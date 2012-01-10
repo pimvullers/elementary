@@ -3,14 +3,14 @@
 <repositories xmlns="" version="1.0">
   <repo quality="experimental" status="unofficial">
     <name>elementary</name>
-    <description lang="en">ebuilds for elementary OS</description>
-    <homepage>https://svn.vullerscode.nl/listing.php?repname=elementary</homepage>
+    <description lang="en">The elementary OS experience for Gentoo Linux.</description>
+    <homepage>http://www.elementaryos.org/</homepage>
     <owner type="person">
       <email>elementary@vullersmail.nl</email>
       <name>Pim Vullers</name>
     </owner>
-    <source type="svn">https://svn.vullerscode.nl/repos/elementary</source>
-    <feed>https://svn.vullerscode.nl/rss.php?repname=elementary&amp;path=%2F&amp;isdir=1&amp;</feed>
+    <source type="git">git://github.com/pimvullers/elementary.git</source>
+    <feed>https://github.com/pimvullers/elementary/commits/master.atom</feed>
   </repo>
 </repositories>
 
