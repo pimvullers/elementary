@@ -1,0 +1,16 @@
+diff -Naur config/CMakeLists.txt config/CMakeLists.txt
+--- config/CMakeLists.txt	2011-08-25 19:04:51.000000000 +0200
++++ config/CMakeLists.txt	2011-08-25 19:07:40.000000000 +0200
+@@ -1,10 +1,2 @@
+-set (_config_file
+-     config)
+-
+-compiz_opt_install_file (${_config_file} ${COMPIZ_SYSCONFDIR}/compizconfig/${_config_file})
+-
+-add_custom_target (
+-    config_install
+-    ${CMAKE_COMMAND} -E make_directory ${COMPIZ_DESTDIR}${CMAKE_ROOT}/Modules &&
+-    ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/config/${_config_file} ${COMPIZ_DESTDIR}${COMPIZ_SYSCONFDIR}/compizconfig/${_config_file}
+-    )
++install(FILES ${CMAKE_SOURCE_DIR}/config/config 
++	DESTINATION ${COMPIZ_DESTDIR}${COMPIZ_SYSCONFDIR}/compizconfig)

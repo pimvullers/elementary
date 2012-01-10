@@ -1,0 +1,45 @@
+=== modified file 'src/Makefile.am'
+--- ido/src/Makefile.am	2011-02-24 19:32:26 +0000
++++ ido/src/Makefile.am	2011-04-05 06:59:42 +0000
+@@ -41,7 +41,7 @@
+ 	-DG_DISABLE_DEPRECATED		\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED	\
+ 	-DGDK_DISABLE_DEPRECATED	\
+-	-DGTK_DISABLE_DEPRECATED
++	-DGTK_NODISABLE_DEPRECATED
+ 
+ AM_CPPFLAGS =				\
+ 	$(GCC_FLAGS)			\
+
+=== modified file 'src/Makefile.in'
+--- ido/src/Makefile.in	2010-09-14 19:33:01 +0000
++++ ido/src/Makefile.in	2011-04-05 06:59:52 +0000
+@@ -273,7 +273,7 @@
+ 	-DG_DISABLE_DEPRECATED		\
+ 	-DGDK_PIXBUF_DISABLE_DEPRECATED	\
+ 	-DGDK_DISABLE_DEPRECATED	\
+-	-DGTK_DISABLE_DEPRECATED
++	-DGTK_NODISABLE_DEPRECATED
+ 
+ AM_CPPFLAGS = \
+ 	$(GCC_FLAGS)			\
+
+=== modified file 'src/idoscalemenuitem.c'
+--- ido/src/idoscalemenuitem.c	2011-02-24 21:13:29 +0000
++++ ido/src/idoscalemenuitem.c	2011-04-05 06:58:47 +0000
+@@ -483,12 +483,12 @@
+   translate_event_coordinates (menuitem, event->x_root, &x);
+   event->x_root = x;
+ 
+-  ubuntu_gtk_widget_set_has_grab (scale, TRUE);
++  GTK_OBJECT_FLAGS (scale) |= GTK_HAS_GRAB;
+ 
+   gtk_widget_event (scale,
+                     ((GdkEvent *)(void*)(event)));
+ 
+-  ubuntu_gtk_widget_set_has_grab (scale, FALSE);
++  GTK_OBJECT_FLAGS (scale) &= ~(GTK_HAS_GRAB);
+ 
+   if (!priv->grabbed)
+     {
+

@@ -1,0 +1,58 @@
+diff --git a/gtk/gnome/CMakeLists.txt b/gtk/gnome/CMakeLists.txt
+index 662979d..cceb3e0 100644
+--- a/gtk/gnome/CMakeLists.txt
++++ b/gtk/gnome/CMakeLists.txt
+@@ -15,16 +15,6 @@ if (USE_GNOME)
+ 	${COMPIZ_LINK_DIRS}
+     )
+ 
+-    set (desktop_file ${CMAKE_CURRENT_BINARY_DIR}/compiz.desktop)
+-    compiz_translate_desktop_file (
+-        ${CMAKE_CURRENT_SOURCE_DIR}/compiz.desktop.in
+-        ${desktop_file}
+-    )
+-    install (
+-	FILES ${desktop_file}
+-	DESTINATION ${COMPIZ_DESTDIR}${datadir}/applications
+-    )
+-
+     set (wmproperties_file ${CMAKE_CURRENT_BINARY_DIR}/compiz-wm.desktop)
+     compiz_translate_desktop_file (
+         ${CMAKE_CURRENT_SOURCE_DIR}/compiz-wm.desktop.in
+@@ -63,7 +53,6 @@ if (USE_GNOME)
+ 	compiz-window-manager.c
+ 	compiz-window-manager.h
+ 	${key_xml}
+-	${desktop_file}
+ 	${wmproperties_file}
+     )
+ 
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 17cad68..ae3f9b4 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -25,6 +25,16 @@ link_directories (
+     ${COMPIZ_LINK_DIRS}
+ )
+ 
++set (desktop_file ${CMAKE_CURRENT_BINARY_DIR}/compiz.desktop)
++compiz_translate_desktop_file (
++    ${CMAKE_SOURCE_DIR}/gtk/gnome/compiz.desktop.in
++    ${desktop_file}
++)
++install (
++    FILES ${desktop_file}
++    DESTINATION ${COMPIZ_DESTDIR}${datadir}/applications
++)
++
+ add_executable (compiz
+     region.cpp
+     atoms.cpp
+@@ -50,6 +60,7 @@ add_executable (compiz
+     modifierhandler.cpp
+     propertywriter.cpp
+     ${_bcop_sources}
++    ${desktop_file}
+ )
+ 
+ target_link_libraries (

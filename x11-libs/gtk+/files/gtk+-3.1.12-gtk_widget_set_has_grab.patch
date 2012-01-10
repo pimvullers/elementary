@@ -1,0 +1,76 @@
+diff -Naur gtk+-3.1.12/gtk/gtk.symbols gtk+-3.1.12.patched/gtk/gtk.symbols
+--- gtk+-3.1.12/gtk/gtk.symbols	2011-08-16 03:23:11.000000000 +0200
++++ gtk+-3.1.12.patched/gtk/gtk.symbols	2011-08-21 21:25:54.563922217 +0200
+@@ -3675,6 +3675,7 @@
+ gtk_widget_set_double_buffered
+ gtk_widget_set_events
+ gtk_widget_set_halign
++gtk_widget_set_has_grab
+ gtk_widget_set_has_tooltip
+ gtk_widget_set_has_window
+ gtk_widget_set_hexpand
+diff -Naur gtk+-3.1.12/gtk/gtkmain.c gtk+-3.1.12.patched/gtk/gtkmain.c
+--- gtk+-3.1.12/gtk/gtkmain.c	2011-08-16 00:57:49.000000000 +0200
++++ gtk+-3.1.12.patched/gtk/gtkmain.c	2011-08-21 21:34:23.451887419 +0200
+@@ -124,6 +124,7 @@
+ #include "gtkselectionprivate.h"
+ #include "gtksettingsprivate.h"
+ #include "gtkwidgetprivate.h"
++#include "gtkwidget.h"
+ #include "gtkwindowprivate.h"
+ #include "gtktooltip.h"
+ #include "gtkdebug.h"
+@@ -2210,7 +2211,7 @@
+ 
+   if (!gtk_widget_has_grab (widget) && gtk_widget_is_sensitive (widget))
+     {
+-      _gtk_widget_set_has_grab (widget, TRUE);
++      gtk_widget_set_has_grab (widget, TRUE);
+ 
+       group = gtk_main_get_window_group (widget);
+ 
+@@ -2261,7 +2262,7 @@
+ 
+   if (gtk_widget_has_grab (widget))
+     {
+-      _gtk_widget_set_has_grab (widget, FALSE);
++      gtk_widget_set_has_grab (widget, FALSE);
+ 
+       group = gtk_main_get_window_group (widget);
+       _gtk_window_group_remove_grab (group, widget);
+diff -Naur gtk+-3.1.12/gtk/gtkwidget.c gtk+-3.1.12.patched/gtk/gtkwidget.c
+--- gtk+-3.1.12/gtk/gtkwidget.c	2011-08-16 00:57:49.000000000 +0200
++++ gtk+-3.1.12.patched/gtk/gtkwidget.c	2011-08-21 21:34:53.548885361 +0200
+@@ -6924,7 +6924,7 @@
+ }
+ 
+ void
+-_gtk_widget_set_has_grab (GtkWidget *widget,
++gtk_widget_set_has_grab (GtkWidget *widget,
+                           gboolean   has_grab)
+ {
+   widget->priv->has_grab = has_grab;
+diff -Naur gtk+-3.1.12/gtk/gtkwidget.h gtk+-3.1.12.patched/gtk/gtkwidget.h
+--- gtk+-3.1.12/gtk/gtkwidget.h	2011-08-16 00:57:49.000000000 +0200
++++ gtk+-3.1.12.patched/gtk/gtkwidget.h	2011-08-21 21:28:57.580909702 +0200
+@@ -573,6 +573,8 @@
+                                            gboolean             receives_default);
+ gboolean  gtk_widget_get_receives_default (GtkWidget           *widget);
+ 
++void       gtk_widget_set_has_grab        (GtkWidget           *widget,
++                                           gboolean             has_grab);
+ gboolean   gtk_widget_has_grab            (GtkWidget           *widget);
+ 
+ gboolean   gtk_widget_device_is_shadowed  (GtkWidget           *widget,
+diff -Naur gtk+-3.1.12/gtk/gtkwidgetprivate.h gtk+-3.1.12.patched/gtk/gtkwidgetprivate.h
+--- gtk+-3.1.12/gtk/gtkwidgetprivate.h	2011-07-28 05:25:54.000000000 +0200
++++ gtk+-3.1.12.patched/gtk/gtkwidgetprivate.h	2011-08-21 21:31:14.568900335 +0200
+@@ -125,8 +125,6 @@
+                                                             gboolean   clip_to_size);
+ void              _gtk_widget_set_has_default              (GtkWidget *widget,
+                                                             gboolean   has_default);
+-void              _gtk_widget_set_has_grab                 (GtkWidget *widget,
+-                                                            gboolean   has_grab);
+ void              _gtk_widget_set_is_toplevel              (GtkWidget *widget,
+                                                             gboolean   is_toplevel);
+ 

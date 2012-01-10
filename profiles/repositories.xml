@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE repositories SYSTEM "/dtd/repositories.dtd">
+<repositories xmlns="" version="1.0">
+  <repo quality="experimental" status="unofficial">
+    <name>elementary</name>
+    <description lang="en">ebuilds for elementary OS</description>
+    <homepage>https://svn.vullerscode.nl/listing.php?repname=elementary</homepage>
+    <owner type="person">
+      <email>elementary@vullersmail.nl</email>
+      <name>Pim Vullers</name>
+    </owner>
+    <source type="svn">https://svn.vullerscode.nl/repos/elementary</source>
+    <feed>https://svn.vullerscode.nl/rss.php?repname=elementary&amp;path=%2F&amp;isdir=1&amp;</feed>
+  </repo>
+</repositories>
+

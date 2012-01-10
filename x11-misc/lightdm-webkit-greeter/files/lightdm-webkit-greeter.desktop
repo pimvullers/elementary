@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=LightDM WebKit Greeter
+Comment=This runs the WebKit greeter, it should only be run from LightDM
+Exec=lightdm-webkit-greeter
+Type=Application
+X-Ubuntu-Gettext-Domain=lightdm

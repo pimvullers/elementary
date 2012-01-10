@@ -1,0 +1,13 @@
+diff -Naur CMakeLists.txt CMakeLists.txt
+--- CMakeLists.txt	2011-08-05 14:16:16.000000000 +0200
++++ CMakeLists.txt	2011-08-05 14:16:36.000000000 +0200
+@@ -34,9 +34,5 @@
+ 
+ message (STATUS "GSettings schemas will be installed into ${GSETTINGS_DIR}")
+ install (FILES ${MAYA_SCHEMAS} DESTINATION ${GSETTINGS_DIR} OPTIONAL)
+-install (CODE "message (STATUS \"Compiling GSettings schemas\")
+-")
+-install (CODE "execute_process (COMMAND ${_glib_comple_schemas} ${GSETTINGS_DIR})
+-")
+ add_subdirectory(euclidecore)
+ add_subdirectory(data)

@@ -1,0 +1,38 @@
+diff -Naur Makefile.am Makefile.am
+--- Makefile.am	2011-10-18 15:15:48.729822313 +0200
++++ Makefile.am	2011-10-18 15:25:51.885480297 +0200
+@@ -6,8 +6,7 @@
+   tests/functional \
+   tests/bamfdaemon \
+   tests/libbamf \
+-  data \
+-  doc
++  data
+ 
+ EXTRA_DIST = COPYING.LGPL autogen.sh build.rules.mk m4/i18n.m4 m4/programs.m4 m4/util.m4
+ DISTCHECK_CONFIGURE_FLAGS = --enable-introspection=no --enable-gtk-doc
+diff -Naur configure.in configure.in
+--- configure.in	2011-10-18 15:15:48.729822313 +0200
++++ configure.in	2011-10-18 15:16:33.877560360 +0200
+@@ -109,11 +109,6 @@
+ AC_PATH_PROG([VALA_API_GEN], [vapigen])
+ AC_PATH_PROG([GLIB_GENMARSHAL], [glib-genmarshal])
+ 
+-###########################
+-# GTK-DOC
+-###########################
+-GTK_DOC_CHECK(1.0)
+-
+ 
+ ###########################
+ # Headless tests
+@@ -145,9 +140,6 @@
+ tests/bamfdaemon/Makefile
+ tests/libbamf/Makefile
+ data/Makefile
+-doc/Makefile
+-doc/reference/Makefile
+-doc/reference/libbamf/Makefile
+ ])
+ 
+ cat <<EOF
