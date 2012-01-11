@@ -17,23 +17,25 @@ IUSE="ayatana menu zeitgeist"
 
 RDEPEND="
 	dev-db/sqlheavy:0.1
-	>=dev-libs/glib-2.26:2
-	>=dev-libs/json-glib-0.10
+	dev-libs/glib:2
+	dev-libs/json-glib
+	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
 	dev-libs/libgee:0
-	x11-libs/granite
-	x11-libs/libnotify
-	>=dev-libs/libxml2-2.7.7:2
-	>=gnome-base/gconf-2.31.91:2
-	>=media-libs/gstreamer-0.10
-	>=media-libs/gst-plugins-base-0.10
-	>=media-libs/taglib-1.6.3
-	>=net-libs/libsoup-2.25.2:2.4
 	ayatana? ( >=dev-libs/libindicate-0.5.90 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.10 )
-	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
-	x11-libs/gtk+:3"
+	dev-libs/libxml2:2
+	gnome-base/gconf:2
+	media-libs/gstreamer
+	media-libs/gst-plugins-base
+	media-libs/libgpod
+	media-libs/taglib
+	net-libs/libsoup:2.4
+	x11-libs/gtk+:3
+	x11-libs/granite
+	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14"
+	dev-lang/vala:0.14
+	dev-util/pkgconfig"
 
 src_configure() {
 	local mycmakeargs=(
