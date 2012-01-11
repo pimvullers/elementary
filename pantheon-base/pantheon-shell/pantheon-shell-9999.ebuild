@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,7 @@ RDEPEND="${CDEPEND}
 	pantheon-base/plank
 	pantheon-base/slingshot
 	pantheon-base/wingpanel
-	x11-wm/compiz"
+	x11-wm/compiz-fusion"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
