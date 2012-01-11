@@ -18,7 +18,7 @@ IUSE="static-libs"
 RDEPEND="
 	app-misc/geoclue
 	dev-libs/glib:2
-	dev-libs/libdbusmenu:3
+	dev-libs/libdbusmenu:3[gtk]
 	dev-libs/libical
 	dev-libs/libindicator:3
 	gnome-base/gconf
