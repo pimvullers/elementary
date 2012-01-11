@@ -13,17 +13,26 @@ EBZR_REPO_URI="lp:indicator-session"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="static-libs"
+IUSE="nls policykit static-libs"
 
 RDEPEND="
-	>=dev-libs/libindicator-0.3.19
-	>=dev-libs/libdbusmenu-0.4.92
-	>=x11-libs/gtk+-3.0:3"
+	dev-libs/dbus-glib
+	dev-libs/glib:2
+	dev-libs/libdbusmenu:3
+	dev-libs/libindicator:3
+	policykit? ( sys-auth/polkit )
+	sys-fs/udev[gudev]
+	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	dev-util/intltool
+	dev-util/pkgconfig
+	gnome-base/gnome-common
+	nls? ( sys-devel/gettext )"
 
 src_prepare() {
 	NOCONFIGURE=1 ./autogen.sh
+
+	autotools-utils_src_prepare
 }
 
 pkg_preinst() {
