@@ -6,35 +6,27 @@ EAPI=4
 
 inherit gnome2-utils autotools-utils
 
-DESCRIPTION="The Date and Time Indicator - A very, very simple clock"
-HOMEPAGE="https://launchpad.net/indicator-datetime"
+DESCRIPTION="Session indicator"
+HOMEPAGE="https://launchpad.net/indicator-session"
 SRC_URI="http://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="static-libs"
+IUSE="nls policykit static-libs"
 
 RDEPEND="
-	app-misc/geoclue
+	dev-libs/dbus-glib
 	dev-libs/glib:2
 	dev-libs/libdbusmenu:3
-	dev-libs/libical
 	dev-libs/libindicator:3
-	gnome-base/gconf
-	gnome-extra/evolution-data-server
-	x11-libs/cairo
-	x11-libs/gtk+:3
-	x11-libs/libido:3"
-DEPEND="${RDEPEND}"
-
-src_prepare() {
-	epatch "${FILESDIR}/${P}-make-ccpanel-optional.patch"
-
-	eautoreconf
-
-	autotools-utils_src_prepare
-}
+	policykit? ( sys-auth/polkit )
+	sys-fs/udev[gudev]
+	x11-libs/gtk+:3"
+DEPEND="${RDEPEND}
+	dev-util/intltool
+	dev-util/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 pkg_preinst() {
 	gnome2_schemas_savelist
