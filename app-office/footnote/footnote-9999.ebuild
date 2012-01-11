@@ -25,6 +25,10 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.14"
 
+pkg_setup() {
+	CMAKE_IN_SOURCE_BUILD=1
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE=$(type -p valac-0.14)
