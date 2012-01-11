@@ -1,8 +1,9 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=4
+
 inherit gnome2-utils autotools-utils
 
 DESCRIPTION="A unified sound menu"
@@ -12,30 +13,32 @@ SRC_URI="http://launchpad.net/${PN}/fifth/${PV}/+download/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="static-libs"
+IUSE="nls static-libs"
 
-RDEPEND="dev-libs/glib:2
-	>=dev-libs/libdbusmenu-0.3.101[gtk]
+RDEPEND="
+	dev-libs/glib:2
+	dev-libs/libdbusmenu:3[gtk]
 	dev-libs/libgee
-	>=dev-libs/libindicator-0.3.19
-	dev-libs/libxml2:2
+	dev-libs/libindicator:3
+	dev-libs/libxml2
 	gnome-base/gconf:2
 	media-sound/pulseaudio[glib]
 	x11-libs/gtk+:3
-	x11-libs/libido
-	>=x11-libs/libnotify-0.7"
+	x11-libs/libido:3
+	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.12
-	dev-util/pkgconfig"
-
-DOCS=(AUTHORS)
+	dev-lang/vala:0.14
+	dev-util/intltool
+	dev-util/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 src_configure() {
 	local myeconfargs=(
+		VALAC="$(type -p valac-0.14)"
 		--disable-schemas-compile
 	)
 
-	autotools-utils_src_configure VALAC="$(type -p valac-0.12)"
+	autotools-utils_src_configure
 }
 
 pkg_preinst() {
