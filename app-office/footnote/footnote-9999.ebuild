@@ -31,17 +31,26 @@ pkg_setup() {
 
 src_configure() {
 	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE=$(type -p valac-0.14)
 	)
 
 	cmake-utils_src_configure
 }
 
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
 pkg_postinst() {
 	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+	gnome2_schemas_update
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+	gnome2_schemas_update --uninstall
 }
 
