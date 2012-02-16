@@ -4,11 +4,11 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="A music player written for the elementary project"
 HOMEPAGE="https://launchpad.net/beat-box"
-EBZR_REPO_URI="lp:beat-box"
+SRC_URI="https://launchpad.net/beat-box/trunk/0.3/+download/${PN}_0.1-0%7Er507%2Bpkg15%7Eprecise1.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -36,6 +36,12 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.14
 	dev-util/pkgconfig"
+
+src_unpack() {
+	default_src_unpack
+
+	mv "${WORKDIR}/recipe-{debupstream}-0~r{revno}+pkg{revno:packaging}" "${S}"
+}
 
 src_prepare() {
 	# Disable generation of the translations (if needed)
