@@ -13,14 +13,12 @@ IUSE="nls static-libs"
 
 RDEPEND="
 	dev-libs/glib:2
-	x11-libs/gtk+:3
-	>=dev-libs/gobject-introspection-0.9.12"
+	>=dev-libs/gobject-introspection-0.9.12
+	dev-libs/libgee:0
+	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
+	dev-lang/vala:0.14
 	dev-util/pkgconfig
-	|| (
-		dev-lang/vala:0.14
-		>=dev-lang/vala-0.12.0:0.12
-	)
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -28,14 +26,17 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Disable building of the demo application
-	sed -i 's/add_subdirectory(demo)//' CMakeLists.txt
+	# Disable building of the demo application (if needed)
+	use demo || sed -i 's/add_subdirectory(demo)//' CMakeLists.txt
+
+	# Disable generation of the translations (if needed)
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.14 || type -p valac-0.12)"
-		$(cmake-utils_use_build static-libs STATIC)
+		-DVALA_EXECUTABLE="$(type -p valac-0.14)"
+		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 
 	cmake-utils_src_configure
