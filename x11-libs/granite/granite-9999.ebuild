@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING COPYRIGHT INSTALL NEWS README )
+	DOCS=( AUTHORS COPYING NEWS README )
 }
 
 src_prepare() {
