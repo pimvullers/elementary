@@ -23,6 +23,7 @@ RDEPEND="
 	x11-libs/pango"
 DEPEND="${RDEPEND}
 	|| (
+		dev-lang/vala:0.16
 		dev-lang/vala:0.14
 		dev-lang/vala:0.12
 	)"
@@ -39,7 +40,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE=$(type -p valac-0.14 valac-0.12 | head -n1)
+		-DVALA_EXECUTABLE=$(type -p valac-0.16 valac-0.14 valac-0.12 | head -n1)
 	)
 
 	cmake-utils_src_configure

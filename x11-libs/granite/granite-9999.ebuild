@@ -17,7 +17,10 @@ RDEPEND="
 	dev-libs/libgee:0
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14
+	|| (
+		dev-lang/vala:0.16
+		dev-lang/vala:0.14
+	)
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -35,7 +38,7 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.14)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16 valac-0.14 | head -n1)"
 		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 

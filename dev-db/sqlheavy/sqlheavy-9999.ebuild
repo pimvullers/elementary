@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit autotools-utils git
+inherit autotools-utils git-2
 
 DESCRIPTION="GObject SQLite wrapper, providing very nice APIs for C and Vala, GObject Introspection support, and additional functionality not present in SQLite"
 HOMEPAGE="http://code.google.com/p/sqlheavy/"
@@ -20,7 +20,10 @@ RDEPEND="
 	>=dev-libs/glib-2.22:2
 	>=x11-libs/gtk+-2.24:2"
 DEPEND="${RDEPEND}
- 	dev-lang/vala:0.14"
+	|| (
+ 		dev-lang/vala:0.16
+	 	dev-lang/vala:0.14
+	)"
 
 AUTOTOOLS_IN_SOURCE_BUILD=1
 DOCS=(AUTHORS COPYING ChangeLog NEWS README)
@@ -32,7 +35,7 @@ src_prepare() {
 }
 
 src_configure() {
-	autotools-utils_src_configure VALAC="$(type -p valac-0.14)"
+	autotools-utils_src_configure VALAC="$(type -p valac-0.16 valac-0.14 | head	-n1)"
 }
 
 src_install() {

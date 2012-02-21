@@ -26,6 +26,7 @@ DEPEND="${CDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )
 	|| (
+		dev-lang/vala:0.16
 		dev-lang/vala:0.14
 		dev-lang/vala:0.12
 		dev-lang/vala:0.10
@@ -43,7 +44,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.14 valac-0.12 valac-0.10 | head -n1)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16 valac-0.14 valac-0.12 valac-0.10 | head -n1)"
 	)
 
 	cmake-utils_src_configure

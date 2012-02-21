@@ -23,7 +23,10 @@ RDEPEND="
 	x11-libs/libwnck:3
 	x11-libs/libXtst"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14"
+	|| (
+		dev-lang/vala:0.16
+		dev-lang/vala:0.14
+	)"
 
 pkg_setup() {
 	CMAKE_IN_SOURCE_BUILD=1
@@ -31,7 +34,7 @@ pkg_setup() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE=$(type -p valac-0.14)
+		-DVALA_EXECUTABLE=$(type -p valac-0.16 valac-0.14 | head -n1)
 	)
 
 	cmake-utils_src_configure
