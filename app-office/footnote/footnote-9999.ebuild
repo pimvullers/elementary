@@ -28,10 +28,6 @@ DEPEND="${RDEPEND}
 		dev-lang/vala:0.14
 	)"
 
-pkg_setup() {
-	CMAKE_IN_SOURCE_BUILD=1
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF

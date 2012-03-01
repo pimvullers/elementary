@@ -29,8 +29,14 @@ RDEPEND="
 	addressbook? ( app-office/dexter )
  	html? ( www-client/lynx )"
 DEPEND="${RDEPEND}
-	|| ( dev-lang/python:2.6 dev-lang/python:2.7 )
-	dev-lang/vala:0.14
+	|| ( 
+		dev-lang/python:2.7 
+		dev-lang/python:2.6 
+	)
+	|| (
+		dev-lang/vala:0.16
+		dev-lang/vala:0.14
+	)
 	dev-util/intltool
 	sys-devel/gettext"
 
@@ -41,7 +47,7 @@ src_prepare() {
 }
 
 src_configure() {
-	VALAC="$(type -p valac-0.14)" waf-utils_src_configure \
+	VALAC="$(type -p valac-0.16 valac-0.14 | head -n1)" waf-utils_src_configure \
 		--disable-docs --disable-zeitgeist --disable-libstemmer \
 		$(use_enable ayatana libindicate)
 }
