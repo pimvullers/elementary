@@ -18,7 +18,7 @@ IUSE="nls policykit static-libs"
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-libs/glib:2
-	dev-libs/libdbusmenu:3[gtk]
+	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
 	dev-libs/libindicator:3
 	policykit? ( sys-auth/polkit )
 	sys-fs/udev[gudev]
