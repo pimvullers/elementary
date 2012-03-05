@@ -16,12 +16,13 @@ KEYWORDS="~amd64"
 IUSE="+introspection doc static-libs"
 
 RDEPEND="
-	>=dev-libs/dbus-glib-0.76
-	>=dev-libs/glib-2.16.0:2
+	dev-libs/dbus-glib
+	dev-util/gdbus-codegen
+	dev-libs/glib:2
 	gnome-base/libgtop:2
-	x11-libs/gtk+:2
+	x11-libs/gtk+:3
 	x11-libs/libX11
-	x11-libs/libwnck:1"
+	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
 	dev-util/gtk-doc
 	introspection? ( dev-libs/gobject-introspection )
@@ -38,7 +39,7 @@ src_prepare() {
 src_configure() {
 	local myeconfargs=(
 		--disable-gtktest
-		--with-gtk=2
+		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
 	)
 
