@@ -1,0 +1,24 @@
+=== modified file 'src/CMakeLists.txt'
+--- src/CMakeLists.txt	2011-10-31 17:16:51 +0000
++++ src/CMakeLists.txt	2012-01-09 19:39:18 +0000
+@@ -56,6 +56,7 @@
+ )
+ add_library(euclide MODULE
+     ${VALA_C})
++add_dependencies(euclide euclidecore)
+ target_link_libraries(euclide euclidecore)
+ target_link_libraries(euclide ${DEPS_LIBRARIES})
+ install(TARGETS euclide DESTINATION lib/scratch/plugins/euclide/)
+
+=== modified file 'symbols/CMakeLists.txt'
+--- symbols/CMakeLists.txt	2011-10-31 17:16:51 +0000
++++ symbols/CMakeLists.txt	2012-01-09 19:34:45 +0000
+@@ -25,6 +25,7 @@
+     --thread
+ )
+ add_library(euclidesymbols MODULE ${VALA_C})
++add_dependencies(euclidesymbols euclidecore)
+ install(TARGETS euclidesymbols DESTINATION lib/scratch/plugins/euclide/)
+ install(FILES class.png DESTINATION share/euclide/plugins/euclidesymbols/)
+ install(FILES enum.png DESTINATION share/euclide/plugins/euclidesymbols/)
+
