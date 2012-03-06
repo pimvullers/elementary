@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Tiny, simple calculator written in GTK+ and Vala"
 HOMEPAGE="https://launchpad.net/pantheon-calculator"
@@ -23,7 +23,8 @@ DEPEND="${RDEPEND}
 	|| (
 		dev-lang/vala:0.16
 		dev-lang/vala:0.14
-	)"
+	)
+	dev-util/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS COPYING COPYRIGHT )
@@ -42,12 +43,10 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
 }
 
