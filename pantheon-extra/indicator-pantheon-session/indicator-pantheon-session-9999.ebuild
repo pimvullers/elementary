@@ -6,9 +6,9 @@ EAPI=4
 
 inherit gnome2-utils autotools-utils bzr
 
-DESCRIPTION="Session indicator"
-HOMEPAGE="https://launchpad.net/indicator-session"
-EBZR_REPO_URI="lp:indicator-session"
+DESCRIPTION="Pantheon fork of the session indicator"
+HOMEPAGE="https://launchpad.net/indicator-pantheon-session"
+EBZR_REPO_URI="lp:indicator-pantheon-session"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,10 +20,10 @@ RDEPEND="
 	dev-libs/glib:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
 	dev-libs/libindicator:3
-	!pantheon-extra/indicator-pantheon-session
 	policykit? ( sys-auth/polkit )
 	sys-fs/udev[gudev]
-	x11-libs/gtk+:3"
+	x11-libs/gtk+:3
+	!x11-misc/indicator-session"
 DEPEND="${RDEPEND}
 	dev-util/intltool
 	dev-util/pkgconfig
