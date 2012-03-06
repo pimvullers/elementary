@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Awesome RSS reader"
 HOMEPAGE="https://launchpad.net/feedler"
@@ -26,7 +26,8 @@ DEPEND="${RDEPEND}
 	|| (
 		dev-lang/vala:0.16
 		dev-lang/vala:0.14
-	)"
+	)
+	dev-util/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS COPYING )
@@ -46,12 +47,10 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
 	gnome2_schemas_update --uninstall
 }
 
