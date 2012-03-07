@@ -30,13 +30,6 @@ pkg_setup() {
 	DOCS=( AUTHORS README )
 }
 
-src_prepare() {
-	# Disable compilation of GSettings schemas, this is handled by this ebuild
-	epatch "${FILESDIR}/${PN}-0.4-cmake-gsettings-module.patch"
-
-	epatch "${FILESDIR}/${PN}-gtk-menu-fix.patch"
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
