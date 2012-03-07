@@ -6,7 +6,7 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
-DESCRIPTION="an elementary comic reader"
+DESCRIPTION="An elementary comic reader"
 HOMEPAGE="https://launchpad.net/strip"
 EBZR_REPO_URI="lp:strip"
 
@@ -20,7 +20,11 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14"
+	|| (
+		dev-lang/vala:0.16
+		dev-lang/vala:0.14
+	)
+	dev-util/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS README )
@@ -29,12 +33,14 @@ pkg_setup() {
 src_prepare() {
 	# Disable compilation of GSettings schemas, this is handled by this ebuild
 	epatch "${FILESDIR}/${PN}-0.4-cmake-gsettings-module.patch"
+
+	epatch "${FILESDIR}/${PN}-gtk-menu-fix.patch"
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE=$(type -p valac-0.14)
+		-DVALA_EXECUTABLE=$(type -p valac-0.16 valac-0.14 | head -n1)
 	)
 
 	cmake-utils_src_configure
@@ -46,11 +52,13 @@ pkg_preinst() {
 
 pkg_postinst() {
 	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
-	gnome2_schemas_update --uninstall
+	fdo-mime_mime_database_update
+	gnome2_schemas_update
 }
 

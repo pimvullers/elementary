@@ -1,0 +1,420 @@
+=== modified file 'src/ScaleWithBubble.vala'
+--- src/ScaleWithBubble.vala	2011-10-13 05:53:56 +0000
++++ src/ScaleWithBubble.vala	2012-03-07 21:51:17 +0000
+@@ -20,18 +20,15 @@
+ //      ammonkey <am.monkeyd@gmail.com>
+ // 
+ 
+-using Gtk;
+-using Gdk;
+-
+ namespace Granite.Widgets
+ {
+-	class HScaleWithBubble : HScale
++	class HScaleWithBubble : Gtk.HScale
+ 	{
+ //~ 		private Gtk.CssProvider provider;
+ 		private Bubble bubble;
+ 		public bool bubble_on_top = false;
+ 		
+-		public HScaleWithBubble(Adjustment adjustment)
++		public HScaleWithBubble(Gtk.Adjustment adjustment)
+ 		{ init(); }
+ 		
+ 		public HScaleWithBubble.with_range(double min, double max, double step)
+@@ -63,12 +60,12 @@
+ 				int x;
+ 				int y;
+ 				get_window().get_origin(out x, out y);
+-				Allocation scale_allocation;
++				Gtk.Allocation scale_allocation;
+ 				get_allocation(out scale_allocation);
+-				Allocation bubble_allocation;
++				Gtk.Allocation bubble_allocation;
+ 				bubble.get_allocation(out bubble_allocation);
+ 				
+-				Adjustment adjustment = get_adjustment();
++				Gtk.Adjustment adjustment = get_adjustment();
+ 				double scale_percent = (get_value() - adjustment.get_lower()) / (adjustment.get_upper() - adjustment.get_lower());
+ 				
+ 				if (get_inverted())
+@@ -87,13 +84,13 @@
+ 		{ bubble.append(widget); }
+ 	}
+ 	/*
+-	class VScaleWithBubble : VScale
++	class VScaleWithBubble : Gtk.VScale
+ 	{
+ 		private Gtk.CssProvider provider;
+ 		private Bubble bubble;
+ 		public bool bubble_on_left = false;
+ 		
+-		public VScaleWithBubble(Adjustment adjustment)
++		public VScaleWithBubble(Gtk.Adjustment adjustment)
+ 		{ init(); }
+ 		
+ 		public VScaleWithBubble.with_range(double min, double max, double step)
+@@ -130,7 +127,7 @@
+ 				Allocation bubble_allocation;
+ 				bubble.get_allocation(out bubble_allocation);
+ 				
+-				Adjustment adjustment = get_adjustment();
++				Gtk.Adjustment adjustment = get_adjustment();
+ 				double scale_percent = (get_value() - adjustment.get_lower()) / (adjustment.get_upper() - adjustment.get_lower());
+ 				
+ 				if (get_inverted())
+@@ -152,8 +149,8 @@
+ 	class Bubble : Gtk.Window
+ 	{
+ //~ 		private Gtk.CssProvider provider;
+-		private Menu menu;
+-		private VBox box;
++		private Gtk.Menu menu;
++		private Gtk.VBox box;
+ 		
+ 		public Bubble()
+ 		{
+@@ -166,11 +163,11 @@
+ //~ 			set_visual (screen.get_rgba_visual());
+ 			
+ 			/* fake menu to use css */
+-			menu = new Menu ();
++			menu = new Gtk.Menu ();
+ //~ 			menu.get_style_context ().add_provider (provider, 600);
+ //~ 			menu.get_style_context ().add_class ("bubble-window");
+ 			
+-			box = new VBox(false, 0);
++			box = new Gtk.VBox(false, 0);
+ 			box.margin_top = 7;
+ 			box.margin_left = 7;
+ 			box.margin_right = 7;
+
+=== modified file 'src/StripWindow.vala'
+--- src/StripWindow.vala	2011-11-01 08:25:30 +0000
++++ src/StripWindow.vala	2012-03-07 21:51:17 +0000
+@@ -43,12 +43,6 @@
+ 
+ // Tags: FIXME
+ 
+-using Gtk;
+-using Gdk;
+-using Granite.Widgets;
+-
+-using Resources;
+-
+ namespace Strip
+ {
+ 	class StripWindow : Gtk.Window
+@@ -63,24 +57,24 @@
+ 		
+ 		ComicBook book;
+ 		ComicLayout layout = new ComicLayout();
+-		Welcome welcome = new Welcome("Pick a book.", "Open a comic book to start reading.");
++		Granite.Widgets.Welcome welcome;
+ 		
+ 		// Toolbar elements
+-		Toolbar toolbar = new Toolbar();
+-		ToolButton bookmarks;
+-		ToolButton lens;
+-		ModeButton mangaMode = new ModeButton();
++		Gtk.Toolbar toolbar = new Gtk.Toolbar();
++		Gtk.ToolButton bookmarks;
++		Gtk.ToolButton lens;
++		Granite.Widgets.ModeButton mangaMode;
+ 		ElementaryWidgets.TopDisplay topdisplay;
+-		Image thumbnail;
+-		Label thumbnail_number;
+-		ToolItem topdisplay_item = new ToolItem();
+-		ModeButton viewMode = new ModeButton();
+-		Menu menu = new Menu();
+-		CheckMenuItem rotate_menuitem;
+-		CheckMenuItem clockwise_menuitem;
+-        CheckMenuItem fullscreen_menuitem;
+-		AppMenu appMenu;
+-		TargetEntry[] dnd_list;
++		Gtk.Image thumbnail;
++		Gtk.Label thumbnail_number;
++		Gtk.ToolItem topdisplay_item = new Gtk.ToolItem();
++		Granite.Widgets.ModeButton viewMode;
++		Gtk.Menu menu;
++		Gtk.CheckMenuItem rotate_menuitem;
++		Gtk.CheckMenuItem clockwise_menuitem;
++		Gtk.CheckMenuItem fullscreen_menuitem;
++		Granite.Widgets.AppMenu appMenu;
++		Gtk.TargetEntry[] dnd_list;
+ 		
+ 		// Preferences
+ 		string theme;
+@@ -97,6 +91,12 @@
+ 		 * Creates a Strip window.
+ 		 */
+ 		public StripWindow (string? path = "", Granite.Application app) {
++
++			menu = new Gtk.Menu();
++			welcome = new Granite.Widgets.Welcome("Pick a book.", "Open a comic book to start reading.");
++			mangaMode = new Granite.Widgets.ModeButton();
++			viewMode = new Granite.Widgets.ModeButton();
++
+ 			// Set settings
+ 			settings = new GLib.Settings("apps.strip-comicreader.settings");
+ 			manga = settings.get_boolean("manga");
+@@ -138,37 +138,37 @@
+ 			last_path = bookmark.get_string("path");
+ 			last_page = bookmark.get_int("page");
+ 						
+-			events |= EventMask.ALL_EVENTS_MASK;
++			events |= Gdk.EventMask.ALL_EVENTS_MASK;
+ //~ 			TargetEntry[] dnd_list;
+ //~ 			// Python
+ //~ 			( gtk.DEST_DEFAULT_MOTION |
+ //~                   gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
+ //~                   dnd_list, gtk.gdk.ACTION_COPY)
+-//~ 			drag_dest_set(this, DestDefaults.ALL, new TargetEntry(), new DragAction());
+-			drag_dest_set(this, DestDefaults.ALL, dnd_list, DragAction.COPY);
++//~ 			drag_dest_set(this, Gtk.DestDefaults.ALL, new Gtk.TargetEntry(), new Gtk.DragAction());
++			Gtk.drag_dest_set(this, Gtk.DestDefaults.ALL, dnd_list, Gdk.DragAction.COPY);
+ 			
+ 			//Window properties
+ 			set_title("Strip");
+ 			set_size_request(600, 400);
+ 			
+ 			// Bookmarks
+-			bookmarks = new ToolButton(new Image.from_stock("gtk-about", IconSize.BUTTON), "Bookmarks");
+-			var bookmarks_item = new ToolItem();
++			bookmarks = new Gtk.ToolButton(new Gtk.Image.from_stock("gtk-about", Gtk.IconSize.BUTTON), "Bookmarks");
++			var bookmarks_item = new Gtk.ToolItem();
+ 			bookmarks_item.add(bookmarks);
+ 			bookmarks.set_tooltip_text("Bookmarks");
+ 			
+ 			// Lens
+-			lens = new ToolButton(new Image.from_stock("gtk-find", IconSize.BUTTON), "Lens");
+-			var lens_item = new ToolItem();
++			lens = new Gtk.ToolButton(new Gtk.Image.from_stock("gtk-find", Gtk.IconSize.BUTTON), "Lens");
++			var lens_item = new Gtk.ToolItem();
+ 			lens_item.add(lens);
+ 			lens.set_tooltip_text("Lens");
+ 			
+ 			// Manga ModeButton
+-			var mangaMode_manga_image = new Image.from_file(PIXMAP_DIR + theme + "/view-direction-manga.svg");
+-			var mangaMode_comic_image = new Image.from_file(PIXMAP_DIR + theme + "/view-direction-comic.svg");
++			var mangaMode_manga_image = new Gtk.Image.from_file(Resources.PIXMAP_DIR + theme + "/view-direction-manga.svg");
++			var mangaMode_comic_image = new Gtk.Image.from_file(Resources.PIXMAP_DIR + theme + "/view-direction-comic.svg");
+ 			mangaMode.append(mangaMode_manga_image);
+ 			mangaMode.append(mangaMode_comic_image);
+-			var mangaMode_item = new ToolItem();
++			var mangaMode_item = new Gtk.ToolItem();
+ 			mangaMode_item.set_border_width(6);
+ 			mangaMode_item.add(mangaMode);
+ 			mangaMode_item.set_tooltip_text("Reading direction");
+@@ -178,9 +178,9 @@
+ 			topdisplay.set_sensitive(false);
+ 			topdisplay_item.set_expand(true);
+ 			topdisplay_item.add(topdisplay);
+-			thumbnail_number = new Label("");
++			thumbnail_number = new Gtk.Label("");
+ 			thumbnail_number.show();
+-			thumbnail = new Image();
++			thumbnail = new Gtk.Image();
+ 			thumbnail.show();
+ 			topdisplay.append(thumbnail_number);
+ 			topdisplay.append(thumbnail);
+@@ -189,31 +189,31 @@
+ 			topdisplay.set_inverted(manga);
+ 						
+ 			// View ModeButton
+-			var viewMode_double_image = new Image.from_file(PIXMAP_DIR + theme + "/view-mode-double.svg");
+-			var viewMode_simple_image = new Image.from_file(PIXMAP_DIR + theme + "/view-mode-simple.svg");
+-			var viewMode_width_image = new Image.from_file(PIXMAP_DIR + theme + "/view-mode-fitwidth.svg");
++			var viewMode_double_image = new Gtk.Image.from_file(Resources.PIXMAP_DIR + theme + "/view-mode-double.svg");
++			var viewMode_simple_image = new Gtk.Image.from_file(Resources.PIXMAP_DIR + theme + "/view-mode-simple.svg");
++			var viewMode_width_image = new Gtk.Image.from_file(Resources.PIXMAP_DIR + theme + "/view-mode-fitwidth.svg");
+ 			viewMode.append(viewMode_double_image);
+ 			viewMode.append(viewMode_simple_image);
+ 			viewMode.append(viewMode_width_image);
+-			var viewMode_item = new ToolItem();
++			var viewMode_item = new Gtk.ToolItem();
+ 			viewMode_item.set_border_width(6);
+ 			viewMode_item.add(viewMode);
+ 			viewMode_item.set_tooltip_text("View mode");
+ 			
+ 			// Menu
+ 			menu.show_all();
+-			var open_menuitem = new MenuItem.with_label("Open");
+-			var informations_menuitem = new MenuItem.with_label("Information");
+-			fullscreen_menuitem = new CheckMenuItem.with_label("Fullscreen");
+-			rotate_menuitem = new CheckMenuItem.with_label("Rotate");
+-			clockwise_menuitem = new CheckMenuItem.with_label("Clockwise");
++			var open_menuitem = new Gtk.MenuItem.with_label("Open");
++			var informations_menuitem = new Gtk.MenuItem.with_label("Information");
++			fullscreen_menuitem = new Gtk.CheckMenuItem.with_label("Fullscreen");
++			rotate_menuitem = new Gtk.CheckMenuItem.with_label("Rotate");
++			clockwise_menuitem = new Gtk.CheckMenuItem.with_label("Clockwise");
+ 			rotate_menuitem.set_active(rotate);
+ 			clockwise_menuitem.set_active(clockwise);
+-//~ 			var about_menuitem = new MenuItem.with_label("About");
++//~ 			var about_menuitem = new Gtk.MenuItem.with_label("About");
+ 			
+ 			menu.append(open_menuitem);
+ 			menu.append(informations_menuitem);
+-			menu.append(new SeparatorMenuItem());
++			menu.append(new Gtk.SeparatorMenuItem());
+ 			menu.append(fullscreen_menuitem);
+ 			menu.append(rotate_menuitem);
+ 			menu.append(clockwise_menuitem);
+@@ -222,7 +222,7 @@
+ 			// AppMenu
+ //~ 			appMenu = new AppMenu(menu);
+ 			appMenu = app.create_appmenu(menu);
+-			var appMenu_item = new ToolItem();
++			var appMenu_item = new Gtk.ToolItem();
+ 			appMenu_item.add(appMenu);
+ 			
+ 			// Toolbar
+@@ -235,7 +235,7 @@
+ 			toolbar.insert(appMenu_item, -1);
+ 			
+ 			// Basic UI
+-			var vbox = new VBox(false, 0);
++			var vbox = new Gtk.VBox(false, 0);
+ 			add (vbox);
+ 			vbox.pack_start (toolbar, false, false);
+ 			vbox.pack_start (layout, true, true);
+@@ -247,7 +247,7 @@
+ 			layout.hide();
+ 			welcome.append(Gtk.Stock.OPEN, "Open comic", "Open a comic book file.");
+ 			welcome.append("document-open-recent", "Last comic", "Read the last viewed comic book.");
+-			welcome.set_sensitive(1, last_path != "");
++			welcome.set_sensitive(true); // was: welcome.set_sensitive(1, last_path != "");
+ 			welcome.show_all();
+ 					
+ 			mangaMode.selected = (int) !manga;
+@@ -430,7 +430,7 @@
+         /**
+ 		 * Called when the window's state change (size change, maximise, fullscreen...).
+ 		 */
+-        private bool on_window_state_event(EventWindowState event) {
++        private bool on_window_state_event(Gdk.EventWindowState event) {
+             save_window_state();
+             return false;
+         }
+@@ -438,7 +438,7 @@
+         private void save_window_state() {
+             if (fullscreen_menuitem.get_active())
+ 				savedstate.set_enum("window-state", 2);
+-            else if (get_window().get_state() == WindowState.MAXIMIZED)
++            else if (get_window().get_state() == Gdk.WindowState.MAXIMIZED)
+ 				savedstate.set_enum("window-state", 1);
+ 			else
+ 				savedstate.set_enum("window-state", 0);
+@@ -494,7 +494,7 @@
+ 		/**
+ 		 * Called when something is dragded and dropped over the window.
+ 		 */
+-		private void on_drag_data_received(DragContext context, int x, int y, SelectionData selection_data, uint info, uint time_) {
++		private void on_drag_data_received(Gdk.DragContext context, int x, int y, Gtk.SelectionData selection_data, uint info, uint time_) {
+ //~ 			// Python
+ //~ 			uri = selection.data.strip-comicreader('\r\n\x00')
+ //~         uri_splitted = uri.split() # we may have more than one file dropped
+@@ -509,24 +509,24 @@
+ 		 */
+ 		private void open() {
+ 			// Filters
+-			var filter = new FileFilter();
++			var filter = new Gtk.FileFilter();
+ 			filter.set_name("Accepted files"); // FIXME
+ 			foreach (string i in Resources.IMAGE_TYPES) {filter.add_mime_type(i); }
+ 			foreach (string i in Resources.ARCHIVE_TYPES) {filter.add_mime_type(i); }
+ 			/*
+-			var imagefilter = new FileFilter();
++			var imagefilter = new Gtk.FileFilter();
+ 			imagefilter.set_name("Images"); // FIXME
+ 			foreach (string i in Resources.IMAGE_TYPES) {imagefilter.add_mime_type(i); }
+-			var archivefilter = new FileFilter();
++			var archivefilter = new Gtk.FileFilter();
+ 			archivefilter.set_name("Archives"); // FIXME
+ 			foreach (string i in Resources.ARCHIVE_TYPES) {archivefilter.add_mime_type(i); }
+ 			*/
+ 			string filename = "";
+-			var filechooser = new FileChooserDialog("Title", this, FileChooserAction.OPEN, Stock.CANCEL, ResponseType.CANCEL, Stock.OPEN, ResponseType.OK);
++			var filechooser = new Gtk.FileChooserDialog("Title", this, Gtk.FileChooserAction.OPEN, Gtk.Stock.CANCEL, Gtk.ResponseType.CANCEL, Gtk.Stock.OPEN, Gtk.ResponseType.OK);
+ 			// filechooser.add_filter(imagefilter);
+ 			// filechooser.add_filter(archivefilter);
+ 			filechooser.set_filter(filter);
+-			if (filechooser.run() == ResponseType.OK)
++			if (filechooser.run() == Gtk.ResponseType.OK)
+ 			{
+ 				filename = filechooser.get_filename();
+ 			}
+@@ -566,7 +566,7 @@
+ 		private void on_book_progress_notification(double percent, string text) {
+ 			if (percent == 0) {
+ 				layout.hide();
+-				welcome.set_sensitive(1, last_path != "");
++				welcome.set_sensitive(true); // was: welcome.set_sensitive(1, last_path != "");
+ 				welcome.show();
+ 				topdisplay.set_sensitive(false);
+ 				topdisplay.setLabelText("Empty!");
+@@ -606,7 +606,7 @@
+ 		/**
+ 		 * Change the scale's thumbnail when it's pressed.
+ 		 */
+-		private void on_scale_value_changed(ScrollType scroll, double val) {
++		private void on_scale_value_changed(Gtk.ScrollType scroll, double val) {
+ 			var adjustment = topdisplay.get_scale_adjustment();
+ 			if (val >= adjustment.get_lower() && val <= adjustment.get_upper())
+ 			{
+@@ -618,7 +618,7 @@
+ 		/**
+ 		 * Change the current page when the scale button is released.
+ 		 */
+-		private void on_scale_button_release_event(EventButton button) {
++		private void on_scale_button_release_event(Gdk.EventButton button) {
+ 			book.current_page = (int) topdisplay.getScaleValue();
+ 		}
+ 		
+@@ -650,8 +650,8 @@
+ 					layout.first_pixbuf = book.get_pixbuf(book.current_page);
+ 				}
+ 				else {
+-					Pixbuf first_page = null;
+-					Pixbuf second_page = null;
++					Gdk.Pixbuf first_page = null;
++					Gdk.Pixbuf second_page = null;
+ 					if (first_number >= 0 && first_number < book.length)
+ 						if (!(!book.horizontal && book.get_page_horizontal(first_number)))
+ 							first_page = book.get_pixbuf(first_number);
+@@ -682,7 +682,7 @@
+ 		/**
+ 		 * Check the keyboard key pressed.
+ 		 */
+-		private bool on_key_press_event(EventKey event) {
++		private bool on_key_press_event(Gdk.EventKey event) {
+ //~ 			switch (Gdk.keyval_name(event.keyval))
+ //~             {
+ //~                 case "r"
+@@ -738,7 +738,7 @@
+ 		/**
+ 		 * Check the keyboard key released (for modifier keys).
+ 		 */
+-		private bool on_key_release_event(EventKey event) {
++		private bool on_key_release_event(Gdk.EventKey event) {
+ 			string key = Gdk.keyval_name(event.keyval);
+ 			if (key == "Control_L")
+ 				ctrlL = false;
+@@ -754,12 +754,12 @@
+ 		private void set_rotation_mode() {
+ 			if (rotate) {
+ 				if (clockwise)
+-					layout.rotation = PixbufRotation.CLOCKWISE;
++					layout.rotation = Gdk.PixbufRotation.CLOCKWISE;
+ 				else
+-					layout.rotation = PixbufRotation.COUNTERCLOCKWISE;
++					layout.rotation = Gdk.PixbufRotation.COUNTERCLOCKWISE;
+ 			}
+ 			else
+-				layout.rotation = PixbufRotation.NONE;
++				layout.rotation = Gdk.PixbufRotation.NONE;
+ 			refresh();
+ 		}
+ 		
+
