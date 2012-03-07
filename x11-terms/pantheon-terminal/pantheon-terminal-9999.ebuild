@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://launchpad.net/pantheon-terminal"
@@ -21,17 +21,24 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/vte:2.90"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
-	dev-lang/vala:0.14"
+	|| (
+		dev-lang/vala:0.16
+		dev-lang/vala:0.14
+	)
+	dev-util/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS README )
 }
 
+src_prepare() {
+	epatch "${FILESDIR}/${PN}-gtk-menu-fix.patch"
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.14)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16 valac-0.14 | head -n1)"
 	)
 
 	cmake-utils_src_configure
@@ -42,12 +49,10 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
 	gnome2_schemas_update --uninstall
 }
 
