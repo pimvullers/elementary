@@ -4,9 +4,9 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
-DESCRIPTION="a lightweight ToDo app written in Vala for the elementary project"
+DESCRIPTION="A lightweight ToDo app written in Vala for the elementary project"
 HOMEPAGE="https://launchpad.net/ergo"
 EBZR_REPO_URI="lp:ergo"
 
@@ -49,12 +49,10 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	fdo-mime_desktop_database_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
-	fdo-mime_desktop_database_update
-	gnome2_schemas_update --uninstall
+	gnome2_schemas_update
 }
 
