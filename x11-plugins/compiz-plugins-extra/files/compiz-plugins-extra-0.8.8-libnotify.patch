@@ -1,0 +1,48 @@
+diff -Naur compiz-plugins-extra-0.8.8/configure.ac compiz-plugins-extra-0.8.8_patched/configure.ac
+--- compiz-plugins-extra-0.8.8/configure.ac	2012-03-08 14:05:14.000000000 +0100
++++ compiz-plugins-extra-0.8.8_patched/configure.ac	2012-03-08 14:07:50.000000000 +0100
+@@ -136,9 +136,12 @@
+ PKG_CHECK_MODULES(COMPIZMOUSEPOLL, compiz-mousepoll, [have_compiz_mousepoll=yes], [have_compiz_mousepoll=no])
+ AM_CONDITIONAL(SHOWMOUSE_PLUGIN, test "x$have_compiz_mousepoll" = "xyes")
+ 
+-PKG_CHECK_MODULES(LIBNOTIFY, libnotify gtk+-2.0, [have_libnotify=yes], [have_libnotify=no])
++AC_ARG_WITH([libnotify], [AS_HELP_STRING([--without-libnotify], [Build without libnotify support @<:@default=auto@:>@])])
++AS_IF([test "x$with_libnotify" != "xno"], [
++  PKG_CHECK_MODULES(LIBNOTIFY, libnotify gtk+-2.0, [have_libnotify=yes], [have_libnotify=no])
++])
+ AM_CONDITIONAL(NOTIFICATION_PLUGIN, test "x$have_libnotify" = "xyes")
+-if test "$have_libnotify" = yes; then
++if test "x$have_libnotify" = "xyes"; then
+   AC_DEFINE(USE_NOTIFICATION, 1, [Build notification plugin])
+   PKG_CHECK_EXISTS(libnotify >= 0.6.1, [have_libnotify_0_6_1=yes], [have_libnotify_0_6_1=no])
+   if test "$have_libnotify_0_6_1" = yes; then
+diff -Naur compiz-plugins-extra-0.8.8/src/notification/notification.c compiz-plugins-extra-0.8.8_patched/src/notification/notification.c
+--- compiz-plugins-extra-0.8.8/src/notification/notification.c	2012-03-08 14:05:14.000000000 +0100
++++ compiz-plugins-extra-0.8.8_patched/src/notification/notification.c	2012-03-08 14:16:33.000000000 +0100
+@@ -21,6 +21,11 @@
+ 
+ 
+ #include <libnotify/notify.h>
++
++#ifndef NOTIFY_CHECK_VERSION
++#define NOTIFY_CHECK_VERSION(x,y,z) 0
++#endif
++
+ #include <stdio.h>
+ #include <stdarg.h>
+ #include <string.h>
+@@ -104,10 +109,11 @@
+     n = notify_notification_new (logLevel,
+                                  message,
+                                  iconUri
+-#if !defined (HAVE_LIBNOTIFY_0_6_1)
+-                                 , NULL
++#if NOTIFY_CHECK_VERSION (0, 7, 0)
++				 );
++#else
++                                 , NULL);
+ #endif
+-                                 );
+ 
+     notify_notification_set_timeout (n, nd->timeout);
+ 
