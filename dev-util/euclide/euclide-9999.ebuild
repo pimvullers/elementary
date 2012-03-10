@@ -25,12 +25,8 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/gtksourceview:3.0"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16"
-
-src_prepare() {
-	epatch "${FILESDIR}/${PN}-gsettings.patch"
-	epatch "${FILESDIR}/${PN}-parallel-build-fix.patch"
-}
+	dev-lang/vala:0.16
+	dev-util/pkgconfig"
 
 src_configure() {
 	local mycmakeargs=(
