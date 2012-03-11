@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:lightdm-webkit-greeter"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="nls static-libs"
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/dbus-glib
