@@ -9,7 +9,7 @@ EBZR_REPO_URI="lp:granite"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="nls static-libs"
+IUSE="demo nls static-libs"
 
 RDEPEND="
 	dev-libs/glib:2
