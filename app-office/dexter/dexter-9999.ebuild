@@ -35,6 +35,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-fix-bug-952206.patch"
+
 	./autogen.sh --version
 }
 
