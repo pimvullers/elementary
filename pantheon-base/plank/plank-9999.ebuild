@@ -20,12 +20,7 @@ RDEPEND="
 	>=dev-libs/glib-2.26.0:2
 	>=x11-libs/gtk+-2.22.0:2"
 DEPEND="${RDEPEND}
-	|| (
-		dev-lang/vala:0.16[vapigen]
-		dev-lang/vala:0.14[vapigen]
-		dev-lang/vala:0.12[vapigen]
-		dev-lang/vala:0.10[vapigen]
-	)
+	dev-lang/vala:0.16[vapigen]
 	dev-util/intltool
 	dev-util/pkgconfig
 	gnome-base/gnome-common
@@ -42,8 +37,8 @@ src_prepare() {
 
 src_configure() {
 	local myeconfargs=(
-		VALAC="$(type -p valac-0.16 valac-0.14 valac-0.12 valac-0.10 | head -n1)"
-		VAPIGEN="$(type -p vapigen-0.16 vapigen-0.14 vapigen-0.12 vapigen-0.10 | head -n1)"
+		VALAC="$(type -p valac-0.16)"
+		VAPIGEN="$(type -p vapigen-0.16)"
 		$(use_enable debug)
 		$(use_enable nls)
 	)

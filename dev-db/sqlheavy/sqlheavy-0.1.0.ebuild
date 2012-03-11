@@ -20,12 +20,16 @@ RDEPEND="
 	>=dev-libs/glib-2.22:2
 	>=x11-libs/gtk+-2.24:2"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.12"
+	dev-lang/vala:0.16"
 
 DOCS=(AUTHORS COPYING ChangeLog NEWS README)
 
 src_configure() {
-	autotools-utils_src_configure VALAC="$(type -p valac-0.12)"
+	local myeconfargs=(
+		VALAC="$(type -p valac-0.16)"
+	)
+
+	autotools-utils_src_configure
 }
 
 src_install() {

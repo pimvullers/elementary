@@ -20,16 +20,13 @@ RDEPEND="
 	>=media-libs/gst-plugins-base-0.10
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	|| (
-		dev-lang/vala:0.16
-		dev-lang/vala:0.14
-	)
+	dev-lang/vala:0.16
 	dev-util/pkgconfig"
 
 src_configure() {
 	local mycmakeargs=(
 	    -DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16 valac-0.14 | head -n1)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 
 	cmake-utils_src_configure

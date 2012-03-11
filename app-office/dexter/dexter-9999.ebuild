@@ -26,7 +26,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14
+	dev-lang/vala:0.16
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -40,7 +40,7 @@ src_prepare() {
 
 src_configure() {
 	local myeconfargs=(
-		VALAC=$(type -p valac-0.14)
+		VALAC="$(type -p valac-0.16)"
 	)
 
 	autotools-utils_src_configure

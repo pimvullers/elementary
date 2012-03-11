@@ -19,18 +19,13 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig
-	|| (
-		dev-lang/vala:0.16
-		dev-lang/vala:0.14
-		dev-lang/vala:0.12
-		dev-lang/vala:0.10
-	)"
+	dev-lang/vala:0.16
+	dev-util/pkgconfig"
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16 valac-0.14 valac-0.12 valac-0.10 | head -n1)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 
 	cmake-utils_src_configure

@@ -20,10 +20,7 @@ RDEPEND="
 	>=dev-libs/glib-2.22:2
 	>=x11-libs/gtk+-2.24:2"
 DEPEND="${RDEPEND}
-	|| (
- 		dev-lang/vala:0.16
-	 	dev-lang/vala:0.14
-	)"
+	dev-lang/vala:0.16"
 
 AUTOTOOLS_IN_SOURCE_BUILD=1
 DOCS=(AUTHORS COPYING ChangeLog NEWS README)
@@ -35,7 +32,7 @@ src_prepare() {
 }
 
 src_configure() {
-	autotools-utils_src_configure VALAC="$(type -p valac-0.16 valac-0.14 | head	-n1)"
+	autotools-utils_src_configure VALAC="$(type -p valac-0.16)"
 }
 
 src_install() {
