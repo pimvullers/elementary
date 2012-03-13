@@ -28,10 +28,6 @@ pkg_setup() {
 	DOCS=( AUTHORS README )
 }
 
-src_prepare() {
-	epatch "${FILESDIR}/${PN}-gtk-menu-fix.patch"
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
