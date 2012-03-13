@@ -77,9 +77,6 @@ src_prepare() {
 	# Fix gmodule issues on fbsd; bug #184301
 	epatch "${FILESDIR}"/${PN}-2.12.12-fbsd.patch
 
-	# Fix test failure during upgrades, upstream bug 621368
-	epatch "${FILESDIR}/${PN}-2.31-assert-test-failure.patch"
-
 	# Do not try to remove files on live filesystem, upstream bug #619274
 	sed 's:^\(.*"/desktop-app-info/delete".*\):/*\1*/:' \
 		-i "${S}"/gio/tests/desktop-app-info.c || die "sed failed"
@@ -160,7 +157,6 @@ src_configure() {
 		$(use_enable static-libs static) \
 		$(use_enable systemtap dtrace) \
 		$(use_enable systemtap systemtap) \
-		--enable-regex \
 		--with-pcre=internal \
 		--with-threads=posix
 }

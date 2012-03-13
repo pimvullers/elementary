@@ -26,10 +26,6 @@ else
 	KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 fi
 
-# Testing is broken badly:
-# https://bugzilla.gnome.org/show_bug.cgi?id=669562
-RESTRICT="test"
-
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 # Use gtk+:2 for gtk-update-icon-cache and gtk-builder-convert
@@ -53,7 +49,7 @@ COMMON_DEPEND="!aqua? (
 		>=x11-libs/gdk-pixbuf-2.25.2:2[introspection?]
 	)
 	xinerama? ( x11-libs/libXinerama )
-	>=dev-libs/glib-2.31.18
+	>=dev-libs/glib-2.31.20
 	>=x11-libs/pango-1.29.0[introspection?]
 	>=dev-libs/atk-2.1.5[introspection?]
 	>=x11-libs/gtk+-2.24:2
@@ -140,9 +136,9 @@ src_configure() {
 
 	# XXX: Maybe with multi-backend we should enable x11 all the time?
 	if use aqua; then
-		myconf="${myconf} --enable-quartz-backend --disable-xinput"
+		myconf="${myconf} --enable-quartz-backend"
 	else
-		myconf="${myconf} --enable-x11-backend --enable-xinput"
+		myconf="${myconf} --enable-x11-backend"
 	fi
 
 	# Passing --disable-debug is not recommended for production use
@@ -154,6 +150,15 @@ src_configure() {
 }
 
 src_test() {
+	# Tests require a new gnome-themes-standard, but adding it to DEPEND
+	# would result in circular dependencies.
+	# https://bugzilla.gnome.org/show_bug.cgi?id=669562
+	if ! has_version '>=x11-themes/gnome-themes-standard-3.3.91'; then
+		ewarn "Tests will be skipped beecause >=gnome-themes-standard-3.3.90"
+		ewarn "is not installed. Please re-run tests after installing the"
+		ewarn "required version of gnome-themes-standard."
+		return 0
+	fi
 	unset DBUS_SESSION_BUS_ADDRESS
 	# Exporting HOME fixes tests using XDG directories spec since all defaults
 	# are based on $HOME. It is also backward compatible with functions not
