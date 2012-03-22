@@ -19,7 +19,11 @@ SLOT="3"
 #  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
 # I tried this and got it all compiling, but the end result is unusable as it
 # horribly mixes up the backends -- grobian
-IUSE="aqua colord cups debug doc examples +introspection packagekit test vim-syntax xinerama"
+IUSE="aqua colord cups debug doc examples +introspection packagekit test vim-syntax wayland X xinerama"
+REQUIRED_USE="
+	|| ( aqua wayland X )
+	xinerama? ( X )"
+
 if [[ ${PV} = 9999 ]]; then
 	KEYWORDS=""
 else
@@ -28,12 +32,11 @@ fi
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
-# Use gtk+:2 for gtk-update-icon-cache and gtk-builder-convert
-# >=x11-libs/gtk+-2.24:2 is needed for bug 359555
-COMMON_DEPEND="!aqua? (
+# Use gtk+:2 for gtk-update-icon-cache
+COMMON_DEPEND="X? (
 		x11-libs/libXrender
 		x11-libs/libX11
-		x11-libs/libXi
+		>=x11-libs/libXi-1.3
 		x11-libs/libXt
 		x11-libs/libXext
 		>=x11-libs/libXrandr-1.3
@@ -41,32 +44,34 @@ COMMON_DEPEND="!aqua? (
 		x11-libs/libXfixes
 		x11-libs/libXcomposite
 		x11-libs/libXdamage
-		>=x11-libs/cairo-1.10.0[X,glib,svg]
-		>=x11-libs/gdk-pixbuf-2.25.2:2[X,introspection?]
+		xinerama? ( x11-libs/libXinerama )
 	)
-	aqua? (
-		>=x11-libs/cairo-1.10.0[aqua,glib,svg]
-		>=x11-libs/gdk-pixbuf-2.25.2:2[introspection?]
+	wayland? (
+		dev-libs/wayland
+		media-libs/mesa[egl,wayland]
+		x11-libs/cairo[opengl]
+		x11-libs/libxkbcommon
 	)
-	xinerama? ( x11-libs/libXinerama )
 	>=dev-libs/glib-2.31.20
 	>=x11-libs/pango-1.29.0[introspection?]
 	>=dev-libs/atk-2.1.5[introspection?]
+	>=x11-libs/cairo-1.10.0[aqua?,glib,svg,X?]
+	>=x11-libs/gdk-pixbuf-2.25.2:2[introspection?,X?]
 	>=x11-libs/gtk+-2.24:2
 	media-libs/fontconfig
 	x11-misc/shared-mime-info
 	colord? ( >=x11-misc/colord-0.1.9 )
-	cups? ( net-print/cups )
+	cups? ( >=net-print/cups-1.2 )
 	introspection? ( >=dev-libs/gobject-introspection-0.10.1 )"
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/pkgconfig-0.9
-	!aqua? (
+	X? (
 		x11-proto/xextproto
 		x11-proto/xproto
 		x11-proto/inputproto
 		x11-proto/damageproto
+		xinerama? ( x11-proto/xineramaproto )
 	)
-	xinerama? ( x11-proto/xineramaproto )
 	>=dev-util/gtk-doc-am-1.11
 	doc? (
 		>=dev-util/gtk-doc-1.11
@@ -76,10 +81,13 @@ DEPEND="${COMMON_DEPEND}
 		media-fonts/font-cursor-misc )"
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
 # gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
+# >=xorg-server-1.11.4 needed for
+#  http://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
 RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
-	packagekit? ( app-admin/packagekit-base )"
+	packagekit? ( app-admin/packagekit-base )
+	X? ( !<x11-base/xorg-server-1.11.4 )"
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
 strip_builddir() {
@@ -98,6 +106,9 @@ src_prepare() {
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=65410
 	epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
+
+	# Apparently needed for new libxkbcommon headers; bug #408131
+	epatch "${FILESDIR}/${PN}-3.3.20-wayland-xkbcommon-headers.patch"
 
 	# Non-working test in gentoo's env
 	sed 's:\(g_test_add_func ("/ui-tests/keys-events.*\):/*\1*/:g' \
@@ -129,21 +140,22 @@ src_prepare() {
 }
 
 src_configure() {
-	local myconf="$(use_enable doc gtk-doc)
-		$(use_enable xinerama)
-		$(use_enable packagekit)
-		$(use_enable cups cups auto)
+	local myconf="$(use_enable aqua quartz-backend)
 		$(use_enable colord)
+		$(use_enable cups cups auto)
+		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
+		$(use_enable packagekit)
+		$(use_enable wayland wayland-backend)
+		$(use_enable X x11-backend)
+		$(use_enable X xcomposite)
+		$(use_enable X xdamage)
+		$(use_enable X xfixes)
+		$(use_enable X xkb)
+		$(use_enable X xrandr)
+		$(use_enable xinerama)
 		--disable-papi
 		--enable-gtk2-dependency"
-
-	# XXX: Maybe with multi-backend we should enable x11 all the time?
-	if use aqua; then
-		myconf="${myconf} --enable-quartz-backend"
-	else
-		myconf="${myconf} --enable-x11-backend"
-	fi
 
 	# Passing --disable-debug is not recommended for production use
 	use debug && myconf="${myconf} --enable-debug=yes"

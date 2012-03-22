@@ -25,7 +25,7 @@ fi
 IUSE="debug doc glade +introspection"
 
 PDEPEND="x11-libs/gnome-pty-helper"
-RDEPEND=">=dev-libs/glib-2.26:2
+RDEPEND=">=dev-libs/glib-2.31.13:2
 	>=x11-libs/gtk+-3.1.9:3[introspection?]
 	>=x11-libs/pango-1.22.0
 
@@ -57,9 +57,6 @@ pkg_setup() {
 src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=663779
 	epatch "${FILESDIR}/${PN}-0.30.1-alt-meta.patch"
-
-	# Fix scrolling with gtk+-3.3.18, in next release
-	epatch "${FILESDIR}/${P}-gdk_scroll_mask.patch"
 
 	gnome2_src_prepare
 }

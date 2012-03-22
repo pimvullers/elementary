@@ -18,7 +18,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="LGPL-2"
 SLOT="2"
-IUSE="debug doc fam selinux +static-libs systemtap test utils xattr"
+IUSE="debug doc fam selinux static-libs systemtap test utils xattr"
 if [[ ${PV} = 9999 ]]; then
 	KEYWORDS=""
 else
@@ -116,7 +116,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-2.31.x-external-gdbus-codegen.patch"
 
 	# disable pyc compiling
-	ln -sfn $(type -P true) py-compile
+	use test && python_clean_py-compile_files
 
 	# Needed for the punt-python-check patch, disabling timeout test
 	# Also needed to prevent croscompile failures, see bug #267603
