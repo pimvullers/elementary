@@ -75,9 +75,10 @@ DEPEND="${COMMON_DEPEND}
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )"
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
+# gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
 RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gail-1000
-	!<x11-libs/vte-0.30.1-r1:2.90
+	!<x11-libs/vte-0.31.0:2.90
 	packagekit? ( app-admin/packagekit-base )"
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
@@ -94,6 +95,9 @@ src_prepare() {
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
+
+	# https://bugzilla.gnome.org/show_bug.cgi?id=65410
+	epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
 
 	# Non-working test in gentoo's env
 	sed 's:\(g_test_add_func ("/ui-tests/keys-events.*\):/*\1*/:g' \

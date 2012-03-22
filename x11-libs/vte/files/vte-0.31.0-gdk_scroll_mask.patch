@@ -1,0 +1,20 @@
+commit f4db3875fd08d246bf337d048845bd9b54c325f8
+Author: Gert Michael Kulyk <gkulyk@klio>
+Date:   Sun Mar 4 13:03:53 2012 +0100
+
+    Explicitly set GDK_SCROLL_MASK as recent gtk+ versions require it for scrolling to work
+    
+    Bug #671305.
+
+diff --git a/src/vte.c b/src/vte.c
+index 271309e..f99fc00 100644
+--- a/src/vte.c
++++ b/src/vte.c
+@@ -9075,6 +9075,7 @@ vte_terminal_realize(GtkWidget *widget)
+ 				GDK_EXPOSURE_MASK |
+ 				GDK_VISIBILITY_NOTIFY_MASK |
+ 				GDK_FOCUS_CHANGE_MASK |
++				GDK_SCROLL_MASK |
+ 				GDK_BUTTON_PRESS_MASK |
+ 				GDK_BUTTON_RELEASE_MASK |
+ 				GDK_POINTER_MOTION_MASK |
