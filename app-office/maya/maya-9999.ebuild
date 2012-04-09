@@ -13,13 +13,15 @@ EBZR_REPO_URI="lp:maya"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="debug nls"
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee
 	dev-libs/libical
+	gnome-base/gconf:2
 	>=gnome-extra/evolution-data-server-3.2
+	net-libs/libsoup:2.4
     x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
