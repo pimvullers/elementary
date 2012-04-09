@@ -8,7 +8,7 @@ inherit base bzr
 
 DESCRIPTION="A set of wallpapers used by the elementary OS"
 HOMEPAGE="http://www.elementaryos.org"
-SRC_URI="http://www.vullerscode.nl/elementary/distfiles/${P}.tar.bz2"
+SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
 EBZR_REPO_URI="lp:~elementary-design/+junk/elementarywalls"
 
 LICENSE="CCPL-Attribution-2.0"
