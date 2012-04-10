@@ -8,7 +8,7 @@ inherit gnome2-utils autotools-utils
 
 DESCRIPTION="The Power Indicator"
 HOMEPAGE="http://launchpad.net/indicator-power"
-SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/2.0/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,13 +26,13 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-src_prepare() {
-	local PATCHES=(
-		"${FILESDIR}/${P}-out-of-source-build.patch"
-	)
-
-	autotools-utils_src_prepare
-}
+#src_prepare() {
+#	local PATCHES=(
+#		"${FILESDIR}/${PN}-0.10-out-of-source-build.patch"
+#	)
+#
+#	autotools-utils_src_prepare
+#}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
