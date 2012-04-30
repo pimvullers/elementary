@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit gnome2-utils waf-utils git-2
+inherit gnome2-utils cmake-utils git-2
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="http://redmine.yorba.org/projects/geary/wiki"
@@ -16,12 +16,12 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
-	dev-db/sqlheavy:0.2
+	>=dev-db/sqlheavy-0.1.1:0.1
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/libgee
 	dev-libs/libunique:3
-	dev-libs/gmime:2.4
+	dev-libs/gmime:2.6
 	gnome-base/libgnome-keyring
 	net-libs/webkit-gtk:3
 	x11-libs/gtk+:3"
@@ -33,15 +33,13 @@ pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)
 }
 
-src_configure() {
-	VALAC="$(type -p valac-0.16)" \
-	GLIB_COMPILE_SCHEMAS="/bin/true" \
-	waf-utils_src_configure
-}
+src_configure() {	
+	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
+		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+	)
 
-src_install() {
-	waf-utils_src_install
-	base_src_install_docs
+	cmake-utils_src_configure
 }
 
 pkg_preinst() {
