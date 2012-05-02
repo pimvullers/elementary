@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit gnome2-utils cmake-utils git-2
+inherit fdo-mime gnome2-utils cmake-utils git-2
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="http://redmine.yorba.org/projects/geary/wiki"
@@ -35,7 +35,9 @@ pkg_setup() {
 
 src_configure() {	
 	local mycmakeargs=(
+		-DDESKTOP_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
+		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 
@@ -43,14 +45,19 @@ src_configure() {
 }
 
 pkg_preinst() {
+	gnome2_icon_savelist
 	gnome2_schemas_savelist
 }
 
 pkg_postinst() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
+	fdo-mime_desktop_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
