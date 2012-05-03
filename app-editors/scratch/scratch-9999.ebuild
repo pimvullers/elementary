@@ -18,10 +18,12 @@ IUSE="debug nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
-	gnome-base/gconf
-	x11-libs/gtk+:3
+	dev-libs/libpeas
+	gnome-base/gconf:2
+	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
-	x11-libs/granite"
+	x11-libs/granite
+	x11-libs/vte:2.90"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
