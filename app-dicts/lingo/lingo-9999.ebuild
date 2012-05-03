@@ -19,8 +19,8 @@ RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/json-glib
-	dev-libs/libgee
-	net-libs/libsoup
+	dev-libs/libgee:0
+	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
@@ -53,6 +53,6 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome2_schemas_update --uninstall
+	gnome2_schemas_update
 }
 
