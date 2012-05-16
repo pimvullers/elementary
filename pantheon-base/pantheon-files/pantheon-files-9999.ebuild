@@ -2,9 +2,9 @@ EAPI=4
 
 inherit gnome2-utils cmake-utils bzr
 
-DESCRIPTION="The sexiest fish in the large sea of file-browsers"
-HOMEPAGE="https://launchpad.net/marlin"
-EBZR_REPO_URI="lp:marlin"
+DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
+HOMEPAGE="https://launchpad.net/pantheon-files"
+EBZR_REPO_URI="lp:pantheon-files"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -30,8 +30,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Disable generation of Gtk+ icon cache, this is handled by this ebuild
-	epatch "${FILESDIR}/${PN}-icons.patch"
+	epatch "${FILESDIR}/fix-983560.patch"
 }
 
 src_configure() {
