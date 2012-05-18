@@ -1,15 +1,19 @@
+# Copyright 1999-2012 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
 EAPI=4
 
-inherit gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils bzr
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/pantheon-files"
 EBZR_REPO_URI="lp:pantheon-files"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="nls plugins"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -20,22 +24,29 @@ RDEPEND="
 	x11-libs/varka
 	x11-libs/gtk+:3
 	x11-libs/libnotify
-	x11-libs/pango"
+	x11-libs/pango
+	!pantheon-base/marlin"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	dev-util/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	DOCS="AUTHORS COPYING ChangeLog NEWS README TODO"
+	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/fix-949962.patch"
 	epatch "${FILESDIR}/fix-983560.patch"
+
+	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
+	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
+		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 
@@ -48,12 +59,16 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 	gnome2_icon_cache_update
-	gnome2_schemas_update --uninstall
+	gnome2_schemas_update
 }
 

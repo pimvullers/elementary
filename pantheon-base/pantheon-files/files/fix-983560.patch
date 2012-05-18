@@ -1,49 +1,556 @@
-=== modified file 'schemas/org.gnome.marlin.gschema.xml'
+=== modified file 'schemas/CMakeLists.txt'
+--- schemas/CMakeLists.txt	2011-08-30 13:04:09 +0000
++++ schemas/CMakeLists.txt	2012-05-18 18:59:41 +0000
+@@ -1,3 +1,3 @@
+ include(GSettings)
+-add_schema("org.gnome.marlin.gschema.xml")
+-add_schema("org.gnome.marlin.plugins.gschema.xml")
++add_schema("org.pantheon.files.gschema.xml")
++add_schema("org.pantheon.files.plugins.gschema.xml")
+
+=== removed file 'schemas/org.gnome.marlin.gschema.xml'
 --- schemas/org.gnome.marlin.gschema.xml	2012-01-19 11:03:51 +0000
-+++ schemas/org.gnome.marlin.gschema.xml	2012-05-15 15:17:18 +0000
-@@ -26,7 +26,7 @@
-     <value value="2" nick="informal"/>
-   </enum>
- 
++++ schemas/org.gnome.marlin.gschema.xml	1970-01-01 00:00:00 +0000
+@@ -1,235 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<schemalist>
+-  <enum id="viewmode">
+-    <value value="0" nick="icon"/>
+-    <value value="1" nick="list"/>
+-    <value value="2" nick="compact"/>
+-    <value value="3" nick="miller_columns"/>
+-  </enum>
+-  <enum id="org.gnome.marlin.ZoomLevel">
+-    <value value="0" nick="smallest"/>
+-    <value value="1" nick="smaller"/>
+-    <value value="2" nick="small"/>
+-    <value value="3" nick="normal"/>
+-    <value value="4" nick="large"/>
+-    <value value="5" nick="larger"/>
+-    <value value="6" nick="largest"/>
+-  </enum>
+-  <enum id="contextviewmode">
+-    <value value="0" nick="horizontal"/>
+-    <value value="1" nick="vertical"/>
+-    <value value="2" nick="auto"/>
+-  </enum>
+-  <enum id="dateformatmode">
+-    <value value="0" nick="iso"/>
+-    <value value="1" nick="locale"/>
+-    <value value="2" nick="informal"/>
+-  </enum>
+-
 -  <schema path="/apps/marlin/preferences/" id="org.gnome.marlin.preferences">
-+  <schema path="/org/pantheon/pantheon-files/preferences/" id="org.gnome.marlin.preferences">
-     <key type="b" name="show-menubar">
-       <default>false</default>
-       <summary>Show the menubar</summary>
-@@ -175,7 +175,7 @@
-     </key>
-   </schema>
- 
+-    <key type="b" name="show-menubar">
+-      <default>false</default>
+-      <summary>Show the menubar</summary>
+-      <description>Show the menubar</description>
+-    </key>
+-    <key type="as" name="plugins-enabled">
+-      <default>[]</default>
+-      <summary>Enabled Plugins</summary>
+-      <description>Enabled Plugins</description>
+-    </key>
+-    <key type="b" name="show-sidebar">
+-      <default>true</default>
+-      <summary>Show the sidebar</summary>
+-      <description>Show the sidebar</description>
+-    </key>
+-    <key type="b" name="show-hiddenfiles">
+-      <default>false</default>
+-      <summary>Show hidden files</summary>
+-      <description>If set to true, hidden files will also be shown (files starting with a "." for example)</description>
+-    </key>
+-    <key type="b" name="start-with-contextview">
+-      <default>false</default>
+-      <summary>Show the context view pane</summary>
+-      <description>Show the context view pane</description>
+-    </key>
+-    <key type="b" name="rgba-colormap">
+-      <default>false</default>
+-      <summary>enable rgba window</summary>
+-      <description>If set to true, rgba will be enabled, you'll need a gtk engine supporting rgba, like murrine. Compiz can have some problems like drawings shadows ...</description>
+-    </key>
+-    <key name="date-format" enum="dateformatmode">
+-      <default>'iso'</default>
+-      <summary>Date Format</summary>
+-      <description>The format of file dates. Possible values are "locale", "iso", and "informal".</description>
+-    </key>
+-    <key type="b" name="single-click">
+-      <default>true</default>
+-      <summary>single click</summary>
+-      <description>Whether items are activated by single clicks instead of dubble clicks</description>
+-    </key>
+-    <key type="i" name="single-click-timeout">
+-      <default>0</default>
+-      <range min="0" max="1000"/>
+-      <summary>single click timeout</summary>
+-      <description>
+-        The amount of time which the item under the mouse cursor will be selected automatically in single click mode. A value of 0 disables the automatic selection.
+-      </description>
+-    </key>
+-    <key type="b" name="dialog-property-modal">
+-      <default>false</default>
+-      <summary>dialog property modal</summary>
+-      <description>If true the property dialog is a modal window</description>
+-    </key>
+-    <key type="b" name="interpret-desktop-files">
+-      <default>true</default>
+-      <summary>interpret desktop files</summary>
+-      <description>If true the desktop files would be interpreted, a desktop file can represent an executable, a directory etc. (their filename, type and some other properties would be the target ones)</description>
+-    </key>
+-    <key name="contextview-orientation" enum="contextviewmode">
+-      <default>'auto'</default>
+-      <summary>Context View Panel orientation</summary>
+-      <description>
+-        Auto Context View Panel orientation means the panel would be horizontal or vertical depending on the size of your window.
+-      </description>
+-    </key>
+-    <key name="default-viewmode" enum="viewmode">
+-      <default>'icon'</default>
+-      <summary>Default viewmode when browsing</summary>
+-      <description>
+-        The default viewmode to be used when opening a new tab or window
+-      </description>
+-    </key>
+-    <key type="b" name="toolbar-primary-css-style">
+-      <default>true</default>
+-      <summary>toolbar css style</summary>
+-      <description>Set the toolbar css style to primary-toolbar.</description>
+-    </key>
+-    <key type="as" name="toolbar-items">
+-      <default>[ 'Back', 'Forward', 'LocationEntry', 'ViewSwitcher']</default>
+-      <summary>List of actions present in the toolbar</summary>
+-      <description>
+-        List of actions present in the toolbar
+-      </description>
+-    </key>
+-    <key type="i" name="sidebar-icon-size">
+-      <default>16</default>
+-      <summary>Size of the icons in the Places sidebar</summary>
+-      <description>
+-        If set to a null or negative value, the default GTK_ICON_SIZE_MENU would be used.
+-      </description>
+-    </key>
+-    <key type="b" name="sidebar-cat-personal-expander">
+-      <default>true</default>
+-      <summary>Categorie personal expander</summary>
+-      <description>Expand/Collapse categorie Personal</description>
+-    </key>
+-    <key type="b" name="sidebar-cat-devices-expander">
+-      <default>true</default>
+-      <summary>Categorie Devices expander</summary>
+-      <description>Expand/Collapse categorie Devices</description>
+-    </key>
+-    <key type="b" name="sidebar-cat-network-expander">
+-      <default>true</default>
+-      <summary>Categorie Network expander</summary>
+-      <description>Expand/Collapse categorie Network</description>
+-    </key>
+-    <key type="b" name="properties-dlg-info">
+-      <default>true</default>
+-      <summary>Properties Info expander</summary>
+-      <description>Expand/collapse Info panel</description>
+-    </key>
+-    <key type="b" name="properties-dlg-permissions">
+-      <default>true</default>
+-      <summary>Properties Permissions expander</summary>
+-      <description>Expand/collapse Permissions panel</description>
+-    </key>
+-    <key type="b" name="properties-dlg-preview">
+-      <default>true</default>
+-      <summary>Properties Preview expander</summary>
+-      <description>Expand/collapse Preview panel</description>
+-    </key>
+-    <key type="s" name="geometry">
+-      <default>''</default>
+-      <summary>The geometry string for a navigation window.</summary>
+-      <description>A string containing the saved geometry and coordinates string for navigation windows.</description>
+-    </key>
+-    <key type="b" name="maximized">
+-      <default>false</default>
+-      <summary>Whether the navigation window should be maximized.</summary>
+-      <description>Whether the navigation window should be maximized by default.</description>
+-    </key>
+-    <key type="i" name="sidebar-width">
+-      <default>148</default>
+-      <summary>Width of the side pane</summary>
+-      <description>The default width of the side pane in new windows.</description>
+-    </key>
+-    <key type="b" name="confirm-trash">
+-      <default>true</default>
+-      <summary>Confirm trash</summary>
+-      <description>Confirm trash</description>
+-    </key>
+-    <key type="s" name="previewer-path">
+-      <default>''</default>
+-      <summary>Path of the previewer.</summary>
+-      <description>Path of the previewer or executable name (if path already definied in PATH environnment variable). If no path is set, then the space bindkey would just activate the selected items instead of previewing them</description>
+-    </key>
+-  </schema>
+-
 -  <schema path="/apps/marlin/icon-view/" id="org.gnome.marlin.icon-view">
-+  <schema path="/org/pantheon/pantheon-files/icon-view/" id="org.gnome.marlin.icon-view">
-     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
-       <default>'normal'</default>
-       <summary>icon default zoom level</summary>
-@@ -188,7 +188,7 @@
-     </key>
-   </schema>
- 
+-    <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'normal'</default>
+-      <summary>icon default zoom level</summary>
+-      <description>Default Zoom level used by the icon view.</description>
+-    </key>
+-    <key name="zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'normal'</default>
+-      <summary>icon zoom level</summary>
+-      <description>Zoom level used by the icon view.</description>
+-    </key>
+-  </schema>
+-
 -  <schema path="/apps/marlin/list-view/" id="org.gnome.marlin.list-view">
-+  <schema path="/org/pantheon/pantheon-files/list-view/" id="org.gnome.marlin.list-view">
-     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
-       <default>'smallest'</default>
-       <summary>icon default zoom level</summary>
-@@ -201,7 +201,7 @@
-     </key>
-   </schema>
- 
+-    <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon default zoom level</summary>
+-      <description>Default Zoom level used by the list view.</description>
+-    </key>
+-    <key name="zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon zoom level</summary>
+-      <description>Zoom level used by the list view.</description>
+-    </key>
+-  </schema>
+-
 -  <schema path="/apps/marlin/compact-view/" id="org.gnome.marlin.compact-view">
-+  <schema path="/org/pantheon/pantheon-files/compact-view/" id="org.gnome.marlin.compact-view">
-     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
-       <default>'smallest'</default>
-       <summary>icon default zoom level</summary>
-@@ -214,7 +214,7 @@
-     </key>
-   </schema>
- 
+-    <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon default zoom level</summary>
+-      <description>Default Zoom level used by the compact view.</description>
+-    </key>
+-    <key name="zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon zoom level</summary>
+-      <description>Zoom level used by the compact view.</description>
+-    </key>
+-  </schema>
+-
 -  <schema path="/apps/marlin/column-view/" id="org.gnome.marlin.column-view">
-+  <schema path="/org/pantheon/pantheon-files/column-view/" id="org.gnome.marlin.column-view">
-     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
-       <default>'smallest'</default>
-       <summary>icon default zoom level</summary>
+-    <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon default zoom level</summary>
+-      <description>Default Zoom level used by the column view.</description>
+-    </key>
+-    <key name="zoom-level" enum="org.gnome.marlin.ZoomLevel">
+-      <default>'smallest'</default>
+-      <summary>icon zoom level</summary>
+-      <description>Zoom level used by the column view.</description>
+-    </key>
+-    <key type="i" name="preferred-column-width">
+-      <default>180</default>
+-      <summary>prefered column width</summary>
+-      <description>The column width preferred by the miller column view.</description>
+-    </key>
+-  </schema>
+-
+-</schemalist>
+
+=== removed file 'schemas/org.gnome.marlin.plugins.gschema.xml'
+--- schemas/org.gnome.marlin.plugins.gschema.xml	2011-08-06 10:54:51 +0000
++++ schemas/org.gnome.marlin.plugins.gschema.xml	1970-01-01 00:00:00 +0000
+@@ -1,11 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<schemalist>
+-  <schema path="/apps/marlin/plugins/openterminal/" id="org.gnome.marlin.plugins.openterminal">
+-    <key type="s" name="default-terminal">
+-      <default>'gnome-terminal --working-directory='</default>
+-      <summary>Terminal</summary>
+-      <description>Terminal</description>
+-    </key>
+-  </schema>
+-
+-</schemalist>
+
+=== added file 'schemas/org.pantheon.files.gschema.xml'
+--- schemas/org.pantheon.files.gschema.xml	1970-01-01 00:00:00 +0000
++++ schemas/org.pantheon.files.gschema.xml	2012-05-18 19:01:15 +0000
+@@ -0,0 +1,235 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<schemalist>
++  <enum id="viewmode">
++    <value value="0" nick="icon"/>
++    <value value="1" nick="list"/>
++    <value value="2" nick="compact"/>
++    <value value="3" nick="miller_columns"/>
++  </enum>
++  <enum id="org.pantheon.files.ZoomLevel">
++    <value value="0" nick="smallest"/>
++    <value value="1" nick="smaller"/>
++    <value value="2" nick="small"/>
++    <value value="3" nick="normal"/>
++    <value value="4" nick="large"/>
++    <value value="5" nick="larger"/>
++    <value value="6" nick="largest"/>
++  </enum>
++  <enum id="contextviewmode">
++    <value value="0" nick="horizontal"/>
++    <value value="1" nick="vertical"/>
++    <value value="2" nick="auto"/>
++  </enum>
++  <enum id="dateformatmode">
++    <value value="0" nick="iso"/>
++    <value value="1" nick="locale"/>
++    <value value="2" nick="informal"/>
++  </enum>
++
++  <schema path="/org/pantheon/pantheon-files/preferences/" id="org.pantheon.files.preferences">
++    <key type="b" name="show-menubar">
++      <default>false</default>
++      <summary>Show the menubar</summary>
++      <description>Show the menubar</description>
++    </key>
++    <key type="as" name="plugins-enabled">
++      <default>[]</default>
++      <summary>Enabled Plugins</summary>
++      <description>Enabled Plugins</description>
++    </key>
++    <key type="b" name="show-sidebar">
++      <default>true</default>
++      <summary>Show the sidebar</summary>
++      <description>Show the sidebar</description>
++    </key>
++    <key type="b" name="show-hiddenfiles">
++      <default>false</default>
++      <summary>Show hidden files</summary>
++      <description>If set to true, hidden files will also be shown (files starting with a "." for example)</description>
++    </key>
++    <key type="b" name="start-with-contextview">
++      <default>false</default>
++      <summary>Show the context view pane</summary>
++      <description>Show the context view pane</description>
++    </key>
++    <key type="b" name="rgba-colormap">
++      <default>false</default>
++      <summary>enable rgba window</summary>
++      <description>If set to true, rgba will be enabled, you'll need a gtk engine supporting rgba, like murrine. Compiz can have some problems like drawings shadows ...</description>
++    </key>
++    <key name="date-format" enum="dateformatmode">
++      <default>'iso'</default>
++      <summary>Date Format</summary>
++      <description>The format of file dates. Possible values are "locale", "iso", and "informal".</description>
++    </key>
++    <key type="b" name="single-click">
++      <default>true</default>
++      <summary>single click</summary>
++      <description>Whether items are activated by single clicks instead of dubble clicks</description>
++    </key>
++    <key type="i" name="single-click-timeout">
++      <default>0</default>
++      <range min="0" max="1000"/>
++      <summary>single click timeout</summary>
++      <description>
++        The amount of time which the item under the mouse cursor will be selected automatically in single click mode. A value of 0 disables the automatic selection.
++      </description>
++    </key>
++    <key type="b" name="dialog-property-modal">
++      <default>false</default>
++      <summary>dialog property modal</summary>
++      <description>If true the property dialog is a modal window</description>
++    </key>
++    <key type="b" name="interpret-desktop-files">
++      <default>true</default>
++      <summary>interpret desktop files</summary>
++      <description>If true the desktop files would be interpreted, a desktop file can represent an executable, a directory etc. (their filename, type and some other properties would be the target ones)</description>
++    </key>
++    <key name="contextview-orientation" enum="contextviewmode">
++      <default>'auto'</default>
++      <summary>Context View Panel orientation</summary>
++      <description>
++        Auto Context View Panel orientation means the panel would be horizontal or vertical depending on the size of your window.
++      </description>
++    </key>
++    <key name="default-viewmode" enum="viewmode">
++      <default>'icon'</default>
++      <summary>Default viewmode when browsing</summary>
++      <description>
++        The default viewmode to be used when opening a new tab or window
++      </description>
++    </key>
++    <key type="b" name="toolbar-primary-css-style">
++      <default>true</default>
++      <summary>toolbar css style</summary>
++      <description>Set the toolbar css style to primary-toolbar.</description>
++    </key>
++    <key type="as" name="toolbar-items">
++      <default>[ 'Back', 'Forward', 'LocationEntry', 'ViewSwitcher']</default>
++      <summary>List of actions present in the toolbar</summary>
++      <description>
++        List of actions present in the toolbar
++      </description>
++    </key>
++    <key type="i" name="sidebar-icon-size">
++      <default>16</default>
++      <summary>Size of the icons in the Places sidebar</summary>
++      <description>
++        If set to a null or negative value, the default GTK_ICON_SIZE_MENU would be used.
++      </description>
++    </key>
++    <key type="b" name="sidebar-cat-personal-expander">
++      <default>true</default>
++      <summary>Categorie personal expander</summary>
++      <description>Expand/Collapse categorie Personal</description>
++    </key>
++    <key type="b" name="sidebar-cat-devices-expander">
++      <default>true</default>
++      <summary>Categorie Devices expander</summary>
++      <description>Expand/Collapse categorie Devices</description>
++    </key>
++    <key type="b" name="sidebar-cat-network-expander">
++      <default>true</default>
++      <summary>Categorie Network expander</summary>
++      <description>Expand/Collapse categorie Network</description>
++    </key>
++    <key type="b" name="properties-dlg-info">
++      <default>true</default>
++      <summary>Properties Info expander</summary>
++      <description>Expand/collapse Info panel</description>
++    </key>
++    <key type="b" name="properties-dlg-permissions">
++      <default>true</default>
++      <summary>Properties Permissions expander</summary>
++      <description>Expand/collapse Permissions panel</description>
++    </key>
++    <key type="b" name="properties-dlg-preview">
++      <default>true</default>
++      <summary>Properties Preview expander</summary>
++      <description>Expand/collapse Preview panel</description>
++    </key>
++    <key type="s" name="geometry">
++      <default>''</default>
++      <summary>The geometry string for a navigation window.</summary>
++      <description>A string containing the saved geometry and coordinates string for navigation windows.</description>
++    </key>
++    <key type="b" name="maximized">
++      <default>false</default>
++      <summary>Whether the navigation window should be maximized.</summary>
++      <description>Whether the navigation window should be maximized by default.</description>
++    </key>
++    <key type="i" name="sidebar-width">
++      <default>148</default>
++      <summary>Width of the side pane</summary>
++      <description>The default width of the side pane in new windows.</description>
++    </key>
++    <key type="b" name="confirm-trash">
++      <default>true</default>
++      <summary>Confirm trash</summary>
++      <description>Confirm trash</description>
++    </key>
++    <key type="s" name="previewer-path">
++      <default>''</default>
++      <summary>Path of the previewer.</summary>
++      <description>Path of the previewer or executable name (if path already definied in PATH environnment variable). If no path is set, then the space bindkey would just activate the selected items instead of previewing them</description>
++    </key>
++  </schema>
++
++  <schema path="/org/pantheon/pantheon-files/icon-view/" id="org.pantheon.files.icon-view">
++    <key name="default-zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'normal'</default>
++      <summary>icon default zoom level</summary>
++      <description>Default Zoom level used by the icon view.</description>
++    </key>
++    <key name="zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'normal'</default>
++      <summary>icon zoom level</summary>
++      <description>Zoom level used by the icon view.</description>
++    </key>
++  </schema>
++
++  <schema path="/org/pantheon/pantheon-files/list-view/" id="org.pantheon.files.list-view">
++    <key name="default-zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon default zoom level</summary>
++      <description>Default Zoom level used by the list view.</description>
++    </key>
++    <key name="zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon zoom level</summary>
++      <description>Zoom level used by the list view.</description>
++    </key>
++  </schema>
++
++  <schema path="/org/pantheon/pantheon-files/compact-view/" id="org.pantheon.files.compact-view">
++    <key name="default-zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon default zoom level</summary>
++      <description>Default Zoom level used by the compact view.</description>
++    </key>
++    <key name="zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon zoom level</summary>
++      <description>Zoom level used by the compact view.</description>
++    </key>
++  </schema>
++
++  <schema path="/org/pantheon/pantheon-files/column-view/" id="org.pantheon.files.column-view">
++    <key name="default-zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon default zoom level</summary>
++      <description>Default Zoom level used by the column view.</description>
++    </key>
++    <key name="zoom-level" enum="org.pantheon.files.ZoomLevel">
++      <default>'smallest'</default>
++      <summary>icon zoom level</summary>
++      <description>Zoom level used by the column view.</description>
++    </key>
++    <key type="i" name="preferred-column-width">
++      <default>180</default>
++      <summary>prefered column width</summary>
++      <description>The column width preferred by the miller column view.</description>
++    </key>
++  </schema>
++
++</schemalist>
+
+=== added file 'schemas/org.pantheon.files.plugins.gschema.xml'
+--- schemas/org.pantheon.files.plugins.gschema.xml	1970-01-01 00:00:00 +0000
++++ schemas/org.pantheon.files.plugins.gschema.xml	2012-05-18 19:00:06 +0000
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<schemalist>
++  <schema path="/org/pantheon/files/plugins/openterminal/" id="org.pantheon.files.plugins.openterminal">
++    <key type="s" name="default-terminal">
++      <default>'gnome-terminal --working-directory='</default>
++      <summary>Terminal</summary>
++      <description>Terminal</description>
++    </key>
++  </schema>
++
++</schemalist>
+
+=== modified file 'src/marlin-application.c'
+--- src/marlin-application.c	2012-05-08 20:16:38 +0000
++++ src/marlin-application.c	2012-05-18 19:02:21 +0000
+@@ -554,11 +554,11 @@
+ init_schemas (void)
+ {
+     /* gsettings parameters */
+-    settings = g_settings_new ("org.gnome.marlin.preferences");
+-    marlin_icon_view_settings = g_settings_new ("org.gnome.marlin.icon-view");
+-    marlin_list_view_settings = g_settings_new ("org.gnome.marlin.list-view");
+-    marlin_compact_view_settings = g_settings_new ("org.gnome.marlin.compact-view");
+-    marlin_column_view_settings = g_settings_new ("org.gnome.marlin.column-view");
++    settings = g_settings_new ("org.pantheon.files.preferences");
++    marlin_icon_view_settings = g_settings_new ("org.pantheon.files.icon-view");
++    marlin_list_view_settings = g_settings_new ("org.pantheon.files.list-view");
++    marlin_compact_view_settings = g_settings_new ("org.pantheon.files.compact-view");
++    marlin_column_view_settings = g_settings_new ("org.pantheon.files.column-view");
+ 
+     /* bind settings with GOFPreferences */
+     g_settings_bind (settings, "show-hiddenfiles", 
+
+=== modified file 'src/tests/marlintests.c'
+--- src/tests/marlintests.c	2011-08-11 10:57:32 +0000
++++ src/tests/marlintests.c	2012-05-18 19:02:58 +0000
+@@ -30,7 +30,7 @@
+     g_thread_init (NULL);
+     gtk_test_init (&argc, &argv);
+ 
+-    settings = g_settings_new ("org.gnome.marlin.preferences");
++    settings = g_settings_new ("org.pantheon.files.preferences");
+     
+     /* FIXME: tags should be initialized. */
+     //tags = marlin_view_tags_new ();
 
