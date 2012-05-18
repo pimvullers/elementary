@@ -20,10 +20,11 @@ RDEPEND="
 	dev-libs/libgee:0
 	<dev-libs/libpeas-1.4
 	gnome-base/gconf:2
+	plugins? ( pantheon-base/marlin )
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
 	x11-libs/granite
-	x11-libs/vte:2.90"
+	plugins? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
