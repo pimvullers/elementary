@@ -24,7 +24,8 @@ RDEPEND="
 	x11-libs/varka
 	x11-libs/gtk+:3
 	x11-libs/libnotify
-	x11-libs/pango"
+	x11-libs/pango
+	!pantheon-base/pantheon-files"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
