@@ -1,0 +1,69 @@
+=== modified file 'core/Settings.vala'
+--- core/Settings.vala	2012-05-03 04:19:07 +0000
++++ core/Settings.vala	2012-05-18 14:01:02 +0000
+@@ -78,11 +78,11 @@
+ 	string music_folder;
+ 	
+ 	public Settings() {
+-		lastfm = new GLib.Settings("apps.beatbox.lastfm");
+-		ui = new GLib.Settings("apps.beatbox.ui");
+-		library = new GLib.Settings("apps.beatbox.library");
+-		equalizer = new GLib.Settings("apps.beatbox.equalizer");
+-		plugins = new GLib.Settings("apps.beatbox.plugins");
++		lastfm = new GLib.Settings("org.pantheon.beatbox.lastfm");
++		ui = new GLib.Settings("org.pantheon.beatbox.ui");
++		library = new GLib.Settings("org.pantheon.beatbox.library");
++		equalizer = new GLib.Settings("org.pantheon.beatbox.equalizer");
++		plugins = new GLib.Settings("org.pantheon.beatbox.plugins");
+ 		
+ 		int_cache = new HashMap<string, int>();
+ 		string_cache = new HashMap<string, string>();
+
+=== renamed file 'schemas/org.elementary.beatbox.gschema.xml' => 'schemas/org.pantheon.beatbox.gschema.xml'
+--- schemas/org.elementary.beatbox.gschema.xml	2012-05-03 04:19:07 +0000
++++ schemas/org.pantheon.beatbox.gschema.xml	2012-05-18 14:01:02 +0000
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <schemalist>
+-  <schema path="/apps/beatbox/lastfm/" id="apps.beatbox.lastfm">
++  <schema path="/org/pantheon/beatbox/lastfm/" id="org.pantheon.beatbox.lastfm">
+     <key type="s" name="session-key">
+       <default>''</default>
+       <summary>Unique session key</summary>
+@@ -8,7 +8,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/beatbox/library/" id="apps.beatbox.library">
++  <schema path="/org/pantheon/beatbox/library/" id="org.pantheon.beatbox.library">
+     <key type="s" name="music-folder">
+       <default>''</default>
+       <summary>Path to music folder</summary>
+@@ -77,7 +77,7 @@
+     <value nick="Left" value="2" />
+   </enum>
+   
+-  <schema path="/apps/beatbox/ui/" id="apps.beatbox.ui">
++  <schema path="/org/pantheon/beatbox/ui/" id="org.pantheon.beatbox.ui">
+     <key type="i" name="window-width">
+       <default>1100</default>
+       <summary>Window width</summary>
+@@ -145,7 +145,7 @@
+     </key>
+   </schema>
+   
+-  <schema path="/apps/beatbox/equalizer/" id="apps.beatbox.equalizer">
++  <schema path="/org/pantheon/beatbox/equalizer/" id="org.pantheon.beatbox.equalizer">
+     <key type="b" name="equalizer-enabled">
+       <default>false</default>
+       <summary>Whether or not the equalizer is enabled</summary>
+@@ -179,7 +179,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/beatbox/plugins/" id="apps.beatbox.plugins">
++  <schema path="/org/pantheon/beatbox/plugins/" id="org.pantheon.beatbox.plugins">
+     <key type="as" name="enabled-plugins">
+       <default>[]</default>
+       <summary>List of enabled plugins</summary>
+

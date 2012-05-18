@@ -6,7 +6,7 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
-DESCRIPTION="A music player written for the elementary project"
+DESCRIPTION="A music player with focus on speed, simplicity and music discovery"
 HOMEPAGE="https://launchpad.net/beat-box"
 EBZR_REPO_URI="lp:beat-box"
 
@@ -24,7 +24,6 @@ RDEPEND="
 	ayatana? ( >=dev-libs/libindicate-0.5.90 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.10 )
 	dev-libs/libxml2:2
-	media-libs/clutter-gtk:1.0
 	media-libs/gstreamer
 	media-libs/gst-plugins-base
 	media-libs/libgpod
@@ -40,6 +39,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+	epatch "${FILESDIR}/fix-983560.patch"
 }
 
 src_configure() {
@@ -58,12 +58,14 @@ pkg_preinst() {
 
 pkg_postinst() {
 	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
