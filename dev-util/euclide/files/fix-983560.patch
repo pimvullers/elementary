@@ -1,0 +1,76 @@
+=== modified file 'CMakeLists.txt'
+--- CMakeLists.txt	2012-03-08 08:36:10 +0000
++++ CMakeLists.txt	2012-05-18 15:06:12 +0000
+@@ -16,7 +16,7 @@
+ 
+ # GSettings Schema
+ include (GSettings)
+-add_schema ("org.gnome.euclide.gschema.xml")
++add_schema ("org.pantheon.euclide.gschema.xml")
+ 
+ # Process subdirectories
+ add_subdirectory(euclidecore)
+
+=== removed file 'org.gnome.euclide.gschema.xml'
+--- org.gnome.euclide.gschema.xml	2012-02-18 12:04:31 +0000
++++ org.gnome.euclide.gschema.xml	1970-01-01 00:00:00 +0000
+@@ -1,45 +0,0 @@
+-<schemalist>
+-	<schema path="/apps/euclide/settings/" id="org.gnome.euclide.settings" gettext-domain="euclide">
+-            <key type="as" name="plugins-enabled">
+-              <default>[]</default>
+-              <summary>Enabled Plugins</summary>
+-              <description>Enabled Plugins</description>
+-            </key>
+-            <key type="s" name="recent-1">
+-              <default>''</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="s" name="recent-2">
+-              <default>''</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="s" name="recent-3">
+-              <default>''</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="s" name="recent-4">
+-              <default>''</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="s" name="recent-5">
+-              <default>''</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="i" name="geometry-w">
+-              <default>600</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="i" name="geometry-h">
+-              <default>600</default>
+-              <summary>Recent file</summary>
+-            </key>
+-            <key type="i" name="tabs-width">
+-              <default>4</default>
+-              <summary>Tabs width</summary>
+-            </key>
+-            <key type="b" name="make-ctest">
+-              <default>true</default>
+-              <summary>Use make check instead of ctest for the unit tests</summary>
+-            </key>
+-	</schema>
+-</schemalist>
+
+=== modified file 'src/main.vala'
+--- src/main.vala	2012-02-23 20:36:56 +0000
++++ src/main.vala	2012-05-18 15:07:26 +0000
+@@ -445,7 +445,7 @@
+ 
+         /* Init stuff */
+ 
+-        euclide_settings = new Settings("org.gnome.euclide.settings");
++        euclide_settings = new Settings("org.pantheon.euclide.settings");
+         main_actions = new Gtk.ActionGroup("MainActionGroup"); /* Actions and UIManager */
+         main_actions.set_translation_domain("euclide");
+         main_actions.add_actions(main_entries, this);
+
