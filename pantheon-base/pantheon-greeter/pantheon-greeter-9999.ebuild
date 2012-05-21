@@ -16,6 +16,7 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
+	dev-libs/libindicator:3
 	x11-misc/lightdm
 	x11-misc/lightdm-webkit-greeter"
 DEPEND=""
