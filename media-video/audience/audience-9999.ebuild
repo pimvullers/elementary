@@ -16,8 +16,11 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
+	media-libs/clutter-gst
+	media-libs/clutter-gtk:1.0
 	>=media-libs/gstreamer-0.10
 	>=media-libs/gst-plugins-base-0.10
+	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
