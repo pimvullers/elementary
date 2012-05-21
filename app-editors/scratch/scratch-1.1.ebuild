@@ -4,49 +4,45 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
-DESCRIPTION="A sleek and fast GTK3 file manager"
-HOMEPAGE="https://launchpad.net/marlin"
-EBZR_REPO_URI="lp:marlin"
+DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
+HOMEPAGE="https://launchpad.net/scratch"
+SRC_URI="https://launchpad.net/${PN}/1.x/${PV}/+download/${P}.tar.gz"
 
-LICENSE="GPL-3;GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="nls plugins"
 
 RDEPEND="
-	dev-db/sqlite:3
-	dev-libs/dbus-glib
-	>=dev-libs/glib-2.29.0:2
-	x11-libs/granite
+	dev-libs/glib:2
 	dev-libs/libgee:0
-	x11-libs/varka
-	x11-libs/gtk+:3
-	x11-libs/libnotify
-	x11-libs/pango
-	!pantheon-base/pantheon-files"
+	<dev-libs/libpeas-1.4
+	gnome-base/gconf:2
+	plugins? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
+	>=x11-libs/gtk+-3.4:3
+	x11-libs/gtksourceview:3.0
+	x11-libs/granite
+	plugins? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
+	DOCS=( COPYING README )
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-949962.patch"
-	epatch "${FILESDIR}/fix-983560.patch"
-
-	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
-	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
+	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
+	use plugins || sed -i -e 's/add_subdirectory(plugins)//' CMakeLists.txt
+	use plugins || sed -i -e 's/;vte-2.90//' CMakeLists.txt
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 

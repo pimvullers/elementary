@@ -32,8 +32,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/fix-983560.patch"
 	# Set a default background
-	sed -f "${FILESDIR}/${PN}-default.sed" -i desktop.Wallpaper.gschema.xml
+	sed -f "${FILESDIR}/${PN}-default.sed" -i org.pantheon.wallpaper.gschema.xml
 }
 
 src_configure() {

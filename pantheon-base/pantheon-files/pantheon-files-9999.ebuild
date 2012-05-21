@@ -6,11 +6,11 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
-DESCRIPTION="A sleek and fast GTK3 file manager"
-HOMEPAGE="https://launchpad.net/marlin"
-EBZR_REPO_URI="lp:marlin"
+DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
+HOMEPAGE="https://launchpad.net/pantheon-files"
+EBZR_REPO_URI="lp:pantheon-files"
 
-LICENSE="GPL-3;GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="nls plugins"
@@ -25,7 +25,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/libnotify
 	x11-libs/pango
-	!pantheon-base/pantheon-files"
+	!pantheon-base/marlin"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
@@ -36,9 +36,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-949962.patch"
-	epatch "${FILESDIR}/fix-983560.patch"
-
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
 }

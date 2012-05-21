@@ -4,9 +4,9 @@
 
 EAPI=4
 
-inherit bzr
+inherit cmake-utils bzr
 
-DESCRIPTION="Pantheon Login Screen for the LightDM Webkit Greeter"
+DESCRIPTION="Pantheon Login Screen for LightDM"
 HOMEPAGE="https://launchpad.net/pantheon-greeter"
 EBZR_REPO_URI="lp:pantheon-greeter"
 
@@ -15,25 +15,19 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-RDEPEND="
+DEPEND="
 	dev-libs/libindicator:3
-	x11-misc/lightdm
-	x11-misc/lightdm-webkit-greeter"
-DEPEND=""
+	media-libs/clutter-gtk:1.0
+	x11-libs/granite
+	x11-libs/gtk+:3
+	x11-misc/lightdm"
+RDEPEND="${DEPEND}"
 
-src_install() {
-	insinto /usr/share/lightdm-webkit/themes/
-	doins -r pantheon
+src_configure() {
+	local mycmakeargs=(
+		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+	)
 
-	insinto /etc/lightdm/
-	doins "${FILESDIR}"/lightdm-webkit-greeter.conf
+	cmake-utils_src_configure
 }
-
-#pkg_postinst() {
-#	einfo "For the LightDM Webkit greeter to use the Pantheon theme you will need to set"
-#	einfo ""
-#	einfo "  webkit-theme=pantheon"
-#	einfo ""
-#	einfo "in the [greeter] section of /etc/lightdm/lightdm-webkit-greeter.conf"
-#}
 

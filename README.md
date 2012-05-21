@@ -1,4 +1,12 @@
-To install this overlay using Layman (app-portage/layman, http://layman.sourceforge.net) run the following commands:
+To install this overlay using Layman (app-portage/layman, http://layman.sourceforge.net) run the following command:
 
-    layman -f -o https://raw.github.com/pimvullers/elementary/master/profiles/repositories.xml
-    layman -a elementary -o https://raw.github.com/pimvullers/elementary/master/profiles/repositories.xml
+    layman -a elementary
+
+Updating is easy, just run:
+
+    layman -s elementary
+
+or (to update all overlays managed by layman):
+
+    layman -S
+

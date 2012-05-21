@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,22 +6,25 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
-DESCRIPTION="Simple text editor adhering to the Elementary HIG"
+DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/scratch"
 EBZR_REPO_URI="lp:scratch"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="debug nls"
+IUSE="nls plugins"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
-	gnome-base/gconf
-	x11-libs/gtk+:3
+	<dev-libs/libpeas-1.4
+	gnome-base/gconf:2
+	plugins? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
+	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
-	x11-libs/granite"
+	x11-libs/granite
+	plugins? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
@@ -29,6 +32,12 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	DOCS=( COPYING README )
+}
+
+src_prepare() {
+	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
+	use plugins || sed -i -e 's/add_subdirectory(plugins)//' CMakeLists.txt
+	use plugins || sed -i -e 's/;vte-2.90//' CMakeLists.txt
 }
 
 src_configure() {

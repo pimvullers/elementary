@@ -6,9 +6,9 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
-DESCRIPTION="A music player with focus on speed, simplicity and music discovery"
-HOMEPAGE="https://launchpad.net/beat-box"
-EBZR_REPO_URI="lp:beat-box"
+DESCRIPTION="Noise is the official audio player of elementary OS"
+HOMEPAGE="https://launchpad.net/noise"
+EBZR_REPO_URI="lp:noise"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -39,7 +39,8 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
-	epatch "${FILESDIR}/fix-983560.patch"
+
+	sed -i 's/install (CODE "execute_process(COMMAND gtk-update-icon-cache/#install (CODE "execute_process(COMMAND gtk-update-icon-cache/' images/CMakeLists.txt
 }
 
 src_configure() {
