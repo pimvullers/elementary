@@ -1,6 +1,6 @@
 EAPI=4
 
-inherit cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
@@ -35,10 +35,23 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
+		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_icon_savelist
+}
+
+pkg_postinst() {
+	gnome2_icon_cache_update
+}
+
+pkg_postrm() {
+	gnome2_icon_cache_update
 }
 
