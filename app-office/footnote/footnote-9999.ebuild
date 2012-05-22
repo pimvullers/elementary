@@ -26,10 +26,6 @@ DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig"
 
-src_prepare() {
-	epatch "${FILESDIR}/fix-983560.patch"
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
@@ -40,18 +36,21 @@ src_configure() {
 }
 
 pkg_preinst() {
+	gnome2_icon_savelist
 	gnome2_schemas_savelist
 }
 
 pkg_postinst() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
 	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update --uninstall
 }
 
