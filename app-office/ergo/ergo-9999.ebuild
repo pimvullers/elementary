@@ -28,8 +28,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Disable compilation of GSettings schemas, this is handled by this ebuild
-	epatch "${FILESDIR}/${PN}-0.1-cmake-gsettings-module.patch"
 	epatch "${FILESDIR}/fix-983560.patch"
 }
 
