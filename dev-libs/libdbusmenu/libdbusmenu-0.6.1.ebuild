@@ -31,12 +31,6 @@ pkg_setup() {
 	DOCS=( AUTHORS ChangeLog README )
 }
 
-src_prepare() {
-	# Drop DEPRECATED flags, bug #391103
-	sed -i -e 's:-D[A-Z_]*DISABLE_DEPRECATED:$(NULL):g' \
-		{libdbusmenu-{glib,gtk},tests}/Makefile.{am,in} configure{,.ac} || die
-}
-
 src_configure() {
 	local myeconfargs=(
 		VALA_API_GEN="$(type -p vapigen-0.16)"
