@@ -15,7 +15,8 @@ SLOT="3"
 KEYWORDS="~amd64 ~x86"
 IUSE="static-libs"
 
-RDEPEND=">=dev-libs/glib-2.22
+RDEPEND="
+	dev-libs/glib:2
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig
@@ -23,6 +24,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	sed -i -e 's:-Werror::' {libindicator,tests,tools}/Makefile.{am,in} || die
+
+	eautoreconf
 }
 
 src_configure() {
