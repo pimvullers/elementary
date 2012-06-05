@@ -6,28 +6,22 @@ EAPI=4
 
 inherit autotools-utils
 
-MY_PN=${PN/lib}
-MY_P=${MY_PN}-${PV}
-
 DESCRIPTION="Widgets and other objects used for indicators"
 HOMEPAGE="https://launchpad.net/ido"
-SRC_URI="http://launchpad.net/ido/trunk/${PV}/+download/${MY_P}.tar.gz"
+SRC_URI="http://launchpad.net/ido/0.3/${PV}/+download/ido-${PV}.tar.gz"
 
 LICENSE="LGPL-2.1 LGPL-3"
-SLOT="0"
+SLOT="3"
 KEYWORDS="~amd64"
-IUSE="static-libs"
+IUSE="doc static-libs"
 
-RDEPEND="x11-libs/gtk+:2"
+RDEPEND="
+	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	dev-util/pkgconfig"
 
-S=${WORKDIR}/${MY_P}
-
-DOCS=(AUTHORS)
-
-src_prepare() {
-#	epatch "${FILESDIR}"/${P}-remove-ubuntu.patch
-	sed -i 's/ubuntu_//' src/idoscalemenuitem.c
+pkg_setup() {
+	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
+	S="${WORKDIR}/ido-${PV}"
 }
 
