@@ -26,14 +26,6 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-#src_prepare() {
-#	local PATCHES=(
-#		"${FILESDIR}/${PN}-0.10-out-of-source-build.patch"
-#	)
-#
-#	autotools-utils_src_prepare
-#}
-
 pkg_preinst() {
 	gnome2_schemas_savelist
 }
