@@ -17,11 +17,14 @@ IUSE=""
 
 RDEPEND="
 	dev-db/sqlheavy:0.1
+	>=dev-libs/libindicate-0.6.90:3
 	dev-libs/libxml2
+	dev-libs/libunity
 	net-libs/libsoup
 	net-libs/webkit-gtk:3
 	x11-libs/granite
-    x11-libs/gtk+:3"
+    x11-libs/gtk+:3
+	x11-libs/libnotify"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig"
