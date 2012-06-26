@@ -26,7 +26,7 @@ RDEPEND="
 	net-libs/webkit-gtk:3
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 pkg_setup() {
@@ -38,7 +38,7 @@ src_configure() {
 		-DDESKTOP_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
