@@ -1,0 +1,61 @@
+=== modified file 'schemas/org.gnome.marlin.gschema.xml'
+--- schemas/org.gnome.marlin.gschema.xml	2012-06-12 07:49:19 +0000
++++ schemas/org.gnome.marlin.gschema.xml	2012-06-29 05:01:18 +0000
+@@ -26,7 +26,7 @@
+     <value value="2" nick="informal"/>
+   </enum>
+ 
+-  <schema path="/apps/marlin/preferences/" id="org.gnome.marlin.preferences">
++  <schema path="/org/gnome/marlin/preferences/" id="org.gnome.marlin.preferences">
+     <key type="b" name="auto-theme">
+       <default>false</default>
+       <summary>Auto-theme</summary>
+@@ -173,7 +173,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/marlin/icon-view/" id="org.gnome.marlin.icon-view">
++  <schema path="/org/gnome/marlin/icon-view/" id="org.gnome.marlin.icon-view">
+     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+       <default>'normal'</default>
+       <summary>icon default zoom level</summary>
+@@ -186,7 +186,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/marlin/list-view/" id="org.gnome.marlin.list-view">
++  <schema path="/org/gnome/marlin/list-view/" id="org.gnome.marlin.list-view">
+     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+       <default>'smallest'</default>
+       <summary>icon default zoom level</summary>
+@@ -199,7 +199,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/marlin/compact-view/" id="org.gnome.marlin.compact-view">
++  <schema path="/org/gnome/marlin/compact-view/" id="org.gnome.marlin.compact-view">
+     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+       <default>'smallest'</default>
+       <summary>icon default zoom level</summary>
+@@ -212,7 +212,7 @@
+     </key>
+   </schema>
+ 
+-  <schema path="/apps/marlin/column-view/" id="org.gnome.marlin.column-view">
++  <schema path="/org/gnome/marlin/column-view/" id="org.gnome.marlin.column-view">
+     <key name="default-zoom-level" enum="org.gnome.marlin.ZoomLevel">
+       <default>'smallest'</default>
+       <summary>icon default zoom level</summary>
+
+=== modified file 'schemas/org.gnome.marlin.plugins.gschema.xml' (properties changed: +x to -x)
+--- schemas/org.gnome.marlin.plugins.gschema.xml	2011-08-06 10:54:51 +0000
++++ schemas/org.gnome.marlin.plugins.gschema.xml	2012-06-29 05:01:18 +0000
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <schemalist>
+-  <schema path="/apps/marlin/plugins/openterminal/" id="org.gnome.marlin.plugins.openterminal">
++  <schema path="/org/gnome/marlin/plugins/openterminal/" id="org.gnome.marlin.plugins.openterminal">
+     <key type="s" name="default-terminal">
+       <default>'gnome-terminal --working-directory='</default>
+       <summary>Terminal</summary>
+

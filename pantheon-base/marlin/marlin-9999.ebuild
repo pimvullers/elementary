@@ -36,8 +36,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-949962.patch"
-	epatch "${FILESDIR}/fix-983560.patch"
+	epatch "${FILESDIR}/fix-1019136.patch"
 
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
