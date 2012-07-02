@@ -51,6 +51,6 @@ pkg_postinst() {
 
 pkg_postrm() {
 	fdo-mime_desktop_database_update
-	gnome2_schemas_update --uninstall
+	gnome2_schemas_update
 }
 
