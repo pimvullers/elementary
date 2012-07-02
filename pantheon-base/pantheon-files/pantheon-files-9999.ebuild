@@ -36,8 +36,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-983560.patch"
-
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
 }
