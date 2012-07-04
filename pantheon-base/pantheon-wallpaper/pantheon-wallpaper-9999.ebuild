@@ -32,7 +32,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-983560.patch"
 	# Set a default background
 	sed -f "${FILESDIR}/${PN}-default.sed" -i org.pantheon.wallpaper.gschema.xml
 }
@@ -44,6 +43,13 @@ src_configure() {
 	)
 
 	cmake-utils_src_configure
+}
+
+src_install() {
+	cmake-utils_src_install
+
+	# Contractor already provides a wallpaper contract
+	rm -r "${ED}/usr/share/contractor"
 }
 
 pkg_preinst() {
