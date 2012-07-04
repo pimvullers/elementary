@@ -13,10 +13,12 @@ EBZR_REPO_URI="lp:noise"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="ayatana menu nls zeitgeist"
+IUSE="ayatana menu nls plugins upnp zeitgeist"
+
+REQUIRED_USE="upnp? ( plugins )"
 
 RDEPEND="
-	dev-db/sqlheavy:0.1
+	dev-db/sqlheavy
 	dev-libs/glib:2
 	dev-libs/json-glib
 	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
@@ -28,6 +30,7 @@ RDEPEND="
 	media-libs/gst-plugins-base
 	media-libs/libgpod
 	media-libs/taglib
+	plugins? ( upnp? ( net-libs/gupnp-vala ) )
 	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite
@@ -40,7 +43,8 @@ src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
-	sed -i 's/install (CODE "execute_process(COMMAND gtk-update-icon-cache/#install (CODE "execute_process(COMMAND gtk-update-icon-cache/' images/CMakeLists.txt
+	# Disable building of plugins (if needed)
+	use plugins || sed -i 's/add_subdirectory(plugins)//' CMakeLists.txt
 }
 
 src_configure() {

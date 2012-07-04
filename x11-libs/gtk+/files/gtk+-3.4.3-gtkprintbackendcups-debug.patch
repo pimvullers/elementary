@@ -1,0 +1,25 @@
+From 18db64749fafc78ca4b7a5c9cb5c8ddc2d85d9ac Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Mon, 30 Apr 2012 07:07:33 -0400
+Subject: [PATCH] Fix build with --enable-debug
+
+---
+ modules/printbackends/cups/gtkprintbackendcups.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/modules/printbackends/cups/gtkprintbackendcups.c b/modules/printbackends/cups/gtkprintbackendcups.c
+index b7e008b..cddb6b7 100644
+--- a/modules/printbackends/cups/gtkprintbackendcups.c
++++ b/modules/printbackends/cups/gtkprintbackendcups.c
+@@ -1900,7 +1900,7 @@ cups_create_printer (GtkPrintBackendCups *cups_backend,
+     {
+       cups_printer->ppd_name = g_strdup (resource + 10);
+       GTK_NOTE (PRINTING,
+-		g_print ("CUPS Backend: Setting ppd name '%s' for printer/class '%s'\n", cups_printer->ppd_name, printer_name));
++		g_print ("CUPS Backend: Setting ppd name '%s' for printer/class '%s'\n", cups_printer->ppd_name, info->printer_name));
+     }
+ 
+   gethostname (uri, sizeof (uri));
+-- 
+1.7.8.6
+
