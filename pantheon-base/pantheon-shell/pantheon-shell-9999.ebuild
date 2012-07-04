@@ -16,16 +16,15 @@ KEYWORDS="~amd64"
 IUSE="lightdm"
 
 CDEPEND="
-	lightdm? ( x11-misc/lightdm )"
+	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
 RDEPEND="${CDEPEND}
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
 	pantheon-base/cerbere
-	pantheon-base/pantheon-wallpaper
 	pantheon-base/plank
 	pantheon-base/slingshot
 	pantheon-base/wingpanel
-	x11-wm/compiz-fusion"
+	x11-wm/gala"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
