@@ -39,7 +39,6 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
-	epatch "${FILESDIR}/fix-983560.patch"
 }
 
 src_configure() {
