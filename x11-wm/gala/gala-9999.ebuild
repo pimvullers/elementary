@@ -22,7 +22,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/bamf
 	x11-libs/libXfixes
-	x11-wm/mutter"
+	>=x11-wm/mutter-3.5.3"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	virtual/pkgconfig"
