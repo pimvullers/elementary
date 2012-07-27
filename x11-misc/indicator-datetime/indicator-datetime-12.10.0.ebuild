@@ -8,7 +8,7 @@ inherit gnome2-utils autotools-utils
 
 DESCRIPTION="The Date and Time Indicator - A very, very simple clock"
 HOMEPAGE="https://launchpad.net/indicator-datetime"
-SRC_URI="http://launchpad.net/${PN}/0.4/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/12.10/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -27,6 +27,10 @@ RDEPEND="
 	>=x11-libs/gtk+-3.1.4:3
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
+
+#src_prepare() {
+#	epatch "${FILESDIR}/${P}-elementaryos.patch"
+#}
 
 pkg_preinst() {
 	gnome2_schemas_savelist

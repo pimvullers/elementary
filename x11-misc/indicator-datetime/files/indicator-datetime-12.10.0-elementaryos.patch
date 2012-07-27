@@ -1,0 +1,3116 @@
+diff -Naur indicator-datetime-12.10.0/aclocal.m4 indicator-datetime-precise/aclocal.m4
+--- indicator-datetime-12.10.0/aclocal.m4	2012-07-12 14:28:02.000000000 -0700
++++ indicator-datetime-precise/aclocal.m4	2012-07-26 21:37:36.715709000 -0700
+@@ -1,4 +1,4 @@
+-# generated automatically by aclocal 1.11.5 -*- Autoconf -*-
++# generated automatically by aclocal 1.11.3 -*- Autoconf -*-
+ 
+ # Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+ # 2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software Foundation,
+@@ -14,8 +14,8 @@
+ 
+ m4_ifndef([AC_AUTOCONF_VERSION],
+   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
+-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.69],,
+-[m4_warning([this file was generated for autoconf 2.69.
++m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.68],,
++[m4_warning([this file was generated for autoconf 2.68.
+ You have another version of autoconf.  It may work, but is not guaranteed to.
+ If you have problems, you may need to regenerate the build system entirely.
+ To do so, use the procedure documented by the package, typically `autoreconf'.])])
+@@ -752,7 +752,7 @@
+ [am__api_version='1.11'
+ dnl Some users find AM_AUTOMAKE_VERSION and mistake it for a way to
+ dnl require some minimum version.  Point them to the right macro.
+-m4_if([$1], [1.11.5], [],
++m4_if([$1], [1.11.3], [],
+       [AC_FATAL([Do not call $0, use AM_INIT_AUTOMAKE([$1]).])])dnl
+ ])
+ 
+@@ -768,7 +768,7 @@
+ # Call AM_AUTOMAKE_VERSION and AM_AUTOMAKE_VERSION so they can be traced.
+ # This function is AC_REQUIREd by AM_INIT_AUTOMAKE.
+ AC_DEFUN([AM_SET_CURRENT_AUTOMAKE_VERSION],
+-[AM_AUTOMAKE_VERSION([1.11.5])dnl
++[AM_AUTOMAKE_VERSION([1.11.3])dnl
+ m4_ifndef([AC_AUTOCONF_VERSION],
+   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
+ _AM_AUTOCONF_VERSION(m4_defn([AC_AUTOCONF_VERSION]))])
+diff -Naur indicator-datetime-12.10.0/AUTHORS indicator-datetime-precise/AUTHORS
+--- indicator-datetime-12.10.0/AUTHORS	2012-07-12 14:28:43.000000000 -0700
++++ indicator-datetime-precise/AUTHORS	2012-07-26 21:37:36.715709000 -0700
+@@ -2,7 +2,6 @@
+ 
+  Allan LeSage 
+  Antti Kaijanmäki 
+- Bob Owen 
+  Charles Kerr 
+  David Barth 
+  David Planella 
+diff -Naur indicator-datetime-12.10.0/build-aux/compile indicator-datetime-precise/build-aux/compile
+--- indicator-datetime-12.10.0/build-aux/compile	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/build-aux/compile	2012-07-26 21:37:36.715709000 -0700
+@@ -1,7 +1,7 @@
+ #! /bin/sh
+ # Wrapper for compilers which do not understand '-c -o'.
+ 
+-scriptversion=2012-03-05.13; # UTC
++scriptversion=2012-01-04.17; # UTC
+ 
+ # Copyright (C) 1999, 2000, 2003, 2004, 2005, 2009, 2010, 2012 Free
+ # Software Foundation, Inc.
+@@ -79,48 +79,6 @@
+   esac
+ }
+ 
+-# func_cl_dashL linkdir
+-# Make cl look for libraries in LINKDIR
+-func_cl_dashL ()
+-{
+-  func_file_conv "$1"
+-  if test -z "$lib_path"; then
+-    lib_path=$file
+-  else
+-    lib_path="$lib_path;$file"
+-  fi
+-  linker_opts="$linker_opts -LIBPATH:$file"
+-}
+-
+-# func_cl_dashl library
+-# Do a library search-path lookup for cl
+-func_cl_dashl ()
+-{
+-  lib=$1
+-  found=no
+-  save_IFS=$IFS
+-  IFS=';'
+-  for dir in $lib_path $LIB
+-  do
+-    IFS=$save_IFS
+-    if $shared && test -f "$dir/$lib.dll.lib"; then
+-      found=yes
+-      lib=$dir/$lib.dll.lib
+-      break
+-    fi
+-    if test -f "$dir/$lib.lib"; then
+-      found=yes
+-      lib=$dir/$lib.lib
+-      break
+-    fi
+-  done
+-  IFS=$save_IFS
+-
+-  if test "$found" != yes; then
+-    lib=$lib.lib
+-  fi
+-}
+-
+ # func_cl_wrapper cl arg...
+ # Adjust compile command to suit cl
+ func_cl_wrapper ()
+@@ -151,34 +109,43 @@
+ 	      ;;
+ 	  esac
+ 	  ;;
+-	-I)
+-	  eat=1
+-	  func_file_conv "$2" mingw
+-	  set x "$@" -I"$file"
+-	  shift
+-	  ;;
+ 	-I*)
+ 	  func_file_conv "${1#-I}" mingw
+ 	  set x "$@" -I"$file"
+ 	  shift
+ 	  ;;
+-	-l)
+-	  eat=1
+-	  func_cl_dashl "$2"
+-	  set x "$@" "$lib"
+-	  shift
+-	  ;;
+ 	-l*)
+-	  func_cl_dashl "${1#-l}"
+-	  set x "$@" "$lib"
++	  lib=${1#-l}
++	  found=no
++	  save_IFS=$IFS
++	  IFS=';'
++	  for dir in $lib_path $LIB
++	  do
++	    IFS=$save_IFS
++	    if $shared && test -f "$dir/$lib.dll.lib"; then
++	      found=yes
++	      set x "$@" "$dir/$lib.dll.lib"
++	      break
++	    fi
++	    if test -f "$dir/$lib.lib"; then
++	      found=yes
++	      set x "$@" "$dir/$lib.lib"
++	      break
++	    fi
++	  done
++	  IFS=$save_IFS
++
++	  test "$found" != yes && set x "$@" "$lib.lib"
+ 	  shift
+ 	  ;;
+-	-L)
+-	  eat=1
+-	  func_cl_dashL "$2"
+-	  ;;
+ 	-L*)
+-	  func_cl_dashL "${1#-L}"
++	  func_file_conv "${1#-L}"
++	  if test -z "$lib_path"; then
++	    lib_path=$file
++	  else
++	    lib_path="$lib_path;$file"
++	  fi
++	  linker_opts="$linker_opts -LIBPATH:$file"
+ 	  ;;
+ 	-static)
+ 	  shared=false
+diff -Naur indicator-datetime-12.10.0/build-aux/config.sub indicator-datetime-precise/build-aux/config.sub
+--- indicator-datetime-12.10.0/build-aux/config.sub	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/build-aux/config.sub	2012-07-26 21:37:36.715709000 -0700
+@@ -4,7 +4,7 @@
+ #   2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010,
+ #   2011, 2012 Free Software Foundation, Inc.
+ 
+-timestamp='2012-04-18'
++timestamp='2012-02-10'
+ 
+ # This file is (in principle) common to ALL GNU software.
+ # The presence of a machine in this file suggests that SOME GNU software
+@@ -225,12 +225,6 @@
+ 	-isc*)
+ 		basic_machine=`echo $1 | sed -e 's/86-.*/86-pc/'`
+ 		;;
+-	-lynx*178)
+-		os=-lynxos178
+-		;;
+-	-lynx*5)
+-		os=-lynxos5
+-		;;
+ 	-lynx*)
+ 		os=-lynxos
+ 		;;
+@@ -1543,9 +1537,6 @@
+ 	c4x-* | tic4x-*)
+ 		os=-coff
+ 		;;
+-	hexagon-*)
+-		os=-elf
+-		;;
+ 	tic54x-*)
+ 		os=-coff
+ 		;;
+diff -Naur indicator-datetime-12.10.0/build-aux/depcomp indicator-datetime-precise/build-aux/depcomp
+--- indicator-datetime-12.10.0/build-aux/depcomp	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/build-aux/depcomp	2012-07-26 21:37:36.715709000 -0700
+@@ -1,10 +1,10 @@
+ #! /bin/sh
+ # depcomp - compile a program generating dependencies as side-effects
+ 
+-scriptversion=2012-03-27.16; # UTC
++scriptversion=2011-12-04.11; # UTC
+ 
+ # Copyright (C) 1999, 2000, 2003, 2004, 2005, 2006, 2007, 2009, 2010,
+-# 2011, 2012 Free Software Foundation, Inc.
++# 2011 Free Software Foundation, Inc.
+ 
+ # This program is free software; you can redistribute it and/or modify
+ # it under the terms of the GNU General Public License as published by
+@@ -28,7 +28,7 @@
+ 
+ case $1 in
+   '')
+-     echo "$0: No command.  Try '$0 --help' for more information." 1>&2
++     echo "$0: No command.  Try \`$0 --help' for more information." 1>&2
+      exit 1;
+      ;;
+   -h | --h*)
+@@ -40,8 +40,8 @@
+ 
+ Environment variables:
+   depmode     Dependency tracking mode.
+-  source      Source file read by 'PROGRAMS ARGS'.
+-  object      Object file output by 'PROGRAMS ARGS'.
++  source      Source file read by `PROGRAMS ARGS'.
++  object      Object file output by `PROGRAMS ARGS'.
+   DEPDIR      directory where to store dependencies.
+   depfile     Dependency file to output.
+   tmpdepfile  Temporary file to use when outputting dependencies.
+@@ -57,12 +57,6 @@
+     ;;
+ esac
+ 
+-# A tabulation character.
+-tab='	'
+-# A newline character.
+-nl='
+-'
+-
+ if test -z "$depmode" || test -z "$source" || test -z "$object"; then
+   echo "depcomp: Variables source, object and depmode must be set" 1>&2
+   exit 1
+@@ -108,12 +102,6 @@
+    depmode=msvc7
+ fi
+ 
+-if test "$depmode" = xlc; then
+-   # IBM C/C++ Compilers xlc/xlC can output gcc-like dependency informations.
+-   gccflag=-qmakedep=gcc,-MF
+-   depmode=gcc
+-fi
+-
+ case "$depmode" in
+ gcc3)
+ ## gcc 3 implements dependency tracking that does exactly what
+@@ -168,14 +156,15 @@
+ ## The second -e expression handles DOS-style file names with drive letters.
+   sed -e 's/^[^:]*: / /' \
+       -e 's/^['$alpha']:\/[^:]*: / /' < "$tmpdepfile" >> "$depfile"
+-## This next piece of magic avoids the "deleted header file" problem.
++## This next piece of magic avoids the `deleted header file' problem.
+ ## The problem is that when a header file which appears in a .P file
+ ## is deleted, the dependency causes make to die (because there is
+ ## typically no way to rebuild the header).  We avoid this by adding
+ ## dummy dependencies for each header file.  Too bad gcc doesn't do
+ ## this for us directly.
+-  tr ' ' "$nl" < "$tmpdepfile" |
+-## Some versions of gcc put a space before the ':'.  On the theory
++  tr ' ' '
++' < "$tmpdepfile" |
++## Some versions of gcc put a space before the `:'.  On the theory
+ ## that the space means something, we add a space to the output as
+ ## well.  hp depmode also adds that space, but also prefixes the VPATH
+ ## to the object.  Take care to not repeat it in the output.
+@@ -214,15 +203,18 @@
+     # clever and replace this with sed code, as IRIX sed won't handle
+     # lines with more than a fixed number of characters (4096 in
+     # IRIX 6.2 sed, 8192 in IRIX 6.5).  We also remove comment lines;
+-    # the IRIX cc adds comments like '#:fec' to the end of the
++    # the IRIX cc adds comments like `#:fec' to the end of the
+     # dependency line.
+-    tr ' ' "$nl" < "$tmpdepfile" \
++    tr ' ' '
++' < "$tmpdepfile" \
+     | sed -e 's/^.*\.o://' -e 's/#.*$//' -e '/^$/ d' | \
+-    tr "$nl" ' ' >> "$depfile"
++    tr '
++' ' ' >> "$depfile"
+     echo >> "$depfile"
+ 
+     # The second pass generates a dummy entry for each header file.
+-    tr ' ' "$nl" < "$tmpdepfile" \
++    tr ' ' '
++' < "$tmpdepfile" \
+    | sed -e 's/^.*\.o://' -e 's/#.*$//' -e '/^$/ d' -e 's/$/:/' \
+    >> "$depfile"
+   else
+@@ -234,17 +226,10 @@
+   rm -f "$tmpdepfile"
+   ;;
+ 
+-xlc)
+-  # This case exists only to let depend.m4 do its work.  It works by
+-  # looking at the text of this script.  This case will never be run,
+-  # since it is checked for above.
+-  exit 1
+-  ;;
+-
+ aix)
+   # The C for AIX Compiler uses -M and outputs the dependencies
+   # in a .u file.  In older versions, this file always lives in the
+-  # current directory.  Also, the AIX compiler puts '$object:' at the
++  # current directory.  Also, the AIX compiler puts `$object:' at the
+   # start of each line; $object doesn't have directory information.
+   # Version 6 uses the directory in both cases.
+   dir=`echo "$object" | sed -e 's|/[^/]*$|/|'`
+@@ -274,11 +259,12 @@
+     test -f "$tmpdepfile" && break
+   done
+   if test -f "$tmpdepfile"; then
+-    # Each line is of the form 'foo.o: dependent.h'.
++    # Each line is of the form `foo.o: dependent.h'.
+     # Do two passes, one to just change these to
+-    # '$object: dependent.h' and one to simply 'dependent.h:'.
++    # `$object: dependent.h' and one to simply `dependent.h:'.
+     sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
+-    sed -e 's,^.*\.[a-z]*:['"$tab"' ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
++    # That's a tab and a space in the [].
++    sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
+   else
+     # The sourcefile does not contain any dependencies, so just
+     # store a dummy comment line, to avoid errors with the Makefile
+@@ -289,26 +275,23 @@
+   ;;
+ 
+ icc)
+-  # Intel's C compiler anf tcc (Tiny C Compiler) understand '-MD -MF file'.
+-  # However on
+-  #    $CC -MD -MF foo.d -c -o sub/foo.o sub/foo.c
++  # Intel's C compiler understands `-MD -MF file'.  However on
++  #    icc -MD -MF foo.d -c -o sub/foo.o sub/foo.c
+   # ICC 7.0 will fill foo.d with something like
+   #    foo.o: sub/foo.c
+   #    foo.o: sub/foo.h
+-  # which is wrong.  We want
++  # which is wrong.  We want:
+   #    sub/foo.o: sub/foo.c
+   #    sub/foo.o: sub/foo.h
+   #    sub/foo.c:
+   #    sub/foo.h:
+   # ICC 7.1 will output
+   #    foo.o: sub/foo.c sub/foo.h
+-  # and will wrap long lines using '\':
++  # and will wrap long lines using \ :
+   #    foo.o: sub/foo.c ... \
+   #     sub/foo.h ... \
+   #     ...
+-  # tcc 0.9.26 (FIXME still under development at the moment of writing)
+-  # will emit a similar output, but also prepend the continuation lines
+-  # with horizontal tabulation characters.
++
+   "$@" -MD -MF "$tmpdepfile"
+   stat=$?
+   if test $stat -eq 0; then :
+@@ -317,21 +300,15 @@
+     exit $stat
+   fi
+   rm -f "$depfile"
+-  # Each line is of the form 'foo.o: dependent.h',
+-  # or 'foo.o: dep1.h dep2.h \', or ' dep3.h dep4.h \'.
++  # Each line is of the form `foo.o: dependent.h',
++  # or `foo.o: dep1.h dep2.h \', or ` dep3.h dep4.h \'.
+   # Do two passes, one to just change these to
+-  # '$object: dependent.h' and one to simply 'dependent.h:'.
+-  sed -e "s/^[ $tab][ $tab]*/  /" -e "s,^[^:]*:,$object :," \
+-    < "$tmpdepfile" > "$depfile"
+-  sed '
+-    s/[ '"$tab"'][ '"$tab"']*/ /g
+-    s/^ *//
+-    s/ *\\*$//
+-    s/^[^:]*: *//
+-    /^$/d
+-    /:$/d
+-    s/$/ :/
+-  ' < "$tmpdepfile" >> "$depfile"
++  # `$object: dependent.h' and one to simply `dependent.h:'.
++  sed "s,^[^:]*:,$object :," < "$tmpdepfile" > "$depfile"
++  # Some versions of the HPUX 10.20 sed can't process this invocation
++  # correctly.  Breaking it into two sed invocations is a workaround.
++  sed 's,^[^:]*: \(.*\)$,\1,;s/^\\$//;/^$/d;/:$/d' < "$tmpdepfile" |
++    sed -e 's/$/ :/' >> "$depfile"
+   rm -f "$tmpdepfile"
+   ;;
+ 
+@@ -367,7 +344,7 @@
+   done
+   if test -f "$tmpdepfile"; then
+     sed -e "s,^.*\.[a-z]*:,$object:," "$tmpdepfile" > "$depfile"
+-    # Add 'dependent.h:' lines.
++    # Add `dependent.h:' lines.
+     sed -ne '2,${
+ 	       s/^ *//
+ 	       s/ \\*$//
+@@ -382,9 +359,9 @@
+ 
+ tru64)
+    # The Tru64 compiler uses -MD to generate dependencies as a side
+-   # effect.  'cc -MD -o foo.o ...' puts the dependencies into 'foo.o.d'.
++   # effect.  `cc -MD -o foo.o ...' puts the dependencies into `foo.o.d'.
+    # At least on Alpha/Redhat 6.1, Compaq CCC V6.2-504 seems to put
+-   # dependencies in 'foo.d' instead, so we check for that too.
++   # dependencies in `foo.d' instead, so we check for that too.
+    # Subdirectories are respected.
+    dir=`echo "$object" | sed -e 's|/[^/]*$|/|'`
+    test "x$dir" = "x$object" && dir=
+@@ -430,7 +407,8 @@
+    done
+    if test -f "$tmpdepfile"; then
+       sed -e "s,^.*\.[a-z]*:,$object:," < "$tmpdepfile" > "$depfile"
+-      sed -e 's,^.*\.[a-z]*:['"$tab"' ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
++      # That's a tab and a space in the [].
++      sed -e 's,^.*\.[a-z]*:[	 ]*,,' -e 's,$,:,' < "$tmpdepfile" >> "$depfile"
+    else
+       echo "#dummy" > "$depfile"
+    fi
+@@ -465,11 +443,11 @@
+   p
+ }' | $cygpath_u | sort -u | sed -n '
+ s/ /\\ /g
+-s/\(.*\)/'"$tab"'\1 \\/p
++s/\(.*\)/	\1 \\/p
+ s/.\(.*\) \\/\1:/
+ H
+ $ {
+-  s/.*/'"$tab"'/
++  s/.*/	/
+   G
+   p
+ }' >> "$depfile"
+@@ -500,7 +478,7 @@
+     shift
+   fi
+ 
+-  # Remove '-o $object'.
++  # Remove `-o $object'.
+   IFS=" "
+   for arg
+   do
+@@ -520,14 +498,15 @@
+   done
+ 
+   test -z "$dashmflag" && dashmflag=-M
+-  # Require at least two characters before searching for ':'
++  # Require at least two characters before searching for `:'
+   # in the target name.  This is to cope with DOS-style filenames:
+-  # a dependency such as 'c:/foo/bar' could be seen as target 'c' otherwise.
++  # a dependency such as `c:/foo/bar' could be seen as target `c' otherwise.
+   "$@" $dashmflag |
+-    sed 's:^['"$tab"' ]*[^:'"$tab"' ][^:][^:]*\:['"$tab"' ]*:'"$object"'\: :' > "$tmpdepfile"
++    sed 's:^[  ]*[^: ][^:][^:]*\:[    ]*:'"$object"'\: :' > "$tmpdepfile"
+   rm -f "$depfile"
+   cat < "$tmpdepfile" > "$depfile"
+-  tr ' ' "$nl" < "$tmpdepfile" | \
++  tr ' ' '
++' < "$tmpdepfile" | \
+ ## Some versions of the HPUX 10.20 sed can't process this invocation
+ ## correctly.  Breaking it into two sed invocations is a workaround.
+     sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+@@ -583,7 +562,8 @@
+   # makedepend may prepend the VPATH from the source file name to the object.
+   # No need to regex-escape $object, excess matching of '.' is harmless.
+   sed "s|^.*\($object *:\)|\1|" "$tmpdepfile" > "$depfile"
+-  sed '1,2d' "$tmpdepfile" | tr ' ' "$nl" | \
++  sed '1,2d' "$tmpdepfile" | tr ' ' '
++' | \
+ ## Some versions of the HPUX 10.20 sed can't process this invocation
+ ## correctly.  Breaking it into two sed invocations is a workaround.
+     sed -e 's/^\\$//' -e '/^$/d' -e '/:$/d' | sed -e 's/$/ :/' >> "$depfile"
+@@ -603,7 +583,7 @@
+     shift
+   fi
+ 
+-  # Remove '-o $object'.
++  # Remove `-o $object'.
+   IFS=" "
+   for arg
+   do
+@@ -672,8 +652,8 @@
+   sed -n '/^#line [0-9][0-9]* "\([^"]*\)"/ s::\1:p' | $cygpath_u | sort -u > "$tmpdepfile"
+   rm -f "$depfile"
+   echo "$object : \\" > "$depfile"
+-  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::'"$tab"'\1 \\:p' >> "$depfile"
+-  echo "$tab" >> "$depfile"
++  sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::	\1 \\:p' >> "$depfile"
++  echo "	" >> "$depfile"
+   sed < "$tmpdepfile" -n -e 's% %\\ %g' -e '/^\(.*\)$/ s::\1\::p' >> "$depfile"
+   rm -f "$tmpdepfile"
+   ;;
+diff -Naur indicator-datetime-12.10.0/ChangeLog indicator-datetime-precise/ChangeLog
+--- indicator-datetime-12.10.0/ChangeLog	2012-07-12 14:28:42.000000000 -0700
++++ indicator-datetime-precise/ChangeLog	2012-07-26 21:37:36.715709000 -0700
+@@ -1,96 +1,5 @@
+ # Generated by Makefile. Do not edit.
+ 
+-2012-07-12  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	bump version to 12.10.0
+-
+-2012-07-12  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	cyphermox patch to support EDS 3.6's API
+-
+-2012-06-18  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~bobowen/indicator-datetime/fix-for-749847 to apply an 'en space' between the date string and time string.
+-
+-2012-05-25  Bob Owen  <bobowen@spamcop.net>
+-
+-	* src/utils.c
+-	- generate_format_string_full - Changed space between date and time 
+-	to Unicode en space.  Added using UTF-8 hex encoding (0xE28082) 
+-	to avoid the need to mess with CFLAGS to add std=c99. (LP: #749847)
+-
+-2012-05-21  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~charlesk/indicator-datetime/lp-833325 to have locations follow the sort order specified in https://wiki.ubuntu.com/TimeAndDate
+-
+-2012-05-17  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	Modify the timezone location sorting to follow mpt's design at https://wiki.ubuntu.com/TimeAndDate
+-	
+-	- the auto-detected location, if enabled, is listed before user-specified locations
+-	- Locations in the indicator always mirror the Locations Dialog's ordering
+-	- Added sort-by-name and sort-by-time buttons in the Locations Dialog
+-
+-2012-05-17  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	Add the "Time in auto-detected location" setting described in https://wiki.ubuntu.com/TimeAndDate
+-
+-2012-05-21  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~charlesk/indicator-datetime/unnecessary-saves to fix a bug that caused the location settings to re-saved every time update_times() was called (which is periodically every 2 seconds).
+-
+-2012-05-17  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	fix a bug that caused the location settings to re-saved every time update_times() was called (which is periodically every 2 seconds).
+-
+-2012-05-08  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	raise the minimum gtk version to 3
+-
+-2012-05-08  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	remove AC_ARG_WITH
+-
+-2012-05-07  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	require gtk3
+-
+-2012-04-23  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	sync with lp:indicator-datetime
+-
+-2012-04-23  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~charlesk/indicator-datetime/shush to silence a couple of console warnings when the calendar app is disabled.
+-
+-2012-04-22  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	minor: silence two console warnings when the calendar app is disabled.
+-
+-2012-04-23  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~ted/indicator-datetime/lp773987 to switch the parsing of the lat and long to be non-locale based as it's returned from the webservice in C, we want to parse it using the decimal instead of a comma.
+-
+-2012-04-18  Ted Gould  <ted@gould.cx>
+-
+-	Use the same function here as well, just to ensure we're consistent
+-
+-2012-04-18  Ted Gould  <ted@gould.cx>
+-
+-	Make it so that we parse the long and lat in a locale independent way
+-
+-2012-04-18  Ted Gould  <ted@gould.cx>
+-
+-	Attaching bug
+-
+-2012-04-23  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	merge lp:~charlesk/indicator-datetime/lp-986881 so that indicator_datetime_panel's dispose() method will call the superclass' dispose() method.
+-
+-2012-04-22  Charles Kerr  <charles.kerr@canonical.com>
+-
+-	indicator_datetime_panel's dispose() method needs to chain up to the superclass' dispose() method
+-
+ 2012-04-04  Charles Kerr  <charles.kerr@canonical.com>
+ 
+ 	0.3.94
+diff -Naur indicator-datetime-12.10.0/configure indicator-datetime-precise/configure
+--- indicator-datetime-12.10.0/configure	2012-07-12 14:28:03.000000000 -0700
++++ indicator-datetime-precise/configure	2012-07-26 21:37:36.715709000 -0700
+@@ -1,11 +1,13 @@
+ #! /bin/sh
+ # Guess values for system-dependent variables and create Makefiles.
+-# Generated by GNU Autoconf 2.69 for indicator-datetime 12.10.0.
++# Generated by GNU Autoconf 2.68 for indicator-datetime 0.3.94.
+ #
+ # Report bugs to <http://bugs.launchpad.net/indicator-datetime>.
+ #
+ #
+-# Copyright (C) 1992-1996, 1998-2012 Free Software Foundation, Inc.
++# Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,
++# 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free Software
++# Foundation, Inc.
+ #
+ #
+ # This configure script is free software; the Free Software Foundation
+@@ -136,31 +138,6 @@
+ # CDPATH.
+ (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+ 
+-# Use a proper internal environment variable to ensure we don't fall
+-  # into an infinite loop, continuously re-executing ourselves.
+-  if test x"${_as_can_reexec}" != xno && test "x$CONFIG_SHELL" != x; then
+-    _as_can_reexec=no; export _as_can_reexec;
+-    # We cannot yet assume a decent shell, so we have to provide a
+-# neutralization value for shells without unset; and this also
+-# works around shells that cannot unset nonexistent variables.
+-# Preserve -v and -x to the replacement shell.
+-BASH_ENV=/dev/null
+-ENV=/dev/null
+-(unset BASH_ENV) >/dev/null 2>&1 && unset BASH_ENV ENV
+-case $- in # ((((
+-  *v*x* | *x*v* ) as_opts=-vx ;;
+-  *v* ) as_opts=-v ;;
+-  *x* ) as_opts=-x ;;
+-  * ) as_opts= ;;
+-esac
+-exec $CONFIG_SHELL $as_opts "$as_myself" ${1+"$@"}
+-# Admittedly, this is quite paranoid, since all the known shells bail
+-# out after a failed `exec'.
+-$as_echo "$0: could not re-execute with $CONFIG_SHELL" >&2
+-as_fn_exit 255
+-  fi
+-  # We don't want this to propagate to other subprocesses.
+-          { _as_can_reexec=; unset _as_can_reexec;}
+ if test "x$CONFIG_SHELL" = x; then
+   as_bourne_compatible="if test -n \"\${ZSH_VERSION+set}\" && (emulate sh) >/dev/null 2>&1; then :
+   emulate sh
+@@ -194,8 +171,7 @@
+ else
+   exitcode=1; echo positional parameters were not saved.
+ fi
+-test x\$exitcode = x0 || exit 1
+-test -x / || exit 1"
++test x\$exitcode = x0 || exit 1"
+   as_suggested="  as_lineno_1=";as_suggested=$as_suggested$LINENO;as_suggested=$as_suggested" as_lineno_1a=\$LINENO
+   as_lineno_2=";as_suggested=$as_suggested$LINENO;as_suggested=$as_suggested" as_lineno_2a=\$LINENO
+   eval 'test \"x\$as_lineno_1'\$as_run'\" != \"x\$as_lineno_2'\$as_run'\" &&
+@@ -248,25 +224,21 @@
+ 
+ 
+       if test "x$CONFIG_SHELL" != x; then :
+-  export CONFIG_SHELL
+-             # We cannot yet assume a decent shell, so we have to provide a
+-# neutralization value for shells without unset; and this also
+-# works around shells that cannot unset nonexistent variables.
+-# Preserve -v and -x to the replacement shell.
+-BASH_ENV=/dev/null
+-ENV=/dev/null
+-(unset BASH_ENV) >/dev/null 2>&1 && unset BASH_ENV ENV
+-case $- in # ((((
+-  *v*x* | *x*v* ) as_opts=-vx ;;
+-  *v* ) as_opts=-v ;;
+-  *x* ) as_opts=-x ;;
+-  * ) as_opts= ;;
+-esac
+-exec $CONFIG_SHELL $as_opts "$as_myself" ${1+"$@"}
+-# Admittedly, this is quite paranoid, since all the known shells bail
+-# out after a failed `exec'.
+-$as_echo "$0: could not re-execute with $CONFIG_SHELL" >&2
+-exit 255
++  # We cannot yet assume a decent shell, so we have to provide a
++	# neutralization value for shells without unset; and this also
++	# works around shells that cannot unset nonexistent variables.
++	# Preserve -v and -x to the replacement shell.
++	BASH_ENV=/dev/null
++	ENV=/dev/null
++	(unset BASH_ENV) >/dev/null 2>&1 && unset BASH_ENV ENV
++	export CONFIG_SHELL
++	case $- in # ((((
++	  *v*x* | *x*v* ) as_opts=-vx ;;
++	  *v* ) as_opts=-v ;;
++	  *x* ) as_opts=-x ;;
++	  * ) as_opts= ;;
++	esac
++	exec "$CONFIG_SHELL" $as_opts "$as_myself" ${1+"$@"}
+ fi
+ 
+     if test x$as_have_required = xno; then :
+@@ -369,14 +341,6 @@
+ 
+ 
+ } # as_fn_mkdir_p
+-
+-# as_fn_executable_p FILE
+-# -----------------------
+-# Test if FILE is an executable regular file.
+-as_fn_executable_p ()
+-{
+-  test -f "$1" && test -x "$1"
+-} # as_fn_executable_p
+ # as_fn_append VAR VALUE
+ # ----------------------
+ # Append the text in VALUE to the end of the definition contained in VAR. Take
+@@ -498,10 +462,6 @@
+   chmod +x "$as_me.lineno" ||
+     { $as_echo "$as_me: error: cannot create $as_me.lineno; rerun with a POSIX shell" >&2; as_fn_exit 1; }
+ 
+-  # If we had to re-execute with $CONFIG_SHELL, we're ensured to have
+-  # already done that, so ensure we don't try to do so again and fall
+-  # in an infinite loop.  This has already happened in practice.
+-  _as_can_reexec=no; export _as_can_reexec
+   # Don't try to exec as it changes $[0], causing all sort of problems
+   # (the dirname of $[0] is not the place where we might find the
+   # original and so on.  Autoconf is especially sensitive to this).
+@@ -536,16 +496,16 @@
+     # ... but there are two gotchas:
+     # 1) On MSYS, both `ln -s file dir' and `ln file dir' fail.
+     # 2) DJGPP < 2.04 has no symlinks; `ln -s' creates a wrapper executable.
+-    # In both cases, we have to default to `cp -pR'.
++    # In both cases, we have to default to `cp -p'.
+     ln -s conf$$.file conf$$.dir 2>/dev/null && test ! -f conf$$.exe ||
+-      as_ln_s='cp -pR'
++      as_ln_s='cp -p'
+   elif ln conf$$.file conf$$ 2>/dev/null; then
+     as_ln_s=ln
+   else
+-    as_ln_s='cp -pR'
++    as_ln_s='cp -p'
+   fi
+ else
+-  as_ln_s='cp -pR'
++  as_ln_s='cp -p'
+ fi
+ rm -f conf$$ conf$$.exe conf$$.dir/conf$$.file conf$$.file
+ rmdir conf$$.dir 2>/dev/null
+@@ -557,8 +517,28 @@
+   as_mkdir_p=false
+ fi
+ 
+-as_test_x='test -x'
+-as_executable_p=as_fn_executable_p
++if test -x / >/dev/null 2>&1; then
++  as_test_x='test -x'
++else
++  if ls -dL / >/dev/null 2>&1; then
++    as_ls_L_option=L
++  else
++    as_ls_L_option=
++  fi
++  as_test_x='
++    eval sh -c '\''
++      if test -d "$1"; then
++	test -d "$1/.";
++      else
++	case $1 in #(
++	-*)set "./$1";;
++	esac;
++	case `ls -ld'$as_ls_L_option' "$1" 2>/dev/null` in #((
++	???[sx]*):;;*)false;;esac;fi
++    '\'' sh
++  '
++fi
++as_executable_p=$as_test_x
+ 
+ # Sed expression to map a string onto a valid CPP name.
+ as_tr_cpp="eval sed 'y%*$as_cr_letters%P$as_cr_LETTERS%;s%[^_$as_cr_alnum]%_%g'"
+@@ -592,8 +572,8 @@
+ # Identity of this package.
+ PACKAGE_NAME='indicator-datetime'
+ PACKAGE_TARNAME='indicator-datetime'
+-PACKAGE_VERSION='12.10.0'
+-PACKAGE_STRING='indicator-datetime 12.10.0'
++PACKAGE_VERSION='0.3.94'
++PACKAGE_STRING='indicator-datetime 0.3.94'
+ PACKAGE_BUGREPORT='http://bugs.launchpad.net/indicator-datetime'
+ PACKAGE_URL='http://launchpad.net/indicator-datetime'
+ 
+@@ -851,6 +831,7 @@
+ with_sysroot
+ enable_libtool_lock
+ enable_deprecations
++with_gtk
+ with_ccpanel
+ enable_schemas_compile
+ enable_gcov
+@@ -1332,6 +1313,8 @@
+ if test "x$host_alias" != x; then
+   if test "x$build_alias" = x; then
+     cross_compiling=maybe
++    $as_echo "$as_me: WARNING: if you wanted to set the --build type, don't use --host.
++    If a cross compiler is detected then cross compile mode will be used" >&2
+   elif test "x$build_alias" != "x$host_alias"; then
+     cross_compiling=yes
+   fi
+@@ -1417,7 +1400,7 @@
+   # Omit some internal or obsolete options to make the list less imposing.
+   # This message is too long to be a string in the A/UX 3.1 sh.
+   cat <<_ACEOF
+-\`configure' configures indicator-datetime 12.10.0 to adapt to many kinds of systems.
++\`configure' configures indicator-datetime 0.3.94 to adapt to many kinds of systems.
+ 
+ Usage: $0 [OPTION]... [VAR=VALUE]...
+ 
+@@ -1488,7 +1471,7 @@
+ 
+ if test -n "$ac_init_help"; then
+   case $ac_init_help in
+-     short | recursive ) echo "Configuration of indicator-datetime 12.10.0:";;
++     short | recursive ) echo "Configuration of indicator-datetime 0.3.94:";;
+    esac
+   cat <<\_ACEOF
+ 
+@@ -1523,6 +1506,8 @@
+   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+   --with-sysroot=DIR Search for dependent libraries within DIR
+                         (or the compiler's sysroot if not specified).
++  --with-gtk              Which version of gtk to use for the indicator
++                          [default=3]
+   --with-ccpanel          enable Control Center panel
+ 
+ Some influential environment variables:
+@@ -1620,10 +1605,10 @@
+ test -n "$ac_init_help" && exit $ac_status
+ if $ac_init_version; then
+   cat <<\_ACEOF
+-indicator-datetime configure 12.10.0
+-generated by GNU Autoconf 2.69
++indicator-datetime configure 0.3.94
++generated by GNU Autoconf 2.68
+ 
+-Copyright (C) 2012 Free Software Foundation, Inc.
++Copyright (C) 2010 Free Software Foundation, Inc.
+ This configure script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it.
+ 
+@@ -1780,7 +1765,7 @@
+ 	 test ! -s conftest.err
+        } && test -s conftest$ac_exeext && {
+ 	 test "$cross_compiling" = yes ||
+-	 test -x conftest$ac_exeext
++	 $as_test_x conftest$ac_exeext
+        }; then :
+   ac_retval=0
+ else
+@@ -1991,8 +1976,8 @@
+ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
+ 
+-It was created by indicator-datetime $as_me 12.10.0, which was
+-generated by GNU Autoconf 2.69.  Invocation command line was
++It was created by indicator-datetime $as_me 0.3.94, which was
++generated by GNU Autoconf 2.68.  Invocation command line was
+ 
+   $ $0 $@
+ 
+@@ -2416,7 +2401,7 @@
+     # by default.
+     for ac_prog in ginstall scoinst install; do
+       for ac_exec_ext in '' $ac_executable_extensions; do
+-	if as_fn_executable_p "$as_dir/$ac_prog$ac_exec_ext"; then
++	if { test -f "$as_dir/$ac_prog$ac_exec_ext" && $as_test_x "$as_dir/$ac_prog$ac_exec_ext"; }; then
+ 	  if test $ac_prog = install &&
+ 	    grep dspmsg "$as_dir/$ac_prog$ac_exec_ext" >/dev/null 2>&1; then
+ 	    # AIX install.  It has an incompatible calling convention.
+@@ -2585,7 +2570,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_STRIP="${ac_tool_prefix}strip"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -2625,7 +2610,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_STRIP="strip"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -2676,7 +2661,7 @@
+   test -z "$as_dir" && as_dir=.
+     for ac_prog in mkdir gmkdir; do
+ 	 for ac_exec_ext in '' $ac_executable_extensions; do
+-	   as_fn_executable_p "$as_dir/$ac_prog$ac_exec_ext" || continue
++	   { test -f "$as_dir/$ac_prog$ac_exec_ext" && $as_test_x "$as_dir/$ac_prog$ac_exec_ext"; } || continue
+ 	   case `"$as_dir/$ac_prog$ac_exec_ext" --version 2>&1` in #(
+ 	     'mkdir (GNU coreutils) '* | \
+ 	     'mkdir (coreutils) '* | \
+@@ -2729,7 +2714,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_AWK="$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -2815,7 +2800,7 @@
+ 
+ # Define the identity of the package.
+  PACKAGE='indicator-datetime'
+- VERSION='12.10.0'
++ VERSION='0.3.94'
+ 
+ 
+ cat >>confdefs.h <<_ACEOF
+@@ -2942,7 +2927,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_CC="${ac_tool_prefix}gcc"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -2982,7 +2967,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_CC="gcc"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -3035,7 +3020,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_CC="${ac_tool_prefix}cc"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -3076,7 +3061,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     if test "$as_dir/$ac_word$ac_exec_ext" = "/usr/ucb/cc"; then
+        ac_prog_rejected=yes
+        continue
+@@ -3134,7 +3119,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_CC="$ac_tool_prefix$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -3178,7 +3163,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_CC="$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -3624,7 +3609,8 @@
+ /* end confdefs.h.  */
+ #include <stdarg.h>
+ #include <stdio.h>
+-struct stat;
++#include <sys/types.h>
++#include <sys/stat.h>
+ /* Most of the following tests are stolen from RCS 5.7's src/conf.sh.  */
+ struct buf { int x; };
+ FILE * (*rcsopen) (struct buf *, struct stat *, int);
+@@ -4181,7 +4167,7 @@
+     for ac_prog in grep ggrep; do
+     for ac_exec_ext in '' $ac_executable_extensions; do
+       ac_path_GREP="$as_dir/$ac_prog$ac_exec_ext"
+-      as_fn_executable_p "$ac_path_GREP" || continue
++      { test -f "$ac_path_GREP" && $as_test_x "$ac_path_GREP"; } || continue
+ # Check for GNU ac_path_GREP and select it if it is found.
+   # Check for GNU $ac_path_GREP
+ case `"$ac_path_GREP" --version 2>&1` in
+@@ -4247,7 +4233,7 @@
+     for ac_prog in egrep; do
+     for ac_exec_ext in '' $ac_executable_extensions; do
+       ac_path_EGREP="$as_dir/$ac_prog$ac_exec_ext"
+-      as_fn_executable_p "$ac_path_EGREP" || continue
++      { test -f "$ac_path_EGREP" && $as_test_x "$ac_path_EGREP"; } || continue
+ # Check for GNU ac_path_EGREP and select it if it is found.
+   # Check for GNU $ac_path_EGREP
+ case `"$ac_path_EGREP" --version 2>&1` in
+@@ -4597,7 +4583,7 @@
+     for ac_prog in sed gsed; do
+     for ac_exec_ext in '' $ac_executable_extensions; do
+       ac_path_SED="$as_dir/$ac_prog$ac_exec_ext"
+-      as_fn_executable_p "$ac_path_SED" || continue
++      { test -f "$ac_path_SED" && $as_test_x "$ac_path_SED"; } || continue
+ # Check for GNU ac_path_SED and select it if it is found.
+   # Check for GNU $ac_path_SED
+ case `"$ac_path_SED" --version 2>&1` in
+@@ -4676,7 +4662,7 @@
+     for ac_prog in fgrep; do
+     for ac_exec_ext in '' $ac_executable_extensions; do
+       ac_path_FGREP="$as_dir/$ac_prog$ac_exec_ext"
+-      as_fn_executable_p "$ac_path_FGREP" || continue
++      { test -f "$ac_path_FGREP" && $as_test_x "$ac_path_FGREP"; } || continue
+ # Check for GNU ac_path_FGREP and select it if it is found.
+   # Check for GNU $ac_path_FGREP
+ case `"$ac_path_FGREP" --version 2>&1` in
+@@ -4932,7 +4918,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_DUMPBIN="$ac_tool_prefix$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -4976,7 +4962,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_DUMPBIN="$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5400,7 +5386,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_OBJDUMP="${ac_tool_prefix}objdump"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5440,7 +5426,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_OBJDUMP="objdump"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5746,7 +5732,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_DLLTOOL="${ac_tool_prefix}dlltool"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5786,7 +5772,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_DLLTOOL="dlltool"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5889,7 +5875,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_AR="$ac_tool_prefix$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -5933,7 +5919,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_AR="$ac_prog"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6058,7 +6044,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_STRIP="${ac_tool_prefix}strip"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6098,7 +6084,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_STRIP="strip"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6157,7 +6143,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_RANLIB="${ac_tool_prefix}ranlib"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6197,7 +6183,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_RANLIB="ranlib"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6846,7 +6832,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_MANIFEST_TOOL="${ac_tool_prefix}mt"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6886,7 +6872,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_MANIFEST_TOOL="mt"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -6966,7 +6952,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_DSYMUTIL="${ac_tool_prefix}dsymutil"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7006,7 +6992,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_DSYMUTIL="dsymutil"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7058,7 +7044,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_NMEDIT="${ac_tool_prefix}nmedit"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7098,7 +7084,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_NMEDIT="nmedit"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7150,7 +7136,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_LIPO="${ac_tool_prefix}lipo"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7190,7 +7176,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_LIPO="lipo"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7242,7 +7228,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_OTOOL="${ac_tool_prefix}otool"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7282,7 +7268,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_OTOOL="otool"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7334,7 +7320,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_OTOOL64="${ac_tool_prefix}otool64"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -7374,7 +7360,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_ac_ct_OTOOL64="otool64"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -11703,7 +11689,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_GLIB_MKENUMS="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -11743,7 +11729,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_GLIB_GENMARSHAL="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -11793,7 +11779,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -11836,7 +11822,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -11888,6 +11874,19 @@
+ fi
+ 
+ ###########################
++# GTK+ version option
++###########################
++
++
++# Check whether --with-gtk was given.
++if test "${with_gtk+set}" = set; then :
++  withval=$with_gtk;
++else
++  with_gtk=3
++fi
++
++
++###########################
+ # Dependencies
+ ###########################
+ 
+@@ -11906,6 +11905,7 @@
+ GTK3_REQUIRED_VERSION=3.1.4
+ GCONF_REQUIRED_VERSION=2.31
+ 
++if test "x$with_gtk" = x3; then :
+ 
+ pkg_failed=no
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for INDICATOR" >&5
+@@ -11916,23 +11916,23 @@
+  elif test -n "$PKG_CONFIG"; then
+     if test -n "$PKG_CONFIG" && \
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"indicator3-0.4 >= \$INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= \$GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
++                                  glib-2.0 >= \$GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
+ 		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+@@ -11945,23 +11945,23 @@
+  elif test -n "$PKG_CONFIG"; then
+     if test -n "$PKG_CONFIG" && \
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"indicator3-0.4 >= \$INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= \$GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
++                                  glib-2.0 >= \$GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
+ 		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+@@ -11983,25 +11983,154 @@
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+ 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
+         else
+ 	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$INDICATOR_PKG_ERRORS" >&5
+ 
+ 	as_fn_error $? "Package requirements (indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS) were not met:
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS) were not met:
++
++$INDICATOR_PKG_ERRORS
++
++Consider adjusting the PKG_CONFIG_PATH environment variable if you
++installed software in a non-standard prefix.
++
++Alternatively, you may set the environment variables INDICATOR_CFLAGS
++and INDICATOR_LIBS to avoid the need to call pkg-config.
++See the pkg-config man page for more details." "$LINENO" 5
++elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++is in your PATH or set the PKG_CONFIG environment variable to the full
++path to pkg-config.
++
++Alternatively, you may set the environment variables INDICATOR_CFLAGS
++and INDICATOR_LIBS to avoid the need to call pkg-config.
++See the pkg-config man page for more details.
++
++To get pkg-config, see <http://pkg-config.freedesktop.org/>.
++See \`config.log' for more details" "$LINENO" 5; }
++else
++	INDICATOR_CFLAGS=$pkg_cv_INDICATOR_CFLAGS
++	INDICATOR_LIBS=$pkg_cv_INDICATOR_LIBS
++        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
++$as_echo "yes" >&6; }
++
++fi
++
++elif test "x$with_gtk" = x2; then :
++
++pkg_failed=no
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for INDICATOR" >&5
++$as_echo_n "checking for INDICATOR... " >&6; }
++
++if test -n "$INDICATOR_CFLAGS"; then
++    pkg_cv_INDICATOR_CFLAGS="$INDICATOR_CFLAGS"
++ elif test -n "$PKG_CONFIG"; then
++    if test -n "$PKG_CONFIG" && \
++    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"indicator-0.4 >= \$INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= \$GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
++  ($PKG_CONFIG --exists --print-errors "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
++  ac_status=$?
++  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
++  test $ac_status = 0; }; then
++  pkg_cv_INDICATOR_CFLAGS=`$PKG_CONFIG --cflags "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes
++else
++  pkg_failed=yes
++fi
++ else
++    pkg_failed=untried
++fi
++if test -n "$INDICATOR_LIBS"; then
++    pkg_cv_INDICATOR_LIBS="$INDICATOR_LIBS"
++ elif test -n "$PKG_CONFIG"; then
++    if test -n "$PKG_CONFIG" && \
++    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"indicator-0.4 >= \$INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= \$GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= \$DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= \$DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= \$INDICATOR_DISPLAY_OBJECTS\""; } >&5
++  ($PKG_CONFIG --exists --print-errors "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS") 2>&5
++  ac_status=$?
++  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
++  test $ac_status = 0; }; then
++  pkg_cv_INDICATOR_LIBS=`$PKG_CONFIG --libs "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>/dev/null`
++		      test "x$?" != "x0" && pkg_failed=yes
++else
++  pkg_failed=yes
++fi
++ else
++    pkg_failed=untried
++fi
++
++
++
++if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++
++if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
++        _pkg_short_errors_supported=yes
++else
++        _pkg_short_errors_supported=no
++fi
++        if test $_pkg_short_errors_supported = yes; then
++	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
++        else
++	        INDICATOR_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS" 2>&1`
++        fi
++	# Put the nasty error message in config.log where it belongs
++	echo "$INDICATOR_PKG_ERRORS" >&5
++
++	as_fn_error $? "Package requirements (indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS) were not met:
+ 
+ $INDICATOR_PKG_ERRORS
+ 
+@@ -12034,6 +12163,14 @@
+ 
+ fi
+ 
++else
++  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++as_fn_error $? "Value for --with-gtk was neither 2 nor 3
++See \`config.log' for more details" "$LINENO" 5; }
++
++fi
++
+ 
+ pkg_failed=no
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for SERVICE" >&5
+@@ -12374,14 +12511,14 @@
+  elif test -n "$PKG_CONFIG"; then
+     if test -n "$PKG_CONFIG" && \
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gio-2.0 >= \$GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= \$GTK3_REQUIRED_VERSION\""; } >&5
++                                      gtk+-3.0 >= \$GTK3_REQUIRED_VERSION\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION") 2>&5
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_LIBMAP_CFLAGS=`$PKG_CONFIG --cflags "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>/dev/null`
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>/dev/null`
+ 		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+@@ -12394,14 +12531,14 @@
+  elif test -n "$PKG_CONFIG"; then
+     if test -n "$PKG_CONFIG" && \
+     { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gio-2.0 >= \$GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= \$GTK3_REQUIRED_VERSION\""; } >&5
++                                      gtk+-3.0 >= \$GTK3_REQUIRED_VERSION\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION") 2>&5
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+   pkg_cv_LIBMAP_LIBS=`$PKG_CONFIG --libs "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>/dev/null`
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>/dev/null`
+ 		      test "x$?" != "x0" && pkg_failed=yes
+ else
+   pkg_failed=yes
+@@ -12423,16 +12560,16 @@
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+ 	        LIBMAP_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors --cflags --libs "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>&1`
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>&1`
+         else
+ 	        LIBMAP_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>&1`
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$LIBMAP_PKG_ERRORS" >&5
+ 
+ 	as_fn_error $? "Package requirements (gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION) were not met:
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION) were not met:
+ 
+ $LIBMAP_PKG_ERRORS
+ 
+@@ -12523,7 +12660,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12566,7 +12703,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_ac_pt_PKG_CONFIG="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12639,7 +12776,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_GLIB_COMPILE_SCHEMAS="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12763,7 +12900,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_SHTOOL="shtool"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12810,7 +12947,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_LCOV="lcov"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12847,7 +12984,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_GENHTML="genhtml"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -12934,7 +13071,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_prog_GCOVR="gcovr"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13013,11 +13150,18 @@
+ 	INDICATORICONSDIR="${datadir}/libindicate/icons/"
+ 
+ else
++  if test "x$with_gtk" = "x2"; then :
++
++		INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator-0.4`
++		INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator-0.4`
++
++else
+ 
+-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
+-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
++		INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
++		INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
+ 
+ fi
++fi
+ 
+ 
+ 
+@@ -13115,7 +13259,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_INTLTOOL_UPDATE="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13155,7 +13299,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_INTLTOOL_MERGE="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13195,7 +13339,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_INTLTOOL_EXTRACT="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13379,7 +13523,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_XGETTEXT="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13419,7 +13563,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_MSGMERGE="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13459,7 +13603,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_MSGFMT="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13499,7 +13643,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_GMSGFMT="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -13550,7 +13694,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_INTLTOOL_PERL="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -14160,7 +14304,7 @@
+   IFS=$as_save_IFS
+   test -z "$as_dir" && as_dir=.
+     for ac_exec_ext in '' $ac_executable_extensions; do
+-  if as_fn_executable_p "$as_dir/$ac_word$ac_exec_ext"; then
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
+     ac_cv_path_GMSGFMT="$as_dir/$ac_word$ac_exec_ext"
+     $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
+     break 2
+@@ -14824,16 +14968,16 @@
+     # ... but there are two gotchas:
+     # 1) On MSYS, both `ln -s file dir' and `ln file dir' fail.
+     # 2) DJGPP < 2.04 has no symlinks; `ln -s' creates a wrapper executable.
+-    # In both cases, we have to default to `cp -pR'.
++    # In both cases, we have to default to `cp -p'.
+     ln -s conf$$.file conf$$.dir 2>/dev/null && test ! -f conf$$.exe ||
+-      as_ln_s='cp -pR'
++      as_ln_s='cp -p'
+   elif ln conf$$.file conf$$ 2>/dev/null; then
+     as_ln_s=ln
+   else
+-    as_ln_s='cp -pR'
++    as_ln_s='cp -p'
+   fi
+ else
+-  as_ln_s='cp -pR'
++  as_ln_s='cp -p'
+ fi
+ rm -f conf$$ conf$$.exe conf$$.dir/conf$$.file conf$$.file
+ rmdir conf$$.dir 2>/dev/null
+@@ -14893,16 +15037,28 @@
+   as_mkdir_p=false
+ fi
+ 
+-
+-# as_fn_executable_p FILE
+-# -----------------------
+-# Test if FILE is an executable regular file.
+-as_fn_executable_p ()
+-{
+-  test -f "$1" && test -x "$1"
+-} # as_fn_executable_p
+-as_test_x='test -x'
+-as_executable_p=as_fn_executable_p
++if test -x / >/dev/null 2>&1; then
++  as_test_x='test -x'
++else
++  if ls -dL / >/dev/null 2>&1; then
++    as_ls_L_option=L
++  else
++    as_ls_L_option=
++  fi
++  as_test_x='
++    eval sh -c '\''
++      if test -d "$1"; then
++	test -d "$1/.";
++      else
++	case $1 in #(
++	-*)set "./$1";;
++	esac;
++	case `ls -ld'$as_ls_L_option' "$1" 2>/dev/null` in #((
++	???[sx]*):;;*)false;;esac;fi
++    '\'' sh
++  '
++fi
++as_executable_p=$as_test_x
+ 
+ # Sed expression to map a string onto a valid CPP name.
+ as_tr_cpp="eval sed 'y%*$as_cr_letters%P$as_cr_LETTERS%;s%[^_$as_cr_alnum]%_%g'"
+@@ -14923,8 +15079,8 @@
+ # report actual input values of CONFIG_FILES etc. instead of their
+ # values after options handling.
+ ac_log="
+-This file was extended by indicator-datetime $as_me 12.10.0, which was
+-generated by GNU Autoconf 2.69.  Invocation command line was
++This file was extended by indicator-datetime $as_me 0.3.94, which was
++generated by GNU Autoconf 2.68.  Invocation command line was
+ 
+   CONFIG_FILES    = $CONFIG_FILES
+   CONFIG_HEADERS  = $CONFIG_HEADERS
+@@ -14990,11 +15146,11 @@
+ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ ac_cs_config="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`"
+ ac_cs_version="\\
+-indicator-datetime config.status 12.10.0
+-configured by $0, generated by GNU Autoconf 2.69,
++indicator-datetime config.status 0.3.94
++configured by $0, generated by GNU Autoconf 2.68,
+   with options \\"\$ac_cs_config\\"
+ 
+-Copyright (C) 2012 Free Software Foundation, Inc.
++Copyright (C) 2010 Free Software Foundation, Inc.
+ This config.status script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it."
+ 
+@@ -15085,7 +15241,7 @@
+ _ACEOF
+ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ if \$ac_cs_recheck; then
+-  set X $SHELL '$0' $ac_configure_args \$ac_configure_extra_args --no-create --no-recursion
++  set X '$SHELL' '$0' $ac_configure_args \$ac_configure_extra_args --no-create --no-recursion
+   shift
+   \$as_echo "running CONFIG_SHELL=$SHELL \$*" >&6
+   CONFIG_SHELL='$SHELL'
+diff -Naur indicator-datetime-12.10.0/configure.ac indicator-datetime-precise/configure.ac
+--- indicator-datetime-12.10.0/configure.ac	2012-07-12 14:24:21.000000000 -0700
++++ indicator-datetime-precise/configure.ac	2012-07-26 21:37:36.715709000 -0700
+@@ -1,5 +1,5 @@
+ AC_INIT([indicator-datetime],
+-        [12.10.0],
++        [0.3.94],
+         [http://bugs.launchpad.net/indicator-datetime],
+         [indicator-datetime],
+         [http://launchpad.net/indicator-datetime])
+@@ -43,6 +43,16 @@
+ PKG_PROG_PKG_CONFIG
+ 
+ ###########################
++# GTK+ version option
++###########################
++
++AC_ARG_WITH([gtk],
++  [AS_HELP_STRING([--with-gtk],
++    [Which version of gtk to use for the indicator @<:@default=3@:>@])],
++  [],
++  [with_gtk=3])
++
++###########################
+ # Dependencies
+ ###########################
+ 
+@@ -61,11 +71,22 @@
+ GTK3_REQUIRED_VERSION=3.1.4
+ GCONF_REQUIRED_VERSION=2.31
+ 
+-PKG_CHECK_MODULES(INDICATOR, indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+-                             glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                             dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
+-                             dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
+-                             libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS)
++AS_IF([test "x$with_gtk" = x3],
++    [PKG_CHECK_MODULES(INDICATOR, indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido3-0.1 >= $INDICATOR_DISPLAY_OBJECTS)
++        ],
++      [test "x$with_gtk" = x2],
++    [PKG_CHECK_MODULES(INDICATOR, indicator-0.4 >= $INDICATOR_REQUIRED_VERSION
++                                  glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                  dbusmenu-glib-0.4 >= $DBUSMENUGLIB_REQUIRED_VERSION
++                                  dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION
++                                  libido-0.1 >= $INDICATOR_DISPLAY_OBJECTS)
++        ],
++    [AC_MSG_FAILURE([Value for --with-gtk was neither 2 nor 3])]
++)
+ 
+ PKG_CHECK_MODULES(SERVICE, indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION
+                            glib-2.0 >= $GLIB_REQUIRED_VERSION
+@@ -102,7 +123,7 @@
+    if test x${have_ccpanel} = xyes; then
+       AC_DEFINE(HAVE_CCPANEL, 1, [Define to 1 to enable Control Center panel])
+       PKG_CHECK_MODULES(LIBMAP, gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION)
++                                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION)
+    fi
+    if test x${with_ccpanel} = xyes && test x${have_ccpanel} = xno; then
+      AC_MSG_ERROR([Control Center panel configured but not found])
+@@ -146,10 +167,15 @@
+ 	INDICATORDIR="${libdir}/indicators/2/"
+ 	INDICATORICONSDIR="${datadir}/libindicate/icons/"
+ 	],
+-	[
+-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
+-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
+-	])
++	[AS_IF([test "x$with_gtk" = "x2"],
++		[
++		INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator-0.4`
++		INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator-0.4`
++		],
++		[
++		INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
++		INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
++		])])
+ 
+ AC_SUBST(INDICATORDIR)
+ AC_SUBST(INDICATORICONSDIR)
+diff -Naur indicator-datetime-12.10.0/data/com.canonical.indicator.datetime.gschema.xml indicator-datetime-precise/data/com.canonical.indicator.datetime.gschema.xml
+--- indicator-datetime-12.10.0/data/com.canonical.indicator.datetime.gschema.xml	2012-07-12 14:24:06.000000000 -0700
++++ indicator-datetime-precise/data/com.canonical.indicator.datetime.gschema.xml	2012-07-26 21:37:36.715709000 -0700
+@@ -85,13 +85,6 @@
+ 			  Shows events from Evolution in indicator-datetime's menu.
+ 			</description>
+ 		</key>
+-		<key name="show-auto-detected-location" type="b">
+-			<default>false</default>
+-			<summary>Show the auto-detected location in the indicator</summary>
+-			<description>
+-			  Shows your current location (determined from geoclue and /etc/timezone) in indicator-datetime's menu.
+-			</description>
+-		</key>
+ 		<key name="show-locations" type="b">
+ 			<default>false</default>
+ 			<summary>Show locations in the indicator</summary>
+diff -Naur indicator-datetime-12.10.0/data/datetime-dialog.ui indicator-datetime-precise/data/datetime-dialog.ui
+--- indicator-datetime-12.10.0/data/datetime-dialog.ui	2012-07-12 14:24:06.000000000 -0700
++++ indicator-datetime-precise/data/datetime-dialog.ui	2012-07-26 21:37:36.715709000 -0700
+@@ -28,8 +28,6 @@
+                 <property name="visible">True</property>
+                 <property name="can_focus">True</property>
+                 <property name="model">locationsStore</property>
+-                <property name="headers_visible">False</property>
+-                <property name="headers_clickable">False</property>
+                 <property name="reorderable">True</property>
+                 <property name="search_column">0</property>
+               </object>
+@@ -56,7 +54,6 @@
+           <object class="GtkHBox" id="hbox10">
+             <property name="visible">True</property>
+             <property name="can_focus">False</property>
+-            <property name="spacing">4</property>
+             <child>
+               <object class="GtkButton" id="addButton">
+                 <property name="visible">True</property>
+@@ -107,46 +104,10 @@
+                 <property name="position">1</property>
+               </packing>
+             </child>
+-            <child>
+-              <object class="GtkButton" id="sortByNameButton">
+-                <property name="label" translatable="yes">Sort by _Name</property>
+-                <property name="use_action_appearance">False</property>
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="receives_default">True</property>
+-                <property name="use_action_appearance">False</property>
+-                <property name="use_underline">True</property>
+-                <accelerator key="n" signal="clicked" modifiers="GDK_MOD1_MASK"/>
+-              </object>
+-              <packing>
+-                <property name="expand">False</property>
+-                <property name="fill">False</property>
+-                <property name="padding">6</property>
+-                <property name="position">2</property>
+-              </packing>
+-            </child>
+-            <child>
+-              <object class="GtkButton" id="sortByTimeButton">
+-                <property name="label" translatable="yes">Sort by _Time</property>
+-                <property name="use_action_appearance">False</property>
+-                <property name="visible">True</property>
+-                <property name="can_focus">True</property>
+-                <property name="receives_default">True</property>
+-                <property name="use_action_appearance">False</property>
+-                <property name="use_underline">True</property>
+-                <accelerator key="t" signal="clicked" modifiers="GDK_MOD1_MASK"/>
+-              </object>
+-              <packing>
+-                <property name="expand">False</property>
+-                <property name="fill">False</property>
+-                <property name="position">3</property>
+-              </packing>
+-            </child>
+           </object>
+           <packing>
+             <property name="expand">False</property>
+             <property name="fill">True</property>
+-            <property name="padding">4</property>
+             <property name="position">2</property>
+           </packing>
+         </child>
+@@ -718,23 +679,6 @@
+                           </packing>
+                         </child>
+                         <child>
+-                          <object class="GtkCheckButton" id="showDetectedCheck">
+-                            <property name="label" translatable="yes">Time in _auto-detected location</property>
+-                            <property name="visible">True</property>
+-                            <property name="can_focus">True</property>
+-                            <property name="receives_default">False</property>
+-                            <property name="use_action_appearance">False</property>
+-                            <property name="use_underline">True</property>
+-                            <property name="xalign">0</property>
+-                            <property name="draw_indicator">True</property>
+-                          </object>
+-                          <packing>
+-                            <property name="expand">False</property>
+-                            <property name="fill">True</property>
+-                            <property name="position">4</property>
+-                          </packing>
+-                        </child>
+-                        <child>
+                           <object class="GtkCheckButton" id="showLocationsCheck">
+                             <property name="label" translatable="yes">Time in _other locations</property>
+                             <property name="visible">True</property>
+@@ -775,7 +719,7 @@
+                           <packing>
+                             <property name="expand">True</property>
+                             <property name="fill">True</property>
+-                            <property name="position">6</property>
++                            <property name="position">5</property>
+                           </packing>
+                         </child>
+                       </object>
+diff -Naur indicator-datetime-12.10.0/data/Makefile.in indicator-datetime-precise/data/Makefile.in
+--- indicator-datetime-12.10.0/data/Makefile.in	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/data/Makefile.in	2012-07-26 21:37:36.715709000 -0700
+@@ -1,4 +1,4 @@
+-# Makefile.in generated by automake 1.11.5 from Makefile.am.
++# Makefile.in generated by automake 1.11.3 from Makefile.am.
+ # @configure_input@
+ 
+ # Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+@@ -18,23 +18,6 @@
+ #SUBDIRS = icons
+ 
+ VPATH = @srcdir@
+-am__make_dryrun = \
+-  { \
+-    am__dry=no; \
+-    case $$MAKEFLAGS in \
+-      *\\[\ \	]*) \
+-        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
+-          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
+-      *) \
+-        for am__flg in $$MAKEFLAGS; do \
+-          case $$am__flg in \
+-            *=*|--*) ;; \
+-            *n*) am__dry=yes; break;; \
+-          esac; \
+-        done;; \
+-    esac; \
+-    test $$am__dry = yes; \
+-  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -79,11 +62,6 @@
+ am__v_at_0 = @
+ SOURCES =
+ DIST_SOURCES =
+-am__can_run_installinfo = \
+-  case $$AM_UPDATE_INFO_DIR in \
+-    n|no|NO) false;; \
+-    *) (install-info --version) >/dev/null 2>&1;; \
+-  esac
+ am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
+ am__vpath_adj = case $$p in \
+     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
+@@ -339,11 +317,8 @@
+ 	-rm -rf .libs _libs
+ install-dbus_servicesDATA: $(dbus_services_DATA)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(dbus_servicesdir)" || $(MKDIR_P) "$(DESTDIR)$(dbus_servicesdir)"
+ 	@list='$(dbus_services_DATA)'; test -n "$(dbus_servicesdir)" || list=; \
+-	if test -n "$$list"; then \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(dbus_servicesdir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(dbus_servicesdir)" || exit 1; \
+-	fi; \
+ 	for p in $$list; do \
+ 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+ 	  echo "$$d$$p"; \
+@@ -360,11 +335,8 @@
+ 	dir='$(DESTDIR)$(dbus_servicesdir)'; $(am__uninstall_files_from_dir)
+ install-desktopDATA: $(desktop_DATA)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(desktopdir)" || $(MKDIR_P) "$(DESTDIR)$(desktopdir)"
+ 	@list='$(desktop_DATA)'; test -n "$(desktopdir)" || list=; \
+-	if test -n "$$list"; then \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(desktopdir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(desktopdir)" || exit 1; \
+-	fi; \
+ 	for p in $$list; do \
+ 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+ 	  echo "$$d$$p"; \
+@@ -381,11 +353,8 @@
+ 	dir='$(DESTDIR)$(desktopdir)'; $(am__uninstall_files_from_dir)
+ install-pkgdataDATA: $(pkgdata_DATA)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(pkgdatadir)" || $(MKDIR_P) "$(DESTDIR)$(pkgdatadir)"
+ 	@list='$(pkgdata_DATA)'; test -n "$(pkgdatadir)" || list=; \
+-	if test -n "$$list"; then \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(pkgdatadir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(pkgdatadir)" || exit 1; \
+-	fi; \
+ 	for p in $$list; do \
+ 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+ 	  echo "$$d$$p"; \
+diff -Naur indicator-datetime-12.10.0/Makefile.in indicator-datetime-precise/Makefile.in
+--- indicator-datetime-12.10.0/Makefile.in	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/Makefile.in	2012-07-26 21:37:36.715709000 -0700
+@@ -1,4 +1,4 @@
+-# Makefile.in generated by automake 1.11.5 from Makefile.am.
++# Makefile.in generated by automake 1.11.3 from Makefile.am.
+ # @configure_input@
+ 
+ # Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+@@ -17,23 +17,6 @@
+ 
+ # Coverage targets
+ VPATH = @srcdir@
+-am__make_dryrun = \
+-  { \
+-    am__dry=no; \
+-    case $$MAKEFLAGS in \
+-      *\\[\ \	]*) \
+-        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
+-          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
+-      *) \
+-        for am__flg in $$MAKEFLAGS; do \
+-          case $$am__flg in \
+-            *=*|--*) ;; \
+-            *n*) am__dry=yes; break;; \
+-          esac; \
+-        done;; \
+-    esac; \
+-    test $$am__dry = yes; \
+-  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -89,11 +72,6 @@
+ 	install-pdf-recursive install-ps-recursive install-recursive \
+ 	installcheck-recursive installdirs-recursive pdf-recursive \
+ 	ps-recursive uninstall-recursive
+-am__can_run_installinfo = \
+-  case $$AM_UPDATE_INFO_DIR in \
+-    n|no|NO) false;; \
+-    *) (install-info --version) >/dev/null 2>&1;; \
+-  esac
+ RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+   distclean-recursive maintainer-clean-recursive
+ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+@@ -555,10 +533,13 @@
+ 	done
+ 	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+ 	  if test "$$subdir" = .; then :; else \
+-	    $(am__make_dryrun) \
+-	      || test -d "$(distdir)/$$subdir" \
+-	      || $(MKDIR_P) "$(distdir)/$$subdir" \
+-	      || exit 1; \
++	    test -d "$(distdir)/$$subdir" \
++	    || $(MKDIR_P) "$(distdir)/$$subdir" \
++	    || exit 1; \
++	  fi; \
++	done
++	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
++	  if test "$$subdir" = .; then :; else \
+ 	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+ 	    $(am__relativize); \
+ 	    new_distdir=$$reldir; \
+diff -Naur indicator-datetime-12.10.0/NEWS indicator-datetime-precise/NEWS
+--- indicator-datetime-12.10.0/NEWS	2012-07-12 14:27:43.000000000 -0700
++++ indicator-datetime-precise/NEWS	2012-07-26 21:37:36.715709000 -0700
+@@ -1,15 +0,0 @@
+-12.10.0
+-
+- - Support EDS 3.6's API (cyphermox)
+-
+- - Apply an 'en space' between the date and time strings. (LP #749847)
+-   lp:~bobowen/indicator-datetime/fix-for-749847
+-
+- - Sort locations as spec'ed by https://wiki.ubuntu.com/TimeAndDate (LP #833325)
+-   lp:~charlesk/indicator-datetime/lp-833325
+-
+- - Fix a bug that caused location settings to be re-saved each 2 seconds
+-   lp:~charlesk/indicator-datetime/unnecessary-saves
+-
+- - Drop GTK+ 2 support
+-
+diff -Naur indicator-datetime-12.10.0/src/datetime-prefs.c indicator-datetime-precise/src/datetime-prefs.c
+--- indicator-datetime-12.10.0/src/datetime-prefs.c	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/datetime-prefs.c	2012-07-26 21:37:36.715709000 -0700
+@@ -733,8 +733,6 @@
+                    "active", G_SETTINGS_BIND_DEFAULT);
+   g_settings_bind (conf, SETTINGS_SHOW_EVENTS_S, WIG ("showEventsCheck"),
+                    "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_DETECTED_S, WIG ("showDetectedCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+   g_settings_bind (conf, SETTINGS_SHOW_LOCATIONS_S, WIG ("showLocationsCheck"),
+                    "active", G_SETTINGS_BIND_DEFAULT);
+ 
+@@ -831,8 +829,6 @@
+     gtk_widget_destroy (priv->date_spin);
+     priv->date_spin = NULL;
+   }
+-
+-  G_OBJECT_CLASS (indicator_datetime_panel_parent_class)->dispose (object);
+ }
+ 
+ static void
+diff -Naur indicator-datetime-12.10.0/src/datetime-prefs-locations.c indicator-datetime-precise/src/datetime-prefs-locations.c
+--- indicator-datetime-12.10.0/src/datetime-prefs-locations.c	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/datetime-prefs-locations.c	2012-07-26 21:37:36.715709000 -0700
+@@ -44,138 +44,6 @@
+ static gboolean update_times (GtkWidget * dlg);
+ static void save_when_idle (GtkWidget * dlg);
+ 
+-/***
+-**** Sorting
+-***/
+-
+-/**
+- * A temporary struct used for sorting
+- */
+-struct TimeLocation
+-{
+-  gchar * collated_name;
+-  gint pos;
+-  gint32 offset;
+-};
+-
+-static struct TimeLocation*
+-time_location_new (const char * zone, const char * name, int pos, time_t now)
+-{
+-  struct TimeLocation * loc = g_new (struct TimeLocation, 1);
+-  GTimeZone * tz = g_time_zone_new (zone);
+-  const gint interval = g_time_zone_find_interval (tz, G_TIME_TYPE_UNIVERSAL, now);
+-  loc->offset = g_time_zone_get_offset (tz, interval);
+-  loc->collated_name = g_utf8_collate_key (name, -1);
+-  loc->pos = pos;
+-  g_time_zone_unref (tz);
+-  return loc;
+-}
+-
+-static void
+-time_location_free (struct TimeLocation * loc)
+-{
+-  g_free (loc->collated_name);
+-  g_free (loc);
+-}
+-
+-static GSList*
+-time_location_array_new_from_model (GtkTreeModel * model)
+-{
+-  int pos = 0;
+-  GtkTreeIter iter;
+-  GSList * list = NULL;
+-  const time_t now = time (NULL);
+-
+-  if (gtk_tree_model_get_iter_first (model, &iter)) do
+-    {
+-      gchar * zone = NULL;
+-      gchar * name = NULL;
+-
+-      gtk_tree_model_get (model, &iter,
+-                          COL_ZONE, &zone,
+-                          COL_VISIBLE_NAME, &name,
+-                          -1);
+-      list = g_slist_prepend (list, time_location_new (zone, name, pos++, now));
+-
+-      g_free (name);
+-      g_free (zone);
+-    }
+-  while (gtk_tree_model_iter_next (model, &iter));
+-
+-  return g_slist_reverse (list);
+-}
+-
+-static void
+-handle_sort(GtkWidget * button, GtkTreeView * tree_view, GCompareFunc compare)
+-{
+-  GtkTreeModel * model = gtk_tree_view_get_model (tree_view);
+-  GSList * l;
+-  GSList * list = g_slist_sort (time_location_array_new_from_model(model), compare);
+-
+-  gint i;
+-  gint * reorder = g_new (gint, g_slist_length(list));
+-  for (i=0, l=list; l!=NULL; l=l->next, i++)
+-      reorder[i] = ((struct TimeLocation*)l->data)->pos;
+-  gtk_list_store_reorder (GTK_LIST_STORE(model), reorder);
+-
+-  g_free (reorder);
+-  g_slist_free_full (list, (GDestroyNotify)time_location_free);
+-}
+-
+-static gint
+-time_location_compare_by_name (gconstpointer ga, gconstpointer gb)
+-{
+-  const struct TimeLocation * a = ga;
+-  const struct TimeLocation * b = gb;
+-  int ret = g_strcmp0 (a->collated_name, b->collated_name); /* primary key */
+-  if (!ret)
+-    ret = a->offset - b->offset; /* secondary key */
+-  return ret;
+-}
+-static void
+-handle_sort_by_name (GtkWidget * button, GtkTreeView * tree_view)
+-{
+-  handle_sort (button, tree_view, time_location_compare_by_name);
+-}
+-
+-static gint
+-time_location_compare_by_time (gconstpointer ga, gconstpointer gb)
+-{
+-  const struct TimeLocation * a = ga;
+-  const struct TimeLocation * b = gb;
+-  int ret = a->offset - b->offset; /* primary key */
+-  if (!ret)
+-    ret = g_strcmp0 (a->collated_name, b->collated_name); /* secondary key */
+-  return ret;
+-}
+-static void
+-handle_sort_by_time (GtkWidget * button, GtkTreeView * tree_view)
+-{
+-  handle_sort (button, tree_view, time_location_compare_by_time);
+-}
+-
+-static gboolean
+-time_location_list_test_sorted (GSList * list, GCompareFunc compare)
+-{
+-  GSList * l;
+-  for (l=list; l!=NULL && l->next!=NULL; l=l->next)
+-    if (compare(l->data, l->next->data) > 0)
+-      return FALSE;
+-  return TRUE;
+-}
+-static void
+-location_model_test_sorted (GtkTreeModel * model, gboolean * is_sorted_by_name, gboolean * is_sorted_by_time)
+-{
+-  GSList * list = time_location_array_new_from_model(model);
+-  *is_sorted_by_name = time_location_list_test_sorted (list, time_location_compare_by_name);
+-  *is_sorted_by_time = time_location_list_test_sorted (list, time_location_compare_by_time);
+-  g_slist_free_full (list, (GDestroyNotify)time_location_free);
+-}
+-
+-/***
+-****
+-***/
+-
+ static void
+ handle_add (GtkWidget * button, GtkTreeView * tree)
+ {
+@@ -430,13 +298,9 @@
+         GDateTime * now_tz = g_date_time_to_timezone (now, tz);
+         gchar * format = generate_format_string_at_time (now_tz);
+         gchar * time_str = g_date_time_format (now_tz, format);
+-        gchar * old_time_str;
+ 
+-        gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_TIME, &old_time_str, -1);
+-        if (g_strcmp0 (old_time_str, time_str))
+-          gtk_list_store_set (store, &iter, COL_TIME, time_str, -1);
++        gtk_list_store_set (store, &iter, COL_TIME, time_str, -1);
+ 
+-        g_free (old_time_str);
+         g_free (time_str);
+         g_free (format);
+         g_date_time_unref (now_tz);
+@@ -562,26 +426,6 @@
+   gtk_widget_set_sensitive (remove_button, count > 0);
+ }
+ 
+-static void
+-update_button_sensitivity (GtkWidget * dlg)
+-{
+-  GObject * odlg = G_OBJECT(dlg);
+-  GObject * completion = g_object_get_data(odlg, "completion");
+-  GtkTreeModel * model = GTK_TREE_MODEL (g_object_get_data (completion, "store")); 
+-  gboolean is_sorted_by_name;
+-  gboolean is_sorted_by_time;
+-  location_model_test_sorted (model, &is_sorted_by_name, &is_sorted_by_time);
+-  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByNameButton")), !is_sorted_by_name);
+-  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByTimeButton")), !is_sorted_by_time);
+-}
+-
+-static void
+-model_changed (GtkWidget * dlg)
+-{
+-  update_button_sensitivity (dlg);
+-  save_when_idle (dlg);
+-}
+-
+ GtkWidget *
+ datetime_setup_locations_dialog (CcTimezoneMap * map)
+ {
+@@ -629,7 +473,6 @@
+   g_signal_connect (tree, "query-tooltip", G_CALLBACK (query_tooltip), cell);
+ 
+   cell = gtk_cell_renderer_text_new ();
+-  gtk_cell_renderer_set_alignment (cell, 1.0f, 0.5f);
+   gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree), -1,
+                                                _("Time"), cell,
+                                                "text", COL_TIME, NULL);
+@@ -642,19 +485,12 @@
+   g_signal_connect (WIG ("addButton"), "clicked", G_CALLBACK (handle_add), tree);
+   g_signal_connect (WIG ("removeButton"), "clicked", G_CALLBACK (handle_remove), tree);
+ 
+-  GtkWidget * w = WIG ("sortByNameButton");
+-  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_name), tree);
+-  g_object_set_data (G_OBJECT(dlg), "sortByNameButton", w);
+-
+-  w = WIG ("sortByTimeButton");
+-  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_time), tree);
+-  g_object_set_data (G_OBJECT(dlg), "sortByTimeButton", w);
+-
+   fill_from_settings (store, conf);
+-  g_signal_connect_swapped (store, "row-deleted", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "row-inserted", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "row-changed", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "rows-reordered", G_CALLBACK (model_changed), dlg);
++  g_signal_connect_swapped (store, "row-deleted", G_CALLBACK (save_when_idle), dlg);
++  g_signal_connect_swapped (store, "row-inserted", G_CALLBACK (save_when_idle), dlg);
++  g_signal_connect_swapped (store, "row-changed", G_CALLBACK (save_when_idle), dlg);
++  g_signal_connect_swapped (store, "rows-reordered", G_CALLBACK (save_when_idle), dlg);
++
+   g_object_set_data_full (G_OBJECT (dlg), "conf", g_object_ref (conf), g_object_unref);
+   g_object_set_data_full (G_OBJECT (dlg), "completion", completion, g_object_unref);
+   g_signal_connect (dlg, "destroy", G_CALLBACK (dialog_closed), store);
+diff -Naur indicator-datetime-12.10.0/src/datetime-service.c indicator-datetime-precise/src/datetime-service.c
+--- indicator-datetime-12.10.0/src/datetime-service.c	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/datetime-service.c	2012-07-26 21:37:36.715709000 -0700
+@@ -40,9 +40,11 @@
+ #include <geoclue/geoclue-master-client.h>
+ 
+ #include <time.h>
+-#include <libecal/libecal.h>
++#include <libecal/e-cal.h>
+ #include <libical/ical.h>
+-#include <libedataserver/libedataserver.h>
++#include <libecal/e-cal-time-util.h>
++#include <libedataserver/e-source.h>
++#include <libedataserverui/e-passwords.h>
+ // Other users of ecal seem to also include these, not sure why they should be included by the above
+ #include <libical/icaltime.h>
+ #include <cairo/cairo.h>
+@@ -52,12 +54,6 @@
+ #include "settings-shared.h"
+ #include "utils.h"
+ 
+-#ifdef HAVE_CCPANEL
+- #define SETTINGS_APP_INVOCATION "gnome-control-center indicator-datetime"
+-#else
+- #define SETTINGS_APP_INVOCATION "gnome-control-center datetime"
+-#endif
+-
+ static void geo_create_client (GeoclueMaster * master, GeoclueMasterClient * client, gchar * path, GError * error, gpointer user_data);
+ static gboolean update_appointment_menu_items (gpointer user_data);
+ static void update_location_menu_items (void);
+@@ -113,7 +109,6 @@
+ 	gint32 offset;
+ 	gchar * zone;
+ 	gchar * name;
+-	gboolean visible;
+ };
+ static void
+ time_location_free (struct TimeLocation * loc)
+@@ -123,7 +118,7 @@
+ 	g_free (loc);
+ }
+ static struct TimeLocation*
+-time_location_new (const char * zone, const char * name, gboolean visible, time_t now)
++time_location_new (const char * zone, const char * name, time_t now)
+ {
+ 	struct TimeLocation * loc = g_new (struct TimeLocation, 1);
+ 	GTimeZone * tz = g_time_zone_new (zone);
+@@ -131,7 +126,6 @@
+ 	loc->offset = g_time_zone_get_offset (tz, interval);
+ 	loc->zone = g_strdup (zone);
+ 	loc->name = g_strdup (name);
+-	loc->visible = visible;
+ 	g_time_zone_unref (tz);
+ 	g_debug ("%s zone '%s' name '%s' offset is %d", G_STRLOC, zone, name, (int)loc->offset);
+ 	return loc;
+@@ -139,22 +133,22 @@
+ static int
+ time_location_compare (const struct TimeLocation * a, const struct TimeLocation * b)
+ {
+-	int ret = a->offset - b->offset; /* primary key */
+-	if (!ret)
++	int ret;
++	if (a->offset != b->offset) /* primary key s.t. we can sort by timezone order */
++		ret = a->offset - b->offset;
++	else
+ 		ret = g_strcmp0 (a->name, b->name); /* secondary key */
+-	if (!ret)
+-		ret = a->visible - b->visible; /* tertiary key */
+ 	g_debug ("%s comparing '%s' (%d) to '%s' (%d), returning %d", G_STRLOC, a->name, (int)a->offset, b->name, (int)b->offset, ret);
+ 	return ret;
+ }
+ static GSList*
+-locations_add (GSList * locations, const char * zone, const char * name, gboolean visible, time_t now)
++locations_add (GSList * locations, const char * zone, const char * name, time_t now)
+ {
+-	struct TimeLocation * loc = time_location_new (zone, name, visible, now);
++	struct TimeLocation * loc = time_location_new (zone, name, now);
+ 
+ 	if (g_slist_find_custom (locations, loc, (GCompareFunc)time_location_compare) == NULL) {
+ 		g_debug ("%s Adding zone '%s', name '%s'", G_STRLOC, zone, name);
+-		locations = g_slist_append (locations, loc);
++		locations = g_slist_prepend (locations, loc);
+ 	} else {
+ 		g_debug("%s Skipping duplicate zone '%s' name '%s'", G_STRLOC, zone, name);
+ 		time_location_free (loc);
+@@ -188,17 +182,15 @@
+ 
+ 	/* maybe add geo_timezone */
+ 	if (geo_timezone != NULL) {
+-		const gboolean visible = g_settings_get_boolean (conf, SETTINGS_SHOW_DETECTED_S);
+ 		gchar * name = get_current_zone_name (geo_timezone);
+-		locations = locations_add (locations, geo_timezone, name, visible, now);
++		locations = locations_add (locations, geo_timezone, name, now);
+ 		g_free (name);
+ 	}
+ 
+ 	/* maybe add current_timezone */
+ 	if (current_timezone != NULL) {
+-		const gboolean visible = g_settings_get_boolean (conf, SETTINGS_SHOW_DETECTED_S);
+ 		gchar * name = get_current_zone_name (current_timezone);
+-		locations = locations_add (locations, current_timezone, name, visible, now);
++		locations = locations_add (locations, current_timezone, name, now);
+ 		g_free (name);
+ 	}
+ 
+@@ -207,13 +199,12 @@
+ 	if (user_locations != NULL) { 
+ 		gint i;
+ 		const guint location_count = g_strv_length (user_locations);
+-		const gboolean visible = g_settings_get_boolean (conf, SETTINGS_SHOW_LOCATIONS_S);
+ 		g_debug ("%s Found %u user-specified locations", G_STRLOC, location_count);
+ 		for (i=0; i<location_count; i++) {
+ 			gchar * zone;
+ 			gchar * name;
+ 			split_settings_location (user_locations[i], &zone, &name);
+-			locations = locations_add (locations, zone, name, visible, now);
++			locations = locations_add (locations, zone, name, now);
+ 			g_free (name);
+ 			g_free (zone);
+ 		}
+@@ -221,10 +212,13 @@
+ 		user_locations = NULL;
+ 	}
+ 
++	/* sort the list by timezone offset */
++	locations = g_slist_sort (locations, (GCompareFunc)time_location_compare);
++
+ 	/* finally create menuitems for each location */
+ 	gint offset = dbusmenu_menuitem_get_position (locations_separator, root)+1;
++	const gboolean show_locations = g_settings_get_boolean (conf, SETTINGS_SHOW_LOCATIONS_S);
+ 	GSList * l;
+-	gboolean have_visible_location = FALSE;
+ 	for (l=locations; l!=NULL; l=l->next) {
+ 		struct TimeLocation * loc = l->data;
+ 		g_debug("%s Adding location: zone '%s', name '%s'", G_STRLOC, loc->zone, loc->name);
+@@ -234,19 +228,17 @@
+ 		dbusmenu_menuitem_property_set      (item, TIMEZONE_MENUITEM_PROP_ZONE, loc->zone);
+ 		dbusmenu_menuitem_property_set_bool (item, TIMEZONE_MENUITEM_PROP_RADIO, FALSE);
+ 		dbusmenu_menuitem_property_set_bool (item, DBUSMENU_MENUITEM_PROP_ENABLED, TRUE);
+-		dbusmenu_menuitem_property_set_bool (item, DBUSMENU_MENUITEM_PROP_VISIBLE, loc->visible);
++		dbusmenu_menuitem_property_set_bool (item, DBUSMENU_MENUITEM_PROP_VISIBLE, show_locations);
+ 		dbusmenu_menuitem_child_add_position (root, item, offset++);
+ 		g_signal_connect(G_OBJECT(item), DBUSMENU_MENUITEM_SIGNAL_ITEM_ACTIVATED, G_CALLBACK(quick_set_tz), NULL);
+ 		location_menu_items = g_slist_append (location_menu_items, item);
+-		if (loc->visible)
+-			have_visible_location = TRUE;
+ 		time_location_free (loc);
+ 	}
+ 	g_slist_free (locations);
+ 	locations = NULL;
+ 
+ 	/* if there's at least one item being shown, show the separator too */
+-	dbusmenu_menuitem_property_set_bool (locations_separator, DBUSMENU_MENUITEM_PROP_VISIBLE, have_visible_location);
++	dbusmenu_menuitem_property_set_bool (locations_separator, DBUSMENU_MENUITEM_PROP_VISIBLE, show_locations && (location_menu_items!=NULL));
+ }
+ 
+ /* Update the current timezone */
+@@ -581,10 +573,8 @@
+ 		g_signal_connect(calendar, "event::day-selected-double-click", G_CALLBACK(day_selected_double_click_cb), NULL);
+ 	} else {
+ 		g_debug("Unable to find calendar app.");
+-		if (add_appointment != NULL)
+-			dbusmenu_menuitem_property_set_bool(add_appointment, DBUSMENU_MENUITEM_PROP_VISIBLE, FALSE);
+-		if (events_separator != NULL)
+-			dbusmenu_menuitem_property_set_bool(events_separator, DBUSMENU_MENUITEM_PROP_VISIBLE, FALSE);
++		dbusmenu_menuitem_property_set_bool(add_appointment, DBUSMENU_MENUITEM_PROP_VISIBLE, FALSE);
++		dbusmenu_menuitem_property_set_bool(events_separator, DBUSMENU_MENUITEM_PROP_VISIBLE, FALSE);
+ 	}
+ 	
+ 	if (g_settings_get_boolean(conf, SETTINGS_SHOW_CALENDAR_S)) {
+@@ -598,6 +588,27 @@
+ 	return FALSE;
+ }
+ 
++// Authentication function
++static gchar *
++auth_func (ECal *ecal, 
++           const gchar *prompt, 
++           const gchar *key, 
++           gpointer user_data)
++{
++	ESource *source = e_cal_get_source (ecal);
++	gchar *auth_domain = e_source_get_duped_property (source, "auth-domain");
++
++	const gchar *component_name;
++	if (auth_domain) component_name = auth_domain;
++	else component_name = "Calendar";
++	
++	gchar *password = e_passwords_get_password (component_name, key);
++	
++	g_free (auth_domain);
++
++	return password;
++}
++
+ static gint
+ compare_comp_instances (gconstpointer ga, gconstpointer gb)
+ {
+@@ -632,53 +643,23 @@
+ }
+ 
+ static gboolean
+-populate_appointment_instances (ECalClient * client,
++populate_appointment_instances (ECalComponent * comp,
+                                 time_t          start,
+                                 time_t          end,
+                                 gpointer        data)
+ {
+-       GSList *ecalcomps, *comp_item;
++	g_debug("Appending item %p", comp);
++	
++	ECalComponentVType vtype = e_cal_component_get_vtype (comp);
++	if (vtype != E_CAL_COMPONENT_EVENT && vtype != E_CAL_COMPONENT_TODO) return FALSE;
++	
++	icalproperty_status status;
++	e_cal_component_get_status (comp, &status);
++	if (status == ICAL_STATUS_COMPLETED || status == ICAL_STATUS_CANCELLED) return FALSE;
+ 
+-       if (e_cal_client_get_object_list_as_comps_sync (client,
+-                                                       NULL,
+-                                                       &ecalcomps,
+-                                                       NULL, NULL)) {
+-
+-               for (comp_item = ecalcomps; comp_item; comp_item = g_slist_next(comp_item)) {
+-                       ECalComponent *comp = comp_item->data;
+-
+-                       g_debug("Appending item %p", e_cal_component_get_as_string(comp));
+-
+-                       ECalComponentVType vtype = e_cal_component_get_vtype (comp);
+-                       if (vtype != E_CAL_COMPONENT_EVENT && vtype != E_CAL_COMPONENT_TODO) return FALSE;
+-
+-                       icalproperty_status status;
+-                       e_cal_component_get_status (comp, &status);
+-                       if (status == ICAL_STATUS_COMPLETED || status == ICAL_STATUS_CANCELLED) return FALSE;
+-
+-                       g_object_ref(comp);
+-
+-                       ECalComponentDateTime datetime;
+-                       icaltimezone *appointment_zone = NULL;
+-                       icaltimezone *current_zone = NULL;
+-
+-                       if (vtype == E_CAL_COMPONENT_EVENT)
+-                               e_cal_component_get_dtstart (comp, &datetime);
+-                       else
+-                               e_cal_component_get_due (comp, &datetime);
+-
+-                       appointment_zone = icaltimezone_get_builtin_timezone_from_tzid(datetime.tzid);
+-                       current_zone = icaltimezone_get_builtin_timezone_from_tzid(current_timezone);
+-                       if (!appointment_zone || datetime.value->is_date) { // If it's today put in the current timezone?
+-                               appointment_zone = current_zone;
+-                       }
+-
+-                       struct comp_instance *ci = comp_instance_new (comp, start, end, E_SOURCE(data));
+-                       comp_instances = g_list_append (comp_instances, ci);
+-               }
+-               return TRUE;
+-       }
+-       return FALSE;
++	struct comp_instance *ci = comp_instance_new (comp, start, end, E_SOURCE(data));
++	comp_instances = g_list_append (comp_instances, ci);
++	return TRUE;
+ }
+ 
+ /* Populate the menu with todays, next 5 appointments. 
+@@ -698,12 +679,12 @@
+ 	updating_appointments = TRUE;
+ 	
+ 	time_t curtime = 0, t1 = 0, t2 = 0;
+-	GList *l, *s;
++	GList *l;
++	GSList *g;
+ 	GError *gerror = NULL;
+ 	gint i;
+ 	gint width = 0, height = 0;
+-	ESourceRegistry * src_registry = NULL;
+-	GList * sources = NULL;
++	ESourceList * sources = NULL;
+ 
+ 	// Get today & work out query times
+ 	time(&curtime);
+@@ -743,52 +724,67 @@
+ 	highlightdays = highlightdays + 7; // Minimum of 7 days ahead 
+ 	t2 = t1 + (time_t) (highlightdays * 24 * 60 * 60);
+ 	
++	if (!e_cal_get_sources(&sources, E_CAL_SOURCE_TYPE_EVENT, &gerror)) {
++		g_debug("Failed to get ecal sources\n");
++		g_clear_error (&gerror);
++		return FALSE;
++	}
++	
+ 	// clear any previous comp_instances
+ 	g_list_free_full (comp_instances, (GDestroyNotify)comp_instance_free);
+ 	comp_instances = NULL;
+ 
+-       src_registry = e_source_registry_new_sync (NULL, &gerror);
+-       if (!src_registry) {
+-               g_debug("Failed to get access to source registry: %s\n", gerror->message);
+-               return FALSE;
+-       }
+-
+-       sources = e_source_registry_list_sources(src_registry, E_SOURCE_EXTENSION_CALENDAR);
+-
++	GSList *cal_list = gconf_client_get_list(gconf, "/apps/evolution/calendar/display/selected_calendars", GCONF_VALUE_STRING, &gerror);
++	if (gerror) {
++	  g_debug("Failed to get evolution preference for enabled calendars");
++	  g_clear_error (&gerror);
++	  cal_list = NULL;
++	}
++	
+ 	// Generate instances for all sources
+-       for (s = g_list_first (sources); s; s = g_list_next (s)) {
+-
+-               ESource *source = E_SOURCE (s->data);
+-               g_signal_connect (G_OBJECT(source), "changed", G_CALLBACK (update_appointment_menu_items), NULL);
+-               ECalClient *ecal = e_cal_client_new(source, E_CAL_CLIENT_SOURCE_TYPE_EVENTS, &gerror);
+-
+-               icaltimezone* current_zone = icaltimezone_get_builtin_timezone(current_timezone);
+-               if (!current_zone) {
+-                       // current_timezone may be a TZID?
+-                       current_zone = icaltimezone_get_builtin_timezone_from_tzid(current_timezone);
+-               }
+-
+-               e_cal_client_set_default_timezone (ecal, current_zone);
+-
+-               g_debug("Checking if source %s is enabled", e_source_get_uid(source));
+-               if (e_source_get_enabled (source)) {
+-                       g_debug("source is enabled, generating instances");
+-
+-                       if (!e_client_open_sync (E_CLIENT (ecal), TRUE, NULL, &gerror)) {
+-                               g_debug("Failed to open source: %s", gerror->message);
++	for (g = e_source_list_peek_groups (sources); g; g = g->next) {
++		ESourceGroup *group = E_SOURCE_GROUP (g->data);
++		GSList *s;
++		
++		for (s = e_source_group_peek_sources (group); s; s = s->next) {
++			ESource *source = E_SOURCE (s->data);
++			g_signal_connect (G_OBJECT(source), "changed", G_CALLBACK (update_appointment_menu_items), NULL);
++			ECal *ecal = e_cal_new(source, E_CAL_SOURCE_TYPE_EVENT);
++			e_cal_set_auth_func (ecal, (ECalAuthFunc) auth_func, NULL);
++			
++			icaltimezone* current_zone = icaltimezone_get_builtin_timezone(current_timezone);
++			if (!current_zone) {
++				// current_timezone may be a TZID?
++				current_zone = icaltimezone_get_builtin_timezone_from_tzid(current_timezone);
++			}
++			if (current_zone && !e_cal_set_default_timezone(ecal, current_zone, &gerror)) {
++				g_debug("Failed to set ecal default timezone %s", gerror->message);
++				g_clear_error (&gerror);
++				g_object_unref(ecal);
++				continue;
++			}
++			
++			if (!e_cal_open(ecal, FALSE, &gerror)) {
++				g_debug("Failed to get ecal sources %s", gerror->message);
+ 				g_clear_error (&gerror);
+ 				g_object_unref(ecal);
+ 				continue;
+ 			}
+ 
+-                       e_cal_client_generate_instances (ecal, t1, t2, NULL,
+-                                                        (ECalRecurInstanceFn) populate_appointment_instances,
+-                                                        (gpointer) source,
+-                                                        NULL);
+-               }
+-               g_object_unref(ecal);
+-       }
+-       g_list_free_full (sources, g_object_unref);
++			const gchar *ecal_uid = e_source_peek_uid(source);
++			g_debug("Checking ecal_uid is enabled: %s", ecal_uid);
++			const gboolean in_list = g_slist_find_custom (cal_list, ecal_uid, (GCompareFunc)g_strcmp0) != NULL;
++			if (!in_list) {
++				g_object_unref(ecal);
++				continue;
++			}
++
++			g_debug("ecal_uid is enabled, generating instances");
++			e_cal_generate_instances (ecal, t1, t2, (ECalRecurInstanceFn) populate_appointment_instances, source);
++			g_object_unref(ecal);
++		}
++	}
++	g_slist_free_full (cal_list, g_free);
+ 
+ 	g_debug("Number of ECalComponents returned: %d", g_list_length(comp_instances));
+ 	GList *sorted_comp_instances = g_list_sort(comp_instances, compare_comp_instances);
+@@ -940,7 +936,7 @@
+ 		                       G_CALLBACK(activate_cb), cmd, (GClosureNotify)g_free, 0);
+ 		g_free (ad);
+ 
+-	const gchar *color_spec = e_source_selectable_get_color (e_source_get_extension (ci->source, E_SOURCE_EXTENSION_CALENDAR));
++        const gchar *color_spec = e_source_peek_color_spec(ci->source);
+         g_debug("Colour to use: %s", color_spec);
+ 			
+ 		// Draw the correct icon for the appointment type and then tint it using mask fill.
+@@ -948,10 +944,17 @@
+         if (color_spec != NULL) {
+         	g_debug("Creating a cairo surface: size, %d by %d", width, height);         
+         	cairo_surface_t *surface = cairo_image_surface_create( CAIRO_FORMAT_ARGB32, width, height ); 
++
+ 			cairo_t *cr = cairo_create(surface);
++#if GTK_CHECK_VERSION(3,0,0)
+         	GdkRGBA rgba;
+         	if (gdk_rgba_parse (&rgba, color_spec))
+         		gdk_cairo_set_source_rgba (cr, &rgba);
++#else
++			GdkColor color;
++			if (gdk_color_parse (color_spec, &color))
++				gdk_cairo_set_source_color (cr, &color);
++#endif
+ 			cairo_paint(cr);
+     		cairo_set_source_rgba(cr, 0,0,0,0.5);
+     		cairo_set_line_width(cr, 1);
+@@ -1086,21 +1089,10 @@
+ 		update_location_menu_items();
+ 	
+ 		g_signal_connect (conf, "changed::" SETTINGS_SHOW_LOCATIONS_S, G_CALLBACK (show_locations_changed), NULL);
+-		g_signal_connect (conf, "changed::" SETTINGS_SHOW_DETECTED_S, G_CALLBACK (show_locations_changed), NULL);
+ 		g_signal_connect (conf, "changed::" SETTINGS_LOCATIONS_S, G_CALLBACK (show_locations_changed), NULL);
+ 		g_signal_connect (conf, "changed::" SETTINGS_SHOW_EVENTS_S, G_CALLBACK (show_events_changed), NULL);
+ 		g_signal_connect (conf, "changed::" SETTINGS_TIME_FORMAT_S, G_CALLBACK (time_format_changed), NULL);
+ 
+-		DbusmenuMenuitem * separator = dbusmenu_menuitem_new();
+-		dbusmenu_menuitem_property_set(separator, DBUSMENU_MENUITEM_PROP_TYPE, DBUSMENU_CLIENT_TYPES_SEPARATOR);
+-		dbusmenu_menuitem_child_append(root, separator);
+-
+-		settings = dbusmenu_menuitem_new();
+-		dbusmenu_menuitem_property_set     (settings, DBUSMENU_MENUITEM_PROP_LABEL, _("Time & Date Settings…"));
+-		/* insensitive until we check for available apps */
+-		dbusmenu_menuitem_property_set_bool(settings, DBUSMENU_MENUITEM_PROP_ENABLED, FALSE);
+-		g_signal_connect(G_OBJECT(settings), DBUSMENU_MENUITEM_SIGNAL_ITEM_ACTIVATED, G_CALLBACK(activate_cb), SETTINGS_APP_INVOCATION);
+-		dbusmenu_menuitem_child_append(root, settings);
+ 		g_idle_add(check_for_timeadmin, NULL);
+ 	}
+ 
+diff -Naur indicator-datetime-12.10.0/src/indicator-datetime.c indicator-datetime-precise/src/indicator-datetime.c
+--- indicator-datetime-12.10.0/src/indicator-datetime.c	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/indicator-datetime.c	2012-07-26 21:37:36.715709000 -0700
+@@ -1220,7 +1220,11 @@
+ 
+ 	mi_data->gmi = gtk_menu_item_new();
+ 
++#if GTK_CHECK_VERSION(3,0,0)
+ 	GtkWidget * hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
++#else
++	GtkWidget * hbox = gtk_hbox_new(FALSE, 4);
++#endif
+ 
+ 	/* Icon, probably someone's face or avatar on an IM */
+ 	mi_data->icon = gtk_image_new();
+@@ -1431,7 +1435,11 @@
+ 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(mi_data->gmi),
+ 		dbusmenu_menuitem_property_get_bool(newitem, TIMEZONE_MENUITEM_PROP_RADIO));
+ 
++#if GTK_CHECK_VERSION(3,0,0)
+ 	GtkWidget * hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
++#else
++	GtkWidget * hbox = gtk_hbox_new(FALSE, 4);
++#endif
+ 
+   	/* Label, probably a username, chat room or mailbox name */
+ 	mi_data->label = gtk_label_new("");
+diff -Naur indicator-datetime-12.10.0/src/Makefile.in indicator-datetime-precise/src/Makefile.in
+--- indicator-datetime-12.10.0/src/Makefile.in	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/src/Makefile.in	2012-07-26 21:37:36.715709000 -0700
+@@ -1,4 +1,4 @@
+-# Makefile.in generated by automake 1.11.5 from Makefile.am.
++# Makefile.in generated by automake 1.11.3 from Makefile.am.
+ # @configure_input@
+ 
+ # Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+@@ -17,23 +17,6 @@
+ 
+ 
+ VPATH = @srcdir@
+-am__make_dryrun = \
+-  { \
+-    am__dry=no; \
+-    case $$MAKEFLAGS in \
+-      *\\[\ \	]*) \
+-        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
+-          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
+-      *) \
+-        for am__flg in $$MAKEFLAGS; do \
+-          case $$am__flg in \
+-            *=*|--*) ;; \
+-            *n*) am__dry=yes; break;; \
+-          esac; \
+-        done;; \
+-    esac; \
+-    test $$am__dry = yes; \
+-  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -170,11 +153,6 @@
+ DIST_SOURCES = $(libdatetime_la_SOURCES) \
+ 	$(am__libindicator_datetime_la_SOURCES_DIST) \
+ 	$(indicator_datetime_service_SOURCES)
+-am__can_run_installinfo = \
+-  case $$AM_UPDATE_INFO_DIR in \
+-    n|no|NO) false;; \
+-    *) (install-info --version) >/dev/null 2>&1;; \
+-  esac
+ ETAGS = etags
+ CTAGS = ctags
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+@@ -470,6 +448,7 @@
+ $(am__aclocal_m4_deps):
+ install-ccpanelLTLIBRARIES: $(ccpanel_LTLIBRARIES)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(ccpaneldir)" || $(MKDIR_P) "$(DESTDIR)$(ccpaneldir)"
+ 	@list='$(ccpanel_LTLIBRARIES)'; test -n "$(ccpaneldir)" || list=; \
+ 	list2=; for p in $$list; do \
+ 	  if test -f $$p; then \
+@@ -477,8 +456,6 @@
+ 	  else :; fi; \
+ 	done; \
+ 	test -z "$$list2" || { \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(ccpaneldir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(ccpaneldir)" || exit 1; \
+ 	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(ccpaneldir)'"; \
+ 	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(ccpaneldir)"; \
+ 	}
+@@ -502,6 +479,7 @@
+ 	done
+ install-datetimelibLTLIBRARIES: $(datetimelib_LTLIBRARIES)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(datetimelibdir)" || $(MKDIR_P) "$(DESTDIR)$(datetimelibdir)"
+ 	@list='$(datetimelib_LTLIBRARIES)'; test -n "$(datetimelibdir)" || list=; \
+ 	list2=; for p in $$list; do \
+ 	  if test -f $$p; then \
+@@ -509,8 +487,6 @@
+ 	  else :; fi; \
+ 	done; \
+ 	test -z "$$list2" || { \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(datetimelibdir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(datetimelibdir)" || exit 1; \
+ 	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(datetimelibdir)'"; \
+ 	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(datetimelibdir)"; \
+ 	}
+@@ -538,11 +514,8 @@
+ 	$(AM_V_CCLD)$(libindicator_datetime_la_LINK) $(am_libindicator_datetime_la_rpath) $(libindicator_datetime_la_OBJECTS) $(libindicator_datetime_la_LIBADD) $(LIBS)
+ install-libexecPROGRAMS: $(libexec_PROGRAMS)
+ 	@$(NORMAL_INSTALL)
++	test -z "$(libexecdir)" || $(MKDIR_P) "$(DESTDIR)$(libexecdir)"
+ 	@list='$(libexec_PROGRAMS)'; test -n "$(libexecdir)" || list=; \
+-	if test -n "$$list"; then \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(libexecdir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(libexecdir)" || exit 1; \
+-	fi; \
+ 	for p in $$list; do echo "$$p $$p"; done | \
+ 	sed 's/$(EXEEXT)$$//' | \
+ 	while read p p1; do if test -f $$p || test -f $$p1; \
+diff -Naur indicator-datetime-12.10.0/src/settings-shared.h indicator-datetime-precise/src/settings-shared.h
+--- indicator-datetime-12.10.0/src/settings-shared.h	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/settings-shared.h	2012-07-26 21:37:36.715709000 -0700
+@@ -33,7 +33,6 @@
+ #define SETTINGS_SHOW_WEEK_NUMBERS_S    "show-week-numbers"
+ #define SETTINGS_SHOW_EVENTS_S          "show-events"
+ #define SETTINGS_SHOW_LOCATIONS_S       "show-locations"
+-#define SETTINGS_SHOW_DETECTED_S        "show-auto-detected-location"
+ #define SETTINGS_LOCATIONS_S            "locations"
+ #define SETTINGS_TIMEZONE_NAME_S        "timezone-name"
+ 
+diff -Naur indicator-datetime-12.10.0/src/utils.c indicator-datetime-precise/src/utils.c
+--- indicator-datetime-12.10.0/src/utils.c	2012-07-12 14:24:07.000000000 -0700
++++ indicator-datetime-precise/src/utils.c	2012-07-26 21:37:36.715709000 -0700
+@@ -243,10 +243,9 @@
+ 	g_return_val_if_fail(date_string != NULL, g_strdup(time_string));
+ 
+ 	/* TRANSLATORS: This is a format string passed to strftime to combine the
+-	   date and the time.  The value of "%s\xE2\x80\x82%s" would result in a string like
+-	   this in US English 12-hour time: 'Fri Jul 16 11:50 AM'.
+-	   The space in between date and time is a Unicode en space (E28082 in UTF-8 hex). */
+-	return g_strdup_printf(T_("%s\xE2\x80\x82%s"), date_string, time_string);
++	   date and the time.  The value of "%s %s" would result in a string like
++	   this in US English 12-hour time: 'Fri Jul 16 11:50 AM' */
++	return g_strdup_printf(T_("%s %s"), date_string, time_string);
+ }
+ 
+ gchar *
+diff -Naur indicator-datetime-12.10.0/tests/Makefile.in indicator-datetime-precise/tests/Makefile.in
+--- indicator-datetime-12.10.0/tests/Makefile.in	2012-07-12 14:28:04.000000000 -0700
++++ indicator-datetime-precise/tests/Makefile.in	2012-07-26 21:37:36.715709000 -0700
+@@ -1,4 +1,4 @@
+-# Makefile.in generated by automake 1.11.5 from Makefile.am.
++# Makefile.in generated by automake 1.11.3 from Makefile.am.
+ # @configure_input@
+ 
+ # Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+@@ -15,23 +15,6 @@
+ 
+ @SET_MAKE@
+ VPATH = @srcdir@
+-am__make_dryrun = \
+-  { \
+-    am__dry=no; \
+-    case $$MAKEFLAGS in \
+-      *\\[\ \	]*) \
+-        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
+-          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
+-      *) \
+-        for am__flg in $$MAKEFLAGS; do \
+-          case $$am__flg in \
+-            *=*|--*) ;; \
+-            *n*) am__dry=yes; break;; \
+-          esac; \
+-        done;; \
+-    esac; \
+-    test $$am__dry = yes; \
+-  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -72,11 +55,6 @@
+ am__v_at_0 = @
+ SOURCES =
+ DIST_SOURCES =
+-am__can_run_installinfo = \
+-  case $$AM_UPDATE_INFO_DIR in \
+-    n|no|NO) false;; \
+-    *) (install-info --version) >/dev/null 2>&1;; \
+-  esac
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ ACLOCAL = @ACLOCAL@
+ ALL_LINGUAS = @ALL_LINGUAS@
