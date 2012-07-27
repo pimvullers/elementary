@@ -4,11 +4,11 @@
 
 EAPI=4
 
-inherit gnome2-utils autotools-utils bzr
+inherit gnome2-utils autotools-utils
 
 DESCRIPTION="The Power Indicator"
 HOMEPAGE="http://launchpad.net/indicator-power"
-EBZR_REPO_URI="lp:indicator-power"
+SRC_URI="http://launchpad.net/${PN}/12.10/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,7 +18,7 @@ IUSE="nls static-libs"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libindicator:3
-	>=gnome-base/gnome-settings-daemon-3.1.4
+	gnome-base/gnome-settings-daemon
 	sys-power/upower
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
@@ -27,7 +27,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
-	NOCONFIGURE=1 ./autogen.sh
+	epatch "${FILESDIR}/${P}-elementaryos.patch"
 }
 
 pkg_preinst() {
