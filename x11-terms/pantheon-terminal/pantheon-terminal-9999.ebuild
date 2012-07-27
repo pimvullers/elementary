@@ -12,8 +12,8 @@ EBZR_REPO_URI="lp:pantheon-terminal"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE=""
+KEYWORDS="~amd64 ~x86"
+IUSE="nls"
 
 RDEPEND="
 	x11-libs/granite
@@ -22,10 +22,15 @@ RDEPEND="
 	x11-libs/vte:2.90"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	nls? ( sys-devel/gettext )
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS README )
+}
+
+src_prepare() {
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 }
 
 src_configure() {
@@ -48,4 +53,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

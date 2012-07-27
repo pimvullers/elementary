@@ -22,8 +22,8 @@ RDEPEND="
 	x11-libs/vte:2.90"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
-	dev-util/pkgconfig
-	nls? ( sys-devel/gettext )"
+	nls? ( sys-devel/gettext )
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS README )
@@ -59,4 +59,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-
