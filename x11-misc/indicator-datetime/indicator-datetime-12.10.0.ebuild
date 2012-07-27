@@ -22,14 +22,22 @@ RDEPEND="
 	dev-libs/libical
 	dev-libs/libindicator:3
 	gnome-base/gconf
-	gnome-extra/evolution-data-server
+	>=gnome-extra/evolution-data-server-3.5.3
 	x11-libs/cairo
 	>=x11-libs/gtk+-3.1.4:3
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
 
+#pkg_setup() {
+#	AUTOTOOLS_IN_SOURCE_BUILD=1
+#}
+
 #src_prepare() {
 #	epatch "${FILESDIR}/${P}-elementaryos.patch"
+#}
+
+#src_compile() {
+#	autotools-utils_src_compile -j1
 #}
 
 pkg_preinst() {
