@@ -19,6 +19,7 @@ RDEPEND="
 	dev-libs/glib:2
 	media-libs/gstreamer
 	media-libs/gst-plugins-base
+	media-video/cheese
     x11-libs/gtk+:3
 	x11-libs/granite
 	x11-libs/libX11"
