@@ -20,7 +20,10 @@ RDEPEND="
 	dev-libs/libgee:0
 	<dev-libs/libpeas-1.4
 	gnome-base/gconf:2
-	plugins? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
+	plugins? ( 
+		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
+		dev-util/devhelp
+	)
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
 	x11-libs/granite
