@@ -24,6 +24,7 @@ RDEPEND="
 	x11-libs/libX11
 	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
+	dev-lang/vala:0.16[vapigen]
 	dev-util/gtk-doc
 	introspection? ( dev-libs/gobject-introspection )
 	dev-util/pkgconfig"
@@ -41,6 +42,7 @@ src_configure() {
 		--disable-gtktest
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
+		VALA_API_GEN="$(type -p vapigen-0.16)"
 	)
 
 	autotools-utils_src_configure
