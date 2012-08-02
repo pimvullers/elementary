@@ -20,7 +20,7 @@ RDEPEND="
 	>=dev-libs/glib-2.29.12:2
 	dev-libs/libgee:0
 	gnome-base/gnome-desktop:3
-	gnome-extra/evolution-data-server
+	<gnome-extra/evolution-data-server-3.5
 	net-libs/gnome-online-accounts
 	x11-libs/gtk+:3
 	x11-libs/granite

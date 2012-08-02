@@ -21,6 +21,7 @@ RDEPEND="
 	dev-libs/libical
 	gnome-base/gconf:2
 	>=gnome-extra/evolution-data-server-3.2
+	<gnome-extra/evolution-data-server-3.5
 	net-libs/libsoup:2.4
     x11-libs/gtk+:3
 	x11-libs/granite"
