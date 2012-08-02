@@ -18,7 +18,7 @@ IUSE="nls plugins"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
-	<dev-libs/libpeas-1.4
+	dev-libs/libpeas
 	gnome-base/gconf:2
 	plugins? ( 
 		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
