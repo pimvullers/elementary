@@ -29,7 +29,7 @@ DEPEND="${CDEPEND}"
 
 src_prepare() {
 	# Use gnome-fallback instead of ubuntu-2d
-	sed -i 's/ubuntu-2d/gnome-fallback/' debian/pantheon.session
+	sed -i 's/ubuntu/gnome/' debian/pantheon.session
 }
 
 src_install() {
