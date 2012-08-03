@@ -31,10 +31,6 @@ pkg_setup() {
 	DOCS=( AUTHORS COPYING )
 }
 
-src_prepare() {
-	epatch "${FILESDIR}/fix-983560.patch"
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF

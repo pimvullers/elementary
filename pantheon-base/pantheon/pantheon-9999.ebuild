@@ -14,7 +14,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="
-	|| ( app-dicts/lingo app-dicts/purple )
+	app-dicts/lingo
 	app-editors/scratch
 	|| ( 
 		app-office/libreoffice 
@@ -22,15 +22,23 @@ RDEPEND="
 		( app-office/abiword app-office/gnumeric ) 
 	)
 	app-office/dexter
+	app-office/ergo
+	app-office/footnote
 	app-office/maya
+	dev-libs/contractor
 	dev-util/euclide
-	pantheon-base/marlin
+	mail-client/geary
+	|| ( media-sound/noise media-sound/beatbox )
+	media-video/audience
+	media-video/eidete
+	media-video/snap
+	net-news/feedler
+	|| ( pantheon-base/pantheon-files pantheon-base/marlin )
+	pantheon-base/pantheon-print
 	pantheon-base/pantheon-shell
 	pantheon-base/switchboard
-	mail-client/postler
-	media-sound/beatbox
+	pantheon-extra/dropoff
 	www-client/midori
-	x11-misc/lightdm
 	x11-terms/pantheon-terminal
 	x11-themes/elementary-icon-theme
 	x11-themes/elementary-theme"

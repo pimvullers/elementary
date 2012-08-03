@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="lightdm"
+IUSE="libnotify lightdm"
 
 CDEPEND="
 	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
@@ -24,11 +24,12 @@ RDEPEND="${CDEPEND}
 	pantheon-base/plank
 	pantheon-base/slingshot
 	pantheon-base/wingpanel
-	x11-wm/gala"
+	x11-wm/gala
+	libnotify? ( x11-misc/notify-osd )"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
-	# Use gnome-fallback instead of ubuntu-2d
+	# Use gnome as fallback instead of ubuntu
 	sed -i 's/ubuntu/gnome/' debian/pantheon.session
 }
 
