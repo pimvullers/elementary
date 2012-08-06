@@ -16,6 +16,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/glib:2
 	x11-libs/granite
 	x11-libs/libnotify
 	x11-libs/gtk+:3
