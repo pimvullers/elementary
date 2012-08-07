@@ -22,6 +22,7 @@ RDEPEND="
 	dev-libs/libpeas[gtk]
 	dev-libs/libxml2:2
 	x11-libs/granite
+	app-editors/scratch
 	x11-libs/gtk+:3
 	x11-libs/gtksourceview:3.0"
 DEPEND="${RDEPEND}
