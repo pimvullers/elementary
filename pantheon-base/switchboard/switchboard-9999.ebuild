@@ -19,6 +19,7 @@ RDEPEND="
 	dev-libs/glib:2
 	x11-libs/gtk+:3
 	x11-libs/granite
+	dev-libs/libunity
 	dev-libs/libgee"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
