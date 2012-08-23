@@ -23,7 +23,7 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING README )
+	DOCS=( AUTHORS COPYING )
 }
 
 src_configure() {
