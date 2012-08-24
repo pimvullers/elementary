@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:egtk"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="+cursors +fonts gnome +gtk +gtk3 +icons lxde +wallpapers xfce"
+IUSE="+cursors +fonts gnome +gtk +gtk3 +icons lxde +wallpapers"
 
 RDEPEND="
 	cursors? ( 
@@ -52,7 +52,6 @@ pkg_setup() {
 	use gtk && THEMES="${THEMES} gtk-2.0"
 	use gtk3 && THEMES="${THEMES} gtk-3.0"
 	use lxde && THEMES="${THEMES} openbox-3"
-	use xfce && THEMES="${THEMES} xfwm4"
 }
 
 src_prepare() {
