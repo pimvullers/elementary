@@ -19,6 +19,7 @@ RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
+	dev-libs/libunity-webapps
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
