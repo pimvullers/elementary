@@ -18,6 +18,7 @@ IUSE=""
 RDEPEND="
 	dev-db/sqlheavy:0.1
 	>=dev-libs/libindicate-0.6.90:3
+	dev-libs/libdbusmenu[gtk]
 	dev-libs/libxml2
 	dev-libs/libunity
 	net-libs/libsoup
