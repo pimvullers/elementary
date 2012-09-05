@@ -39,6 +39,9 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+
+	# Disable built-in gtk-update-icon-cache
+	sed -i '/ICON_UPDATE/s/ ON/ OFF/' images/CMakeLists.txt
 }
 
 src_configure() {
