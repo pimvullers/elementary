@@ -53,6 +53,10 @@ src_configure() {
 	cmake-utils_src_configure
 }
 
+src_compile() {
+	cmake-utils_src_compile -j1
+}
+
 pkg_preinst() {
 	gnome2_icon_savelist
 	gnome2_schemas_savelist
