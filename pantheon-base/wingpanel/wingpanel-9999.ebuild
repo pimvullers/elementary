@@ -22,6 +22,7 @@ RDEPEND="
 	>=x11-libs/gtk+-3.0.0:3
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
+	x11-libs/granite
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
