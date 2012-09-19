@@ -4,20 +4,20 @@
 
 EAPI=4
 
-inherit gnome2-utils autotools-utils bzr
+inherit gnome2-utils autotools-utils
 
 DESCRIPTION="Session indicator"
 HOMEPAGE="https://launchpad.net/indicator-session"
-EBZR_REPO_URI="lp:indicator-session"
+SRC_URI="http://launchpad.net/${PN}/12.10/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="nls policykit static-libs"
 
 RDEPEND="
 	dev-libs/dbus-glib
-	dev-libs/glib:2
+	>=dev-libs/glib-2.33:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
 	dev-libs/libindicator:3
 	!pantheon-extra/indicator-pantheon-session
@@ -29,12 +29,6 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
-
-src_prepare() {
-	NOCONFIGURE=1 ./autogen.sh
-
-	autotools-utils_src_prepare
-}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
