@@ -1,18 +1,17 @@
 # Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-wm/mutter/mutter-3.4.1-r1.ebuild,v 1.3 2012/05/22 06:38:59 tetromino Exp $
+# $Header: $
 
 EAPI="4"
-GNOME2_LA_PUNT="yes"
 
-inherit eutils gnome2
+inherit gnome2
 
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="http://git.gnome.org/browse/mutter/"
 
 LICENSE="GPL-2"
 SLOT="0"
-IUSE="+introspection test xinerama"
+IUSE="+introspection test"
 KEYWORDS="~amd64 ~x86"
 
 COMMON_DEPEND=">=x11-libs/pango-1.2[X,introspection?]
@@ -34,22 +33,21 @@ COMMON_DEPEND=">=x11-libs/pango-1.2[X,introspection?]
 	x11-libs/libXdamage
 	x11-libs/libXext
 	x11-libs/libXfixes
+	x11-libs/libXinerama
 	x11-libs/libXrandr
 	x11-libs/libXrender
 
 	gnome-extra/zenity
 
 	introspection? ( >=dev-libs/gobject-introspection-0.9.5 )
-	xinerama? ( x11-libs/libXinerama )
 "
 DEPEND="${COMMON_DEPEND}
-	>=app-text/gnome-doc-utils-0.8
 	>=dev-util/intltool-0.35
 	sys-devel/gettext
 	virtual/pkgconfig
 	test? ( app-text/docbook-xml-dtd:4.5 )
-	xinerama? ( x11-proto/xineramaproto )
 	x11-proto/xextproto
+	x11-proto/xineramaproto
 	x11-proto/xproto"
 RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity"
@@ -65,8 +63,7 @@ pkg_setup() {
 		--enable-verbose-mode
 		--enable-compile-warnings=maximum
 		--with-libcanberra
-		$(use_enable introspection)
-		$(use_enable xinerama)"
+		$(use_enable introspection)"
 }
 
 src_prepare() {
