@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit autotools-utils bzr
+inherit autotools-utils
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
-EBZR_REPO_URI="lp:bamf"
+SRC_URI="http://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.gz"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="+introspection doc static-libs"
 
 RDEPEND="
@@ -31,11 +31,7 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig"
 
 pkg_setup() {
-	DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
-}
-
-src_prepare() {
-	NOCONFIGURE=1 ./autogen.sh
+	DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 }
 
 src_configure() {
