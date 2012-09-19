@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit autotools-utils bzr
+inherit autotools-utils
 
 DESCRIPTION="Widgets and other objects used for indicators"
 HOMEPAGE="https://launchpad.net/ido"
-EBZR_REPO_URI="lp:ido"
+SRC_URI="http://launchpad.net/ido/12.10/${PV}/+download/ido-${PV}.tar.gz"
 
-LICENSE="LGPL-2.1 LGPL-3"
+LICENSE="LGPL-3"
 SLOT="3"
-KEYWORDS=""
+KEYWORDS="~amd64"
 IUSE="doc static-libs"
 
 RDEPEND="
@@ -22,7 +22,8 @@ DEPEND="${RDEPEND}
 	doc? ( dev-util/gtk-doc )"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING COPYING.LGPL.2.1 ChangeLog NEWS README TODO )
+	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
+	S="${WORKDIR}/ido-${PV}"
 }
 
 src_prepare() {
@@ -32,6 +33,7 @@ src_prepare() {
 	# Remove GTK_DOC_CHECK if documentation is not enabled
 	use doc || sed -i 's/GTK_DOC_CHECK(\[1.8\])//' configure.ac
 
-	NOCONFIGURE=1 ./autogen.sh
+	eautoreconf
+	#NOCONFIGURE=1 ./autogen.sh
 }
 
