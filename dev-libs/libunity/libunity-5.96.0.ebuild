@@ -8,7 +8,7 @@ inherit autotools-utils
 
 DESCRIPTION="A library for instrumenting- and integrating with all aspects of the Unity shell"
 HOMEPAGE="http://launchpad.net/libunity"
-SRC_URI="http://launchpad.net/${PN}/5.0/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/6.0/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
