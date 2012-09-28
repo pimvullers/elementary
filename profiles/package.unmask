@@ -1,0 +1,16 @@
+=app-accessibility/at-spi2-atk-2.6*
+=app-accessibility/at-spi2-core-2.6*
+=dev-libs/atk-2.6*
+=dev-libs/gjs-1.34*
+=dev-libs/glib-2.34*
+=dev-libs/gobject-introspection-1.34*
+=dev-libs/gobject-introspection-common-1.34*
+=dev-python/pyatspi-2.6*
+=dev-python/pygobject-3.4*
+=dev-util/gdbus-codegen-2.34*
+=gnome-base/dconf-0.14*
+=gnome-base/gvfs-1.14*
+=net-libs/glib-networking-2.34*
+=x11-libs/gtk+-3.6*
+=x11-themes/gnome-themes-standard-3.6*
+
