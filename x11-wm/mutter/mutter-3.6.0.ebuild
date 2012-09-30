@@ -3,16 +3,24 @@
 # $Header: $
 
 EAPI="4"
+GNOME2_LA_PUNT="yes"
 
 inherit gnome2
+if [[ ${PV} = 9999 ]]; then
+	inherit gnome2-live
+fi
 
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="http://git.gnome.org/browse/mutter/"
 
-LICENSE="GPL-2"
+LICENSE="GPL-2+"
 SLOT="0"
 IUSE="+introspection test"
-KEYWORDS="~amd64 ~x86"
+if [[ ${PV} = 9999 ]]; then
+	KEYWORDS=""
+else
+	KEYWORDS="~amd64 ~x86"
+fi
 
 COMMON_DEPEND=">=x11-libs/pango-1.2[X,introspection?]
 	>=x11-libs/cairo-1.10[X]
