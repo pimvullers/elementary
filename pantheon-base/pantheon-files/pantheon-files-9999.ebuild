@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:pantheon-files"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="nls plugins"
+IUSE="+gvfs nls plugins"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -25,6 +25,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/libnotify
 	x11-libs/pango
+	gvfs? ( gnome-base/gvfs )
 	!pantheon-base/marlin"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
