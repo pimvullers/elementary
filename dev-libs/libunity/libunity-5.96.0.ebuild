@@ -23,12 +23,12 @@ RDEPEND="
 	dev-libs/libgee
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 src_configure() {
 	local myeconfargs=(
-		VALAC="$(type -p valac-0.16)"
+		VALAC="$(type -p valac-0.18)"
 	)
 
 	autotools-utils_src_configure

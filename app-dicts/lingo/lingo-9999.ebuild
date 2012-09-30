@@ -24,7 +24,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 pkg_setup() {
@@ -34,7 +34,7 @@ pkg_setup() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
