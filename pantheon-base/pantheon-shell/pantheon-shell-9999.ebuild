@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="libnotify lightdm"
+IUSE="libnotify lightdm screensaver"
 
 CDEPEND="
 	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
@@ -25,7 +25,8 @@ RDEPEND="${CDEPEND}
 	pantheon-base/slingshot
 	pantheon-base/wingpanel
 	x11-wm/gala
-	libnotify? ( x11-misc/notify-osd )"
+	libnotify? ( || ( pantheon-base/pantheon-notify x11-misc/notify-osd virtual/notification-daemon ) )
+	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
@@ -39,17 +40,24 @@ src_install() {
 
 	insinto /usr/share/xsessions
 	doins debian/pantheon.desktop
+
+	insinto /etc/xdg/autostart
+	doins autostart/*
+
+	insinto /usr/share/gconf
+	doins gconf/*
+
+	insinto /usr/share/pantheon
+	doins -r applications
 }
 
 pkg_postinst() {
-	if [ $(use lightdm) && -x /usr/lib/lightdm/lightdm-set-defaults ]; then
-		/usr/lib/lightdm/lightdm-set-defaults --keep-old --session=pantheon
-	fi
+	use lightdm && \
+	  /usr/libexec/lightdm/lightdm-set-defaults --keep-old --session=pantheon
 }
 
 pkg_postrm() {
-	if [ $(use lightdm) && -x /usr/lib/lightdm/lightdm-set-defaults ]; then
-		/usr/lib/lightdm/lightdm-set-defaults --remove --session=pantheon
-	fi
+	use lightdm && \
+	  /usr/libexec/lightdm/lightdm-set-defaults --remove --session=pantheon
 }
 

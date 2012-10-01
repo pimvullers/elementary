@@ -16,7 +16,6 @@ KEYWORDS="~amd64"
 IUSE="nls policykit static-libs"
 
 RDEPEND="
-	app-admin/packagekit-base
 	dev-libs/dbus-glib
 	dev-libs/glib:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
@@ -27,14 +26,24 @@ RDEPEND="
 	!x11-misc/indicator-session"
 DEPEND="${RDEPEND}
 	dev-util/intltool
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
+	sed -i 's/packagekit-glib2//' configure.ac
+
 	NOCONFIGURE=1 ./autogen.sh
 
 	autotools-utils_src_prepare
+}
+
+src_configure() {
+	local myeconfargs=(
+		--disable-apt
+	)
+
+	autotools-utils_src_configure
 }
 
 pkg_preinst() {
