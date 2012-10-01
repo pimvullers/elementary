@@ -8,7 +8,7 @@ inherit gnome2-utils autotools-utils
 
 DESCRIPTION="The Power Indicator"
 HOMEPAGE="http://launchpad.net/indicator-power"
-SRC_URI="http://launchpad.net/${PN}/12.10/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/2.0/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -25,10 +25,6 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
-
-src_prepare() {
-	epatch "${FILESDIR}/${P}-elementaryos.patch"
-}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
