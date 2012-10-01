@@ -15,17 +15,19 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE=""
 
-DEPEND="
+RDEPEND="
 	dev-libs/libindicator:3
 	media-libs/clutter-gtk:1.0
 	x11-libs/granite
 	x11-libs/gtk+:3
-	x11-misc/lightdm"
-RDEPEND="${DEPEND}"
+	>=x11-misc/lightdm-1.2"
+DEPEND="${DEPEND}
+	dev-lang/vala:0.18
+	virtual/pkgconfig"
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
