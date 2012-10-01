@@ -8,7 +8,7 @@ inherit autotools-utils
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
-SRC_URI="http://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/0.2/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -19,15 +19,13 @@ RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
-	dev-libs/libunity-webapps
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
 	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18[vapigen]
-	doc? ( dev-util/gtk-doc )
 	introspection? ( dev-libs/gobject-introspection )
+	dev-lang/vala:0.18[vapigen]
 	virtual/pkgconfig"
 
 pkg_setup() {
