@@ -10,10 +10,10 @@ DESCRIPTION="Elementary GTK THEME designed to be smooth, attractive, fast, and u
 HOMEPAGE="https://launchpad.net/egtk"
 EBZR_REPO_URI="lp:egtk"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE="+cursors +fonts gnome +gtk +gtk3 +icons lxde +wallpapers"
+KEYWORDS="~x86 ~amd64"
+IUSE="+cursors dark +fonts +gnome +gtk +gtk3 +icons +wallpapers"
 
 RDEPEND="
 	cursors? ( 
@@ -51,18 +51,17 @@ pkg_setup() {
 	use gnome && THEMES="${THEMES} metacity-1"
 	use gtk && THEMES="${THEMES} gtk-2.0"
 	use gtk3 && THEMES="${THEMES} gtk-3.0"
-	use lxde && THEMES="${THEMES} openbox-3"
 }
 
 src_prepare() {
-	# Add support for the openbox window manager
-	use lxde && epatch "${FILESDIR}/${P}-openbox.patch"
+	# Add support for dark theming
+	use dark && epatch "${FILESDIR}/${P}-dark.patch"
 }
 
 src_install() {
 	insinto /usr/share/themes/elementary
 	doins -r ${THEMES}
 
-	dodoc ${DOCS}
+	base-src_install
 }
 
