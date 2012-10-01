@@ -27,6 +27,10 @@ DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig"
 
+pkg_setup() {
+	DOCS="README"
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
