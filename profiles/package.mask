@@ -1,6 +1,3 @@
-=media-libs/clutter-1.12*
-=media-libs/clutter-gtk-1.3*
-=media-libs/cogl-1.12*
 =gnome-extra/evolution-data-server-3.6*
 =x11-misc/indicator-session-12.10*
 =x11-misc/indicator-datetime-12.10*
