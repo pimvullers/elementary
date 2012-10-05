@@ -6,3 +6,6 @@
 =media-sound/indicator-sound-12.10*
 =x11-libs/bamf-0.3*
 dev-libs/libunity-webapps
+=media-libs/cogl-1.12*
+=media-libs/clutter-1.12*
+=media-libs/clutter-gtk-1.3*
