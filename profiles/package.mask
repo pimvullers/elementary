@@ -8,4 +8,3 @@
 dev-libs/libunity-webapps
 =media-libs/cogl-1.12*
 =media-libs/clutter-1.12*
-=media-libs/clutter-gtk-1.3*
