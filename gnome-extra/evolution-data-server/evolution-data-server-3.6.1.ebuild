@@ -1,28 +1,35 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2012 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-extra/evolution-data-server/evolution-data-server-2.32.1-r1.ebuild,v 1.4 2011/01/15 19:55:02 nirbheek Exp $
+# $Header: $
 
 EAPI="4"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 PYTHON_DEPEND="2"
+VALA_MIN_API_VERSION="0.18"
+VALA_USE_DEPEND="vapigen"
 
-inherit db-use eutils flag-o-matic gnome2 python versionator virtualx
+inherit db-use eutils flag-o-matic gnome2 python vala versionator virtualx
 if [[ ${PV} = 9999 ]]; then
 	inherit gnome2-live
 fi
 
 DESCRIPTION="Evolution groupware backend"
-HOMEPAGE="http://www.gnome.org/projects/evolution/"
+HOMEPAGE="http://projects.gnome.org/evolution/"
 
-LICENSE="LGPL-2 BSD DB"
+# Note: explicitly "|| ( LGPL-2 LGPL-3 )", not "LGPL-2+".
+LICENSE="|| ( LGPL-2 LGPL-3 ) BSD DB"
 SLOT="0"
+IUSE="api-doc-extras +gnome-online-accounts +introspection ipv6 ldap kerberos vala +weather"
+REQUIRED_USE="vala? ( introspection )"
+
 if [[ ${PV} = 9999 ]]; then
+	IUSE="${IUSE} doc"
+	REQUIRED_USE="${REQUIRED_USE} api-doc-extras? ( doc )"
 	KEYWORDS=""
 else
-	KEYWORDS="~amd64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-solaris"
+	KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-solaris"
 fi
-IUSE="doc +gnome-online-accounts +introspection ipv6 ldap kerberos vala +weather"
 
 RDEPEND=">=dev-libs/glib-2.32:2
 	>=x11-libs/gtk+-3.2:3
@@ -56,13 +63,12 @@ DEPEND="${RDEPEND}
 	>=dev-util/gtk-doc-am-1.9
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
-	doc? ( >=dev-util/gtk-doc-1.14 )
-	vala? ( dev-lang/vala:0.18[vapigen] )"
+	vala? ( $(vala_depend) )"
 # eautoreconf needs:
 #	>=gnome-base/gnome-common-2
-#	>=dev-util/gtk-doc-am-1.9
 
-REQUIRED_USE="vala? ( introspection )"
+[[ ${PV} = 9999 ]] && DEPEND="${DEPEND}
+	doc? ( >=dev-util/gtk-doc-1.14 )"
 
 # FIXME
 RESTRICT="test"
@@ -72,9 +78,8 @@ pkg_setup() {
 	# Uh, what to do about dbus-call-timeout ?
 	G2CONF="${G2CONF}
 		--disable-schemas-compile
-		VALAC=$(type -P valac-0.18)
-		VAPIGEN=$(type -P vapigen-0.18)
-		$(use_with doc private-docs)
+		$(use_enable api-doc-extras gtk-doc)
+		$(use_with api-doc-extras private-docs)
 		$(use_enable gnome-online-accounts goa)
 		$(use_enable introspection)
 		$(use_enable ipv6)
@@ -91,6 +96,7 @@ pkg_setup() {
 
 src_prepare() {
 	gnome2_src_prepare
+	use vala && vala_src_prepare
 
 	# /usr/include/db.h is always db-1 on FreeBSD
 	# so include the right dir in CPPFLAGS
