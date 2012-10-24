@@ -17,7 +17,7 @@ RDEPEND="
 	dev-libs/libgee:0
 	>=x11-libs/gtk+-3.3.14:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -31,12 +31,17 @@ src_prepare() {
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
+	# Fix feature request #810826
+	epatch "${FILESDIR}/fix-810826.patch"
+
+	base_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 
