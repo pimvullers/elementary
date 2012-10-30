@@ -15,7 +15,7 @@ RDEPEND="
 	dev-libs/glib:2
 	>=dev-libs/gobject-introspection-0.9.12
 	dev-libs/libgee:0
-	x11-libs/gtk+:3"
+	<x11-libs/gtk+-3.5:3"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.14
 	dev-util/pkgconfig
