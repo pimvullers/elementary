@@ -33,7 +33,7 @@ src_prepare() {
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 
 	# Fix feature request #810826
-	epatch "${FILESDIR}/fix-810826.patch"
+#	epatch "${FILESDIR}/fix-810826.patch"
 
 	base_src_prepare
 }
