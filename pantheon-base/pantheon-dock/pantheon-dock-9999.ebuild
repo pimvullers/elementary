@@ -2,9 +2,9 @@ EAPI=4
 
 inherit fdo-mime gnome2-utils autotools-utils bzr
 
-DESCRIPTION="Stupidly simple"
-HOMEPAGE="https://launchpad.net/plank"
-EBZR_REPO_URI="lp:plank"
+DESCRIPTION="The dock for elementary Pantheon, built on the awesome foundation of Plank"
+HOMEPAGE="https://launchpad.net/pantheon-dock"
+EBZR_REPO_URI="lp:pantheon-dock"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -19,7 +19,7 @@ RDEPEND="
 	>=x11-libs/bamf-0.2.58
 	>=dev-libs/glib-2.26.0:2
 	>=x11-libs/gtk+-2.22.0:2
-	!pantheon-base/pantheon-dock"
+	!pantheon-base/plank"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.18[vapigen]
 	dev-util/intltool
