@@ -60,7 +60,7 @@ DEPEND="${COMMON_DEPEND}
 RDEPEND="${COMMON_DEPEND}
 	!x11-misc/expocity"
 
-pkg_setup() {
+src_prepare() {
 	DOCS="AUTHORS ChangeLog HACKING MAINTAINERS NEWS README *.txt doc/*.txt"
 	G2CONF="${G2CONF}
 		--disable-static
@@ -72,9 +72,7 @@ pkg_setup() {
 		--enable-compile-warnings=maximum
 		--with-libcanberra
 		$(use_enable introspection)"
-}
 
-src_prepare() {
 	# Compat with Ubuntu metacity themes (e.g. x11-themes/light-themes)
 	epatch "${FILESDIR}/${PN}-3.2.1-ignore-shadow-and-padding.patch"
 
