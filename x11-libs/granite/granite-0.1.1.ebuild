@@ -1,14 +1,14 @@
 EAPI=4
 
-inherit gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
-EBZR_REPO_URI="lp:granite"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="demo nls static-libs"
 
 RDEPEND="
@@ -32,9 +32,6 @@ src_prepare() {
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
-
-	# Fix feature request #810826
-#	epatch "${FILESDIR}/fix-810826.patch"
 
 	base_src_prepare
 }
