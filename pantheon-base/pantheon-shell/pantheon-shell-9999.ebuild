@@ -21,7 +21,7 @@ RDEPEND="${CDEPEND}
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
 	pantheon-base/cerbere
-	pantheon-base/plank
+	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
 	pantheon-base/slingshot
 	pantheon-base/wingpanel
 	x11-wm/gala
