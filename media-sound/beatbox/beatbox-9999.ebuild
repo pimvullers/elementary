@@ -16,7 +16,7 @@ KEYWORDS="~amd64"
 IUSE="ayatana menu nls zeitgeist"
 
 RDEPEND="
-	dev-db/sqlheavy:0.1
+	|| ( dev-db/sqlheavy:0.2 dev-db/sqlheavy:0.1 )
 	dev-libs/glib:2
 	dev-libs/json-glib
 	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
@@ -33,7 +33,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 src_prepare() {
@@ -47,7 +47,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
