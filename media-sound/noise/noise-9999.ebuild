@@ -49,6 +49,7 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
+		-DICON_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
