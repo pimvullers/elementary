@@ -1,6 +1,6 @@
-diff -Naur --exclude .bzr egtk/gtk-3.0/gtk-dark.css dark-theme/gtk-3.0/gtk-dark.css
---- egtk/gtk-3.0/gtk-dark.css	1970-01-01 01:00:00.000000000 +0100
-+++ dark-theme/gtk-3.0/gtk-dark.css	2012-10-01 20:24:16.374927000 +0200
+diff -Naur egtk-orig/gtk-3.0/gtk-dark.css egtk/gtk-3.0/gtk-dark.css
+--- egtk-orig/gtk-3.0/gtk-dark.css	1970-01-01 01:00:00.000000000 +0100
++++ egtk/gtk-3.0/gtk-dark.css	2012-11-14 18:00:08.894818000 +0100
 @@ -0,0 +1,64 @@
 +/* Copyright 2011-2012 elementary
 +*
@@ -66,10 +66,19 @@ diff -Naur --exclude .bzr egtk/gtk-3.0/gtk-dark.css dark-theme/gtk-3.0/gtk-dark.
 +
 +@import url("gtk-widgets.css");
 +@import url("gtk-widgets-dark.css");
-diff -Naur --exclude .bzr egtk/gtk-3.0/gtk-widgets.css dark-theme/gtk-3.0/gtk-widgets.css
---- egtk/gtk-3.0/gtk-widgets.css	2012-10-01 20:41:22.074538000 +0200
-+++ dark-theme/gtk-3.0/gtk-widgets.css	2012-10-01 20:32:09.889668000 +0200
-@@ -992,8 +992,8 @@
+diff -Naur egtk-orig/gtk-3.0/gtk-widgets.css egtk/gtk-3.0/gtk-widgets.css
+--- egtk-orig/gtk-3.0/gtk-widgets.css	2012-11-14 17:59:33.742340594 +0100
++++ egtk/gtk-3.0/gtk-widgets.css	2012-11-14 18:00:08.894818000 +0100
+@@ -895,7 +895,7 @@
+ .dynamic-notebook GtkLabel,
+ .dynamic-notebook GtkImage {
+  
+-   color: shade (@bg_color, 0.35);
++   color: @text_color;
+ }
+ 
+ .dynamic-notebook .notebook {
+@@ -931,8 +931,8 @@
          to (alpha (#000, 0.20)));
      -unico-inner-stroke-gradient: -gtk-gradient (linear,
          left top, left bottom,
@@ -80,9 +89,9 @@ diff -Naur --exclude .bzr egtk/gtk-3.0/gtk-widgets.css dark-theme/gtk-3.0/gtk-wi
  
  }
  
-diff -Naur --exclude .bzr egtk/gtk-3.0/menu.css dark-theme/gtk-3.0/menu.css
---- egtk/gtk-3.0/menu.css	2012-10-01 20:41:22.074538000 +0200
-+++ dark-theme/gtk-3.0/menu.css	2012-10-01 20:32:09.889668000 +0200
+diff -Naur egtk-orig/gtk-3.0/menu.css egtk/gtk-3.0/menu.css
+--- egtk-orig/gtk-3.0/menu.css	2012-11-14 17:59:33.742340594 +0100
++++ egtk/gtk-3.0/menu.css	2012-11-14 18:00:08.894818000 +0100
 @@ -54,7 +54,8 @@
  .popover_bg {
      /*border-radius: 6;*/
@@ -112,4 +121,41 @@ diff -Naur --exclude .bzr egtk/gtk-3.0/menu.css dark-theme/gtk-3.0/menu.css
 +    color: alpha (#fff, 0.20);
  }
  
- .menubar.menuitem:active,
+ .menuitem:active,
+diff -Naur egtk-orig/metacity-1/metacity-theme-3.xml egtk/metacity-1/metacity-theme-3.xml
+--- egtk-orig/metacity-1/metacity-theme-3.xml	2012-11-14 17:59:33.739340588 +0100
++++ egtk/metacity-1/metacity-theme-3.xml	2012-11-14 18:00:08.894818000 +0100
+@@ -141,7 +141,7 @@
+ 
+ <draw_ops name="title_focused">
+ 	<title color="shade/gtk:bg[NORMAL]/1.30" x="((width - title_width) / 2) `max` 0" y="1 `max` ((height-title_height)/2)+1"/>
+-	<title color="shade/gtk:text[NORMAL]/2.00" x="((width - title_width) / 2) `max` 0" y="0 `max` ((height-title_height)/2)"/>
++	<title color="shade/gtk:text[NORMAL]/1.80" x="((width - title_width) / 2) `max` 0" y="0 `max` ((height-title_height)/2)"/>
+ </draw_ops>
+ 
+ <draw_ops name="title_unfocused">
+@@ -152,7 +152,11 @@
+ <!-- ::: TITLEBAR ::: -->
+ 
+ <draw_ops name="entire_background_focused">
+-	<rectangle color="gtk:bg[NORMAL]" x="1" y="5" width="width-2" height="height-6" filled="true" />
++	<!--<rectangle color="gtk:bg[NORMAL]" x="1" y="5" width="width-2" height="height-6" filled="true" />-->
++	<gradient type="vertical" x="1" y="1" width="width-2" height="height-2">
++		<color value="shade/gtk:bg[NORMAL]/1.0"/>
++		<color value="shade/gtk:bg[NORMAL]/2.0"/>
++	</gradient>
+ </draw_ops>
+ 
+ <draw_ops name="entire_background_unfocused">
+@@ -161,9 +165,10 @@
+ 
+ <draw_ops name="titlebar_fill_focused">
+ 	<gradient type="vertical" x="1" y="1" width="width-2" height="height-2">
+-		<color value="shade/gtk:bg[NORMAL]/1.04"/>
++		<color value="shade/gtk:bg[NORMAL]/1.4"/>
+ 		<color value="shade/gtk:bg[NORMAL]/1.0"/>
+ 	</gradient>
++	<rectangle color="shade/gtk:bg[NORMAL]/2.2" x="1" y="1" width="width-2" height="2" filled="true" />
+ </draw_ops>
+ 
+ <draw_ops name="titlebar_fill_unfocused">
