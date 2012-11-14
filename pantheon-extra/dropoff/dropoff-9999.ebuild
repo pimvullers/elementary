@@ -8,7 +8,7 @@ inherit fdo-mime gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Sharing your files easily and efficiently"
 HOMEPAGE="https://launchpad.net/dropoff"
-EBZR_REPO_URI="lp:dropoff"
+EBZR_REPO_URI="lp:~elementary-dev-community/dropoff/dropoff"
 
 LICENSE="GPL-3"
 SLOT="0"
