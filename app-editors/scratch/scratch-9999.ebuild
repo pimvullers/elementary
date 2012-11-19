@@ -23,6 +23,7 @@ RDEPEND="
 	plugins? ( 
 		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
 		dev-util/devhelp
+		app-text/gtkspell:3
 	)
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
