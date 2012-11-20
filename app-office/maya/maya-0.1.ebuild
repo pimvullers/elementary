@@ -37,7 +37,7 @@ pkg_setup() {
 
 src_prepare() {
 	# Fix bug #1080713
-	epatch "${FILESDIR}/fix-1080713.patch"
+	epatch "${FILESDIR}/${P}-fix-1080713.patch"
 
 	base_src_prepare
 }

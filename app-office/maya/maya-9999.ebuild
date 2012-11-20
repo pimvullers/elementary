@@ -34,13 +34,6 @@ pkg_setup() {
 	DOCS=( AUTHORS COPYING COPYRIGHT )
 }
 
-src_prepare() {
-	# Fix bug #1080713
-	epatch "${FILESDIR}/fix-1080713.patch"
-
-	base_src_prepare
-}
-
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
