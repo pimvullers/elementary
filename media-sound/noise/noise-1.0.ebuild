@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="Noise is the official audio player of elementary OS"
 HOMEPAGE="https://launchpad.net/noise"
-EBZR_REPO_URI="lp:noise"
+SRC_URI="https://launchpad.net/${PN}/0.x/luna-beta1/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="ayatana menu nls plugins upnp zeitgeist"
 
 REQUIRED_USE="upnp? ( plugins )"
@@ -38,6 +38,11 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig"
+
+pkg_setup() {
+	S="${WORKDIR}"
+	DOCS=( AUTHORS COPYING NEWS README )
+}
 
 src_prepare() {
 	# Disable generation of the translations (if needed)
