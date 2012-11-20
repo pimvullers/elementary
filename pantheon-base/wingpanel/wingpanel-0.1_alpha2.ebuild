@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-EBZR_REPO_URI="lp:wingpanel"
+SRC_URI="https://launchpad.net/${PN}/0.x/0.1-alpha2/+download/${PN}-0.1-alpha2.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
@@ -28,6 +28,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}"
 	DOCS="AUTHORS COPYING COPYRIGHT"
 }
 
