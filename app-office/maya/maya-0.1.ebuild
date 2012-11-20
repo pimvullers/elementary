@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="https://launchpad.net/maya"
-EBZR_REPO_URI="lp:maya"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}"
 	DOCS=( AUTHORS COPYING COPYRIGHT )
 }
 
