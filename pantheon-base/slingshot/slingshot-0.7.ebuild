@@ -1,14 +1,14 @@
 EAPI=4
 
-inherit gnome2-utils cmake-utils bzr
+inherit gnome2-utils cmake-utils
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="https://launchpad.net/slingshot"
-EBZR_REPO_URI="lp:slingshot"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
@@ -23,6 +23,7 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig"
 
 pkg_setup() {
+	S="${WORKDIR}"
 	DOCS=( AUTHORS COPYING )
 }
 
