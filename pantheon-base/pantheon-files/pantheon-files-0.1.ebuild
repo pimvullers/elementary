@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/pantheon-files"
-EBZR_REPO_URI="lp:pantheon-files"
+SRC_URI="https://launchpad.net/${PN}/0.x/luna-beta1/+download/${P}-luna-beta1.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+gvfs nls plugins"
 
 RDEPEND="
@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}"
 	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
 }
 
