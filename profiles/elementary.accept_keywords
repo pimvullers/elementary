@@ -1,4 +1,10 @@
+app-office/maya **
 mail-client/geary **
+media-sound/noise **
+pantheon-base/cerbere **
+pantheon-base/pantheon-files **
+pantheon-base/slingshot **
+pantheon-base/wingpanel **
 x11-terms/pantheon-terminal **
 x11-libs/granite **
 x11-themes/elementary-theme **
