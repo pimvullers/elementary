@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="A simple service to relaunch pantheon applications"
 HOMEPAGE="https://launchpad.net/cerbere"
-EBZR_REPO_URI="lp:cerbere"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
@@ -21,6 +21,10 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig"
+
+pkg_setup() {
+	S="${WORKDIR}"
+}
 
 src_prepare() {
 	epatch "${FILESDIR}/fix-1063970.patch"
