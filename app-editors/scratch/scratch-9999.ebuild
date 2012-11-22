@@ -43,6 +43,8 @@ src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory(plugins)//' CMakeLists.txt
 	use plugins || sed -i -e 's/;vte-2.90//' CMakeLists.txt
+
+	sed -i -e 's/add_subdirectory(core-tests)//' scratchcore/CMakeLists.txt
 }
 
 src_configure() {
