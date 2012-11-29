@@ -19,12 +19,14 @@ RDEPEND="
 	>=dev-db/sqlheavy-0.1.1:0.1
 	dev-db/sqlite:3
 	dev-libs/glib:2
-	dev-libs/libgee
+	dev-libs/libgee:0
 	dev-libs/libunique:3
 	dev-libs/gmime:2.6
 	gnome-base/libgnome-keyring
+	media-libs/libcanberra
 	net-libs/webkit-gtk:3
-	x11-libs/gtk+:3"
+	x11-libs/gtk+:3
+	x11-libs/libnotify"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.18
 	dev-util/pkgconfig"
