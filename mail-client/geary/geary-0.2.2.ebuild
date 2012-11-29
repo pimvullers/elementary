@@ -33,12 +33,17 @@ pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)
 }
 
+src_prepare() {
+	epatch "${FILESDIR}/fix-granite-0.1.1.patch"
+
+	base_src_prepare
+}
+
 src_configure() {	
 	local mycmakeargs=(
 		-DDESKTOP_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
-		-DLIBGRANITE_FOUND=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
