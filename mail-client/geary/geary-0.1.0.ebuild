@@ -4,15 +4,15 @@
 
 EAPI=4
 
-inherit fdo-mime gnome2-utils cmake-utils 
+inherit fdo-mime gnome2-utils cmake-utils
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="http://redmine.yorba.org/projects/geary/wiki"
-SRC_URI="http://yorba.org/download/${PN}/stable/${P}.tar.xz"
+SRC_URI="http://yorba.org/download/${PN}/0.1/${P}.tar.xz"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="

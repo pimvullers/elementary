@@ -26,7 +26,7 @@ RDEPEND="
 	net-libs/webkit-gtk:3
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	>=dev-lang/vala-0.17.4:0.18
+	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 pkg_setup() {
