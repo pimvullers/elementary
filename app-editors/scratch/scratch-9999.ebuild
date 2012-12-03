@@ -12,7 +12,7 @@ EBZR_REPO_URI="lp:scratch"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE="nls plugins"
 
 RDEPEND="
