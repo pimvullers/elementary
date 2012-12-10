@@ -10,3 +10,4 @@
 =media-libs/clutter-gtk-1.3*
 =media-libs/cogl-1.12*
 =net-libs/glib-networking-2.34*
+=x11-wm/mutter-3.6*
