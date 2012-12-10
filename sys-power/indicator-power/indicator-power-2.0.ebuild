@@ -26,6 +26,11 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
+src_install() {
+	autotools-utils_src_install
+	prune_libtool_files --all
+}
+
 pkg_preinst() {
 	gnome2_schemas_savelist
 }

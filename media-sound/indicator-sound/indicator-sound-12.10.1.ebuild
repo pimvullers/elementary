@@ -32,10 +32,6 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-#src_prepare() {
-#	epatch "${FILESDIR}/${P}-elementaryos.patch"
-#}
-
 src_configure() {
 	local myeconfargs=(
 		VALAC="$(type -p valac-0.14)"
@@ -45,10 +41,10 @@ src_configure() {
 	autotools-utils_src_configure
 }
 
-# Required since elementary patches break parallel build (bug #1029752)
-#src_compile() {
-#	autotools-utils_src_compile -j1
-#}
+src_install() {
+	autotools-utils_src_install
+	prune_libtool_files --all
+}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
