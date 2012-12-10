@@ -16,6 +16,7 @@ KEYWORDS="~amd64"
 IUSE="nls policykit static-libs"
 
 RDEPEND="
+	app-admin/packagekit-base
 	dev-libs/dbus-glib
 	>=dev-libs/glib-2.33:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
@@ -29,6 +30,11 @@ DEPEND="${RDEPEND}
 	dev-util/pkgconfig
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
+
+src_install() {
+	autotools-utils_src_install
+	prune_libtool_files --all
+}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
