@@ -18,7 +18,7 @@ DESCRIPTION="Evolution groupware backend"
 HOMEPAGE="http://projects.gnome.org/evolution/"
 
 # Note: explicitly "|| ( LGPL-2 LGPL-3 )", not "LGPL-2+".
-LICENSE="|| ( LGPL-2 LGPL-3 ) BSD DB"
+LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0"
 IUSE="api-doc-extras +gnome-online-accounts +introspection ipv6 ldap kerberos vala +weather"
 REQUIRED_USE="vala? ( introspection )"
