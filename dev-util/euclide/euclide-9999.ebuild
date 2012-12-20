@@ -24,7 +24,7 @@ RDEPEND="
 	x11-libs/granite
 	app-editors/scratch
 	x11-libs/gtk+:3
-	x11-libs/gtksourceview:3.0"
+	x11-libs/gtksourceview:3.0[introspection]"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.18
 	dev-util/pkgconfig"
