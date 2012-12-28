@@ -1,0 +1,64 @@
+=== modified file 'plugins/devhelp/devhelp.vala'
+--- plugins/devhelp/devhelp.vala	2012-08-03 16:48:30 +0000
++++ plugins/devhelp/devhelp.vala	2012-09-16 06:44:56 +0000
+@@ -44,7 +44,12 @@
+             
+             var aw = new Dh.AssistantView ();
+             
+-            dhbase = plugins.dhbase as Dh.Base;
++            if (plugins.dhbase != null)
++                dhbase = plugins.dhbase as Dh.Base;
++            else {
++                plugins.dhbase = new Dh.Base ();
++                dhbase = plugins.dhbase as Dh.Base;
++            }   
+             
+             aw.set_base (dhbase);
+             
+
+=== modified file 'scratchcore/CMakeLists.txt'
+--- scratchcore/CMakeLists.txt	2012-08-03 16:48:30 +0000
++++ scratchcore/CMakeLists.txt	2012-09-16 06:44:56 +0000
+@@ -23,11 +23,6 @@
+ link_directories(${LIB_PATHS})
+ #VALA stuff
+ 
+-pkg_check_modules (DEVHELP REQUIRED "libdevhelp-3.0")
+-add_definitions (${DEVHELP_CFLAGS})
+-link_libraries (${DEVHELP_LIBRARIES})
+-link_directories (${DEVHELP_LIBRARY_DIRS})
+-
+ pkg_check_modules (PEASGTK REQUIRED "libpeas-gtk-1.0")
+ add_definitions (${PEASGTK_CFLAGS})
+ link_libraries (${PEASGTK_LIBRARIES})
+@@ -48,7 +43,6 @@
+     gee-1.0
+     libpeas-1.0
+     peas-gtk
+-    libdevhelp-3.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_SOURCE_DIR}/vapi
+
+=== modified file 'scratchcore/PluginManager.vala'
+--- scratchcore/PluginManager.vala	2012-08-07 14:20:48 +0000
++++ scratchcore/PluginManager.vala	2012-09-16 06:44:56 +0000
+@@ -54,7 +54,7 @@
+     public unowned List<Gtk.TextView> all_source_view { private set; get; }
+     
+     // Utilities for some core plugins
+-    public GLib.Object dhbase;
++    public GLib.Object? dhbase = null;
+     
+     // base args to init external libs
+     public unowned string[] args;
+@@ -80,8 +80,6 @@
+         manager.hook_source_view.connect( (m) => {
+             all_source_view.append(m);
+         });
+-        // Utilities for some core plugins
+-        dhbase = new Dh.Base ();
+     }
+     
+     public void register_function_arg (Hook hook, HookFunctionArg hook_function) {
+

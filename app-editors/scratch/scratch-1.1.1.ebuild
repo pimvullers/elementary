@@ -22,7 +22,7 @@ RDEPEND="
 	gnome-base/gconf:2
 	plugins? ( 
 		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
-		dev-util/devhelp
+		<dev-util/devhelp-3.5
 	)
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
@@ -43,6 +43,9 @@ src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory(plugins)//' CMakeLists.txt
 	use plugins || sed -i -e 's/;vte-2.90//' CMakeLists.txt
+
+	# Fix devhelp dependency in scratchcore (bug #1040924)
+	epatch "${FILESDIR}/${P}-devhelp.patch"
 }
 
 src_configure() {
