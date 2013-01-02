@@ -22,7 +22,7 @@ RDEPEND="
 	gnome-base/gconf:2
 	plugins? ( 
 		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
-		dev-util/devhelp
+		<dev-util/devhelp-3.5
 		app-text/gtkspell:3
 	)
 	>=x11-libs/gtk+-3.4:3
