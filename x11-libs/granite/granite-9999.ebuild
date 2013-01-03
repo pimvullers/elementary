@@ -28,13 +28,10 @@ pkg_setup() {
 
 src_prepare() {
 	# Disable building of the demo application (if needed)
-	use demo || sed -i 's/add_subdirectory(demo)//' CMakeLists.txt
+	use demo || sed -i 's/add_subdirectory (demo)//' CMakeLists.txt
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
-
-	# Fix feature request #810826
-#	epatch "${FILESDIR}/fix-810826.patch"
 
 	base_src_prepare
 }
