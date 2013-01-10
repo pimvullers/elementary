@@ -16,14 +16,14 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
-	>=dev-libs/glib-2.28.0:2
-	>=dev-libs/libgee-0.5.0
-	>=dev-libs/libindicator-0.3.92
-	>=x11-libs/gtk+-3.0.0:3
+	dev-libs/glib:2
+	dev-libs/libgee:0
+	dev-libs/libindicator:3
+	x11-libs/gtk+:3
+	x11-libs/granite
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
-	x11-libs/granite
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -35,7 +35,7 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DINDICATORDIR="$(pkg-config --variable=indicatordir indicator3-0.4)"
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
