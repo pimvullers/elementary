@@ -23,7 +23,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	dev-lang/vala:0.16
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -31,11 +31,17 @@ pkg_setup() {
 	DOCS="AUTHORS COPYING COPYRIGHT"
 }
 
+src_prepare() {
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
+	base_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DINDICATORDIR="$(pkg-config --variable=indicatordir indicator3-0.4)"
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
 	)
 
 	cmake-utils_src_configure
