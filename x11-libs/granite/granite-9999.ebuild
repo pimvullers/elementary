@@ -13,10 +13,9 @@ IUSE="demo nls static-libs"
 
 RDEPEND="
 	dev-libs/glib:2
-	>=dev-libs/gobject-introspection-0.9.12
+	dev-libs/gobject-introspection
 	dev-libs/libgee:0
-	>=x11-libs/gtk+-3.3.14:3
-	<x11-libs/gtk+-3.5:3"
+	>=x11-libs/gtk+-3.4:3"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.18
 	dev-util/pkgconfig
