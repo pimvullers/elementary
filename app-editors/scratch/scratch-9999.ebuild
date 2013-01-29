@@ -13,23 +13,24 @@ EBZR_REPO_URI="lp:scratch"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls plugins"
+IUSE="nls devhelp files pastebin spell terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
+	dev-libs/gobject-introspection
 	dev-libs/libgee:0
 	dev-libs/libpeas
 	gnome-base/gconf:2
-	plugins? ( 
-		|| ( pantheon-base/pantheon-files pantheon-base/marlin ) 
-		<dev-util/devhelp-3.5
-		app-text/gtkspell:3
-	)
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
 	x11-libs/granite
 	dev-libs/libzeitgeist
-	plugins? ( x11-libs/vte:2.90 )"
+	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
+	devhelp? ( dev-util/devhelp )
+	pastebin? ( net-libs/libsoup )
+	spell? ( app-text/gtkspell:3 )
+	webkit? ( net-libs/webkit-gtk:3 )
+	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
 	dev-lang/vala:0.16
 	dev-util/pkgconfig
@@ -40,10 +41,24 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# Translations
 	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
-	use plugins || sed -i -e 's/add_subdirectory(plugins)//' CMakeLists.txt
-	use plugins || sed -i -e 's/;vte-2.90//' CMakeLists.txt
 
+	# Plugins
+	use devhelp || \
+	  sed -i -e 's/add_subdirectory (devhelp)//' plugins/CMakeLists.txt
+	use files || \
+      sed -i -e 's/add_subdirectory (filemanager)//' plugins/CMakeLists.txt
+	use pastebin || \
+	  sed -i -e 's/add_subdirectory (pastebin)//' plugins/CMakeLists.txt
+	use terminal || \
+	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
+	use spell || \
+	  sed -i -e 's/add_subdirectory (spell-check)//' plugins/CMakeLists.txt
+	use webkit || \
+	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
+
+	# Disable tests
 	sed -i -e 's/add_subdirectory(core-tests)//' scratchcore/CMakeLists.txt
 }
 
