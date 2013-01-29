@@ -1,0 +1,2 @@
+>=net-im/indicator-messages-12
+>=x11-libs/bamf-0.3
