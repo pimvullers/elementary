@@ -4,7 +4,7 @@
 
 EAPI=4
 
-inherit cmake-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Pantheon Login Screen for LightDM"
 HOMEPAGE="https://launchpad.net/pantheon-greeter"
@@ -27,9 +27,22 @@ DEPEND="${DEPEND}
 
 src_configure() {
 	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
 }
 
