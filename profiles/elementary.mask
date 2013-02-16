@@ -1,2 +1,4 @@
 >=net-im/indicator-messages-12
 >=x11-libs/bamf-0.3
+>=x11-libs/gtk+-3.5
+>=x11-misc/xdg-user-dirs-gtk-0.10
