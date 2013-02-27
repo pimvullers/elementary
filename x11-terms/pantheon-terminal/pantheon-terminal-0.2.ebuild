@@ -28,7 +28,6 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	DOCS=( AUTHORS README )
-    S=${WORKDIR}
 }
 
 src_prepare() {
