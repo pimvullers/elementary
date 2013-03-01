@@ -29,6 +29,10 @@ DEPEND="${RDEPEND}
 	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
+src_prepare() {
+	epatch "${FILESDIR}/${P}-sourceview.patch"
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF

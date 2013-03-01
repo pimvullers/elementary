@@ -1,0 +1,13 @@
+=== modified file 'euclidecore/CMakeLists.txt'
+--- euclidecore/CMakeLists.txt	2011-10-25 11:33:28 +0000
++++ euclidecore/CMakeLists.txt	2013-03-01 14:13:13 +0000
+@@ -31,7 +31,7 @@
+ set(CFLAGS ${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER})
+ add_definitions(${CFLAGS} "-DGETTEXT_PACKAGE=\"${PKGNAME_}\"")
+ set(LIBS
+-	${DEP_LIBRARIES}
++	${DEPS_LIBRARIES}
+ )
+ set(LIB_PATHS
+ 	${DEPS_LIBRARY_DIRS}
+
