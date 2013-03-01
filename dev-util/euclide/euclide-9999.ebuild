@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-sourceview.patch"
+	epatch "${FILESDIR}/${P}-scratch-text-editor.patch"
 }
 
 src_configure() {
