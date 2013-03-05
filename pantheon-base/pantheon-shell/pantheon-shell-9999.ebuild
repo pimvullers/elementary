@@ -32,6 +32,12 @@ DEPEND="${CDEPEND}"
 src_prepare() {
 	# Use gnome as fallback instead of ubuntu
 	sed -i 's/ubuntu/gnome/' debian/pantheon.session
+
+	# Use gnome-session wrapper that sets XDG_CURRENT_DESKTOP
+	sed -i 's/gnome-session*/pantheon-session/' debian/pantheon.desktop
+
+	# Correct paths
+	sed -i 's#/usr/lib/[^/]*/#/usr/libexec/#' autostart/*
 }
 
 src_install() {
@@ -49,6 +55,8 @@ src_install() {
 
 	insinto /usr/share/pantheon
 	doins -r applications
+
+	dobin ${FILESDIR}/pantheon-session
 }
 
 pkg_postinst() {

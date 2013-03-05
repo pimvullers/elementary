@@ -1,0 +1,4 @@
+#!/bin/sh
+
+export XDG_CURRENT_DESKTOP=Pantheon
+gnome-session --session=pantheon
