@@ -34,6 +34,9 @@ pkg_setup() {
 src_prepare() {
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 
+	# Disable slide in animation since it is broken.
+	epatch "$FILESDIR/${P}-no-animation.patch"
+
 	base_src_prepare
 }
 
