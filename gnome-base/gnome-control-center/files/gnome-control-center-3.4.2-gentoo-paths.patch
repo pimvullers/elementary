@@ -1,0 +1,147 @@
+From 44cd56e05a59fbdfcd3dc5b12c0c7ff178b230f1 Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gentoo.org>
+Date: Wed, 18 Jul 2012 22:12:04 -0400
+Subject: [PATCH] Use Gentoo-appropriate absolute paths
+
+---
+ panels/common/Makefile.am               |    2 +-
+ panels/datetime/Makefile.am             |    1 +
+ panels/datetime/test-endianess.c        |    4 ++--
+ panels/datetime/test-timezone.c         |    2 +-
+ panels/datetime/tz.h                    |    4 ++--
+ panels/printers/Makefile.am             |    3 +++
+ panels/printers/cc-printers-panel.c     |    4 ++--
+ panels/printers/pp-new-printer-dialog.c |    2 +-
+ panels/user-accounts/Makefile.am        |    2 +-
+ 9 files changed, 14 insertions(+), 10 deletions(-)
+
+diff --git a/panels/common/Makefile.am b/panels/common/Makefile.am
+index 6ed8e6c..2d7b1cc 100644
+--- a/panels/common/Makefile.am
++++ b/panels/common/Makefile.am
+@@ -9,7 +9,7 @@ AM_CPPFLAGS =						\
+ 	$(LIBLANGUAGE_CFLAGS)				\
+ 	-DDATADIR=\""$(datadir)"\"			\
+ 	-DUIDIR=\""$(pkgdatadir)/ui"\"			\
+-	-DLIBLOCALEDIR=\""$(prefix)/lib/locale"\"       \
++	-DLIBLOCALEDIR=\""$(libdir)/locale"\"       \
+ 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"        \
+ 	-DUM_PIXMAP_DIR=\""$(pkgdatadir)/pixmaps"\"
+ 
+diff --git a/panels/datetime/Makefile.am b/panels/datetime/Makefile.am
+index 65ee027..9a97d24 100644
+--- a/panels/datetime/Makefile.am
++++ b/panels/datetime/Makefile.am
+@@ -72,6 +72,7 @@ AM_CPPFLAGS =						\
+ 	-DGNOMELOCALEDIR="\"$(datadir)/locale\""	\
+ 	-DGNOMECC_DATA_DIR="\"$(pkgdatadir)\""		\
+ 	-DDATADIR="\"$(uidir)\""			\
++	-DREALDATADIR="\"$(datadir)\""			\
+ 	$(NULL)
+ 
+ noinst_PROGRAMS = test-timezone-gfx test-endianess test-timezone
+diff --git a/panels/datetime/test-endianess.c b/panels/datetime/test-endianess.c
+index 490df17..b43fc87 100644
+--- a/panels/datetime/test-endianess.c
++++ b/panels/datetime/test-endianess.c
+@@ -38,11 +38,11 @@ int main (int argc, char **argv)
+ 		return 0;
+ 	}
+ 
+-	dir = g_dir_open ("/usr/share/i18n/locales/", 0, NULL);
++	dir = g_dir_open (REALDATADIR "/i18n/locales/", 0, NULL);
+ 	if (dir == NULL) {
+ 		/* Try with /usr/share/locale/
+ 		 * https://bugzilla.gnome.org/show_bug.cgi?id=646780 */
+-		dir = g_dir_open ("/usr/share/locale/", 0, NULL);
++		dir = g_dir_open (REALDATADIR "/locale/", 0, NULL);
+ 		if (dir == NULL) {
+ 			return 1;
+ 		}
+diff --git a/panels/datetime/test-timezone.c b/panels/datetime/test-timezone.c
+index 5667657..8483b87 100644
+--- a/panels/datetime/test-timezone.c
++++ b/panels/datetime/test-timezone.c
+@@ -1,7 +1,7 @@
+ #include <gtk/gtk.h>
+ #include "cc-timezone-map.h"
+ 
+-#define TZ_DIR "/usr/share/zoneinfo/"
++#define TZ_DIR REALDATADIR "/zoneinfo/"
+ 
+ static GList *
+ get_timezone_list (GList *tzs,
+diff --git a/panels/datetime/tz.h b/panels/datetime/tz.h
+index 71c1c23..ca4b3c4 100644
+--- a/panels/datetime/tz.h
++++ b/panels/datetime/tz.h
+@@ -29,9 +29,9 @@
+ #include <glib.h>
+ 
+ #ifndef __sun
+-#  define TZ_DATA_FILE "/usr/share/zoneinfo/zone.tab"
++#  define TZ_DATA_FILE REALDATADIR "/zoneinfo/zone.tab"
+ #else
+-#  define TZ_DATA_FILE "/usr/share/lib/zoneinfo/tab/zone_sun.tab"
++#  define TZ_DATA_FILE REALDATADIR "/lib/zoneinfo/tab/zone_sun.tab"
+ #endif
+ 
+ typedef struct _TzDB TzDB;
+diff --git a/panels/printers/Makefile.am b/panels/printers/Makefile.am
+index 0dade8c..3e5d7a8 100644
+--- a/panels/printers/Makefile.am
++++ b/panels/printers/Makefile.am
+@@ -12,6 +12,9 @@ INCLUDES = 						\
+ 	-DGNOMELOCALEDIR="\"$(datadir)/locale\""	\
+ 	-DGNOMECC_DATA_DIR="\"$(pkgdatadir)\""		\
+ 	-DDATADIR="\"$(uidir)\""			\
++	-DREALDATADIR="\"$(datadir)\""			\
++	-DPREFIX="\"$(prefix)\""			\
++	-DLIBEXECDIR="\"$(libexecdir)\""			\
+ 	$(NULL)
+ 
+ ccpanelsdir = $(PANELS_DIR)
+diff --git a/panels/printers/cc-printers-panel.c b/panels/printers/cc-printers-panel.c
+index f5cf0d9..09f3e56 100644
+--- a/panels/printers/cc-printers-panel.c
++++ b/panels/printers/cc-printers-panel.c
+@@ -2199,8 +2199,8 @@ test_page_cb (GtkButton *button,
+ 
+   if (printer_name)
+     {
+-      const gchar  *const dirs[] = { "/usr/share/cups",
+-                                     "/usr/local/share/cups",
++      const gchar  *const dirs[] = { REALDATADIR "/cups",
++                                     PREFIX "/local/share/cups",
+                                      NULL };
+       const gchar  *testprint[] = { "%s/data/testprint",
+                                     "%s/data/testprint.ps",
+diff --git a/panels/printers/pp-new-printer-dialog.c b/panels/printers/pp-new-printer-dialog.c
+index eb134b5..d435a61 100644
+--- a/panels/printers/pp-new-printer-dialog.c
++++ b/panels/printers/pp-new-printer-dialog.c
+@@ -1058,7 +1058,7 @@ search_address_cb (GtkToggleButton *togglebutton,
+                 }
+ 
+               /* Use SNMP to get printer's informations */
+-              command = g_strdup_printf ("/usr/lib/cups/backend/snmp %s", host);
++              command = g_strdup_printf (LIBEXECDIR "/cups/backend/snmp %s", host);
+               if (g_spawn_command_line_sync (command, &standard_output, NULL, &exit_status, &error))
+                 {
+                   if (exit_status == 0 && standard_output)
+diff --git a/panels/user-accounts/Makefile.am b/panels/user-accounts/Makefile.am
+index 2907f01..4da4fee 100644
+--- a/panels/user-accounts/Makefile.am
++++ b/panels/user-accounts/Makefile.am
+@@ -10,7 +10,7 @@ ccpanels_LTLIBRARIES = libuser-accounts.la
+ AM_CPPFLAGS =						\
+ 	-DDATADIR=\""$(datadir)"\"			\
+ 	-DUIDIR=\""$(pkgdatadir)/ui/user-accounts"\"	\
+-	-DLIBLOCALEDIR=\""$(prefix)/lib/locale"\"       \
++	-DLIBLOCALEDIR=\""$(libdir)/locale"\"       \
+ 	-DGNOMELOCALEDIR=\""$(datadir)/locale"\"        \
+ 	-DUM_PIXMAP_DIR=\""$(pkgdatadir)/pixmaps"\"	\
+ 	-I$(srcdir)/../common/				\
+-- 
+1.7.8.6
+
