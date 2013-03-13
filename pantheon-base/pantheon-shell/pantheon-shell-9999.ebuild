@@ -18,7 +18,7 @@ IUSE="libnotify lightdm screensaver"
 CDEPEND="
 	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
 RDEPEND="${CDEPEND}
-	gnome-base/gnome-session
+	>=gnome-base/gnome-session-3.0.0
 	gnome-base/gnome-settings-daemon
 	pantheon-base/cerbere
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
@@ -30,11 +30,11 @@ RDEPEND="${CDEPEND}
 DEPEND="${CDEPEND}"
 
 src_prepare() {
-	# Use gnome as fallback instead of ubuntu
-	sed -i 's/ubuntu/gnome/' debian/pantheon.session
+	# Use gnome as fallback instead of ubuntu and mutter instead of gala
+	sed -i -e 's/ubuntu/gnome/' -e 's/gala/mutter/' debian/pantheon.session
 
 	# Use gnome-session wrapper that sets XDG_CURRENT_DESKTOP
-	sed -i 's/gnome-session*/pantheon-session/' debian/pantheon.desktop
+	sed -i 's/gnome-session --session=pantheon/pantheon-session/' debian/pantheon.desktop
 
 	# Correct paths
 	sed -i 's#/usr/lib/[^/]*/#/usr/libexec/#' autostart/*
