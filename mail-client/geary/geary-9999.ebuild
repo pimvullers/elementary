@@ -15,30 +15,25 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-RDEPEND="
-	>=dev-db/sqlheavy-0.1.1:0.1
+CDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/libgee:0
 	dev-libs/libunique:3
 	dev-libs/gmime:2.6
-	gnome-base/libgnome-keyring
+	>=gnome-base/libgnome-keyring-3.2.2
 	media-libs/libcanberra
 	net-libs/webkit-gtk:3
-	x11-libs/gtk+:3
+	>=x11-libs/gtk+-3.4.0:3
 	x11-libs/libnotify"
-DEPEND="${RDEPEND}
+RDEPEND="${CDEPEND}
+	gnome-base/gsettings-desktop-schemas"
+DEPEND="${CDEPEND}
 	dev-lang/vala:0.18
 	dev-util/pkgconfig"
 
 pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)
-}
-
-src_prepare() {
-	epatch "${FILESDIR}/fix-granite-0.1.1.patch"
-
-	base_src_prepare
 }
 
 src_configure() {	
