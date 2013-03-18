@@ -18,7 +18,7 @@ IUSE="nls static-libs"
 RDEPEND="
 	>=dev-libs/glib-2.33:2
 	dev-libs/libindicator:3
-	gnome-base/gnome-settings-daemon
+	>=gnome-base/gnome-settings-daemon-3.1.5
 	sys-power/upower
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}

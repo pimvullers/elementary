@@ -22,7 +22,7 @@ RDEPEND="
 	dev-libs/libindicator:3
 	!pantheon-extra/indicator-pantheon-session
 	policykit? ( sys-auth/polkit )
-	sys-fs/udev[gudev]
+	virtual/udev[gudev]
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	dev-util/intltool

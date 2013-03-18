@@ -21,7 +21,7 @@ RDEPEND="
 	dev-libs/libdbusmenu:3[gtk]
 	dev-libs/libindicator:3
 	policykit? ( sys-auth/polkit )
-	sys-fs/udev[gudev]
+	virtual/udev[gudev]
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	dev-util/intltool
