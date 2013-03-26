@@ -10,25 +10,25 @@ DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
 EBZR_REPO_URI="lp:bamf"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+introspection doc static-libs"
+IUSE="+introspection doc static-libs -webapps"
 
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
-	dev-libs/libunity-webapps
+	webapps? ( dev-libs/libunity-webapps )
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
 	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16[vapigen]
-	dev-util/gtk-doc
+	dev-lang/vala:0.18[vapigen]
+	doc? ( dev-util/gtk-doc )
 	introspection? ( dev-libs/gobject-introspection )
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
@@ -43,7 +43,8 @@ src_configure() {
 		--disable-gtktest
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
-		VALA_API_GEN="$(type -p vapigen-0.16)"
+		$(use_enable webapps)
+		VALA_API_GEN="$(type -p vapigen-0.18)"
 	)
 
 	autotools-utils_src_configure

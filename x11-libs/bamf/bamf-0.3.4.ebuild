@@ -13,13 +13,13 @@ SRC_URI="http://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.gz"
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="+introspection doc static-libs"
+IUSE="+introspection doc static-libs -webapps"
 
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
-	dev-libs/libunity-webapps
+	webapps? ( dev-libs/libunity-webapps )
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
@@ -39,6 +39,7 @@ src_configure() {
 		--disable-gtktest
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
+		$(use_enable webapps)
 		VALA_API_GEN="$(type -p vapigen-0.18)"
 	)
 
