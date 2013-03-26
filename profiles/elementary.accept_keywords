@@ -1,7 +1,9 @@
 app-editors/scratch **
 app-office/maya **
+dev-libs/libappstore **
 mail-client/geary **
 media-sound/noise **
+pantheon-base/appcenter **
 pantheon-base/cerbere **
 pantheon-base/pantheon-files **
 pantheon-base/slingshot **
