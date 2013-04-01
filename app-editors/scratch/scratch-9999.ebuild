@@ -32,7 +32,7 @@ RDEPEND="
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	dev-lang/vala:0.18
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -65,7 +65,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
 	)
 
 	cmake-utils_src_configure
