@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
@@ -23,8 +25,8 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -37,14 +39,15 @@ src_prepare() {
 	# Disable slide in animation since it is broken.
 	epatch "$FILESDIR/${P}-no-animation.patch"
 
-	base_src_prepare
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DINDICATORDIR="$(pkg-config --variable=indicatordir indicator3-0.4)"
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

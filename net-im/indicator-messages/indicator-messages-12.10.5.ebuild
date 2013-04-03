@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/net-im/indicator-messages/indicator-messages-0.6.0.ebuild,v 1.1 2012/07/26 16:52:46 ssuominen Exp $
 
-EAPI=4
+EAPI=5
 inherit eutils gnome2-utils
 
 DESCRIPTION="A place on the user's desktop that collects messages that need a response"

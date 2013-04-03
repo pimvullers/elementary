@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit gnome2-utils autotools-utils bzr
 
@@ -30,10 +30,12 @@ DEPEND="${RDEPEND}
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
 
+AUTOTOOLS_AUTORECONF=yes
+
 src_prepare() {
 	sed -i 's/packagekit-glib2//' configure.ac
 
-	NOCONFIGURE=1 ./autogen.sh
+#	NOCONFIGURE=1 ./autogen.sh
 
 	autotools-utils_src_prepare
 }

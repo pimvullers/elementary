@@ -2,11 +2,13 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.14
 
-DESCRIPTION="A music player written for the elementary project"
+inherit fdo-mime gnome2-utils vala cmake-utils
+
+DESCRIPTION="A music player with focus on speed, simplicity and music discovery"
 HOMEPAGE="https://launchpad.net/beat-box"
 SRC_URI="https://launchpad.net/beat-box/trunk/0.3/+download/${PN}_0.1-0%7Er507%2Bpkg15%7Eprecise1.tar.gz"
 
@@ -34,8 +36,8 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 src_unpack() {
 	default_src_unpack
@@ -46,12 +48,15 @@ src_unpack() {
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.14)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

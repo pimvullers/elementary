@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 VALA_MIN_API_VERSION="0.16"
 
@@ -25,7 +25,7 @@ RDEPEND="
 	dev-libs/libgee"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=( AUTHORS COPYING )

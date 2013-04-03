@@ -1,6 +1,8 @@
-EAPI=4
+EAPI=5
 
-inherit gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="https://launchpad.net/slingshot"
@@ -20,19 +22,24 @@ RDEPEND="
 	x11-libs/granite
 	>=x11-libs/gtk+-3.2.0:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
 	S="${WORKDIR}"
 	DOCS=( AUTHORS COPYING )
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DICONCACHE_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="A sleek and fast GTK3 file manager"
 HOMEPAGE="https://launchpad.net/marlin"
@@ -27,8 +29,8 @@ RDEPEND="
 	x11-libs/pango
 	!pantheon-base/pantheon-files"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -38,13 +40,16 @@ pkg_setup() {
 src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

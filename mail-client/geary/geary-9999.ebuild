@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit fdo-mime gnome2-utils cmake-utils git-2
 
@@ -29,8 +29,8 @@ CDEPEND="
 RDEPEND="${CDEPEND}
 	gnome-base/gsettings-desktop-schemas"
 DEPEND="${CDEPEND}
-	dev-lang/vala:0.18
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)

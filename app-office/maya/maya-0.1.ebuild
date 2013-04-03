@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="https://launchpad.net/maya"
@@ -26,8 +28,8 @@ RDEPEND="
     x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -39,13 +41,14 @@ src_prepare() {
 	# Fix bug #1080713
 	epatch "${FILESDIR}/${P}-fix-1080713.patch"
 
-	base_src_prepare
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

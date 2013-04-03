@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit vala cmake-utils
 
 DESCRIPTION="Use PackageKit and SQLHeavy to build a fast distro agnostic applications store."
 HOMEPAGE="https://launchpad.net/libappstore"
@@ -22,7 +24,7 @@ RDEPEND="
 	dev-libs/libgee:0
 	gtk? ( >=x11-libs/gtk+-3.3.14:3 )"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	virtual/pkgconfig"
 
 pkg_setup() {
@@ -34,13 +36,14 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-optional-gtk.patch"
 
 	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		$(cmake-utils_use_disable gtk GTK)
 		$(cmake-utils_use_want gtk GTK)
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

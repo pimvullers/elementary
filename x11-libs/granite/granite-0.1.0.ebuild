@@ -1,6 +1,8 @@
-EAPI=4
+EAPI=5
 
-inherit cmake-utils
+VALA_MIN_API_VERSION=0.14
+
+inherit vala cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
@@ -17,8 +19,8 @@ RDEPEND="
 	dev-libs/libgee:0
 	<x11-libs/gtk+-3.5:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -31,11 +33,14 @@ src_prepare() {
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.14)"
+		-DVALA_EXECUTABLE="${VALAC}"
 		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 

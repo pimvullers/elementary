@@ -1,6 +1,8 @@
-EAPI=4
+EAPI=5
 
-inherit gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
@@ -18,8 +20,8 @@ RDEPEND="
 	>=x11-libs/gtk+-3.3.14:3
 	<x11-libs/gtk+-3.5:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -33,13 +35,14 @@ src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 
-	base_src_prepare
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 		$(use static-libs && echo "-DBUILD_STATIC=Yes")
 	)
 

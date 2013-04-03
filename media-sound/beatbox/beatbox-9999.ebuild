@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="A music player with focus on speed, simplicity and music discovery"
 HOMEPAGE="https://launchpad.net/beat-box"
@@ -33,21 +35,25 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 src_prepare() {
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
 	# Disable built-in gtk-update-icon-cache
-	sed -i '/ICON_UPDATE/s/ ON/ OFF/' images/CMakeLists.txt
+	#sed -i '/ICON_UPDATE/s/ ON/ OFF/' images/CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DICON_UPDATE=OFF
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

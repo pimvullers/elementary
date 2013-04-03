@@ -35,7 +35,7 @@ RDEPEND="
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {

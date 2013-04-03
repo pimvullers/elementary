@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit gnome2-utils autotools-utils
+VALA_MIN_API_VERSION=0.14
+
+inherit gnome2-utils vala autotools-utils
 
 DESCRIPTION="A unified sound menu"
 HOMEPAGE="https://launchpad.net/indicator-sound"
@@ -27,14 +29,18 @@ RDEPEND="
 	x11-libs/libido:3
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.14
+	$(vala_depend)
 	dev-util/intltool
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
+
+src_prepare() {
+	autotools-utils_src_prepare
+	vala_src_prepare
+}
 
 src_configure() {
 	local myeconfargs=(
-		VALAC="$(type -p valac-0.14)"
 		--disable-schemas-compile
 	)
 

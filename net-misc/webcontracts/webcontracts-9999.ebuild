@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit gnome2-utils cmake-utils bzr
 
@@ -24,7 +24,7 @@ RDEPEND="
 	pantheon-base/libpantheon
 	x11-libs/granite"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	virtual/pkgconfig"
 
 src_configure() {

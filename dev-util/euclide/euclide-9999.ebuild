@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit fdo-mime gnome2-utils cmake-utils bzr
 
@@ -26,8 +26,8 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/gtksourceview:3.0[introspection]"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-sourceview.patch"

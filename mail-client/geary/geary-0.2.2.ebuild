@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit fdo-mime gnome2-utils cmake-utils
 
@@ -28,8 +28,8 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)

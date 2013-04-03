@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Noise is the official audio player of elementary OS"
 HOMEPAGE="https://launchpad.net/noise"
@@ -37,8 +39,8 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
 	S="${WORKDIR}"
@@ -51,13 +53,16 @@ src_prepare() {
 
 	# Disable building of plugins (if needed)
 	use plugins || sed -i 's/add_subdirectory(plugins)//' CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare	
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DICON_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

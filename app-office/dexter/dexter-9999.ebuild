@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit autotools-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit vala autotools-utils bzr
 
 DESCRIPTION="Dexter is a sexy, simple address book with end users in mind"
 HOMEPAGE="https://launchpad.net/dexter-rolodex"
@@ -26,8 +28,8 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libnotify"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig
+	$(vala_depend)
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
@@ -35,14 +37,8 @@ pkg_setup() {
 }
 
 src_prepare() {
-	./autogen.sh --version
-}
-
-src_configure() {
-	local myeconfargs=(
-		VALAC="$(type -p valac-0.16)"
-	)
-
-	autotools-utils_src_configure
+#	./autogen.sh --version
+	autotools-utils_src_prepare
+	vala_src_prepare
 }
 

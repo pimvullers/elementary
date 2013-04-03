@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="A fast photo booth application designed for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/snap-elementary"
@@ -24,17 +26,22 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
-	DOCS="README"
+	DOCS=(README)
+}
+
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

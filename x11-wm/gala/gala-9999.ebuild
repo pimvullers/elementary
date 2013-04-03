@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
@@ -25,13 +27,18 @@ RDEPEND="
 	x11-libs/libXfixes
 	>=x11-wm/mutter-3.5.3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	virtual/pkgconfig"
+
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

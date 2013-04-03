@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit vala cmake-utils bzr
 
 DESCRIPTION="A simple yet flexible GTK dialog tool"
 HOMEPAGE="https://launchpad.net/gaffel"
@@ -19,16 +21,21 @@ RDEPEND="
 	>=dev-libs/glib-2.26.0:2
     >=x11-libs/gtk+-3.0.8:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 pkg_setup() {
 	DOCS=( COPYING README )
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

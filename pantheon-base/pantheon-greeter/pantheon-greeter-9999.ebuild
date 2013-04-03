@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
 inherit gnome2-utils cmake-utils bzr
 
@@ -22,7 +22,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	>=x11-misc/lightdm-1.2"
 DEPEND="${DEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	virtual/pkgconfig"
 
 src_configure() {

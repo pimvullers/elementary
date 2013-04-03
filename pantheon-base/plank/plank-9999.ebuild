@@ -1,6 +1,9 @@
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils autotools-utils bzr
+VALA_MIN_API_VERSION=0.16
+VALA_USE_DEPEND=vapigen
+
+inherit fdo-mime gnome2-utils vala autotools-utils bzr
 
 DESCRIPTION="Stupidly simple"
 HOMEPAGE="https://launchpad.net/plank"
@@ -21,25 +24,26 @@ RDEPEND="
 	>=x11-libs/gtk+-2.22.0:2
 	!pantheon-base/pantheon-dock"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18[vapigen]
+	$(vala_depend)
 	dev-util/intltool
-	dev-util/pkgconfig
+	virtual/pkgconfig
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	AUTOTOOLS_IN_SOURCE_BUILD=1
+	AUTOTOOLS_AUTORECONF=yes
+	AUTOTOOLS_IN_SOURCE_BUILD=yes
+
 	DOCS=(AUTHORS COPYING COPYRIGHT NEWS README)
 }
 
 src_prepare() {
-	NOCONFIGURE=1 ./autogen.sh
+	autotools-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local myeconfargs=(
-		VALAC="$(type -p valac-0.18)"
-		VAPIGEN="$(type -p vapigen-0.18)"
 		$(use_enable debug)
 		$(use_enable nls)
 	)

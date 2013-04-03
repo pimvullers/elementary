@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/dev-libs/libindicator/libindicator-0.4.1-r300.ebuild,v 1.1 2011/11/26 16:25:05 ssuominen Exp $
 
-EAPI=4
+EAPI=5
 
 inherit autotools-utils
 
@@ -33,7 +33,7 @@ RDEPEND="
 	x11-libs/libnotify
 	x11-libs/libwnck:3"
 DEPEND="${RDEPEND}
-	dev-util/pkgconfig"
+	virtual/pkgconfig"
 
 pkg_setup() {
 	S="${WORKDIR}/unity_webapps-${PV}/"

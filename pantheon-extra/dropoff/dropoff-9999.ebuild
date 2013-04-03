@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Sharing your files easily and efficiently"
 HOMEPAGE="https://launchpad.net/dropoff"
@@ -20,12 +22,17 @@ RDEPEND="
 	x11-libs/granite
     x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
-	dev-util/pkgconfig"
+	$(vala_depend)
+	virtual/pkgconfig"
+
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
 
 src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
