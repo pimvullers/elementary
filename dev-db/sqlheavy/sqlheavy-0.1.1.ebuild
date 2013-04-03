@@ -2,9 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit autotools-utils
+VALA_MIN_API_VERSION=0.16
+VALA_MAX_API_VERSION=0.16
+
+inherit vala autotools-utils
 
 DESCRIPTION="GObject SQLite wrapper, providing very nice APIs for C and Vala, GObject Introspection support, and additional functionality not present in SQLite"
 HOMEPAGE="http://code.google.com/p/sqlheavy/"
@@ -20,7 +23,8 @@ RDEPEND="
 	>=dev-libs/glib-2.22:2
 	>=x11-libs/gtk+-2.24:2"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16"
+	$(vala_depend)
+	virtual/pkgconfig"
 
 AUTOTOOLS_IN_SOURCE_BUILD=1
 
@@ -28,12 +32,10 @@ pkg_setup() {
 	DOCS=(AUTHORS COPYING ChangeLog NEWS README)
 }
 
-src_configure() {
-	local myeconfargs=(
-		VALAC="$(type -p valac-0.16)"
-	)
 
-	autotools-utils_src_configure
+src_prepare() {
+	autotools-utils_src_prepare
+	vala_src_prepare
 }
 
 src_compile() {

@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/scratch"
@@ -32,7 +34,7 @@ RDEPEND="
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -60,12 +62,15 @@ src_prepare() {
 
 	# Disable tests
 	sed -i -e 's/add_subdirectory(core-tests)//' scratchcore/CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure

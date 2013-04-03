@@ -1,12 +1,14 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.4.7.ebuild,v 1.2 2012/10/21 12:00:16 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.4.9.ebuild,v 1.3 2013/03/31 19:10:56 pacho Exp $
 
-EAPI=4
+EAPI=5
 
-inherit eutils fdo-mime gnome2-utils python waf-utils
+VALA_MIN_API_VERSION="0.14"
 
-VALA_VERSION=0.18
+PYTHON_COMPAT=( python2_7 )
+
+inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://twotoasts.de/index.php/midori/"
@@ -14,8 +16,8 @@ SRC_URI="mirror://xfce/src/apps/${PN}/${PV%.*}/${P}.tar.bz2"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="doc gnome libnotify nls +unique zeitgeist"
+KEYWORDS="~amd64 ~arm ~ppc ~x86 ~x86-fbsd"
+IUSE="+deprecated doc gnome libnotify nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.22
@@ -23,43 +25,44 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=net-libs/libsoup-2.34:2.4
 	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
-	net-libs/webkit-gtk:3
+	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
 	unique? ( dev-libs/libunique:3 )
-	gnome? ( >=net-libs/libsoup-gnome-2.34:2.4 )
+	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
 	libnotify? ( >=x11-libs/libnotify-0.7 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
-	|| ( dev-lang/python:2.7 dev-lang/python:2.6 )
-	dev-lang/vala:${VALA_VERSION}
+	${PYTHON_DEPS}
+	$(vala_depend)
 	dev-util/intltool
 	gnome-base/librsvg
 	doc? ( dev-util/gtk-doc )
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	python_set_active_version 2
-	python_pkg_setup
+	python-any-r1_pkg_setup
 
 	DOCS=( AUTHORS ChangeLog HACKING INSTALL TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
 }
 
 src_prepare() {
-	# TODO: Both zeitgeist and gcr should have ./configure switch!
-	use zeitgeist || { sed -i -e 's:zeitgeist:&dIsAbLe:' wscript || die; }
+	# Force disabled because we don't have this custom renamed in Portage
+	sed -i -e 's:gcr-3-gtk2:&dIsAbLe:' wscript || die
+
+	vala_src_prepare
 }
 
 src_configure() {
 	strip-linguas -i po
 
-	VALAC="$(type -P valac-${VALA_VERSION})" \
 	waf-utils_src_configure \
 		--disable-docs \
 		 $(use_enable doc apidocs) \
 		 $(use_enable unique) \
 		 $(use_enable libnotify) \
+		 $(use_enable zeitgeist) \
 		--enable-addons \
 		$(use_enable nls) \
 		--enable-gtk3

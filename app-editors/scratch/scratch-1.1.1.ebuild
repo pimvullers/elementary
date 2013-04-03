@@ -2,9 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=4
+EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/scratch"
@@ -17,6 +19,7 @@ IUSE="nls devhelp files pastebin terminal"
 
 RDEPEND="
 	dev-libs/glib:2
+	dev-libs/gobject-introspection
 	dev-libs/libgee:0
 	dev-libs/libpeas
 	gnome-base/gconf:2
@@ -29,7 +32,7 @@ RDEPEND="
 	pastebin? ( net-libs/libsoup )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	$(vala_depend)
 	dev-util/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -59,10 +62,15 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-devhelp.patch"
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
