@@ -4,7 +4,9 @@
 
 EAPI=4
 
-inherit gnome2-utils cmake-utils
+VALA_MIN_API_VERSION="0.18"
+
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="The application store designed for the Pantheon desktop."
 HOMEPAGE="https://launchpad.net/appcenter"
@@ -27,7 +29,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.18
+	$(vala_depend)
 	virtual/pkgconfig"
 
 pkg_setup() {
@@ -35,10 +37,15 @@ pkg_setup() {
 	S="${WORKDIR}/${PN}"
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
