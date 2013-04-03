@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:lingo-dictionary"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="debug"
+IUSE="debug nls"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -27,13 +27,16 @@ RDEPEND="
 	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
 	DOCS=( AUTHORS COPYING )
 }
 
 src_prepare() {
+	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
