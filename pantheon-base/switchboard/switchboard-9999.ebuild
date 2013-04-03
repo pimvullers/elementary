@@ -4,7 +4,9 @@
 
 EAPI=4
 
-inherit cmake-utils bzr
+VALA_MIN_API_VERSION="0.16"
+
+inherit vala cmake-utils bzr
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="https://launchpad.net/switchboard"
@@ -18,11 +20,11 @@ IUSE=""
 RDEPEND="
 	dev-libs/glib:2
 	x11-libs/gtk+:3
-	x11-libs/granite
+	>x11-libs/granite-0.1.1
 	dev-libs/libunity
 	dev-libs/libgee"
 DEPEND="${RDEPEND}
-	dev-lang/vala:0.16
+	$(vala_depend)
 	dev-util/pkgconfig"
 
 pkg_setup() {
@@ -30,8 +32,13 @@ pkg_setup() {
 }
 
 src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
+src_configure() {
 	local mycmakeargs=(
-		-DVALA_EXECUTABLE="$(type -p valac-0.16)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
