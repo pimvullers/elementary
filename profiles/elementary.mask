@@ -1,4 +1,15 @@
+>=dev-libs/glib-2.33
+>=dev-libs/gobject-introspection-1.33
+>=dev-libs/gobject-introspection-common-1.33
+>=dev-util/gdbus-codegen-2.33
+>=media-libs/cogl-1.11
 >=net-im/indicator-messages-12
-#>=x11-libs/bamf-0.3
+>=net-libs/glib-networking-2.33
+>=net-libs/gnome-online-accounts-3.5
+>=net-libs/libsoup-2.39
+>=net-libs/libsoup-gnome-2.39
+>=net-libs/webkit-gtk-1.9
+>=x11-libs/gdk-pixbuf-2.26.5
 >=x11-libs/gtk+-3.5
+>=x11-libs/pango-1.31
 >=x11-misc/xdg-user-dirs-gtk-0.10
