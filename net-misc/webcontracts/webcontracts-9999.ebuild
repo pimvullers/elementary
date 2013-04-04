@@ -4,7 +4,9 @@
 
 EAPI=5
 
-inherit gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Collection of contracts for various web services"
 HOMEPAGE="https://launchpad.net/webcontracts"
@@ -13,7 +15,7 @@ EBZR_REPO_URI="lp:webcontracts"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -27,10 +29,17 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+src_prepare() {
+	use nls || sed -i 's#add_subdirectory (po)##' CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
