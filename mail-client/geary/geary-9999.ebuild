@@ -4,7 +4,9 @@
 
 EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils git-2
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils git-2
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="http://redmine.yorba.org/projects/geary/wiki"
@@ -36,12 +38,17 @@ pkg_setup() {
 	DOCS=(AUTHORS MAINTAINERS)
 }
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {	
 	local mycmakeargs=(
 		-DDESKTOP_UPDATE=OFF
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
