@@ -8,7 +8,7 @@ inherit autotools-utils
 
 DESCRIPTION="Library for the integration of web applications with the Unity desktop"
 HOMEPAGE="http://launchpad.net/libunity-webapps"
-SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/unity_webapps-${PV}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/2.4/${PV}/+download/unity_webapps-${PV}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -25,6 +25,7 @@ RDEPEND="
 	dev-libs/libindicate[gtk]
 	dev-libs/libunity
 	dev-util/gdbus-codegen
+	>=net-im/indicator-messages-12.10
 	net-libs/libsoup:2.4
 	net-libs/telepathy-glib
 	sys-auth/polkit
