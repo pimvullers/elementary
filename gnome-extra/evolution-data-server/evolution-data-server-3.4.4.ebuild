@@ -23,7 +23,6 @@ IUSE="+gnome-online-accounts +introspection ipv6 ldap kerberos vala +weather"
 
 RDEPEND="
 	>=dev-libs/glib-2.31:2
-	<dev-libs/glib-2.34:2
 	>=x11-libs/gtk+-3.2:3
 	>=gnome-base/gconf-2
 	>=dev-db/sqlite-3.5
@@ -105,6 +104,9 @@ src_prepare() {
 	# Touch configure.ac if doing eautoreconf
 	sed 's/^\(AM_CPPFLAGS="\)$WARNING_FLAGS/\1/' \
 		-i configure || die "sed failed"
+	
+	# Fix building with libxml2-2.9, backported from eds-3.6
+	epatch "${FILESDIR}/${PN}-2.32.3-libxml2-2.9.patch"
 }
 
 src_install() {
