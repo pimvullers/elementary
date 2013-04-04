@@ -9,7 +9,7 @@ VALA_MIN_API_VERSION=0.16
 inherit vala autotools-utils bzr
 
 DESCRIPTION="Dexter is a sexy, simple address book with end users in mind"
-HOMEPAGE="https://launchpad.net/dexter-rolodex"
+HOMEPAGE="https://launchpad.net/dexter-contacts"
 EBZR_REPO_URI="lp:dexter-contacts"
 
 LICENSE="GPL-3"
@@ -40,6 +40,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	use nls || sed -i 's# po##' Makefile.am
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }

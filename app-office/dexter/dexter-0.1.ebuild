@@ -6,7 +6,7 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit vala autotools-utils bzr
+inherit vala autotools-utils
 
 DESCRIPTION="Dexter is a sexy, simple address book with end users in mind"
 HOMEPAGE="https://launchpad.net/dexter-contacts"
@@ -34,10 +34,18 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	AUTOTOOLS_AUTORECONF=yes
+
 	DOCS=( AUTHORS COPYING NEWS README )
+	S="${WORKDIR}/${PN}-contacts"
 }
 
 src_prepare() {
+	# Fix compilation with vala 0.15 and above.
+	epatch "${FILESDIR}/${P}-fix-952206.patch"
+
+	use nls || sed -i 's# po##' Makefile.am
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
