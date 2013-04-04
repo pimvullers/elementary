@@ -59,10 +59,8 @@ src_prepare() {
 	sed -i -e 's/add_subdirectory(core-tests)//' scratchcore/CMakeLists.txt
 
 	# Fix devhelp dependency in scratchcore (bug #1040924)
-	epatch "${FILESDIR}/${P}-devhelp.patch"
-}
+	use devhelp || epatch "${FILESDIR}/${P}-devhelp.patch"
 
-src_prepare() {
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
