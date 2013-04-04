@@ -5,6 +5,7 @@
 EAPI=5
 
 VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.18
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -27,6 +28,11 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
+
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
 
 src_configure() {
 	local mycmakeargs=(
