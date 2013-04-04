@@ -4,7 +4,9 @@
 
 EAPI=5
 
-inherit fdo-mime gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="An IDE with a light GUI, based on CMake"
 HOMEPAGE="https://launchpad.net/euclide"
@@ -32,12 +34,15 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	epatch "${FILESDIR}/${P}-sourceview.patch"
 	epatch "${FILESDIR}/${P}-scratch-text-editor.patch"
+
+	cmake-utils_src_prepare
+	vala_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
