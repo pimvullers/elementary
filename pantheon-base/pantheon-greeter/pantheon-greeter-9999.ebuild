@@ -4,7 +4,9 @@
 
 EAPI=5
 
-inherit gnome2-utils cmake-utils bzr
+VALA_MIN_API_VERSION=0.16
+
+inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Pantheon Login Screen for LightDM"
 HOMEPAGE="https://launchpad.net/pantheon-greeter"
@@ -25,10 +27,15 @@ DEPEND="${DEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+src_prepare() {
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="$(type -p valac-0.18)"
+		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
 	cmake-utils_src_configure
