@@ -16,13 +16,12 @@ EBZR_REPO_URI="lp:bamf"
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+introspection doc static-libs -webapps"
+IUSE="+introspection doc static-libs"
 
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
-	webapps? ( dev-libs/libunity-webapps )
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
@@ -34,10 +33,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 AUTOTOOLS_AUTORECONF=yes
-
-pkg_setup() {
-	DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
-}
+DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
 
 src_prepare() {
 	autotools-utils_src_prepare
@@ -47,9 +43,9 @@ src_prepare() {
 src_configure() {
 	local myeconfargs=(
 		--disable-gtktest
+		--disable-webapps
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
-		$(use_enable webapps)
 		VALA_API_GEN="${VAPIGEN}"
 	)
 

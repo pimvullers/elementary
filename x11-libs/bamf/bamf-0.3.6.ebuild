@@ -22,7 +22,6 @@ RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
 	dev-libs/glib:2
-	webapps? ( dev-libs/libunity-webapps )
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
@@ -33,9 +32,7 @@ DEPEND="${RDEPEND}
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
-}
+DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
 
 src_prepare() {
 	autotools-utils_src_prepare
@@ -45,9 +42,9 @@ src_prepare() {
 src_configure() {
 	local myeconfargs=(
 		--disable-gtktest
+		--disable-webapps
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
-		$(use_enable webapps)
 	)
 
 	autotools-utils_src_configure
