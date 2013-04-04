@@ -37,6 +37,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	use nls || epatch "${FILESDIR}/${P}-nls.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }

@@ -41,6 +41,8 @@ src_prepare() {
 	# Fix bug #1080713
 	epatch "${FILESDIR}/${P}-fix-1080713.patch"
 
+	use nls || epatch "${FILESDIR}/${P}-nls.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
