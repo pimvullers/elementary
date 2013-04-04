@@ -12,7 +12,7 @@ EBZR_REPO_URI="lp:elementaryicons"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE=""
 
 CDEPEND=""
