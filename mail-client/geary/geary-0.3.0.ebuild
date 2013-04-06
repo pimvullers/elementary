@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.17
+VALA_MIN_API_VERSION=0.16
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
@@ -17,19 +17,20 @@ SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE=""
 
-RDEPEND="
-	>=dev-db/sqlheavy-0.1.1:0.1
+CDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/libgee:0
 	dev-libs/libunique:3
 	dev-libs/gmime:2.6
-	gnome-base/libgnome-keyring
+	>=gnome-base/libgnome-keyring-3.2.2
 	media-libs/libcanberra
 	net-libs/webkit-gtk:3
-	x11-libs/gtk+:3
+	>=x11-libs/gtk+-3.4.0:3
 	x11-libs/libnotify"
-DEPEND="${RDEPEND}
+RDEPEND="${CDEPEND}
+	gnome-base/gsettings-desktop-schemas"
+DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
