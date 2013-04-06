@@ -127,6 +127,8 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-3.4.2-gentoo-paths.patch"
 	# https://bugzilla.gnome.org/show_bug.cgi?id=679759
 	epatch "${FILESDIR}/${PN}-3.4.2-cups-1.6.patch"
+	# Fix building against newer gnome-bluetooth
+	epatch "${FILESDIR}/${PN}-3.4.2-bluetooth.patch"
 	eautoreconf
 
 	gnome2_src_prepare
