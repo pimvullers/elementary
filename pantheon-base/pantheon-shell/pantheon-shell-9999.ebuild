@@ -18,8 +18,8 @@ IUSE="libnotify lightdm screensaver"
 CDEPEND="
 	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
 RDEPEND="${CDEPEND}
-	>=gnome-base/gnome-session-3.0.0
-	gnome-base/gnome-settings-daemon
+	>=gnome-base/gnome-session-3.0
+	>=gnome-base/gnome-settings-daemon-3.0
 	pantheon-base/cerbere
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
 	pantheon-base/slingshot
