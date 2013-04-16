@@ -45,6 +45,7 @@ src_configure() {
 		--disable-webapps
 		$(use_enable doc gtk-doc)
 		$(use_enable introspection)
+		VALA_API_GEN="${VAPIGEN}"
 	)
 
 	autotools-utils_src_configure
