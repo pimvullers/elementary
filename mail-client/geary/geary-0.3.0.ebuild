@@ -15,7 +15,7 @@ SRC_URI="http://yorba.org/download/${PN}/0.3/${P}.tar.xz"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
+IUSE="nls"
 
 CDEPEND="
 	dev-db/sqlite:3
@@ -39,6 +39,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	use nls || sed -i 's#add_subdirectory(po)##' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }

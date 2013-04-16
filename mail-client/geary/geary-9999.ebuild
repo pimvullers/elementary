@@ -15,9 +15,10 @@ EGIT_REPO_URI="git://yorba.org/geary"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="nls"
 
 CDEPEND="
+	app-crypt/libsecret
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/libgee:0
@@ -39,6 +40,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	use nls || sed -i 's#add_subdirectory(po)##' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
