@@ -14,7 +14,7 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE="debug nls static-libs"
 
-RDEPEND="
+CDEPEND="
 	x11-libs/libX11
 	dev-libs/libgee:0
 	dev-libs/libunique:1
@@ -23,7 +23,9 @@ RDEPEND="
 	>=dev-libs/glib-2.26.0:2
 	>=x11-libs/gtk+-2.22.0:2
 	!pantheon-base/plank"
-DEPEND="${RDEPEND}
+RDEPEND="${CDEPEND}
+	x11-themes/pantheon-plank-theme"
+DEPEND="${CDEPEND}
 	$(vala_depend)
 	dev-util/intltool
 	virtual/pkgconfig
@@ -35,6 +37,19 @@ pkg_setup() {
 	AUTOTOOLS_IN_SOURCE_BUILD=yes
 
 	DOCS=(AUTHORS COPYING COPYRIGHT NEWS README)
+}
+
+src_unpack() {
+	local save_sandbox_write=${SANDBOX_WRITE}
+
+	if [[ -d ${EBZR_STORE_DIR} ]] ; then
+		addwrite /
+		rm -r "${EBZR_STORE_DIR}" \
+			|| die "${EBZR}: can't rm -r ${EBZR_STORE_DIR}"
+		SANDBOX_WRITE=${save_sandbox_write}
+	fi
+
+	bzr_src_unpack
 }
 
 src_prepare() {
