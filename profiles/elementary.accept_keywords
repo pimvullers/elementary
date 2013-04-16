@@ -3,6 +3,7 @@ app-office/maya **
 dev-libs/libappstore **
 mail-client/geary **
 media-sound/noise **
+net-misc/indicator-bluetooth **
 pantheon-base/appcenter **
 pantheon-base/cerbere **
 pantheon-base/pantheon-files **
@@ -11,5 +12,8 @@ pantheon-base/wingpanel **
 www-client/midori **
 x11-libs/bamf **
 x11-libs/granite **
+#x11-misc/indicator-session **
+x11-misc/indicator-printers **
 x11-terms/pantheon-terminal **
+x11-themes/elementary-icon-theme **
 x11-themes/elementary-theme **

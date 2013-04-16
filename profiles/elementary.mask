@@ -1,15 +1,44 @@
->=dev-libs/glib-2.33
->=dev-libs/gobject-introspection-1.33
->=dev-libs/gobject-introspection-common-1.33
->=dev-util/gdbus-codegen-2.33
->=media-libs/cogl-1.11
->=net-im/indicator-messages-12
->=net-libs/glib-networking-2.33
->=net-libs/gnome-online-accounts-3.5
->=net-libs/libsoup-2.39
->=net-libs/libsoup-gnome-2.39
->=net-libs/webkit-gtk-1.9
->=x11-libs/gdk-pixbuf-2.26.5
+# Elementary theme does not work with Gtk+ 3.6
+#
 >=x11-libs/gtk+-3.5
->=x11-libs/pango-1.31
+
+# Packages depending on Gtk+ 3.6
+#
+>=dev-cpp/gtkmm-3.5
+>=gnome-base/gnome-control-center-3.5
+>=gnome-extra/evolution-data-server-3.5
 >=x11-misc/xdg-user-dirs-gtk-0.10
+>=x11-themes/gtk-engines-unico-1.0.3_pre20121212
+
+# Packages depending on EDS 3.6
+#
+>=net-im/indicator-messages-12
+>=net-libs/gnome-online-accounts-3.5
+>=x11-misc/indicator-datetime-12
+
+# Packages to downgrade to GLib 2.34
+#
+#>=app-text/evince-3.5
+#>=dev-cpp/glibmm-2.33
+#>=dev-libs/libcdio-0.90
+#>=dev-libs/glib-2.33
+#>=dev-libs/gobject-introspection-1.33
+#>=dev-libs/gobject-introspection-common-1.33
+#>=dev-python/pygobject-3.3
+#>=dev-util/gdbus-codegen-2.33
+#>=gnome-base/dconf-0.13
+#>=gnome-base/gnome-desktop-3.5
+#>=gnome-base/gnome-session-3.5
+#>=gnome-base/gnome-settings-daemon-3.5
+#>=gnome-base/gvfs-1.13
+#>=media-libs/cogl-1.11
+#>=media-sound/indicator-sound-12
+#>=net-libs/glib-networking-2.33
+#>=net-libs/libsoup-2.39
+#>=net-libs/libsoup-gnome-2.39
+#>=net-libs/webkit-gtk-1.9
+#>=sys-apps/accountsservice-0.6.30
+#>=sys-power/indicator-power-12
+#>=x11-libs/gdk-pixbuf-2.26.5
+#>=x11-libs/pango-1.31
+#>=x11-misc/indicator-session-12
