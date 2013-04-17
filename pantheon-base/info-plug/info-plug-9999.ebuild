@@ -6,7 +6,7 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit cmake-utils bzr
+inherit vala cmake-utils bzr
 
 DESCRIPTION="Information plug for switchboard"
 HOMEPAGE="https://code.launchpad.net/~elementary-os/pantheon-plugs/info-plug"
