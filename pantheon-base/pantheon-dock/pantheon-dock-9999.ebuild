@@ -1,5 +1,7 @@
 EAPI=5
 
+EBZR_UPDATE_CMD="bzr pull --overwrite"
+
 VALA_MIN_API_VERSION=0.16
 VALA_USE_DEPEND=vapigen
 
@@ -39,18 +41,18 @@ pkg_setup() {
 	DOCS=(AUTHORS COPYING COPYRIGHT NEWS README)
 }
 
-src_unpack() {
-	local save_sandbox_write=${SANDBOX_WRITE}
-
-	if [[ -d ${EBZR_STORE_DIR} ]] ; then
-		addwrite /
-		rm -r "${EBZR_STORE_DIR}" \
-			|| die "${EBZR}: can't rm -r ${EBZR_STORE_DIR}"
-		SANDBOX_WRITE=${save_sandbox_write}
-	fi
-
-	bzr_src_unpack
-}
+#src_unpack() {
+#	local save_sandbox_write=${SANDBOX_WRITE}
+#
+#	if [[ -d ${EBZR_STORE_DIR} ]] ; then
+#		addwrite /
+#		rm -r "${EBZR_STORE_DIR}" \
+#			|| die "${EBZR}: can't rm -r ${EBZR_STORE_DIR}"
+#		SANDBOX_WRITE=${save_sandbox_write}
+#	fi
+#
+#	bzr_src_unpack
+#}
 
 src_prepare() {
 	# Drop apport hooks
