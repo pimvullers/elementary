@@ -36,6 +36,8 @@ AUTOTOOLS_AUTORECONF=yes
 DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
 
 src_prepare() {
+	sed -i 's/-Werror//' configure.ac
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
