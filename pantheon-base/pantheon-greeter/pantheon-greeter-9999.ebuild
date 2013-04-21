@@ -22,7 +22,7 @@ RDEPEND="
 	media-libs/clutter-gtk:1.0
 	x11-libs/granite
 	x11-libs/gtk+:3
-	>=x11-misc/lightdm-1.2"
+	>=x11-misc/lightdm-1.2.1"
 DEPEND="${DEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
