@@ -4,15 +4,15 @@
 
 EAPI=5
 
-inherit base bzr
+inherit base
 
 DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
 HOMEPAGE="https://launchpad.net/egtk"
-EBZR_REPO_URI="lp:egtk"
+SRC_URI="https://launchpad.net/egtk/3.x/${PV}/+download/elementary.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~x86 ~amd64"
 IUSE="dark +gtk +gtk3 +icons +wallpapers"
 
 DEPEND="
@@ -38,13 +38,14 @@ RDEPEND="${DEPEND}
 RESTRICT="binchecks mirror strip"
 
 pkg_setup() {
+	S="${WORKDIR}/elementary"
 	DOCS=( AUTHORS CONTRIBUTORS COPYING )
 	THEMES="index.theme metacity-1 gtk-2.0 gtk-3.0"
 }
 
 src_prepare() {
 	# Add support for dark theming
-	use dark && epatch "${FILESDIR}/${PN}-3.3-dark.patch"
+	use dark && epatch "${FILESDIR}/${P}-dark.patch"
 
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
