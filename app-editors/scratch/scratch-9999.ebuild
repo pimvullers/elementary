@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:scratch"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls devhelp files pastebin spell terminal webkit"
+IUSE="nls contractor devhelp files pastebin spell terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -71,6 +71,7 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
+		$(cmake-utils_use_with contractor CONTRACTOR)
 	)
 
 	cmake-utils_src_configure
