@@ -15,7 +15,7 @@ SRC_URI="https://launchpad.net/${PN}/1.x/${PV}/+download/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="nls devhelp files pastebin terminal"
+IUSE="nls contractor devhelp files pastebin terminal"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -46,6 +46,8 @@ src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
 
 	# Plugins
+	use contractor || \
+	  sed -i -e 's/add_subdirectory (contractor)//' plugins/CMakeLists.txt
 	use devhelp || \
 	  sed -i -e 's/add_subdirectory (devhelp)//' plugins/CMakeLists.txt
 	use files || \
