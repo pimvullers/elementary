@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:pantheon-files"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+gvfs nls plugins"
+IUSE="+gvfs nls contractor ctags trash"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -40,7 +40,14 @@ pkg_setup() {
 
 src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
-	use plugins || sed -i -e 's/add_subdirectory (plugins)//' CMakeLists.txt
+
+	# Optional plugins
+	use contractor || \
+		sed -i -e 's/add_subdirectory(contractor)//' plugins/CMakeLists.txt
+	use ctags || \
+		sed -i -e 's/add_subdirectory(marlin-ctags)//' plugins/CMakeLists.txt
+	use trash || \
+		sed -i -e 's/add_subdirectory(marlin-trash)//' plugins/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
