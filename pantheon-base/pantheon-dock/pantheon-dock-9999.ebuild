@@ -67,6 +67,7 @@ src_configure() {
 	local myeconfargs=(
 		$(use_enable debug)
 		$(use_enable nls)
+		--disable-gee-0.8
 	)
 
 	autotools-utils_src_configure
