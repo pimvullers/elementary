@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="https://launchpad.net/maya"
-EBZR_REPO_URI="lp:maya"
+SRC_URI="https://launchpad.net/${PN}/0.x/luna-beta2/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
