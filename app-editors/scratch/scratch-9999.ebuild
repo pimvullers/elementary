@@ -56,7 +56,7 @@ src_prepare() {
 	use terminal || \
 	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
 	use spell || \
-	  sed -i -e 's/add_subdirectory (spell-check)//' plugins/CMakeLists.txt
+	  sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 	use webkit || \
 	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
 
