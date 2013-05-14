@@ -1,0 +1,12 @@
+Index: gsettings-desktop-schemas-3.4.2/schemas/wm-schemas.convert
+===================================================================
+--- gsettings-desktop-schemas-3.4.2.orig/schemas/wm-schemas.convert	2012-03-05 18:29:05.000000000 +0100
++++ gsettings-desktop-schemas-3.4.2/schemas/wm-schemas.convert	2012-11-01 15:29:43.159883408 +0100
+@@ -11,7 +11,6 @@ action-middle-click-titlebar = /apps/met
+ action-right-click-titlebar = /apps/metacity/general/action_right_click_titlebar
+ auto-raise = /apps/metacity/general/auto_raise
+ auto-raise-delay = /apps/metacity/general/auto_raise_delay
+-theme = /apps/metacity/general/theme
+ titlebar-uses-system-font = /apps/metacity/general/titlebar_uses_system_font
+ titlebar-font = /apps/metacity/general/titlebar_font
+ num-workspaces = /apps/metacity/general/num_workspaces
