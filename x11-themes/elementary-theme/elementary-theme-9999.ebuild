@@ -44,7 +44,7 @@ pkg_setup() {
 
 src_prepare() {
 	# Add support for dark theming
-	use dark && epatch "${FILESDIR}/${PN}-3.3-dark.patch"
+	use dark && epatch "${FILESDIR}/${PN}-9999-dark.patch"
 
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
