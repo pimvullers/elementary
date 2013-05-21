@@ -8,24 +8,27 @@ VALA_MIN_API_VERSION=0.16
 
 inherit vala cmake-utils bzr
 
-DESCRIPTION="Default applications plug for switchboard"
-HOMEPAGE="https://code.launchpad.net/~elementary-os/pantheon-plugs/default-apps-plug"
-EBZR_REPO_URI="lp:~elementary-os/pantheon-plugs/default-apps-plug"
+DESCRIPTION="Control system power consumption using Switchboard."
+HOMEPAGE="https://launchpad.net/switchboard-plug-power"
+EBZR_REPO_URI="lp:switchboard-plug-power"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE=""
+KEYWORDS="~amd64 ~x86"
+IUSE="nls"
 
-RDEPEND="
+CDEPEND="
 	pantheon-base/libpantheon
+	x11-libs/granite
+	x11-libs/gtk+:3"
+RDEPEND="${CDEPEND}
 	pantheon-base/switchboard"
-DEPEND="${RDEPEND}
+DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-cmake-build.patch"
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare

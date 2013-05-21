@@ -8,23 +8,27 @@ VALA_MIN_API_VERSION=0.16
 
 inherit vala cmake-utils bzr
 
-DESCRIPTION="Plank plug for switchboard"
-HOMEPAGE="https://code.launchpad.net/~elementary-os/pantheon-plugs/plank-plug"
-EBZR_REPO_URI="lp:~elementary-os/pantheon-plugs/plank-plug"
+DESCRIPTION="Configure various aspects of the Pantheon desktop environment using Switchboard."
+HOMEPAGE="https://launchpad.net/switchboard-plug-pantheon-shell"
+EBZR_REPO_URI="lp:switchboard-plug-pantheon-shell"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE=""
+KEYWORDS="~amd64 ~x86"
+IUSE="nls"
 
-RDEPEND="
+CDEPEND="
 	pantheon-base/libpantheon
+	x11-libs/granite"
+RDEPEND="${CDEPEND}
 	pantheon-base/switchboard"
-DEPEND="${RDEPEND}
+DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
