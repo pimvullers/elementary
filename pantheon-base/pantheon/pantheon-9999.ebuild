@@ -16,28 +16,15 @@ DEPEND=""
 RDEPEND="
 	app-dicts/lingo
 	app-editors/scratch
-	|| ( 
-		app-office/libreoffice 
-		app-office/libreoffice-bin
-		( app-office/abiword app-office/gnumeric ) 
-	)
 	app-office/dexter
-	app-office/ergo
-	app-office/footnote
 	app-office/maya
 	dev-libs/contractor
-	dev-util/euclide
 	mail-client/geary
 	|| ( media-sound/noise media-sound/beatbox )
 	media-video/audience
-	media-video/eidete
-	media-video/snap
-	net-news/feedler
 	|| ( pantheon-base/pantheon-files pantheon-base/marlin )
-	pantheon-base/pantheon-print
 	pantheon-base/pantheon-shell
 	pantheon-base/switchboard
-	pantheon-extra/dropoff
 	www-client/midori
 	x11-terms/pantheon-terminal
 	x11-themes/elementary-icon-theme
