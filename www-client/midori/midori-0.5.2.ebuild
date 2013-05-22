@@ -1,10 +1,9 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.4.9.ebuild,v 1.3 2013/03/31 19:10:56 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.0.ebuild,v 1.1 2013/04/09 07:33:34 angelos Exp $
 
 EAPI=5
-
-VALA_MIN_API_VERSION="0.14"
+VALA_MIN_API_VERSION=0.14
 
 PYTHON_COMPAT=( python2_7 )
 
@@ -59,13 +58,15 @@ src_configure() {
 
 	waf-utils_src_configure \
 		--disable-docs \
-		 $(use_enable doc apidocs) \
-		 $(use_enable unique) \
-		 $(use_enable libnotify) \
-		 $(use_enable zeitgeist) \
+		$(use_enable doc apidocs) \
+		$(use_enable unique) \
+		$(use_enable libnotify) \
+		$(use_enable webkit2) \
+		$(use_enable zeitgeist) \
 		--enable-addons \
 		$(use_enable nls) \
-		--enable-gtk3
+		--enable-gtk3 \
+		--enable-granite
 }
 
 pkg_preinst() {

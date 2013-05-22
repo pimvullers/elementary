@@ -3,16 +3,15 @@
 # $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-9999.ebuild,v 1.44 2012/10/21 12:00:16 ssuominen Exp $
 
 EAPI=5
-
-VALA_MIN_API_VERSION="0.18"
+VALA_MIN_API_VERSION=0.18
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala git-2
+inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala bzr
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://twotoasts.de/index.php/midori/"
-EGIT_REPO_URI="git://git.xfce.org/apps/${PN}"
+EBZR_REPO_URI="lp:midori"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
@@ -59,13 +58,15 @@ src_configure() {
 
 	waf-utils_src_configure \
 		--disable-docs \
-		 $(use_enable doc apidocs) \
-		 $(use_enable unique) \
-		 $(use_enable libnotify) \
-		 $(use_enable zeitgeist) \
+		$(use_enable doc apidocs) \
+		$(use_enable unique) \
+		$(use_enable libnotify) \
+		$(use_enable webkit2) \
+		$(use_enable zeitgeist) \
 		--enable-addons \
 		$(use_enable nls) \
 		--enable-gtk3
+		--enable-granite
 }
 
 pkg_preinst() {
