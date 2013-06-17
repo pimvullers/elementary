@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="https://launchpad.net/maya"
-SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-calendar-${PV}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -33,15 +33,12 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	S="${WORKDIR}"
+	S="${WORKDIR}/${PN}-calendar-${PV}"
 	DOCS=( AUTHORS COPYING COPYRIGHT )
 }
 
 src_prepare() {
-	# Fix bug #1080713
-	epatch "${FILESDIR}/${P}-fix-1080713.patch"
-
-	use nls || epatch "${FILESDIR}/${P}-nls.patch"
+	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
