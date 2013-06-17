@@ -1,6 +1,6 @@
-diff -Naur egtk-orig/gtk-3.0/gtk-dark.css egtk/gtk-3.0/gtk-dark.css
---- egtk-orig/gtk-3.0/gtk-dark.css	1970-01-01 01:00:00.000000000 +0100
-+++ egtk/gtk-3.0/gtk-dark.css	2012-11-14 18:00:08.894818000 +0100
+=== added file 'gtk-3.0/gtk-dark.css'
+--- gtk-3.0/gtk-dark.css	1970-01-01 00:00:00 +0000
++++ gtk-3.0/gtk-dark.css	2013-06-17 07:56:40 +0000
 @@ -0,0 +1,64 @@
 +/* Copyright 2011-2012 elementary
 +*
@@ -66,10 +66,11 @@ diff -Naur egtk-orig/gtk-3.0/gtk-dark.css egtk/gtk-3.0/gtk-dark.css
 +
 +@import url("gtk-widgets.css");
 +@import url("gtk-widgets-dark.css");
-diff -Naur egtk-orig/gtk-3.0/gtk-widgets.css egtk/gtk-3.0/gtk-widgets.css
---- egtk-orig/gtk-3.0/gtk-widgets.css	2012-11-14 17:59:33.742340594 +0100
-+++ egtk/gtk-3.0/gtk-widgets.css	2012-11-14 18:00:08.894818000 +0100
-@@ -895,7 +895,7 @@
+
+=== modified file 'gtk-3.0/gtk-widgets.css'
+--- gtk-3.0/gtk-widgets.css	2013-06-07 21:07:54 +0000
++++ gtk-3.0/gtk-widgets.css	2013-06-17 07:56:40 +0000
+@@ -770,7 +770,7 @@
  .dynamic-notebook GtkLabel,
  .dynamic-notebook GtkImage {
   
@@ -77,8 +78,8 @@ diff -Naur egtk-orig/gtk-3.0/gtk-widgets.css egtk/gtk-3.0/gtk-widgets.css
 +   color: @text_color;
  }
  
- .dynamic-notebook .notebook {
-@@ -931,8 +931,8 @@
+ .dynamic-notebook GtkLabel:insensitive,
+@@ -814,8 +814,8 @@
          to (alpha (#000, 0.20)));
      -unico-inner-stroke-gradient: -gtk-gradient (linear,
          left top, left bottom,
@@ -89,31 +90,28 @@ diff -Naur egtk-orig/gtk-3.0/gtk-widgets.css egtk/gtk-3.0/gtk-widgets.css
  
  }
  
-diff -Naur egtk-orig/gtk-3.0/menu.css egtk/gtk-3.0/menu.css
---- egtk-orig/gtk-3.0/menu.css	2012-11-14 17:59:33.742340594 +0100
-+++ egtk/gtk-3.0/menu.css	2012-11-14 18:00:08.894818000 +0100
-@@ -54,7 +54,8 @@
- .popover_bg {
-     /*border-radius: 6;*/
+
+=== modified file 'gtk-3.0/menu.css'
+--- gtk-3.0/menu.css	2013-06-11 16:25:25 +0000
++++ gtk-3.0/menu.css	2013-06-17 07:57:46 +0000
+@@ -41,9 +41,15 @@
+ 
+     padding: 0 1px 0 1px;
  
 -    background-color: #f8f8f8;
 +	color: #2e3436;
 +    background-color: @base_color;
      background-image: none;
  
-     /*background-image: -gtk-gradient (linear,
-@@ -65,8 +66,8 @@
- 
-     -unico-inner-stroke-gradient: -gtk-gradient (linear,
-                     left top, left bottom,
--                    from (#fff),
--                    to (alpha (#fff, 0.39)));
++    -unico-inner-stroke-gradient: -gtk-gradient (linear,
++                    left top, left bottom,
 +                    from (@base_color),
 +                    to (alpha (@base_color, 0.39)));
- 
++
      border-style: solid;
      border-width: 1px;
-@@ -94,7 +95,7 @@
+     border-color: alpha (#000, 0.4);
+@@ -70,7 +76,7 @@
  }
  
  .menuitem:insensitive {
@@ -122,9 +120,10 @@ diff -Naur egtk-orig/gtk-3.0/menu.css egtk/gtk-3.0/menu.css
  }
  
  .menuitem:active,
-diff -Naur egtk-orig/metacity-1/metacity-theme-3.xml egtk/metacity-1/metacity-theme-3.xml
---- egtk-orig/metacity-1/metacity-theme-3.xml	2012-11-14 17:59:33.739340588 +0100
-+++ egtk/metacity-1/metacity-theme-3.xml	2012-11-14 18:00:08.894818000 +0100
+
+=== modified file 'metacity-1/metacity-theme-3.xml'
+--- metacity-1/metacity-theme-3.xml	2013-04-29 20:06:26 +0000
++++ metacity-1/metacity-theme-3.xml	2013-06-17 07:56:40 +0000
 @@ -141,7 +141,7 @@
  
  <draw_ops name="title_focused">
@@ -159,3 +158,4 @@ diff -Naur egtk-orig/metacity-1/metacity-theme-3.xml egtk/metacity-1/metacity-th
  </draw_ops>
  
  <draw_ops name="titlebar_fill_unfocused">
+

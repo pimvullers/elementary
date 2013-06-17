@@ -10,7 +10,7 @@ DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive
 HOMEPAGE="https://launchpad.net/egtk"
 EBZR_REPO_URI="lp:egtk"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
 IUSE="dark +gtk +gtk3 +icons +wallpapers"
@@ -44,7 +44,7 @@ pkg_setup() {
 
 src_prepare() {
 	# Add support for dark theming
-	use dark && epatch "${FILESDIR}/${PN}-9999-dark.patch"
+	use dark && epatch "${FILESDIR}/${PN}-3.4-dark.patch"
 
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme

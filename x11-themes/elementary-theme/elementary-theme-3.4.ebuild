@@ -8,9 +8,9 @@ inherit base
 
 DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
 HOMEPAGE="https://launchpad.net/egtk"
-SRC_URI="https://launchpad.net/egtk/3.x/${PV}/+download/egtk-${PV}-beta1.tar.gz"
+SRC_URI="https://launchpad.net/egtk/3.x/${PV}/+download/elementary.tar.gz -> ${P}.tar.gz"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~x86 ~amd64"
 IUSE="dark +gtk +gtk3 +icons +wallpapers"
@@ -38,7 +38,7 @@ RDEPEND="${DEPEND}
 RESTRICT="binchecks mirror strip"
 
 pkg_setup() {
-	S="${WORKDIR}"
+	S="${WORKDIR}/elementary"
 	DOCS=( AUTHORS CONTRIBUTORS COPYING )
 	THEMES="index.theme metacity-1 gtk-2.0 gtk-3.0"
 }
