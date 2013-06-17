@@ -7,7 +7,9 @@ net-misc/indicator-bluetooth **
 pantheon-base/appcenter **
 pantheon-base/cerbere **
 pantheon-base/pantheon-files **
+pantheon-base/pantheon-greeter **
 pantheon-base/slingshot **
+pantheon-base/switchboard **
 pantheon-base/wingpanel **
 www-client/midori **
 x11-libs/bamf **
