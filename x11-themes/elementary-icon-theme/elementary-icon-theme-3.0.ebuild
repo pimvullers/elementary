@@ -4,15 +4,15 @@
 
 EAPI=5
 
-inherit gnome2-utils bzr
+inherit gnome2-utils
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"
-EBZR_REPO_URI="lp:elementaryicons"
+SRC_URI="http://launchpad.net/elementaryicons/3.x/${PV}/+download/elementary.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 CDEPEND=""
@@ -23,6 +23,7 @@ DEPEND="${CDEPEND}
 RESTRICT="binchecks strip"
 
 pkg_setup() {
+	S="${WORKDIR}/elementary"
 	DOCS=( AUTHORS COPYING CONTRIBUTORS )
 }
 

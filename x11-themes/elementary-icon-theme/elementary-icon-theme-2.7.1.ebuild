@@ -10,7 +10,7 @@ DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and ef
 HOMEPAGE="https://launchpad.net/elementaryicons"
 SRC_URI="http://launchpad.net/elementaryicons/2.0/${PV}/+download/${P}.tar.gz"
 
-LICENSE="GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
 IUSE="monochrome"
