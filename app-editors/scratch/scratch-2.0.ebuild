@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/scratch"
-EBZR_REPO_URI="lp:scratch"
+SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls contractor devhelp files pastebin spell terminal webkit"
 
 RDEPEND="
@@ -39,6 +39,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}/${PN}"
 	DOCS=( COPYING README )
 }
 
