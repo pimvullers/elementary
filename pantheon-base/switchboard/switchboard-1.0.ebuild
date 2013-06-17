@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION="0.16"
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="https://launchpad.net/switchboard"
-EBZR_REPO_URI="lp:switchboard"
+SRC_URI="https://launchpad.net/${PN}/1.x/${PV}/+download/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
