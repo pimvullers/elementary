@@ -8,7 +8,7 @@ inherit bzr
 
 DESCRIPTION="Elementary's desktop environment"
 HOMEPAGE="http://www.elementaryos.org/ http://launchpad.net/elementaryos/"
-EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
+EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings-luna"
 
 LICENSE="GPL-3"
 SLOT="0"
