@@ -19,6 +19,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/libindicator:3
+	media-fonts/raleway
 	media-libs/clutter-gtk:1.0
 	x11-libs/granite
 	x11-libs/gtk+:3
