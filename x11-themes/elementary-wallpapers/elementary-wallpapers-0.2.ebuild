@@ -4,28 +4,26 @@
 
 EAPI=5
 
-inherit base bzr
+inherit base
 
 DESCRIPTION="A set of wallpapers used by the elementary OS"
-HOMEPAGE="http://www.elementaryos.org"
-SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
-EBZR_REPO_URI="lp:~elementary-design/elementaryos/elementary-wallpapers-luna"
+HOMEPAGE="http://www.elementaryos.org/journal/luna-wallpapers-officially-revealed"
+SRC_URI="https://launchpad.net/elementaryos/0.2-luna/luna-wallpapers/+download/luna-wallpapers.tar.gz"
 
 LICENSE="CCPL-Attribution-2.0"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=""
 DEPEND="${RDEPEND}"
 
-src_unpack() {
-	bzr_src_unpack
-	base_src_unpack
+pkg_setup() {
+	S="${WORKDIR}"
 }
 
 src_install() {
 	insinto /usr/share/backgrounds/elementary
-	doins *.jpg *.png
+	doins *.jpg
 }
 
