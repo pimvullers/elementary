@@ -17,6 +17,7 @@ IUSE=""
 
 pkg_setup() {
 	S="${WORKDIR}/${PN}-family-v${PV}"
+	FONT_S="${S}"
 	FONT_SUFFIX="ttf"
 
 	font_pkg_setup
