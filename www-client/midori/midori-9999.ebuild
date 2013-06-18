@@ -1,9 +1,9 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-9999.ebuild,v 1.44 2012/10/21 12:00:16 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-9999.ebuild,v 1.49 2013/06/01 14:27:45 ssuominen Exp $
 
 EAPI=5
-VALA_MIN_API_VERSION=0.18
+VALA_MIN_API_VERSION=0.14
 
 PYTHON_COMPAT=( python2_7 )
 
@@ -16,7 +16,7 @@ EBZR_REPO_URI="lp:midori"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="+deprecated doc gnome libnotify nls +unique webkit2 zeitgeist"
+IUSE="+deprecated doc gnome nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.22
@@ -27,9 +27,9 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
+	>=x11-libs/libnotify-0.7
 	unique? ( dev-libs/libunique:3 )
 	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
-	libnotify? ( >=x11-libs/libnotify-0.7 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
@@ -42,7 +42,7 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	python-any-r1_pkg_setup
 
-	DOCS=( AUTHORS ChangeLog HACKING INSTALL TODO TRANSLATE )
+	DOCS=( AUTHORS ChangeLog HACKING TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
 }
 
@@ -60,12 +60,11 @@ src_configure() {
 		--disable-docs \
 		$(use_enable doc apidocs) \
 		$(use_enable unique) \
-		$(use_enable libnotify) \
 		$(use_enable webkit2) \
 		$(use_enable zeitgeist) \
 		--enable-addons \
 		$(use_enable nls) \
-		--enable-gtk3
+		--enable-gtk3 \
 		--enable-granite
 }
 
