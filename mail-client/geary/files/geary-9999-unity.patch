@@ -1,0 +1,25 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cea4a79..ccb07ba 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -32,6 +32,7 @@ option(DEBUG "Build for debugging." OFF)
+ option(ICON_UPDATE "Run gtk-update-icon-cache after the install." ON)
+ option(DESKTOP_UPDATE "Run update-desktop-database after the install." ON)
+ option(DESKTOP_VALIDATE "Check generated desktop file for errors during build." ON)
++option(WITH_UNITY "Add unity support." OFF)
+ 
+ if (DEBUG)
+     message(STATUS "Debug build")
+@@ -50,8 +51,10 @@ if (DESKTOP_VALIDATE)
+ endif ()
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(LIBUNITY QUIET unity>=5.12.0)
+-pkg_check_modules(LIBMESSAGINGMENU QUIET messaging-menu>=12.10.2)
++if(WITH_UNITY)
++    pkg_check_modules(LIBUNITY QUIET unity>=5.12.0)
++    pkg_check_modules(LIBMESSAGINGMENU QUIET messaging-menu>=12.10.2)
++endif()
+ 
+ # intl
+ include(Gettext)
