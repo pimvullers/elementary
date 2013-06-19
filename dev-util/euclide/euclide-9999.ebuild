@@ -4,7 +4,8 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.18
+VALA_MAX_API_VERSION=0.18
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -33,7 +34,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-sourceview.patch"
-	epatch "${FILESDIR}/${P}-scratch-text-editor.patch"
 
 	cmake-utils_src_prepare
 	vala_src_prepare
