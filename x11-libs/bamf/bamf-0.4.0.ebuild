@@ -11,7 +11,7 @@ inherit vala autotools-utils
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
-SRC_URI="http://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/0.4/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -32,9 +32,11 @@ DEPEND="${RDEPEND}
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig"
 
-DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
+DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
 
 src_prepare() {
+	sed -i 's/-Werror//' configure
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }

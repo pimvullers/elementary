@@ -37,6 +37,7 @@ DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
 
 src_prepare() {
 	sed -i 's/-Werror//' configure.ac
+	sed -i 's/tests//' Makefile.am
 
 	autotools-utils_src_prepare
 	vala_src_prepare
