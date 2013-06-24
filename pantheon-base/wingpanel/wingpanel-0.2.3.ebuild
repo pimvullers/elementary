@@ -7,15 +7,15 @@ EAPI=5
 VALA_MIN_API_VERSION=0.16
 VALA_MAX_API_VERSION=0.16
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-EBZR_REPO_URI="lp:wingpanel"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
@@ -36,9 +36,6 @@ pkg_setup() {
 
 src_prepare() {
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
-
-	# Disable slide in animation since it is broken.
-	#epatch "$FILESDIR/${P}-no-animation.patch"
 
 	cmake-utils_src_prepare
 	vala_src_prepare
