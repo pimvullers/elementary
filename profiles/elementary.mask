@@ -9,6 +9,7 @@
 >=gnome-extra/evolution-data-server-3.5
 >=x11-misc/xdg-user-dirs-gtk-0.10
 >=x11-themes/gtk-engines-unico-1.0.3_pre20121212
+>=mail-client/geary-0.4
 
 # Packages depending on EDS 3.6
 #
