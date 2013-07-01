@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,7 @@ RDEPEND="
 	>=gnome-extra/evolution-data-server-3.2
 	<gnome-extra/evolution-data-server-3.5
 	net-libs/libsoup:2.4
-    x11-libs/gtk+:3
+	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -67,4 +67,3 @@ pkg_postrm() {
 	fdo-mime_mime_database_update
 	gnome2_schemas_update
 }
-
