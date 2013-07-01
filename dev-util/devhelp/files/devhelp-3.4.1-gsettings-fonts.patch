@@ -1,0 +1,114 @@
+From d761ce906fab110d38d9e71d4c25a334d79b9869 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Rafa=C5=82=20Mu=C5=BCy=C5=82o?= <galtgendo@o2.pl>
+Date: Thu, 3 May 2012 00:15:50 -0400
+Subject: [PATCH] stop using obsoleted default keys
+
+https://bugzilla.gnome.org/show_bug.cgi?id=646402
+---
+ src/dh-preferences.c |   36 ++++++++----------------------------
+ src/dh-util.c        |   14 ++++++++------
+ 2 files changed, 16 insertions(+), 34 deletions(-)
+
+diff --git a/src/dh-preferences.c b/src/dh-preferences.c
+index 7d75ebf..0f33810 100644
+--- a/src/dh-preferences.c
++++ b/src/dh-preferences.c
+@@ -287,41 +287,21 @@ preferences_connect_conf_listeners (void)
+ }
+ #endif
+ 
+-/* FIXME: Use the functions in dh-util.c for this. */
+ static void
+ preferences_fonts_get_font_names (gboolean   use_system_fonts,
+                                   gchar    **variable,
+                                   gchar    **fixed)
+ {
+-	gchar   *var_font_name;
+-        gchar   *fixed_font_name;
+-	IgeConf *conf;
+-
+-	conf = ige_conf_get ();
++	gchar   *name;
++	gdouble  size;
+ 
+-	if (use_system_fonts) {
+-#ifdef GDK_WINDOWING_QUARTZ
+-                var_font_name = g_strdup ("Lucida Grande 14");
+-                fixed_font_name = g_strdup ("Monaco 14");
+-#else
+-		ige_conf_get_string (conf,
+-                                     DH_CONF_SYSTEM_VARIABLE_FONT,
+-                                     &var_font_name);
+-		ige_conf_get_string (conf,
+-                                     DH_CONF_SYSTEM_FIXED_FONT,
+-                                     &fixed_font_name);
+-#endif
+-	} else {
+-		ige_conf_get_string (conf,
+-                                     DH_CONF_VARIABLE_FONT,
+-                                     &var_font_name);
+-                ige_conf_get_string (conf,
+-                                     DH_CONF_FIXED_FONT,
+-                                     &fixed_font_name);
+-	}
++	dh_util_font_get_variable (&name, &size, use_system_fonts);
++	*variable = g_strdup_printf ("%s %u", name, (guint)size);
++	g_free (name);
+ 
+-	*variable = var_font_name;
+-	*fixed = fixed_font_name;
++	dh_util_font_get_fixed (&name, &size, use_system_fonts);
++	*fixed = g_strdup_printf ("%s %u", name, (guint)size);
++	g_free (name);
+ }
+ 
+ static void
+diff --git a/src/dh-util.c b/src/dh-util.c
+index 74312d2..08151a3 100644
+--- a/src/dh-util.c
++++ b/src/dh-util.c
+@@ -603,6 +603,7 @@ dh_util_font_get_variable (gchar    **name,
+ {
+ 	IgeConf *conf;
+ 	gchar   *name_and_size;
++	GSettings *settings;
+ 
+ 	conf = ige_conf_get ();
+ 
+@@ -610,9 +611,9 @@ dh_util_font_get_variable (gchar    **name,
+ #ifdef GDK_WINDOWING_QUARTZ
+                 name_and_size = g_strdup ("Lucida Grande 14");
+ #else
+-		ige_conf_get_string (conf,
+-                                     DH_CONF_SYSTEM_VARIABLE_FONT,
+-                                     &name_and_size);
++		settings = g_settings_new ("org.gnome.desktop.interface");
++		name_and_size = g_settings_get_string (settings, "font-name");
++		g_object_unref (settings);
+ #endif
+ 	} else {
+ 		ige_conf_get_string (conf,
+@@ -635,6 +636,7 @@ dh_util_font_get_fixed (gchar    **name,
+ {
+ 	IgeConf *conf;
+ 	gchar   *name_and_size;
++	GSettings *settings;
+ 
+ 	conf = ige_conf_get ();
+ 
+@@ -642,9 +644,9 @@ dh_util_font_get_fixed (gchar    **name,
+ #ifdef GDK_WINDOWING_QUARTZ
+                 name_and_size = g_strdup ("Monaco 14");
+ #else
+-		ige_conf_get_string (conf,
+-                                     DH_CONF_SYSTEM_FIXED_FONT,
+-                                     &name_and_size);
++		settings = g_settings_new ("org.gnome.desktop.interface");
++		name_and_size = g_settings_get_string (settings, "monospace-font-name");
++		g_object_unref (settings);
+ #endif
+ 	} else {
+ 		ige_conf_get_string (conf,
+-- 
+1.7.8.6
+
