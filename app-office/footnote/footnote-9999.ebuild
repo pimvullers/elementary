@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/libgee
 	dev-db/sqlheavy:0.1
 	x11-libs/granite
-    x11-libs/gtk+:3"
+	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
@@ -61,4 +61,3 @@ pkg_postrm() {
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
-
