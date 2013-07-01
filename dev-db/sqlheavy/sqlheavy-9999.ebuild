@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,7 +8,7 @@ VALA_MIN_API_VERSION=0.16
 
 inherit vala autotools-utils git-2
 
-DESCRIPTION="GObject SQLite wrapper, providing very nice APIs for C and Vala, GObject Introspection support, and additional functionality not present in SQLite"
+DESCRIPTION="GObject SQLite wrapper"
 HOMEPAGE="http://code.google.com/p/sqlheavy/"
 EGIT_REPO_URI="git://gitorious.org/sqlheavy/sqlheavy.git"
 
@@ -32,10 +32,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	./gitlog-to-changelog > ChangeLog
-
-	eautoreconf
-
+	autotools-utils_src_prepare
 	vala_src_prepare
 }
 
@@ -43,7 +40,6 @@ src_install() {
 	autotools-utils_src_install
 
 	# Create a slotted version of the binary
-	mv ${ED}/usr/bin/sqlheavy-gen-orm ${ED}/usr/bin/sqlheavy-gen-orm-${SLOT}
-	mv ${ED}/usr/share/man/man1/sqlheavy-gen-orm.1 ${ED}/usr/share/man/man1/sqlheavy-gen-orm-${SLOT}.1
+	mv "${ED}/usr/bin/sqlheavy-gen-orm" "${ED}/usr/bin/sqlheavy-gen-orm-${SLOT}"
+	mv "${ED}/usr/share/man/man1/sqlheavy-gen-orm.1" "${ED}/usr/share/man/man1/sqlheavy-gen-orm-${SLOT}.1"
 }
-
