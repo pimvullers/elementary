@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,7 +15,7 @@ SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="nls contractor devhelp files pastebin spell terminal webkit"
+IUSE="nls contractor files pastebin spell terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -28,7 +28,6 @@ RDEPEND="
 	x11-libs/granite
 	dev-libs/libzeitgeist
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
-	devhelp? ( dev-util/devhelp )
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
@@ -39,8 +38,8 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	S="${WORKDIR}/${PN}"
 	DOCS=( COPYING README )
+	S="${WORKDIR}/${PN}"
 }
 
 src_prepare() {
@@ -48,8 +47,6 @@ src_prepare() {
 	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
 
 	# Plugins
-	use devhelp || \
-	  sed -i -e 's/add_subdirectory (devhelp)//' plugins/CMakeLists.txt
 	use files || \
       sed -i -e 's/add_subdirectory (filemanager)//' plugins/CMakeLists.txt
 	use pastebin || \
@@ -75,9 +72,9 @@ src_configure() {
 	cmake-utils_src_configure
 }
 
-src_compile() {
-	cmake-utils_src_compile -j1
-}
+#src_compile() {
+#	cmake-utils_src_compile -j1
+#}
 
 pkg_preinst() {
 	gnome2_icon_savelist
@@ -97,4 +94,3 @@ pkg_postrm() {
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
-
