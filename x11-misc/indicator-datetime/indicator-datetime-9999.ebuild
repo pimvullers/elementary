@@ -28,6 +28,12 @@ RDEPEND="
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
 
+src_install() {
+	prune_libtool_files --all
+
+	autotools-utils_src_install
+}
+
 pkg_preinst() {
 	gnome2_schemas_savelist
 }
@@ -39,4 +45,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

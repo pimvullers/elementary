@@ -35,8 +35,6 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-elementaryos.patch"
-
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
@@ -47,11 +45,6 @@ src_configure() {
 	)
 
 	autotools-utils_src_configure
-}
-
-# Required since elementary patches break parallel build (bug #1029752)
-src_compile() {
-	autotools-utils_src_compile -j1
 }
 
 src_install() {
@@ -70,4 +63,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

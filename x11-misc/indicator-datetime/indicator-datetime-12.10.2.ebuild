@@ -12,7 +12,7 @@ SRC_URI="http://launchpad.net/${PN}/12.10/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="static-libs"
 
 RDEPEND="
@@ -45,4 +45,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

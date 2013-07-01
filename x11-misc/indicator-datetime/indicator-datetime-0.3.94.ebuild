@@ -12,7 +12,7 @@ SRC_URI="http://launchpad.net/${PN}/0.4/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="static-libs"
 
 RDEPEND="
@@ -28,17 +28,11 @@ RDEPEND="
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
 
-#pkg_setup() {
-#	AUTOTOOLS_IN_SOURCE_BUILD=1
-#}
+src_install() {
+	prune_libtool_files --all
 
-#src_prepare() {
-#	epatch "${FILESDIR}/${P}-elementaryos.patch"
-#}
-
-#src_compile() {
-#	autotools-utils_src_compile -j1
-#}
+	autotools-utils_src_install
+}
 
 pkg_preinst() {
 	gnome2_schemas_savelist
@@ -51,4 +45,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-
