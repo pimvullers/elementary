@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -18,11 +18,11 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
-    dev-libs/libgee
-    dev-libs/glib:2"
+	dev-libs/libgee
+	dev-libs/glib:2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-    virtual/pkgconfig"
+	virtual/pkgconfig"
 
 src_prepare() {
 	cmake-utils_src_prepare
@@ -36,4 +36,3 @@ src_configure() {
 
 	cmake-utils_src_configure
 }
-
