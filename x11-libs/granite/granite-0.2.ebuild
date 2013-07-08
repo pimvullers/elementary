@@ -1,3 +1,7 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
 EAPI=5
 
 VALA_MIN_API_VERSION=0.16
@@ -16,7 +20,7 @@ IUSE="demo nls static-libs"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
-	dev-libs/libgee:0
+	dev-libs/libgee:0[introspection]
 	>=x11-libs/gtk+-3.4:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -59,4 +63,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_icon_cache_update
 }
-

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<maintainer>
+	<email>elementary@vullersmail.nl</email>
+</maintainer>
+<use>
+	<flag name="demo">Build the Granite demo application (to present all available UI features provided by the library)</flag>
+</use>
+</pkgmetadata>
