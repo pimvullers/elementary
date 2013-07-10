@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -27,7 +27,7 @@ RDEPEND="${DEPEND}
 		<x11-libs/gtk+-3.5:3
 		x11-themes/gtk-engines-unico
 	)
-	icons? ( 
+	icons? (
 		x11-themes/elementary-icon-theme
 		x11-themes/hicolor-icon-theme
 	)
@@ -56,4 +56,3 @@ src_install() {
 
 	base_src_install_docs
 }
-
