@@ -1,0 +1,54 @@
+From 2717a02a8d5da27364ad7a345944a407d0e6f2bd Mon Sep 17 00:00:00 2001
+From: Florian Müllner <fmuellner@gnome.org>
+Date: Wed, 17 Oct 2012 18:15:10 +0000
+Subject: screen: Ignore num-workspaces when using dynamic workspaces
+
+On startup, workspaces are initialized according to the num-workspaces
+preference. However when using dynamic workspaces, the actual number
+of workspaces in use might be greater than the preference (when
+replacing the window manager), forcing windows on those workspaces
+to the first workspace.
+To fix, ignore the preference completely when using dynamic workspaces
+and try to restore the previous number of workspaces (as read from
+_NET_NUMBER_OF_DESKTOPS).
+
+https://bugzilla.gnome.org/show_bug.cgi?id=685439
+---
+diff --git a/src/core/screen.c b/src/core/screen.c
+index e49f7d0..03adfef 100644
+--- a/src/core/screen.c
++++ b/src/core/screen.c
+@@ -1464,7 +1464,30 @@ update_num_workspaces (MetaScreen *screen,
+   MetaWorkspace *last_remaining;
+   gboolean need_change_space;
+   
+-  new_num = meta_prefs_get_num_workspaces ();
++  if (meta_prefs_get_dynamic_workspaces ())
++    {
++      int n_items;
++      gulong *list;
++
++      n_items = 0;
++      list = NULL;
++
++      if (meta_prop_get_cardinal_list (screen->display, screen->xroot,
++                                       screen->display->atom__NET_NUMBER_OF_DESKTOPS,
++                                       &list, &n_items))
++        {
++          new_num = list[0];
++          meta_XFree (list);
++        }
++      else
++        {
++          new_num = 1;
++        }
++    }
++  else
++    {
++      new_num = meta_prefs_get_num_workspaces ();
++    }
+ 
+   g_assert (new_num > 0);
+ 
+--
+cgit v0.9.0.2

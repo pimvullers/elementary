@@ -1,0 +1,16 @@
+Index: mutter-3.4.1/configure.in
+===================================================================
+--- mutter-3.4.1.orig/configure.in	2012-05-04 21:43:52.826625535 +0200
++++ mutter-3.4.1/configure.in	2012-05-04 21:43:54.402625479 +0200
+@@ -446,11 +446,6 @@
+     esac
+ 
+     case " $CFLAGS " in
+-    *[\ \	]-Wcast-align[\ \	]*) ;;
+-    *) CFLAGS="$CFLAGS -Wcast-align" ;;
+-    esac
+-
+-    case " $CFLAGS " in
+     *[\ \	]-Wsign-compare[\ \	]*) ;;
+     *) CFLAGS="$CFLAGS -Wsign-compare" ;;
+     esac
