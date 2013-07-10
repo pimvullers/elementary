@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -11,7 +11,7 @@ HOMEPAGE="http://www.elementaryos.org"
 SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
 EBZR_REPO_URI="lp:~elementary-design/elementaryos/elementary-wallpapers-luna"
 
-LICENSE="CCPL-Attribution-2.0"
+LICENSE="CC-BY-NC-SA-2.5 CC-BY-3.0 CC-BY-NC-ND-3.0"
 SLOT="0"
 KEYWORDS=""
 IUSE=""
@@ -28,4 +28,3 @@ src_install() {
 	insinto /usr/share/backgrounds/elementary
 	doins *.jpg *.png
 }
-
