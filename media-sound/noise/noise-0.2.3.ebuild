@@ -33,7 +33,12 @@ RDEPEND="
 	media-libs/gst-plugins-base:0.10
 	media-libs/libgpod
 	media-libs/taglib
-	plugins? ( upnp? ( net-libs/gupnp-vala ) )
+	plugins? ( 
+	  upnp? ( || ( 
+		( >=net-libs/gupnp-0.20	>=net-libs/gupnp-av-0.12 ) 
+		net-libs/gupnp-vala 
+	  ) )
+	)
 	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite
@@ -43,7 +48,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 pkg_setup() {
-	S="${WORKDIR}"
 	DOCS=( AUTHORS COPYING NEWS README )
 }
 
