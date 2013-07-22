@@ -7,8 +7,8 @@ EAPI=5
 inherit autotools-utils git-2
 
 DESCRIPTION="A simple locker using lightdm"
-HOMEPAGE="https://github.com/ochosi/light-locker"
-EGIT_REPO_URI="https://github.com/ochosi/light-locker.git"
+HOMEPAGE="https://github.com/the-cavalry/light-locker"
+EGIT_REPO_URI="https://github.com/the-cavalry/light-locker.git"
 
 LICENSE="GPL-2"
 SLOT="0"
