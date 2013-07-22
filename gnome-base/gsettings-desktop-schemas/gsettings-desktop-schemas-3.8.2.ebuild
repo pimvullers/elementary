@@ -1,15 +1,14 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gsettings-desktop-schemas/gsettings-desktop-schemas-3.8.0-r1.ebuild,v 1.1 2013/05/12 10:03:44 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gsettings-desktop-schemas/gsettings-desktop-schemas-3.8.2.ebuild,v 1.1 2013/05/14 21:42:40 pacho Exp $
 
-EAPI=5
-
+EAPI="5"
 GCONF_DEBUG="no"
 
 inherit gnome2
 
 DESCRIPTION="Collection of GSettings schemas for GNOME desktop"
-HOMEPAGE="http://www.gnome.org/"
+HOMEPAGE="https://git.gnome.org/browse/gsettings-desktop-schemas"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"
@@ -27,10 +26,8 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	# Don't migrate metacity theme for consistency with the rest of
-	# Gnome 3 theming (as other themes are not migrated), upstream bug #700154
-	epatch "${FILESDIR}/${PN}-3.8.0-metacity-theme.patch"
 	epatch "${FILESDIR}/${PN}-3.8.0-draw-background.patch"
+
 	gnome2_src_prepare
 }
 
