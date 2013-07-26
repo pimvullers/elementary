@@ -35,7 +35,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
+	DOCS=( AUTHORS COPYING HACKING README )
 }
 
 src_prepare() {
