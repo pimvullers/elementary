@@ -28,6 +28,12 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
+src_prepare() {
+	sed -i 's/-Werror//' src/Makefile.in
+
+	autotools-utils_src_prepare
+}
+
 pkg_preinst() {
 	gnome2_schemas_savelist
 }
