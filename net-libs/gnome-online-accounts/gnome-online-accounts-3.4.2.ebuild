@@ -25,7 +25,7 @@ RDEPEND="
 	dev-libs/json-glib
 	gnome-base/libgnome-keyring
 	net-libs/libsoup:2.4
-	>=net-libs/libsoup-gnome-2.26:2.4
+	|| ( >=net-libs/libsoup-2.42 >=net-libs/libsoup-gnome-2.26:2.4 )
 	net-libs/rest:0.7
 	net-libs/webkit-gtk:3
 	>=x11-libs/gtk+-3.0.0:3

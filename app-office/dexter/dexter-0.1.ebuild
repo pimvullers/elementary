@@ -1,4 +1,4 @@
-# Copyright 1999-2010 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,20 +6,21 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit vala autotools-utils
+inherit vala autotools-utils versionator
 
 DESCRIPTION="Dexter is a sexy, simple address book with end users in mind"
-HOMEPAGE="https://launchpad.net/dexter-contacts"
-SRC_URI="https://launchpad.net/dexter-contacts/0.x/${PV}/+download/${PN}-contacts-${PV}.tar.gz"
+HOMEPAGE="http://launchpad.net/dexter-contacts"
+SRC_URI="http://launchpad.net/dexter-contacts/$(get_version_component_range 1-1).x/${PV}/+download/${PN}-contacts-${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="nls static-libs"
 
 RDEPEND="
 	>=dev-libs/folks-0.6.1.1
-	>=dev-libs/glib-2.29.12:2
+	<dev-libs/folks-0.9
+	dev-libs/glib:2
 	dev-libs/libgee:0
 	gnome-base/gnome-desktop:3
 	>=gnome-extra/evolution-data-server-3.2
