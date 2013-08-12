@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,25 +6,24 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit fdo-mime gnome2-utils vala cmake-utils
+inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
-HOMEPAGE="https://launchpad.net/pantheon-files"
-SRC_URI="https://launchpad.net/${PN}/1.x/${PV}/+download/${P}.tar.gz"
+HOMEPAGE="http://launchpad.net/pantheon-files"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="+gvfs nls contractor ctags trash"
+KEYWORDS="amd64 x86"
+IUSE="+gvfs nls"
 
 RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
-	>=dev-libs/glib-2.29.0:2
+	dev-libs/glib:2
 	x11-libs/granite
 	dev-libs/libgee:0
-	x11-libs/varka
-	x11-libs/gtk+:3
+	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
 	x11-libs/pango
 	gvfs? ( gnome-base/gvfs )
@@ -35,19 +34,12 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
-	DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
+	DOCS=( AUTHORS COPYING HACKING README )
 }
 
 src_prepare() {
+	# Disable generation of the translations (if needed)
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
-
-	# Optional plugins
-	use contractor || \
-		sed -i -e 's/add_subdirectory(contractor)//' plugins/CMakeLists.txt
-	use ctags || \
-		sed -i -e 's/add_subdirectory(marlin-ctags)//' plugins/CMakeLists.txt
-	use trash || \
-		sed -i -e 's/add_subdirectory(marlin-trash)//' plugins/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -81,4 +73,3 @@ pkg_postrm() {
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
-
