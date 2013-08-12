@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils
 
 DESCRIPTION="Configure various aspects of the Pantheon desktop environment using Switchboard."
 HOMEPAGE="http://launchpad.net/switchboard-plug-pantheon-shell"
-EBZR_REPO_URI="lp:switchboard-plug-pantheon-shell"
+SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 CDEPEND="
