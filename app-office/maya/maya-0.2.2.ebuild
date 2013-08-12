@@ -9,12 +9,12 @@ VALA_MIN_API_VERSION=0.16
 inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
-HOMEPAGE="https://launchpad.net/maya"
-SRC_URI="https://launchpad.net/${PN}/0.x/luna-beta2/+download/${P}.tar.gz"
+HOMEPAGE="http://launchpad.net/maya"
+SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-calendar-${PV}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}/${PN}-calendar-${PV}"
 	DOCS=( AUTHORS COPYING COPYRIGHT )
 }
 

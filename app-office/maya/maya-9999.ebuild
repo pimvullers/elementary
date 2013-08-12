@@ -9,7 +9,7 @@ VALA_MIN_API_VERSION=0.16
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
-HOMEPAGE="https://launchpad.net/maya"
+HOMEPAGE="http://launchpad.net/maya"
 EBZR_REPO_URI="lp:maya"
 
 LICENSE="GPL-3"
