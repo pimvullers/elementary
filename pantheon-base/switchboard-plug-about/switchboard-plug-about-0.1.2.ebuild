@@ -6,11 +6,11 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils
 
 DESCRIPTION="Switchboard plug to show system information."
 HOMEPAGE="http://launchpad.net/switchboard-plug-about"
-EBZR_REPO_URI="lp:switchboard-plug-about"
+SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
