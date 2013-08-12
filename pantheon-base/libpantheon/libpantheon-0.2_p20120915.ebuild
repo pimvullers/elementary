@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils
 
 DESCRIPTION="A library for interacting with various Pantheon Desktop Environment components"
 HOMEPAGE="https://launchpad.net/libpantheon"
-EBZR_REPO_URI="lp:libpantheon"
+SRC_URI="https://github.com/pimvullers/elementary/blob/master/distfiles/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 IUSE=""
 
 RDEPEND="
