@@ -1,3 +1,7 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
 EAPI=5
 
 VALA_MIN_API_VERSION=0.16
@@ -5,12 +9,12 @@ VALA_MIN_API_VERSION=0.16
 inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
-HOMEPAGE="https://launchpad.net/slingshot"
-SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
+HOMEPAGE="http://launchpad.net/slingshot"
+SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
@@ -57,4 +61,3 @@ pkg_postrm() {
 	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
-
