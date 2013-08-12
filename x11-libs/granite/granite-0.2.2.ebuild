@@ -6,22 +6,22 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit gnome2-utils vala cmake-utils
+inherit gnome2-utils vala multilib cmake-utils versionator
 
 DESCRIPTION="A development library for elementary development"
-HOMEPAGE="https://launchpad.net/granite"
-SRC_URI="https://launchpad.net/${PN}/0.2/${PV}/+download/${P}.tar.gz"
+HOMEPAGE="http://launchpad.net/granite"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tar.gz"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="demo nls static-libs"
+KEYWORDS="amd64 x86"
+IUSE="demo nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
 	dev-libs/libgee:0[introspection]
-	>=x11-libs/gtk+-3.4:3"
+	>=x11-libs/gtk+-3.4:3[introspection]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -44,11 +44,9 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="${VALAC}"
-		$(use static-libs && echo "-DBUILD_STATIC=Yes")
+		-DLIB_INSTALL_DIR=$(get_libdir)
+		-DVALA_EXECUTABLE=${VALAC}
 	)
-
 	cmake-utils_src_configure
 }
 

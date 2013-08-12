@@ -6,22 +6,22 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala multilib cmake-utils bzr
 
 DESCRIPTION="A development library for elementary development"
-HOMEPAGE="https://launchpad.net/granite"
+HOMEPAGE="http://launchpad.net/granite"
 EBZR_REPO_URI="lp:granite"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="demo nls static-libs"
+IUSE="demo nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
 	dev-libs/libgee:0[introspection]
-	>=x11-libs/gtk+-3.4:3"
+	>=x11-libs/gtk+-3.4:3[introspection]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -44,11 +44,9 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DICON_UPDATE=OFF
-		-DVALA_EXECUTABLE="${VALAC}"
-		$(use static-libs && echo "-DBUILD_STATIC=Yes")
+		-DLIB_INSTALL_DIR=$(get_libdir)
+		-DVALA_EXECUTABLE=${VALAC}
 	)
-
 	cmake-utils_src_configure
 }
 
