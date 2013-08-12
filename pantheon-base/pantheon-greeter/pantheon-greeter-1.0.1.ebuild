@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,29 +6,34 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit gnome2-utils vala cmake-utils
+inherit gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="Pantheon Login Screen for LightDM"
-HOMEPAGE="https://launchpad.net/pantheon-greeter"
-SRC_URI="https://launchpad.net/${PN}/1.x/${PV}/+download/${P}.tar.gz"
+HOMEPAGE="http://launchpad.net/pantheon-greeter"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-1).x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE=""
+KEYWORDS="amd64 x86"
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/libindicator:3
 	media-fonts/raleway
 	media-libs/clutter-gtk:1.0
+	virtual/opengl
 	x11-libs/granite
 	x11-libs/gtk+:3
 	>=x11-misc/lightdm-1.2.1"
 DEPEND="${DEPEND}
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 src_prepare() {
+	# Disable generation of the translations (if needed)
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
@@ -53,4 +58,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-
