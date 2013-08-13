@@ -16,6 +16,7 @@ KEYWORDS=""
 IUSE="nls policykit static-libs"
 
 RDEPEND="
+	app-admin/packagekit-base
 	dev-libs/dbus-glib
 	>=dev-libs/glib-2.35.4:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]

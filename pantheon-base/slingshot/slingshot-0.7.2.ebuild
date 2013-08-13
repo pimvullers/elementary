@@ -20,6 +20,7 @@ IUSE=""
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
+	dev-libs/libunity
 	dev-libs/libzeitgeist
 	gnome-base/gnome-menus:0
 	x11-libs/granite
