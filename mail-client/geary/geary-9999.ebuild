@@ -29,7 +29,7 @@ CDEPEND="
 	>=gnome-base/libgnome-keyring-3.2.2
 	media-libs/libcanberra
 	net-libs/webkit-gtk:3[introspection]
-	>=x11-libs/gtk+-3.4.0:3[introspection]
+	>=x11-libs/gtk+-3.6.0:3[introspection]
 	x11-libs/libnotify
 	ayatana? ( dev-libs/libindicate:3 )"
 RDEPEND="${CDEPEND}
