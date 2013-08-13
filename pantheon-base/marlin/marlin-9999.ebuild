@@ -12,7 +12,7 @@ DESCRIPTION="A sleek and fast GTK3 file manager"
 HOMEPAGE="https://launchpad.net/marlin"
 EBZR_REPO_URI="lp:marlin"
 
-LICENSE="GPL-3;GPL-2"
+LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
 IUSE="nls plugins"
