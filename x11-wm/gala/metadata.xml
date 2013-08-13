@@ -4,4 +4,7 @@
 <maintainer>
 	<email>elementary@vullersmail.nl</email>
 </maintainer>
+<use>
+	<flag name="mutter38">Build the new Gala based on Mutter 3.8</flag>
+</use>
 </pkgmetadata>
