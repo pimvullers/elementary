@@ -1,0 +1,9 @@
+## Mutter 3.8 (for Gala)
+=dev-libs/glib-2.36*
+=x11-wm/mutter-3.8*
+=media-libs/clutter-1.14*
+=gnome-base/gsettings-desktop-schemas-3.8*
+=media-libs/cogl-1.14*
+=dev-libs/gobject-introspection-1.36*
+=dev-libs/gobject-introspection-common-1.36*
+

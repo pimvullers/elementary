@@ -10,12 +10,25 @@
 >=x11-misc/xdg-user-dirs-gtk-0.10
 >=x11-themes/gtk-engines-unico-1.0.3_pre20121212
 >=mail-client/geary-0.4
+>=net-libs/webkit-gtk-2.0
+>=app-arch/file-roller-3.8
+>=x11-libs/gtksourceview-3.8
+>=gnome-base/gnome-settings-daemon-3.8
+>=app-text/evince-3.8
+>=gnome-base/gnome-session-3.8
+>=media-libs/clutter-gtk-1.4.4
+>=x11-wm/mutter-3.8.3
+>=media-video/cheese-3.8
+>=gnome-base/gnome-desktop-3.8
+>=media-video/snap-9999
 
 # Packages depending on EDS 3.6
 #
 >=net-im/indicator-messages-12
 >=net-libs/gnome-online-accounts-3.5
 >=x11-misc/indicator-datetime-12
+
+>=x11-misc/indicator-session-12
 
 # Packages to downgrade to GLib 2.34
 #
