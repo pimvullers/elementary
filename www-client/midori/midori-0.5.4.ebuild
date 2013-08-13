@@ -1,27 +1,29 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.0.ebuild,v 1.1 2013/04/09 07:33:34 angelos Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.4.ebuild,v 1.2 2013/08/11 08:17:25 ssuominen Exp $
 
 EAPI=5
-VALA_MIN_API_VERSION=0.14
+VALA_MIN_API_VERSION=0.16
 
 PYTHON_COMPAT=( python2_7 )
 
 inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
-HOMEPAGE="http://twotoasts.de/index.php/midori/"
-SRC_URI="mirror://xfce/src/apps/${PN}/${PV%.*}/${P}.tar.bz2"
+HOMEPAGE="http://www.midori-browser.org/"
+SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2"
+
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86 ~x86-fbsd"
-IUSE="+deprecated doc gnome libnotify nls +unique webkit2 zeitgeist"
+IUSE="doc gnome libnotify nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
-	>=dev-libs/glib-2.22
+	>=dev-libs/glib-2.32.3
 	dev-libs/libxml2
 	>=net-libs/libsoup-2.34:2.4
+	>=x11-libs/libnotify-0.7
 	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
 	>=net-libs/webkit-gtk-1.10.2:3
@@ -30,6 +32,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	unique? ( dev-libs/libunique:3 )
 	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
 	libnotify? ( >=x11-libs/libnotify-0.7 )
+	webkit2? ( >=net-libs/webkit-gtk-2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
@@ -42,7 +45,7 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	python-any-r1_pkg_setup
 
-	DOCS=( AUTHORS ChangeLog HACKING INSTALL TODO TRANSLATE )
+	DOCS=( AUTHORS ChangeLog HACKING README TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
 }
 
@@ -62,11 +65,19 @@ src_configure() {
 		$(use_enable unique) \
 		$(use_enable libnotify) \
 		$(use_enable webkit2) \
-		$(use_enable zeitgeist) \
 		--enable-addons \
 		$(use_enable nls) \
 		--enable-gtk3 \
+		$(use_enable zeitgeist) \
 		--enable-granite
+}
+
+src_install() {
+	waf-utils_src_install
+
+	local jit_is_enabled
+	has_version 'net-libs/webkit-gtk:3[jit]' && jit_is_enabled=yes
+	[[ ${jit_is_enabled} == yes ]] && pax-mark -m "${ED}"/usr/bin/${PN} #480290
 }
 
 pkg_preinst() {
