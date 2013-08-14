@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -16,14 +16,16 @@ KEYWORDS=""
 IUSE="libnotify lightdm screensaver"
 
 CDEPEND="
-	lightdm? ( x11-misc/lightdm pantheon-base/pantheon-greeter )"
+	lightdm? ( >=pantheon-base/pantheon-greeter-1.0 )"
 RDEPEND="${CDEPEND}
 	>=gnome-base/gnome-session-3.0
+	<gnome-base/gnome-session-3.8
 	>=gnome-base/gnome-settings-daemon-3.0
-	pantheon-base/cerbere
+	<gnome-base/gnome-settings-daemon-3.8
+	>=pantheon-base/cerbere-0.2
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
-	pantheon-base/slingshot
-	pantheon-base/wingpanel
+	>=pantheon-base/slingshot-0.7
+	>=pantheon-base/wingpanel-0.2
 	x11-wm/gala
 	libnotify? ( || ( pantheon-base/pantheon-notify x11-misc/notify-osd virtual/notification-daemon ) )
 	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
@@ -56,7 +58,10 @@ src_install() {
 	insinto /usr/share/pantheon
 	doins -r applications
 
-	dobin ${FILESDIR}/pantheon-session
+	exeinto /etc/X11/Sessions
+	doexe "${FILESDIR}/Pantheon"
+
+	dobin "${FILESDIR}/pantheon-session"
 }
 
 pkg_postinst() {
@@ -68,4 +73,3 @@ pkg_postrm() {
 	use lightdm && \
 	  /usr/libexec/lightdm/lightdm-set-defaults --remove --session=pantheon
 }
-

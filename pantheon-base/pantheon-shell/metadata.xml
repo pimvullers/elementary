@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+<maintainer>
+	<email>elementary@vullersmail.nl</email>
+</maintainer>
+<use>
+	<flag name="lightdm">Install and use the Pantheon greeter for LightDM.</flag>
+	<flag name="screensaver">Install a screensaver</flag>
+</use>
+</pkgmetadata>

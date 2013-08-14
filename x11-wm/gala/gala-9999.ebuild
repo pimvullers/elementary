@@ -14,7 +14,7 @@ EBZR_REPO_URI="$(use mutter38 && echo 'lp:~gala-dev/gala/mutter38' || echo 'lp:g
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="+mutter38"
 
 RDEPEND="
