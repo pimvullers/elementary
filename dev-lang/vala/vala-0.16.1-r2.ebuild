@@ -36,7 +36,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-gobject-introspection-1.36.patch"
+	epatch "${FILESDIR}/${P}-gobject-introspection-1.36.patch"
 
 	gnome2_src_prepare
 }
