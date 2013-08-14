@@ -10,7 +10,7 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="http://launchpad.net/slingshot"
-SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-launcher-${PV}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -29,9 +29,8 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=( AUTHORS COPYING )
-}
+S="${WORKDIR}/${PN}-launcher-${PV}"
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	cmake-utils_src_prepare
