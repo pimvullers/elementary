@@ -26,6 +26,7 @@ RDEPEND="${CDEPEND}
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
 	>=pantheon-base/slingshot-0.7
 	>=pantheon-base/wingpanel-0.2
+	x11-themes/elementary-theme
 	x11-wm/gala
 	libnotify? ( || ( pantheon-base/pantheon-notify x11-misc/notify-osd virtual/notification-daemon ) )
 	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
