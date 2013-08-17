@@ -21,6 +21,8 @@ IUSE="+introspection doc static-libs"
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
+	dev-libs/libxml2[python]
+	dev-libs/libxslt[python]
 	dev-libs/glib:2
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
