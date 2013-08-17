@@ -16,7 +16,7 @@ SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE="nls"
+IUSE="bluetooth nls"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -29,6 +29,11 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
+PDEPEND="
+	x11-misc/indicator-datetime
+	x11-misc/indicator-session
+	media-sound/indicator-sound
+	bluetooth? ( net-misc/indicator-bluetooth )"
 
 pkg_setup() {
 	DOCS="AUTHORS COPYING COPYRIGHT"
