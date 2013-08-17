@@ -28,6 +28,11 @@ RDEPEND="
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
 
+src_prepare() {
+	# Drop -Werror flag
+	sed -i -e 's/-Werror//' src/Makefile.in
+}
+
 src_install() {
 	prune_libtool_files --all
 
