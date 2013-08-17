@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.4.0-r2.ebuild,v 1.1 2013/05/18 12:41:16 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.7.9.ebuild,v 1.1 2013/08/16 18:03:09 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd
@@ -14,8 +14,8 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde qt4 razor"
-REQUIRED_USE="|| ( gtk kde razor )"
+IUSE="+gtk +introspection kde pantheon qt4 razor"
+REQUIRED_USE="|| ( gtk kde pantheon razor )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
@@ -39,6 +39,7 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig"
 PDEPEND="gtk? ( x11-misc/lightdm-gtk-greeter )
 	kde? ( x11-misc/lightdm-kde )
+	pantheon? ( pantheon-base/pantheon-greeter )
 	razor? ( razorqt-base/razorqt-lightdm-greeter )"
 
 DOCS=( NEWS )
@@ -47,7 +48,7 @@ src_prepare() {
 	sed -i -e 's:getgroups:lightdm_&:' tests/src/libsystem.c || die #412369
 	sed -i -e '/minimum-uid/s:500:1000:' data/users.conf || die
 
-	epatch "${FILESDIR}"/session-wrapper-${PN}.patch
+	epatch "${FILESDIR}"/${PN}-1.7.7-session-wrapper.patch
 	epatch_user
 
 	# Remove bogus Makefile statement. This needs to go upstream
