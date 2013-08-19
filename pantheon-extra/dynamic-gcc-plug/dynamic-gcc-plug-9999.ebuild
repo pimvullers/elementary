@@ -10,7 +10,7 @@ inherit vala cmake-utils bzr
 
 DESCRIPTION="Dynamic Gnome Control Center plugs for switchboard"
 HOMEPAGE="https://code.launchpad.net/~elementary-os/pantheon-plugs/dynamic-gcc-plug"
-EBZR_REPO_URI="lp:~elementary-os/pantheon-plugs/dynamic-gcc-plug"
+EBZR_REPO_URI="lp:~elementary-apps/pantheon-plugs/dynamic-gcc-plug"
 
 LICENSE="GPL-3"
 SLOT="0"
