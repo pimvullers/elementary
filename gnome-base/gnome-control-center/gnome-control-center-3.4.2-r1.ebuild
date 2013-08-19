@@ -129,6 +129,8 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-3.4.2-cups-1.6.patch"
 	# Fix building against newer gnome-bluetooth
 	epatch "${FILESDIR}/${PN}-3.4.2-bluetooth.patch"
+	# Fix build against newer gnome-desktop
+	epatch "${FILESDIR}/${PN}-3.4.2-gnome-desktop.patch"
 	eautoreconf
 
 	gnome2_src_prepare
