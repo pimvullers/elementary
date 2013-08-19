@@ -22,6 +22,9 @@
 >=gnome-base/gnome-desktop-3.8
 >=media-video/snap-9999
 >=x11-themes/gnome-themes-standard-3.6
+>=sys-apps/gnome-disk-utility-3.6
+
+>=net-misc/indicator-bluetooth-9999
 
 # Packages depending on EDS 3.6
 #

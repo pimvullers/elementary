@@ -8,6 +8,7 @@ pantheon-base/appcenter **
 pantheon-base/cerbere **
 pantheon-base/pantheon-files **
 pantheon-base/pantheon-greeter **
+pantheon-base/libpantheon **
 pantheon-base/slingshot **
 pantheon-base/switchboard **
 pantheon-base/wingpanel **
