@@ -20,6 +20,7 @@ RDEPEND="
 	dev-libs/libdbusmenu:3[gtk]
 	dev-libs/libindicator:3
 	>=net-wireless/gnome-bluetooth-3
+	<net-wireless/gnome-bluetooth-3.8
 	x11-libs/gtk+:3
 	x11-libs/libido"
 DEPEND="${RDEPEND}

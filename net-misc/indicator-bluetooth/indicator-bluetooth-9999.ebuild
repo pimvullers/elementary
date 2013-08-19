@@ -35,6 +35,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# Drop -Werror flag
+	sed -i -e 's/-Werror//' src/Makefile.in
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
