@@ -20,6 +20,7 @@ IUSE=""
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
+	dev-libs/libunity
 	dev-libs/libzeitgeist
 	gnome-base/gnome-menus:0
 	x11-libs/granite
@@ -28,9 +29,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=( AUTHORS COPYING )
-}
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	cmake-utils_src_prepare
