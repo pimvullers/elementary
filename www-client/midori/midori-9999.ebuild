@@ -3,33 +3,35 @@
 # $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-9999.ebuild,v 1.49 2013/06/01 14:27:45 ssuominen Exp $
 
 EAPI=5
-VALA_MIN_API_VERSION=0.14
+VALA_MIN_API_VERSION=0.16
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala bzr
+inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 waf-utils vala bzr
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
-HOMEPAGE="http://twotoasts.de/index.php/midori/"
+HOMEPAGE="http://www.midori-browser.org/"
 EBZR_REPO_URI="lp:midori"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="+deprecated doc gnome nls +unique webkit2 zeitgeist"
+IUSE="doc gnome nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
-	>=dev-libs/glib-2.22
+	>=dev-libs/glib-2.32.3
 	dev-libs/libxml2
 	>=net-libs/libsoup-2.34:2.4
+	>=x11-libs/libnotify-0.7
 	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
-	>=x11-libs/libnotify-0.7
-	unique? ( dev-libs/libunique:3 )
 	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
+	unique? ( dev-libs/libunique:3 )
+	webkit2? ( >=net-libs/webkit-gtk-2 )
+	!webkit2? ( <net-libs/webkit-gtk-2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
@@ -42,7 +44,7 @@ DEPEND="${RDEPEND}
 pkg_setup() {
 	python-any-r1_pkg_setup
 
-	DOCS=( AUTHORS ChangeLog HACKING TODO TRANSLATE )
+	DOCS=( AUTHORS ChangeLog HACKING README TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
 }
 
@@ -59,13 +61,21 @@ src_configure() {
 	waf-utils_src_configure \
 		--disable-docs \
 		$(use_enable doc apidocs) \
+		$(use_enable nls) \
 		$(use_enable unique) \
 		$(use_enable webkit2) \
 		$(use_enable zeitgeist) \
 		--enable-addons \
-		$(use_enable nls) \
 		--enable-gtk3 \
 		--enable-granite
+}
+
+src_install() {
+	waf-utils_src_install
+
+	local jit_is_enabled
+	has_version 'net-libs/webkit-gtk:3[jit]' && jit_is_enabled=yes
+	[[ ${jit_is_enabled} == yes ]] && pax-mark -m "${ED}"/usr/bin/${PN} #480290
 }
 
 pkg_preinst() {

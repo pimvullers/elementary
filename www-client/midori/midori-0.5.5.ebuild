@@ -7,7 +7,7 @@ VALA_MIN_API_VERSION=0.16
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit eutils fdo-mime gnome2-utils python-any-r1 waf-utils vala
+inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 waf-utils vala
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
@@ -17,7 +17,7 @@ SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86 ~x86-fbsd"
-IUSE="doc gnome libnotify nls +unique webkit2 zeitgeist"
+IUSE="doc gnome nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
@@ -29,10 +29,10 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
-	unique? ( dev-libs/libunique:3 )
 	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
-	libnotify? ( >=x11-libs/libnotify-0.7 )
+	unique? ( dev-libs/libunique:3 )
 	webkit2? ( >=net-libs/webkit-gtk-2 )
+	!webkit2? ( <net-libs/webkit-gtk-2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
@@ -62,13 +62,12 @@ src_configure() {
 	waf-utils_src_configure \
 		--disable-docs \
 		$(use_enable doc apidocs) \
-		$(use_enable unique) \
-		$(use_enable libnotify) \
-		$(use_enable webkit2) \
-		--enable-addons \
 		$(use_enable nls) \
-		--enable-gtk3 \
+		$(use_enable unique) \
+		$(use_enable webkit2) \
 		$(use_enable zeitgeist) \
+		--enable-addons \
+		--enable-gtk3 \
 		--enable-granite
 }
 
