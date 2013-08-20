@@ -6,11 +6,11 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit fdo-mime gnome2-utils vala cmake-utils
+inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="Noise is the official audio player of elementary OS"
 HOMEPAGE="https://launchpad.net/noise"
-SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
+SRC_URI="https://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
