@@ -10,7 +10,7 @@ inherit vala cmake-utils
 
 DESCRIPTION="A library for interacting with various Pantheon Desktop Environment components"
 HOMEPAGE="https://launchpad.net/libpantheon"
-SRC_URI="https://github.com/pimvullers/elementary/blob/master/distfiles/${P}.tar.bz2"
+SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
