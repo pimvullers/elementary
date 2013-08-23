@@ -27,7 +27,7 @@ RDEPEND="
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
 	x11-libs/libX11
-	x11-libs/libwnck:3"
+	>=x11-libs/libwnck-3.4.7:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	doc? ( dev-util/gtk-doc )
