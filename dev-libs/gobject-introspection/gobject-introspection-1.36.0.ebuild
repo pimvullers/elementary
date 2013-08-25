@@ -23,7 +23,7 @@ RDEPEND="
 	>=dev-libs/glib-2.36:2
 	doctool? ( dev-python/mako )
 	virtual/libffi:=
-	!<dev-lang/vala-0.16.0
+	!<dev-lang/vala-0.14.0
 "
 # Wants real bison, not virtual/yacc
 DEPEND="${RDEPEND}
