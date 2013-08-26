@@ -9,7 +9,7 @@ inherit base bzr
 DESCRIPTION="A set of wallpapers used by the elementary OS"
 HOMEPAGE="http://www.elementaryos.org"
 SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
-EBZR_REPO_URI="lp:~elementary-design/elementaryos/elementary-wallpapers-luna"
+EBZR_REPO_URI="lp:~elementary-design/elementaryos/elementary-wallpapers"
 
 LICENSE="CC-BY-NC-SA-2.5 CC-BY-3.0 CC-BY-NC-ND-3.0"
 SLOT="0"
