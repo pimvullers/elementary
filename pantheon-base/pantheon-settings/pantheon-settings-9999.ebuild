@@ -22,6 +22,12 @@ RDEPEND="${DEPEND}"
 src_compile() {
 	mv debian/elementary-default-settings.gsettings-override \
 		${P}.gschema.override
+	
+	# Replace Open Sans with Droid Sans as we don't have Open Sans yet
+	sed -i -e 's/Open Sans/Droid Sans/'	${P}.gschema.override
+
+	# Rename DMZ-Black to Vanilla-DMZ-AA as that's the name in Gentoo
+	sed -i -e 's/DMZ-Black/Vanilla-DMZ-AA/' ${P}.gschema.override
 }
 
 src_install() {
