@@ -22,6 +22,7 @@ RDEPEND="
 	dev-libs/libical
 	dev-libs/libindicator:3
 	gnome-base/gconf
+	>=gnome-extra/evolution-data-server-3
 	<gnome-extra/evolution-data-server-3.5
 	x11-libs/cairo
 	>=x11-libs/gtk+-3.1.4:3
