@@ -4,15 +4,15 @@
 
 EAPI=5
 
-inherit autotools-utils git-2
+inherit autotools-utils
 
 DESCRIPTION="A simple locker using lightdm"
 HOMEPAGE="https://github.com/the-cavalry/light-locker"
-EGIT_REPO_URI="https://github.com/the-cavalry/light-locker.git"
+SRC_URI="https://github.com/the-cavalry/${PN}/releases/download/v${PV}/${P}.tar.bz2"
 
 LICENSE="LGPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="X consolekit nls static-libs systemd upower"
 
 RDEPEND="
@@ -25,7 +25,6 @@ DEPEND="${RDEPEND}
 	X? ( x11-proto/scrnsaverproto )
 	nls? ( sys-devel/gettext )"
 
-AUTOTOOLS_AUTORECONF=yes
 DOCS=( AUTHORS COPYING COPYING.LIB HACKING NEWS README TODO )
 
 src_configure() {
