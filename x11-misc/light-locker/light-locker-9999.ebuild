@@ -26,7 +26,13 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 AUTOTOOLS_AUTORECONF=yes
-DOCS=( AUTHORS COPYING COPYING.LIB HACKING NEWS README TODO )
+DOCS=( AUTHORS COPYING COPYING.LIB HACKING NEWS README )
+
+src_prepare() {
+	sed -e "/XDT_I18N/d" configure.ac.in > configure.ac
+
+	autotools-utils_src_prepare
+}
 
 src_configure() {
 	local myeconfargs=(
