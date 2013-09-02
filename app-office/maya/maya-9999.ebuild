@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="http://launchpad.net/maya"
-EBZR_REPO_URI="lp:maya"
+EBZR_REPO_URI="lp:~elementary-apps/maya/maya-saucy" # lp:maya
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -22,8 +22,7 @@ RDEPEND="
 	dev-libs/libgee
 	dev-libs/libical
 	gnome-base/gconf:2
-	>=gnome-extra/evolution-data-server-3.2
-	<gnome-extra/evolution-data-server-3.5
+	>=gnome-extra/evolution-data-server-3.8
 	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite"
