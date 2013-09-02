@@ -28,7 +28,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
-	gnome? ( || ( >=net-libs/libsoup-2.42:2.4 >=net-libs/libsoup-gnome-2.34:2.4 ) )
+	>=net-libs/libsoup-gnome-2.34:2.4
 	unique? ( dev-libs/libunique:3 )
 	webkit2? ( >=net-libs/webkit-gtk-2 )
 	!webkit2? ( <net-libs/webkit-gtk-2 )
