@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="http://launchpad.net/maya"
-SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-calendar-${PV}.tgz"
+SRC_URI="http://launchpad.net/${PN}/luna/${PV}/+download/${PN}-calendar-${PV}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
