@@ -15,7 +15,7 @@ SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="nls contractor files pastebin spell terminal webkit"
+IUSE="nls contractor files pastebin terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -29,7 +29,6 @@ RDEPEND="
 	dev-libs/libzeitgeist
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
 	pastebin? ( net-libs/libsoup )
-	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
@@ -43,8 +42,14 @@ pkg_setup() {
 }
 
 src_prepare() {
+	# Drop unused/unavailable plugin-translate script
+	epatch "${FILESDIR}/${P}-plugin-translate.patch"
+
+	# Drop broken spell plugin
+	sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
+
 	# Translations
-	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
 	# Plugins
 	use files || \
@@ -53,8 +58,6 @@ src_prepare() {
 	  sed -i -e 's/add_subdirectory (pastebin)//' plugins/CMakeLists.txt
 	use terminal || \
 	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
-	use spell || \
-	  sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 	use webkit || \
 	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
 
@@ -71,10 +74,6 @@ src_configure() {
 
 	cmake-utils_src_configure
 }
-
-#src_compile() {
-#	cmake-utils_src_compile -j1
-#}
 
 pkg_preinst() {
 	gnome2_icon_savelist

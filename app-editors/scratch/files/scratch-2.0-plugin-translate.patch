@@ -1,0 +1,15 @@
+--- CMakeLists.txt.orig	2013-09-03 09:16:27.754656868 +0200
++++ CMakeLists.txt	2013-09-03 09:16:50.540826740 +0200
+@@ -61,12 +61,6 @@
+ include_directories(${CMAKE_BINARY_DIR}/scratchcore)
+ include_directories(${CMAKE_BINARY_DIR}/src)
+ 
+-# Translations for plugins
+-execute_process(
+-    COMMAND python ${CMAKE_CURRENT_SOURCE_DIR}/plugin-translate.py
+-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+-)
+-
+ # Subdirectories
+ #add_subdirectory(scratchcore)
+ add_subdirectory (src)

@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:scratch"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls contractor files pastebin spell terminal webkit"
+IUSE="nls contractor files pastebin terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -29,7 +29,6 @@ RDEPEND="
 	dev-libs/libzeitgeist
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
 	pastebin? ( net-libs/libsoup )
-	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
@@ -52,10 +51,11 @@ src_prepare() {
 	  sed -i -e 's/add_subdirectory (pastebin)//' plugins/CMakeLists.txt
 	use terminal || \
 	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
-	use spell || \
-	  sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 	use webkit || \
 	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
+
+	# Drop broken spell plugin
+	sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
