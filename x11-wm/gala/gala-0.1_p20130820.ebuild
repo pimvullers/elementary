@@ -6,16 +6,16 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
-EBZR_REPO_URI="$(use mutter38 && echo 'lp:~gala-dev/gala/mutter38' || echo 'lp:gala')"
+SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
-IUSE="+mutter38"
+KEYWORDS="~amd64 ~x86"
+IUSE=""
 
 RDEPEND="
 	dev-libs/libgee
@@ -25,8 +25,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/bamf
 	x11-libs/libXfixes
-	>=x11-wm/mutter-3.6.3-r1
-	mutter38? ( >=x11-wm/mutter-3.8 )"
+	>=x11-wm/mutter-3.4.1-r2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"

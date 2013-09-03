@@ -1,0 +1,29 @@
+From f5ca6733c4389de9a5bd55b51b016ce40b8e983e Mon Sep 17 00:00:00 2001
+From: Damien Lespiau <damien.lespiau@intel.com>
+Date: Fri, 11 May 2012 12:24:29 +0100
+Subject: [PATCH] doc: Remove the inclusion of non-existent cogl-clipping.xml
+
+The API is now gone, so cogl-clipping.xml is not generated.
+
+Reviewed-by: Robert Bragg <robert@linux.intel.com>
+
+(cherry picked from commit ff3956c25676c898948c5c7239c85154564c0e16)
+---
+ doc/reference/cogl-2.0-experimental/cogl-2.0-experimental-docs.xml.in | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/doc/reference/cogl-2.0-experimental/cogl-2.0-experimental-docs.xml.in b/doc/reference/cogl-2.0-experimental/cogl-2.0-experimental-docs.xml.in
+index 411503f..55c88f7 100644
+--- a/doc/reference/cogl-2.0-experimental/cogl-2.0-experimental-docs.xml.in
++++ b/doc/reference/cogl-2.0-experimental/cogl-2.0-experimental-docs.xml.in
+@@ -113,7 +113,6 @@
+       <xi:include href="xml/cogl-texture-rectangle.xml"/>
+     </section>
+ 
+-    <xi:include href="xml/cogl-clipping.xml"/>
+     <section id="cogl-framebuffer-apis">
+       <title>Framebuffers</title>
+       <xi:include href="xml/cogl-framebuffer.xml"/>
+-- 
+1.7.12
+
