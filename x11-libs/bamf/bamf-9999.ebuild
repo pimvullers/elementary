@@ -21,8 +21,6 @@ IUSE="+introspection doc static-libs"
 RDEPEND="
 	dev-libs/dbus-glib
 	dev-util/gdbus-codegen
-	dev-libs/libxml2[python]
-	dev-libs/libxslt[python]
 	dev-libs/glib:2
 	gnome-base/libgtop:2
 	x11-libs/gtk+:3
@@ -30,6 +28,8 @@ RDEPEND="
 	>=x11-libs/libwnck-3.4.7:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	dev-libs/libxml2[python]
+	dev-libs/libxslt[python]
 	doc? ( dev-util/gtk-doc )
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig"

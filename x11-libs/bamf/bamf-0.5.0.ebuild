@@ -28,6 +28,8 @@ RDEPEND="
 	>=x11-libs/libwnck-3.4.7:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	dev-libs/libxml2[python]
+	dev-libs/libxslt[python]
 	doc? ( dev-util/gtk-doc )
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig"
