@@ -20,16 +20,9 @@ DEPEND="${RDEPEND}"
 
 S="${WORKDIR}"
 
-src_prepare() {
-	sed -i -e 's#backgrounds/#backgrounds/elementary/#' elementary-wallpapers.xml
-}
-
 src_install() {
 	insinto /usr/share/backgrounds/elementary
 	doins *.jpg
-
-	insinto /usr/share/backgrounds
-	doins elementary-wallpapers.xml
 
 	dodir /usr/share/backgrounds
 	dosym elementary/94.jpg /usr/share/backgrounds/elementaryos-default
