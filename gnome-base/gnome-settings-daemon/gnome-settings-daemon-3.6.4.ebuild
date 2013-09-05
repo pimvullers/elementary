@@ -24,8 +24,7 @@ REQUIRED_USE="
 COMMON_DEPEND="
 	>=dev-libs/glib-2.31.0:2
 	>=x11-libs/gtk+-3.3.4:3
-	>=gnome-base/gnome-desktop-3.5.3:3=
-	<gnome-base/gnome-desktop-3.8:3=
+	=gnome-base/gnome-desktop-3.6*:3=
 	>=gnome-base/gsettings-desktop-schemas-3.5.90
 	media-fonts/cantarell
 	media-libs/fontconfig
