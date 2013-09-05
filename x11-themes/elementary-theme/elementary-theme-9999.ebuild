@@ -24,7 +24,7 @@ RDEPEND="${DEPEND}
 		x11-themes/gtk-engines-murrine
 	)
 	gtk3? (
-		<x11-libs/gtk+-3.5:3
+		x11-libs/gtk+:3
 		x11-themes/gtk-engines-unico
 	)
 	icons? (

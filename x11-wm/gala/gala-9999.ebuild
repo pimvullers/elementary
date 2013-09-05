@@ -10,12 +10,12 @@ inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
-EBZR_REPO_URI="$(use mutter38 && echo 'lp:~gala-dev/gala/mutter38' || echo 'lp:gala')"
+EBZR_REPO_URI="lp:gala"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+mutter38"
+IUSE=""
 
 RDEPEND="
 	dev-libs/libgee
@@ -25,13 +25,14 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/bamf
 	x11-libs/libXfixes
-	>=x11-wm/mutter-3.6.3-r1
-	mutter38? ( >=x11-wm/mutter-3.8 )"
+	>=x11-wm/mutter-3.8"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-mutter38-branch.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
