@@ -26,7 +26,7 @@ src_prepare() {
 
 src_install() {
 	insinto /usr/share/backgrounds/elementary
-	doins *.jpg *.png
+	doins *.jpg
 
 	insinto /usr/share/backgrounds
 	doins elementary-wallpapers.xml
