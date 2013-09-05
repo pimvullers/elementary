@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ SRC_URI="http://launchpad.net/${PN}/13.04/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="nls static-libs"
 
 RDEPEND="
@@ -28,11 +28,16 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 src_configure() {
- 	local myeconfargs=(
- 		$(use_enable nls)
- 	)
+	local myeconfargs=(
+		$(use_enable nls)
+	)
 
- 	autotools-utils_src_configure
+	autotools-utils_src_configure
+}
+
+src_install() {
+	autotools-utils_src_install
+	prune_libtool_files --all
 }
 
 pkg_preinst() {
@@ -46,4 +51,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

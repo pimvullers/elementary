@@ -1,4 +1,4 @@
-# Copyright 1999-2011 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ SRC_URI="http://launchpad.net/ido/12.10/${PV}/+download/ido-${PV}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="3"
-KEYWORDS="~amd64"
+KEYWORDS="~amd64 ~x86"
 IUSE="doc static-libs"
 
 RDEPEND="
@@ -36,4 +36,3 @@ src_prepare() {
 	eautoreconf
 	#NOCONFIGURE=1 ./autogen.sh
 }
-
