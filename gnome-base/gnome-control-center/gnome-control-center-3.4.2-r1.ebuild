@@ -15,7 +15,7 @@ HOMEPAGE="http://www.gnome.org/"
 LICENSE="GPL-2"
 SLOT="2"
 IUSE="+bluetooth +cheese +colord +cups +gnome-online-accounts input_devices_wacom +networkmanager +socialweb systemd"
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # XXX: gnome-desktop-2.91.5 is needed for upstream commit c67f7efb
 # XXX: NetworkManager-0.9 support is automagic, make hard-dep once it's released
