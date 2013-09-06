@@ -13,7 +13,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 IUSE="+colord +cups debug +i18n input_devices_wacom packagekit policykit +short-touchpad-timeout smartcard systemd +udev"
 REQUIRED_USE="
