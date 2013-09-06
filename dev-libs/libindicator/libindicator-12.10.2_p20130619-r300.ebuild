@@ -28,7 +28,7 @@ src_prepare() {
 
 src_configure() {
 	append-flags -Wno-error
-	
+
 	local myeconfargs=(
 		--disable-silent-rules
 		--disable-static
