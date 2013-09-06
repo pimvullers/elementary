@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/gnome-extra/evolution-data-server/Attic/evolution-data-server-3.4.4.ebuild,v 1.7 2013/03/29 20:11:31 eva dead $
 
@@ -18,7 +18,7 @@ HOMEPAGE="http://projects.gnome.org/evolution/"
 # Note: explicitly "|| ( LGPL-2 LGPL-3 )", not "LGPL-2+".
 LICENSE="|| ( LGPL-2 LGPL-3 ) BSD Sleepycat"
 SLOT="0"
-KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~amd64 ~ppc ~ppc64 ~x86 ~x86-freebsd ~amd64-linux ~ia64-linux ~x86-linux ~x86-solaris"
 IUSE="+gnome-online-accounts +introspection ipv6 ldap kerberos vala +weather"
 
 RDEPEND="
@@ -73,7 +73,7 @@ pkg_setup() {
 		$(use_enable gnome-online-accounts goa)
 		$(use_enable introspection)
 		$(use_enable ipv6)
-		$(use_with kerberos krb5 ${EPREFIX}/usr)
+		$(use_with kerberos krb5 "${EPREFIX}/usr")
 		$(use_with ldap openldap)
 		$(use_enable vala vala-bindings)
 		$(use_enable weather)
@@ -104,7 +104,7 @@ src_prepare() {
 	# Touch configure.ac if doing eautoreconf
 	sed 's/^\(AM_CPPFLAGS="\)$WARNING_FLAGS/\1/' \
 		-i configure || die "sed failed"
-	
+
 	# Fix building with libxml2-2.9, backported from eds-3.6
 	epatch "${FILESDIR}/${PN}-2.32.3-libxml2-2.9.patch"
 }
