@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:scratch"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls contractor files pastebin terminal webkit"
+IUSE="nls contractor files pastebin spell terminal webkit"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -29,6 +29,7 @@ RDEPEND="
 	dev-libs/libzeitgeist
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
 	pastebin? ( net-libs/libsoup )
+	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )"
 DEPEND="${RDEPEND}
@@ -42,20 +43,19 @@ pkg_setup() {
 
 src_prepare() {
 	# Translations
-	use nls || sed -i -e 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
 	# Plugins
 	use files || \
       sed -i -e 's/add_subdirectory (filemanager)//' plugins/CMakeLists.txt
 	use pastebin || \
 	  sed -i -e 's/add_subdirectory (pastebin)//' plugins/CMakeLists.txt
+	use spell || \
+	  sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 	use terminal || \
 	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
 	use webkit || \
 	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
-
-	# Drop broken spell plugin
-	sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -70,10 +70,6 @@ src_configure() {
 
 	cmake-utils_src_configure
 }
-
-#src_compile() {
-#	cmake-utils_src_compile -j1
-#}
 
 pkg_preinst() {
 	gnome2_icon_savelist
