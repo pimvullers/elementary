@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:egtk"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="dark +gtk +gtk3 +icons +wallpapers"
+IUSE="+gtk +gtk3 +icons +wallpapers"
 
 DEPEND="
 	x11-themes/vanilla-dmz-aa-xcursors"
@@ -43,9 +43,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Add support for dark theming
-	use dark && epatch "${FILESDIR}/${PN}-3.4-dark.patch"
-
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
 }
