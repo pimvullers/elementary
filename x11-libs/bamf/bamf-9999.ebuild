@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI="5"
 
 VALA_MIN_API_VERSION=0.16
 VALA_USE_DEPEND=vapigen
 
-inherit vala autotools-utils bzr
+inherit vala autotools-utils bzr python
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
@@ -17,6 +17,9 @@ LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS=""
 IUSE="+introspection doc static-libs"
+
+PYTHON_DEPEND="2"
+RESTRICT_PYTHON_ABIS="3.*"
 
 RDEPEND="
 	dev-libs/dbus-glib
@@ -36,6 +39,10 @@ DEPEND="${RDEPEND}
 
 AUTOTOOLS_AUTORECONF=yes
 DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
+
+pkg_setup() {
+	python_set_active_version 2
+}
 
 src_prepare() {
 	sed -i 's/-Werror//' configure.ac
