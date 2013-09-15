@@ -1,4 +1,4 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/Attic/gnome-desktop-3.4.2-r1.ebuild,v 1.2 2013/03/07 08:32:22 eva dead $
 
