@@ -10,12 +10,12 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="http://launchpad.net/slingshot"
-SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-launcher-${PV}.tgz"
+SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-IUSE=""
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -29,10 +29,11 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-S="${WORKDIR}/${PN}-launcher-${PV}"
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
+	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }

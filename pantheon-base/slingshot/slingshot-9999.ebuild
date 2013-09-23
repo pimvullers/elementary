@@ -9,13 +9,13 @@ VALA_MIN_API_VERSION=0.16
 inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
-HOMEPAGE="https://launchpad.net/slingshot"
+HOMEPAGE="http://launchpad.net/slingshot"
 EBZR_REPO_URI="lp:slingshot"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -32,6 +32,8 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
+	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
