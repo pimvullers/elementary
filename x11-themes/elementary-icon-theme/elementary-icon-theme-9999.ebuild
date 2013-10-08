@@ -26,6 +26,10 @@ pkg_setup() {
 	DOCS=( AUTHORS COPYING CONTRIBUTORS )
 }
 
+src_prepare() {
+	rm icon-theme.cache
+}
+
 src_install() {
 	dodoc ${DOCS}
 	rm -r ${DOCS}
