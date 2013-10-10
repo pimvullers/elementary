@@ -19,6 +19,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/libgee
+	>=gnome-base/gnome-desktop-3.8
 	media-libs/clutter
 	media-libs/clutter-gtk
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
