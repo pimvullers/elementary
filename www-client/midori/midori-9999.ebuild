@@ -7,7 +7,7 @@ VALA_MIN_API_VERSION=0.16
 
 PYTHON_COMPAT=( python2_7 )
 
-inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 waf-utils vala bzr
+inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala bzr
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
@@ -19,17 +19,14 @@ KEYWORDS=""
 IUSE="doc gnome nls +unique webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
-	>=dev-libs/glib-2.32.3
-	dev-libs/libxml2
-	>=net-libs/libsoup-2.34:2.4
+	>=dev-libs/glib-2.32.3:2
+	>=dev-libs/libxml2-2.6
 	>=x11-libs/libnotify-0.7
-	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
 	x11-libs/granite
 	>=net-libs/libsoup-gnome-2.34:2.4
-	unique? ( dev-libs/libunique:3 )
 	webkit2? ( >=net-libs/webkit-gtk-2 )
 	!webkit2? ( <net-libs/webkit-gtk-2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
@@ -49,29 +46,25 @@ pkg_setup() {
 }
 
 src_prepare() {
-	# Force disabled because we don't have this custom renamed in Portage
-	sed -i -e 's:gcr-3-gtk2:&dIsAbLe:' wscript || die
-
 	vala_src_prepare
+	cmake-utils_src_prepare
+
+	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 }
 
 src_configure() {
-	strip-linguas -i po
+	local mycmakeargs=(
+		$(cmake-utils_use_use zeitgeist)
+		-DUSE_GRANITE=ON
+		-DUSE_GTK3=ON
+		-DVALA_EXECUTABLE=${VALAC}
+	)
 
-	waf-utils_src_configure \
-		--disable-docs \
-		$(use_enable doc apidocs) \
-		$(use_enable nls) \
-		$(use_enable unique) \
-		$(use_enable webkit2) \
-		$(use_enable zeitgeist) \
-		--enable-addons \
-		--enable-gtk3 \
-		--enable-granite
+	cmake-utils_src_configure
 }
 
 src_install() {
-	waf-utils_src_install
+	cmake-utils_src_install
 
 	local jit_is_enabled
 	has_version 'net-libs/webkit-gtk:3[jit]' && jit_is_enabled=yes
