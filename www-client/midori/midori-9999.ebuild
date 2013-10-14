@@ -16,7 +16,7 @@ EBZR_REPO_URI="lp:midori"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="doc gnome nls +unique webkit2 zeitgeist"
+IUSE="nls webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3:2
@@ -35,7 +35,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	dev-util/intltool
 	gnome-base/librsvg
-	doc? ( dev-util/gtk-doc )
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
