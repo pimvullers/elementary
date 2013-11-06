@@ -15,11 +15,11 @@ EBZR_REPO_URI="lp:gala"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="mutter38"
 
 RDEPEND="
 	dev-libs/libgee
-	>=gnome-base/gnome-desktop-3.8
+	mutter38? ( >=gnome-base/gnome-desktop-3.8 )
 	media-libs/clutter
 	media-libs/clutter-gtk
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
@@ -32,7 +32,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-mutter38-branch.patch"
+	use mutter38 && epatch "${FILESDIR}/${P}-mutter38-branch.patch"
 
 	cmake-utils_src_prepare
 	vala_src_prepare
