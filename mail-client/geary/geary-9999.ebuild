@@ -1,12 +1,10 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-0.3.1.ebuild,v 1.2 2013/05/30 13:45:08 hasufell Exp $
-
-# REMINDER: next release probably swaps gnome-keyring for libsecret-1
+# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-0.4.0.ebuild,v 1.2 2013/10/06 21:53:34 hasufell Exp $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.17
+VALA_MIN_API_VERSION=0.20
 
 inherit eutils fdo-mime gnome2-utils vala cmake-utils git-2
 
@@ -23,12 +21,12 @@ CDEPEND="
 	app-crypt/libsecret
 	dev-db/sqlite:3
 	dev-libs/glib:2
-	dev-libs/libgee:0
+	>=dev-libs/libgee-0.8.5:0.8
 	dev-libs/libunique:3
+	dev-libs/libxml2:2
 	dev-libs/gmime:2.6
-	>=gnome-base/libgnome-keyring-3.2.2
 	media-libs/libcanberra
-	net-libs/webkit-gtk:3[introspection]
+	>=net-libs/webkit-gtk-1.10.0:3[introspection]
 	>=x11-libs/gtk+-3.6.0:3[introspection]
 	x11-libs/libnotify
 	ayatana? ( dev-libs/libindicate:3 )"
@@ -40,9 +38,7 @@ DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
-}
+DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-{unity,cflags}.patch
@@ -72,6 +68,7 @@ src_configure() {
 		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 		$(cmake-utils_use_with ayatana UNITY)
+		-DDESKTOP_VALIDATE=OFF
 	)
 
 	cmake-utils_src_configure
