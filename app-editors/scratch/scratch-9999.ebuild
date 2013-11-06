@@ -42,6 +42,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/fix-1232291.patch"
+
 	# Translations
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
