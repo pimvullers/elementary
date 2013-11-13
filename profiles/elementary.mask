@@ -5,21 +5,21 @@
 # Packages depending on Gtk+ 3.6
 #
 #>=dev-cpp/gtkmm-3.5
->=gnome-base/gnome-control-center-3.8
+#>=gnome-base/gnome-control-center-3.8
 #>=x11-misc/xdg-user-dirs-gtk-0.10
 #>=x11-themes/gtk-engines-unico-1.0.3_pre20121212
 #>=mail-client/geary-0.4
 #>=net-libs/webkit-gtk-2.0
 #>=app-arch/file-roller-3.8
 #>=x11-libs/gtksourceview-3.8
->=gnome-base/gnome-settings-daemon-3.8
+#>=gnome-base/gnome-settings-daemon-3.8
 #>=app-text/evince-3.8
->=gnome-base/gnome-session-3.8
+##>=gnome-base/gnome-session-3.8
 #>=media-libs/clutter-gtk-1.4.4
 #>=x11-wm/mutter-3.8.4
 #>=media-video/cheese-3.8
->=gnome-base/gnome-desktop-3.8
->=net-wireless/gnome-bluetooth-3.8
+#>=gnome-base/gnome-desktop-3.8
+##>=net-wireless/gnome-bluetooth-3.8
 #>=media-video/snap-9999
 #>=x11-themes/gnome-themes-standard-3.6
 #>=sys-apps/gnome-disk-utility-3.6

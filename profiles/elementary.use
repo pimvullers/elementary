@@ -5,3 +5,5 @@ x11-themes/elementary-theme dark
 gnome-extra/evolution-data-server -weather
 media-sound/noise plugins menu
 app-editors/scratch contractor files pastebin spell terminal
+x11-wm/gala mutter38
+gnome-base/gnome-settings-daemon -smartcard
