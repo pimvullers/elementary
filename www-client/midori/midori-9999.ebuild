@@ -16,7 +16,7 @@ EBZR_REPO_URI="lp:midori"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls webkit2 zeitgeist"
+IUSE="+granite nls webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3:2
@@ -25,7 +25,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=app-crypt/gcr-3
 	>=net-libs/webkit-gtk-1.10.2:3
 	x11-libs/gtk+:3
-	x11-libs/granite
+	granite? ( x11-libs/granite )
 	>=net-libs/libsoup-gnome-2.34:2.4
 	webkit2? ( >=net-libs/webkit-gtk-2 )
 	!webkit2? ( <net-libs/webkit-gtk-2 )
@@ -54,7 +54,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		$(cmake-utils_use_use zeitgeist)
-		-DUSE_GRANITE=ON
+		$(cmake-utils_use_use granite)
 		-DUSE_GTK3=ON
 		-DVALA_EXECUTABLE=${VALAC}
 	)
