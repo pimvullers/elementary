@@ -1,0 +1,835 @@
+From 99da10fa1c771bd692bf00b6c4ccf2a5c1818bdb Mon Sep 17 00:00:00 2001
+From: Bastien Nocera <hadess@hadess.net>
+Date: Tue, 08 Jan 2013 06:35:42 +0000
+Subject: background: Remove obsolete plugin
+
+The background drawing has now moved to gnome-shell, allowing
+smoother integration, animated backgrounds, etc.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=686549
+---
+Index: gnome-settings-daemon-3.7.90/configure.ac
+===================================================================
+--- gnome-settings-daemon-3.7.90.orig/configure.ac	2013-02-23 13:52:19.012459246 -0500
++++ gnome-settings-daemon-3.7.90/configure.ac	2013-02-23 13:52:19.000459246 -0500
+@@ -154,6 +154,12 @@
+ AC_SUBST(XTEST_LIBS)
+ 
+ dnl ---------------------------------------------------------------------------
++dnl - background
++dnl ---------------------------------------------------------------------------
++
++PKG_CHECK_MODULES(BACKGROUND, x11 gnome-desktop-3.0 >= $GNOME_DESKTOP_REQUIRED_VERSION)
++
++dnl ---------------------------------------------------------------------------
+ dnl - mouse
+ dnl ---------------------------------------------------------------------------
+ 
+@@ -481,6 +487,7 @@
+ plugins/Makefile
+ plugins/a11y-keyboard/Makefile
+ plugins/a11y-settings/Makefile
++plugins/background/Makefile
+ plugins/clipboard/Makefile
+ plugins/color/Makefile
+ plugins/common/Makefile
+Index: gnome-settings-daemon-3.7.90/data/gnome-settings-daemon.convert
+===================================================================
+--- gnome-settings-daemon-3.7.90.orig/data/gnome-settings-daemon.convert	2013-02-23 13:52:19.012459246 -0500
++++ gnome-settings-daemon-3.7.90/data/gnome-settings-daemon.convert	2013-02-23 13:52:19.000459246 -0500
+@@ -14,6 +14,10 @@
+ active = /apps/gnome_settings_daemon/plugins/a11y-keyboard/active
+ priority = /apps/gnome_settings_daemon/plugins/a11y-keyboard/priority
+ 
++[org.gnome.settings-daemon.plugins.background]
++active = /apps/gnome_settings_daemon/plugins/background/active
++priority = /apps/gnome_settings_daemon/plugins/background/priority
++
+ [org.gnome.settings-daemon.plugins.clipboard]
+ active = /apps/gnome_settings_daemon/plugins/clipboard/active
+ priority = /apps/gnome_settings_daemon/plugins/clipboard/priority
+Index: gnome-settings-daemon-3.7.90/data/org.gnome.settings-daemon.plugins.gschema.xml.in.in
+===================================================================
+--- gnome-settings-daemon-3.7.90.orig/data/org.gnome.settings-daemon.plugins.gschema.xml.in.in	2013-02-23 13:52:19.012459246 -0500
++++ gnome-settings-daemon-3.7.90/data/org.gnome.settings-daemon.plugins.gschema.xml.in.in	2013-02-23 13:52:19.000459246 -0500
+@@ -11,6 +11,7 @@
+     </key>
+     <child name="a11y-keyboard" schema="org.gnome.settings-daemon.plugins.a11y-keyboard"/>
+     <child name="a11y-settings" schema="org.gnome.settings-daemon.plugins.a11y-settings"/>
++    <child name="background" schema="org.gnome.settings-daemon.plugins.background"/>
+     <child name="clipboard" schema="org.gnome.settings-daemon.plugins.clipboard"/>
+     <child name="color" schema="org.gnome.settings-daemon.plugins.color"/>
+     <child name="cursor" schema="org.gnome.settings-daemon.plugins.cursor"/>
+@@ -54,6 +55,18 @@
+       <_summary>Priority to use for this plugin</_summary>
+       <_description>Priority to use for this plugin in gnome-settings-daemon startup queue</_description>
+     </key>
++  </schema>
++  <schema gettext-domain="@GETTEXT_PACKAGE@" id="org.gnome.settings-daemon.plugins.background" path="/org/gnome/settings-daemon/plugins/background/">
++    <key name="active" type="b">
++      <default>true</default>
++      <_summary>Activation of this plugin</_summary>
++      <_description>Whether this plugin would be activated by gnome-settings-daemon or not</_description>
++    </key>
++    <key name="priority" type="i">
++      <default>97</default>
++      <_summary>Priority to use for this plugin</_summary>
++      <_description>Priority to use for this plugin in gnome-settings-daemon startup queue</_description>
++    </key>
+   </schema>
+   <schema gettext-domain="@GETTEXT_PACKAGE@" id="org.gnome.settings-daemon.plugins.clipboard" path="/org/gnome/settings-daemon/plugins/clipboard/">
+     <key name="active" type="b">
+Index: gnome-settings-daemon-3.7.90/plugins/Makefile.am
+===================================================================
+--- gnome-settings-daemon-3.7.90.orig/plugins/Makefile.am	2013-02-23 13:52:19.012459246 -0500
++++ gnome-settings-daemon-3.7.90/plugins/Makefile.am	2013-02-23 13:52:19.000459246 -0500
+@@ -3,6 +3,7 @@
+ enabled_plugins =	\
+ 	a11y-keyboard	\
+ 	a11y-settings	\
++	background	\
+ 	clipboard	\
+ 	color		\
+ 	cursor		\
+Index: gnome-settings-daemon-3.7.90/plugins/background/Makefile.am
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/Makefile.am	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,79 @@
++NULL =
++
++plugin_name = background
++
++libexec_PROGRAMS = gsd-test-background
++
++gsd_test_background_SOURCES =		\
++	test-background.c		\
++	gsd-background-manager.h	\
++	gsd-background-manager.c	\
++	$(NULL)
++
++gsd_test_background_CPPFLAGS =				\
++	-I$(top_srcdir)/gnome-settings-daemon		\
++	-I$(top_srcdir)/plugins/common			\
++	-DGNOME_SETTINGS_LOCALEDIR=\""$(datadir)/locale"\" \
++	$(AM_CPPFLAGS)
++
++gsd_test_background_CFLAGS = \
++	$(PLUGIN_CFLAGS)		\
++	$(SETTINGS_PLUGIN_CFLAGS)	\
++	$(BACKGROUND_CFLAGS)		\
++	$(AM_CFLAGS)
++
++gsd_test_background_LDADD =				\
++	$(top_builddir)/gnome-settings-daemon/libgsd.la	\
++	$(SETTINGS_PLUGIN_LIBS)				\
++	$(BACKGROUND_LIBS)				\
++	$(NULL)
++
++plugin_LTLIBRARIES = \
++	libbackground.la		\
++	$(NULL)
++
++libbackground_la_SOURCES =		\
++	gsd-background-plugin.c		\
++	gsd-background-manager.h	\
++	gsd-background-manager.c	\
++	$(NULL)
++
++libbackground_la_CPPFLAGS = \
++	-I$(top_srcdir)/gnome-settings-daemon		\
++	-I$(top_srcdir)/plugins/background/libbackground   \
++	-DGNOME_SETTINGS_LOCALEDIR=\""$(datadir)/locale"\" \
++	$(AM_CPPFLAGS)
++
++libbackground_la_CFLAGS = \
++	$(SETTINGS_PLUGIN_CFLAGS)	\
++	$(BACKGROUND_CFLAGS)		\
++	$(AM_CFLAGS)
++
++libbackground_la_LDFLAGS =		\
++	$(GSD_PLUGIN_LDFLAGS)		\
++	$(NULL)
++
++libbackground_la_LIBADD  =		\
++	$(SETTINGS_PLUGIN_LIBS)		\
++	$(BACKGROUND_LIBS)		\
++	$(NULL)
++
++plugin_in_files =		\
++	background.gnome-settings-plugin.in	\
++	$(NULL)
++
++plugin_DATA = $(plugin_in_files:.gnome-settings-plugin.in=.gnome-settings-plugin)
++
++EXTRA_DIST = 			\
++	$(plugin_in_files)	\
++	$(NULL)
++
++CLEANFILES = 			\
++	$(plugin_DATA)		\
++	$(NULL)
++
++DISTCLEANFILES =		\
++	$(plugin_DATA)		\
++	$(NULL)
++
++@GSD_INTLTOOL_PLUGIN_RULE@
+Index: gnome-settings-daemon-3.7.90/plugins/background/background.gnome-settings-plugin.in
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/background.gnome-settings-plugin.in	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,8 @@
++[GNOME Settings Plugin]
++Module=background
++IAge=0
++_Name=Background
++_Description=Background plugin
++Authors=
++Copyright=Copyright © 2007
++Website=
+Index: gnome-settings-daemon-3.7.90/plugins/background/gsd-background-manager.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/gsd-background-manager.c	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,520 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
++ *
++ * Copyright © 2001 Ximian, Inc.
++ * Copyright (C) 2007 William Jon McCann <mccann@jhu.edu>
++ * Copyright 2007 Red Hat, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ */
++
++#include "config.h"
++
++#include <sys/types.h>
++#include <sys/wait.h>
++#include <stdlib.h>
++#include <stdio.h>
++#include <unistd.h>
++#include <string.h>
++#include <errno.h>
++
++#include <locale.h>
++
++#include <glib.h>
++#include <glib/gi18n.h>
++#include <gio/gio.h>
++#include <gdk/gdk.h>
++#include <gdk/gdkx.h>
++
++#define GNOME_DESKTOP_USE_UNSTABLE_API
++#include <libgnome-desktop/gnome-bg.h>
++#include <X11/Xatom.h>
++
++#include "gnome-settings-session.h"
++#include "gnome-settings-profile.h"
++#include "gsd-background-manager.h"
++
++#define GSD_BACKGROUND_MANAGER_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GSD_TYPE_BACKGROUND_MANAGER, GsdBackgroundManagerPrivate))
++
++struct GsdBackgroundManagerPrivate
++{
++        GSettings   *settings;
++        GnomeBG     *bg;
++
++        GnomeBGCrossfade *fade;
++
++        GDBusProxy  *proxy;
++        guint        proxy_signal_id;
++};
++
++static void     gsd_background_manager_class_init  (GsdBackgroundManagerClass *klass);
++static void     gsd_background_manager_init        (GsdBackgroundManager      *background_manager);
++static void     gsd_background_manager_finalize    (GObject             *object);
++
++static void setup_bg (GsdBackgroundManager *manager);
++static void connect_screen_signals (GsdBackgroundManager *manager);
++
++G_DEFINE_TYPE (GsdBackgroundManager, gsd_background_manager, G_TYPE_OBJECT)
++
++static gpointer manager_object = NULL;
++
++static gboolean
++dont_draw_background (GsdBackgroundManager *manager)
++{
++        return !g_settings_get_boolean (manager->priv->settings,
++                                        "draw-background");
++}
++
++static gboolean
++nautilus_is_drawing_background (GsdBackgroundManager *manager)
++{
++       Atom           window_id_atom;
++       Window         nautilus_xid;
++       Atom           actual_type;
++       int            actual_format;
++       unsigned long  nitems;
++       unsigned long  bytes_after;
++       unsigned char *data;
++       Atom           wmclass_atom;
++       gboolean       running;
++       gint           error;
++       gboolean       show_desktop_icons;
++
++       show_desktop_icons = g_settings_get_boolean (manager->priv->settings,
++                                                     "show-desktop-icons");
++       if (! show_desktop_icons) {
++               return FALSE;
++       }
++
++       window_id_atom = XInternAtom (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()),
++                                     "NAUTILUS_DESKTOP_WINDOW_ID", True);
++
++       if (window_id_atom == None) {
++               return FALSE;
++       }
++
++       XGetWindowProperty (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()),
++                           GDK_ROOT_WINDOW (),
++                           window_id_atom,
++                           0,
++                           1,
++                           False,
++                           XA_WINDOW,
++                           &actual_type,
++                           &actual_format,
++                           &nitems,
++                           &bytes_after,
++                           &data);
++
++       if (data != NULL) {
++               nautilus_xid = *(Window *) data;
++               XFree (data);
++       } else {
++               return FALSE;
++       }
++
++       if (actual_type != XA_WINDOW) {
++               return FALSE;
++       }
++       if (actual_format != 32) {
++               return FALSE;
++       }
++
++       wmclass_atom = XInternAtom (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), "WM_CLASS", False);
++
++       gdk_error_trap_push ();
++
++       XGetWindowProperty (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()),
++                           nautilus_xid,
++                           wmclass_atom,
++                           0,
++                           24,
++                           False,
++                           XA_STRING,
++                           &actual_type,
++                           &actual_format,
++                           &nitems,
++                           &bytes_after,
++                           &data);
++
++       error = gdk_error_trap_pop ();
++
++       if (error == BadWindow) {
++               return FALSE;
++       }
++
++       if (actual_type == XA_STRING &&
++           nitems == 24 &&
++           bytes_after == 0 &&
++           actual_format == 8 &&
++           data != NULL &&
++           !strcmp ((char *)data, "desktop_window") &&
++           !strcmp ((char *)data + strlen ((char *)data) + 1, "Nautilus")) {
++               running = TRUE;
++       } else {
++               running = FALSE;
++       }
++
++       if (data != NULL) {
++               XFree (data);
++       }
++
++       return running;
++}
++
++static void
++on_crossfade_finished (GsdBackgroundManager *manager)
++{
++        g_object_unref (manager->priv->fade);
++        manager->priv->fade = NULL;
++}
++
++static void
++draw_background (GsdBackgroundManager *manager,
++                 gboolean              use_crossfade)
++{
++        GdkDisplay *display;
++        int         n_screens;
++        int         i;
++
++
++        if (nautilus_is_drawing_background (manager) ||
++            dont_draw_background (manager)) {
++                return;
++        }
++
++        gnome_settings_profile_start (NULL);
++
++        display = gdk_display_get_default ();
++        n_screens = gdk_display_get_n_screens (display);
++
++        for (i = 0; i < n_screens; ++i) {
++                GdkScreen *screen;
++                GdkWindow *root_window;
++                cairo_surface_t *surface;
++
++                screen = gdk_display_get_screen (display, i);
++
++                root_window = gdk_screen_get_root_window (screen);
++
++                surface = gnome_bg_create_surface (manager->priv->bg,
++                                                   root_window,
++                                                   gdk_screen_get_width (screen),
++                                                   gdk_screen_get_height (screen),
++                                                   TRUE);
++
++                if (use_crossfade) {
++
++                        if (manager->priv->fade != NULL) {
++                                g_object_unref (manager->priv->fade);
++                        }
++
++                        manager->priv->fade = gnome_bg_set_surface_as_root_with_crossfade (screen, surface);
++                        g_signal_connect_swapped (manager->priv->fade, "finished",
++                                                  G_CALLBACK (on_crossfade_finished),
++                                                  manager);
++                } else {
++                        gnome_bg_set_surface_as_root (screen, surface);
++                }
++
++                cairo_surface_destroy (surface);
++        }
++
++        gnome_settings_profile_end (NULL);
++}
++
++static void
++on_bg_transitioned (GnomeBG              *bg,
++                    GsdBackgroundManager *manager)
++{
++        draw_background (manager, FALSE);
++}
++
++static gboolean
++settings_change_event_cb (GSettings            *settings,
++                          gpointer              keys,
++                          gint                  n_keys,
++                          GsdBackgroundManager *manager)
++{
++        gnome_bg_load_from_preferences (manager->priv->bg,
++                                        manager->priv->settings);
++        return FALSE;
++}
++
++static void
++on_screen_size_changed (GdkScreen            *screen,
++                        GsdBackgroundManager *manager)
++{
++        draw_background (manager, FALSE);
++}
++
++static void
++watch_bg_preferences (GsdBackgroundManager *manager)
++{
++        g_signal_connect (manager->priv->settings,
++                          "change-event",
++                          G_CALLBACK (settings_change_event_cb),
++                          manager);
++}
++
++static void
++on_bg_changed (GnomeBG              *bg,
++               GsdBackgroundManager *manager)
++{
++        draw_background (manager, TRUE);
++}
++
++static void
++setup_bg (GsdBackgroundManager *manager)
++{
++        g_return_if_fail (manager->priv->bg == NULL);
++
++        manager->priv->bg = gnome_bg_new ();
++
++        g_signal_connect (manager->priv->bg,
++                          "changed",
++                          G_CALLBACK (on_bg_changed),
++                          manager);
++
++        g_signal_connect (manager->priv->bg,
++                          "transitioned",
++                          G_CALLBACK (on_bg_transitioned),
++                          manager);
++
++        connect_screen_signals (manager);
++        watch_bg_preferences (manager);
++        gnome_bg_load_from_preferences (manager->priv->bg,
++                                        manager->priv->settings);
++}
++
++static void
++setup_bg_and_draw_background (GsdBackgroundManager *manager)
++{
++        setup_bg (manager);
++        draw_background (manager, FALSE);
++}
++
++static void
++disconnect_session_manager_listener (GsdBackgroundManager *manager)
++{
++        if (manager->priv->proxy && manager->priv->proxy_signal_id) {
++                g_signal_handler_disconnect (manager->priv->proxy,
++                                             manager->priv->proxy_signal_id);
++                manager->priv->proxy_signal_id = 0;
++        }
++}
++
++static void
++on_session_manager_signal (GDBusProxy   *proxy,
++                           const gchar  *sender_name,
++                           const gchar  *signal_name,
++                           GVariant     *parameters,
++                           gpointer      user_data)
++{
++        GsdBackgroundManager *manager = GSD_BACKGROUND_MANAGER (user_data);
++
++        if (g_strcmp0 (signal_name, "SessionRunning") == 0) {
++                setup_bg_and_draw_background (manager);
++                disconnect_session_manager_listener (manager);
++        }
++}
++
++static void
++draw_background_after_session_loads (GsdBackgroundManager *manager)
++{
++        manager->priv->proxy =
++                gnome_settings_session_get_session_proxy ();
++
++        manager->priv->proxy_signal_id = g_signal_connect (manager->priv->proxy,
++                                                           "g-signal",
++                                                           G_CALLBACK (on_session_manager_signal),
++                                                           manager);
++}
++
++
++static void
++disconnect_screen_signals (GsdBackgroundManager *manager)
++{
++        GdkDisplay *display;
++        int         i;
++        int         n_screens;
++
++        display = gdk_display_get_default ();
++        n_screens = gdk_display_get_n_screens (display);
++
++        for (i = 0; i < n_screens; ++i) {
++                GdkScreen *screen;
++                screen = gdk_display_get_screen (display, i);
++                g_signal_handlers_disconnect_by_func (screen,
++                                                      G_CALLBACK (on_screen_size_changed),
++                                                      manager);
++        }
++}
++
++static void
++connect_screen_signals (GsdBackgroundManager *manager)
++{
++        GdkDisplay *display;
++        int         i;
++        int         n_screens;
++
++        display = gdk_display_get_default ();
++        n_screens = gdk_display_get_n_screens (display);
++
++        for (i = 0; i < n_screens; ++i) {
++                GdkScreen *screen;
++                screen = gdk_display_get_screen (display, i);
++                g_signal_connect (screen,
++                                  "monitors-changed",
++                                  G_CALLBACK (on_screen_size_changed),
++                                  manager);
++                g_signal_connect (screen,
++                                  "size-changed",
++                                  G_CALLBACK (on_screen_size_changed),
++                                  manager);
++        }
++}
++
++static void
++draw_background_changed (GSettings            *settings,
++                         const char           *key,
++                         GsdBackgroundManager *manager)
++{
++        if (dont_draw_background (manager) == FALSE)
++                setup_bg_and_draw_background (manager);
++}
++
++gboolean
++gsd_background_manager_start (GsdBackgroundManager *manager,
++                              GError              **error)
++{
++        gboolean show_desktop_icons;
++
++        g_debug ("Starting background manager");
++        gnome_settings_profile_start (NULL);
++
++        manager->priv->settings = g_settings_new ("org.gnome.desktop.background");
++        g_signal_connect (manager->priv->settings, "changed::draw-background",
++                          G_CALLBACK (draw_background_changed), manager);
++
++        /* If this is set, nautilus will draw the background and is
++	 * almost definitely in our session.  however, it may not be
++	 * running yet (so is_nautilus_running() will fail).  so, on
++	 * startup, just don't do anything if this key is set so we
++	 * don't waste time setting the background only to have
++	 * nautilus overwrite it.
++	 */
++        show_desktop_icons = g_settings_get_boolean (manager->priv->settings,
++                                                     "show-desktop-icons");
++
++        if (!show_desktop_icons) {
++                setup_bg (manager);
++        } else {
++                draw_background_after_session_loads (manager);
++        }
++
++        gnome_settings_profile_end (NULL);
++
++        return TRUE;
++}
++
++void
++gsd_background_manager_stop (GsdBackgroundManager *manager)
++{
++        GsdBackgroundManagerPrivate *p = manager->priv;
++
++        g_debug ("Stopping background manager");
++
++        disconnect_screen_signals (manager);
++
++        if (manager->priv->proxy) {
++                disconnect_session_manager_listener (manager);
++                g_clear_object (&manager->priv->proxy);
++        }
++
++        g_signal_handlers_disconnect_by_func (manager->priv->settings,
++                                              settings_change_event_cb,
++                                              manager);
++
++        if (p->settings != NULL) {
++                g_object_unref (p->settings);
++                p->settings = NULL;
++        }
++
++        if (p->bg != NULL) {
++                g_object_unref (p->bg);
++                p->bg = NULL;
++        }
++}
++
++static GObject *
++gsd_background_manager_constructor (GType                  type,
++                                    guint                  n_construct_properties,
++                                    GObjectConstructParam *construct_properties)
++{
++        GsdBackgroundManager      *background_manager;
++
++        background_manager = GSD_BACKGROUND_MANAGER (G_OBJECT_CLASS (gsd_background_manager_parent_class)->constructor (type,
++                                                                                                                        n_construct_properties,
++                                                                                                                        construct_properties));
++
++        return G_OBJECT (background_manager);
++}
++
++static void
++gsd_background_manager_class_init (GsdBackgroundManagerClass *klass)
++{
++        GObjectClass   *object_class = G_OBJECT_CLASS (klass);
++
++        object_class->constructor = gsd_background_manager_constructor;
++        object_class->finalize = gsd_background_manager_finalize;
++
++        g_type_class_add_private (klass, sizeof (GsdBackgroundManagerPrivate));
++}
++
++static void
++gsd_background_manager_init (GsdBackgroundManager *manager)
++{
++        manager->priv = GSD_BACKGROUND_MANAGER_GET_PRIVATE (manager);
++}
++
++static void
++gsd_background_manager_finalize (GObject *object)
++{
++        GsdBackgroundManager *background_manager;
++
++        g_return_if_fail (object != NULL);
++        g_return_if_fail (GSD_IS_BACKGROUND_MANAGER (object));
++
++        background_manager = GSD_BACKGROUND_MANAGER (object);
++
++        g_return_if_fail (background_manager->priv != NULL);
++
++        G_OBJECT_CLASS (gsd_background_manager_parent_class)->finalize (object);
++}
++
++GsdBackgroundManager *
++gsd_background_manager_new (void)
++{
++        if (manager_object != NULL) {
++                g_object_ref (manager_object);
++        } else {
++                manager_object = g_object_new (GSD_TYPE_BACKGROUND_MANAGER, NULL);
++                g_object_add_weak_pointer (manager_object,
++                                           (gpointer *) &manager_object);
++        }
++
++        return GSD_BACKGROUND_MANAGER (manager_object);
++}
+Index: gnome-settings-daemon-3.7.90/plugins/background/gsd-background-manager.h
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/gsd-background-manager.h	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,57 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
++ *
++ * Copyright (C) 2007 William Jon McCann <mccann@jhu.edu>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ */
++
++#ifndef __GSD_BACKGROUND_MANAGER_H
++#define __GSD_BACKGROUND_MANAGER_H
++
++#include <glib-object.h>
++
++G_BEGIN_DECLS
++
++#define GSD_TYPE_BACKGROUND_MANAGER         (gsd_background_manager_get_type ())
++#define GSD_BACKGROUND_MANAGER(o)           (G_TYPE_CHECK_INSTANCE_CAST ((o), GSD_TYPE_BACKGROUND_MANAGER, GsdBackgroundManager))
++#define GSD_BACKGROUND_MANAGER_CLASS(k)     (G_TYPE_CHECK_CLASS_CAST((k), GSD_TYPE_BACKGROUND_MANAGER, GsdBackgroundManagerClass))
++#define GSD_IS_BACKGROUND_MANAGER(o)        (G_TYPE_CHECK_INSTANCE_TYPE ((o), GSD_TYPE_BACKGROUND_MANAGER))
++#define GSD_IS_BACKGROUND_MANAGER_CLASS(k)  (G_TYPE_CHECK_CLASS_TYPE ((k), GSD_TYPE_BACKGROUND_MANAGER))
++#define GSD_BACKGROUND_MANAGER_GET_CLASS(o) (G_TYPE_INSTANCE_GET_CLASS ((o), GSD_TYPE_BACKGROUND_MANAGER, GsdBackgroundManagerClass))
++
++typedef struct GsdBackgroundManagerPrivate GsdBackgroundManagerPrivate;
++
++typedef struct
++{
++        GObject                     parent;
++        GsdBackgroundManagerPrivate *priv;
++} GsdBackgroundManager;
++
++typedef struct
++{
++        GObjectClass   parent_class;
++} GsdBackgroundManagerClass;
++
++GType                   gsd_background_manager_get_type            (void);
++
++GsdBackgroundManager *  gsd_background_manager_new                 (void);
++gboolean                gsd_background_manager_start               (GsdBackgroundManager *manager,
++                                                                    GError              **error);
++void                    gsd_background_manager_stop                (GsdBackgroundManager *manager);
++
++G_END_DECLS
++
++#endif /* __GSD_BACKGROUND_MANAGER_H */
+Index: gnome-settings-daemon-3.7.90/plugins/background/gsd-background-plugin.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/gsd-background-plugin.c	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,29 @@
++/* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 8 -*-
++ *
++ * Copyright (C) 2007 William Jon McCann <mccann@jhu.edu>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2, or (at your option)
++ * any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
++ *
++ */
++
++#include "config.h"
++
++#include <glib/gi18n-lib.h>
++#include <gmodule.h>
++
++#include "gnome-settings-plugin.h"
++#include "gsd-background-manager.h"
++
++GNOME_SETTINGS_PLUGIN_REGISTER (GsdBackground, gsd_background)
+Index: gnome-settings-daemon-3.7.90/plugins/background/test-background.c
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ gnome-settings-daemon-3.7.90/plugins/background/test-background.c	2013-02-23 13:52:19.004459246 -0500
+@@ -0,0 +1,7 @@
++#define NEW gsd_background_manager_new
++#define START gsd_background_manager_start
++#define STOP gsd_background_manager_stop
++#define MANAGER GsdBackgroundManager
++#include "gsd-background-manager.h"
++
++#include "test-plugin.h"
+Index: gnome-settings-daemon-3.7.90/po/POTFILES.in
+===================================================================
+--- gnome-settings-daemon-3.7.90.orig/po/POTFILES.in	2013-02-23 13:52:19.012459246 -0500
++++ gnome-settings-daemon-3.7.90/po/POTFILES.in	2013-02-23 13:52:19.004459246 -0500
+@@ -18,6 +18,7 @@
+ [type: gettext/ini]plugins/a11y-keyboard/a11y-keyboard.gnome-settings-plugin.in
+ plugins/a11y-keyboard/gsd-a11y-keyboard-manager.c
+ [type: gettext/ini]plugins/a11y-settings/a11y-settings.gnome-settings-plugin.in
++[type: gettext/ini]plugins/background/background.gnome-settings-plugin.in
+ [type: gettext/ini]plugins/clipboard/clipboard.gnome-settings-plugin.in
+ [type: gettext/ini]plugins/color/color.gnome-settings-plugin.in
+ plugins/color/gsd-color-manager.c

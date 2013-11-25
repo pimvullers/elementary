@@ -1,0 +1,37 @@
+Subject: xsettings: unwatch dbus before destroying xsettings managers
+
+fix possible race since notify_have_shell is getting called after the
+managers are destroyed.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=711238
+---
+diff --git a/plugins/xsettings/gsd-xsettings-manager.c b/plugins/xsettings/gsd-xsettings-manager.c
+index b0ed011..80fa388 100644
+--- a/plugins/xsettings/gsd-xsettings-manager.c
++++ b/plugins/xsettings/gsd-xsettings-manager.c
+@@ -1013,6 +1013,12 @@
+ 
+         g_debug ("Stopping xsettings manager");
+ 
++        if (manager->priv->shell_name_watch_id > 0)
++                g_bus_unwatch_name (manager->priv->shell_name_watch_id);
++
++        if (manager->priv->unity_name_watch_id > 0)
++                g_bus_unwatch_name (manager->priv->unity_name_watch_id);
++
+         if (p->managers != NULL) {
+                 for (i = 0; p->managers [i]; ++i)
+                         xsettings_manager_destroy (p->managers [i]);
+@@ -1028,12 +1034,6 @@
+ 
+         stop_fontconfig_monitor (manager);
+ 
+-        if (manager->priv->shell_name_watch_id > 0)
+-                g_bus_unwatch_name (manager->priv->shell_name_watch_id);
+-
+-        if (manager->priv->unity_name_watch_id > 0)
+-                g_bus_unwatch_name (manager->priv->unity_name_watch_id);
+-
+         if (p->settings != NULL) {
+                 g_hash_table_destroy (p->settings);
+                 p->settings = NULL;

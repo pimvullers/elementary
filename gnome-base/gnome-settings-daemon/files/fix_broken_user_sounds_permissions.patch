@@ -1,0 +1,39 @@
+Description: Fix up temporarily broken permissions that users may have if they upgraded to 3.6.4-0ubuntu10
+Author: Iain Lane <iain.lane@canonical.com>
+Forwarded: not-needed (temporary)
+
+Index: b/plugins/sound/gsd-sound-manager.c
+===================================================================
+--- a/plugins/sound/gsd-sound-manager.c
++++ b/plugins/sound/gsd-sound-manager.c
+@@ -20,6 +20,7 @@
+ 
+ #include "config.h"
+ 
++#include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <stdlib.h>
+@@ -33,6 +34,7 @@
+ 
+ #include <glib.h>
+ #include <glib/gi18n.h>
++#include <glib/gstdio.h>
+ #include <gtk/gtk.h>
+ #include <pulse/pulseaudio.h>
+ 
+@@ -268,6 +270,14 @@
+         /* ... and we listen to changes of the theme base directories
+          * in $HOME ...*/
+         p = g_build_filename (g_get_user_data_dir (), "sounds", NULL);
++        /* See bug #694134 - the initial commit had the permissions below wrong
++         * so users may have the directory without the right permissions. Fix
++         * them up if so. */
++        if (!g_access (p, F_OK) && g_access (p, R_OK | W_OK | X_OK) != 0)
++        {
++                g_debug ("Permissions on %s wrong; resetting", p);
++                g_chmod (p, S_IRUSR | S_IWUSR | S_IXUSR);
++        }
+         if (g_mkdir_with_parents(p, 0700) == 0)
+                 register_directory_callback (manager, p, NULL);
+         g_free (p);

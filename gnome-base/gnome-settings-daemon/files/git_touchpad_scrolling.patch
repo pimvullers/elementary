@@ -1,0 +1,56 @@
+From 36920e3a9c193badec2898a9a8b979f51d7be094 Mon Sep 17 00:00:00 2001
+From: Ondrej Holy <oholy@redhat.com>
+Date: Fri, 11 Oct 2013 10:52:37 +0000
+Subject: mouse: fix two finger scrolling detection
+
+https://bugzilla.gnome.org/show_bug.cgi?id=702858
+---
+diff --git a/plugins/mouse/gsd-mouse-manager.c b/plugins/mouse/gsd-mouse-manager.c
+index 768a1e3..e86c709 100644
+--- a/plugins/mouse/gsd-mouse-manager.c
++++ b/plugins/mouse/gsd-mouse-manager.c
+@@ -717,19 +717,16 @@ set_scroll_method (GsdMouseManager         *manager,
+ {
+         int rc;
+         XDevice *xdevice;
+-        Atom act_type, prop_edge, prop_twofinger;
++        Atom act_type, prop, prop_edge, prop_twofinger;
+         int act_format;
+         unsigned long nitems, bytes_after;
+         unsigned char *data;
+ 
++        prop = XInternAtom (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), "Synaptics Capabilities", True);
+         prop_edge = XInternAtom (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), "Synaptics Edge Scrolling", False);
+         prop_twofinger = XInternAtom (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), "Synaptics Two-Finger Scrolling", False);
+-        if (!prop_twofinger && method == GSD_TOUCHPAD_SCROLL_METHOD_TWO_FINGER_SCROLLING) {
+-                method = GSD_TOUCHPAD_SCROLL_METHOD_EDGE_SCROLLING;
+-                g_settings_set_enum (manager->priv->touchpad_settings, KEY_SCROLL_METHOD, method);
+-        }
+ 
+-        if (!prop_edge || !prop_twofinger)
++        if (!prop_edge || !prop_twofinger || !prop)
+                 return;
+ 
+         xdevice = open_gdk_device (device);
+@@ -745,6 +742,20 @@ set_scroll_method (GsdMouseManager         *manager,
+ 
+         gdk_error_trap_push ();
+         rc = XGetDeviceProperty (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), xdevice,
++                                 prop, 0, 2, False,
++                                 XA_INTEGER, &act_type, &act_format, &nitems,
++                                 &bytes_after, &data);
++        if (rc == Success && act_type != None) {
++                if (!(data[3]) && method == GSD_TOUCHPAD_SCROLL_METHOD_TWO_FINGER_SCROLLING) {
++                        g_warning ("Two finger scroll is not supported by %s", gdk_device_get_name (device));
++                        method = GSD_TOUCHPAD_SCROLL_METHOD_EDGE_SCROLLING;
++                        g_settings_set_enum (manager->priv->touchpad_settings, KEY_SCROLL_METHOD, method);
++                }
++
++                XFree (data);
++        }
++
++        rc = XGetDeviceProperty (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), xdevice,
+                                  prop_edge, 0, 1, False,
+                                  XA_INTEGER, &act_type, &act_format, &nitems,
+                                  &bytes_after, &data);
+--
