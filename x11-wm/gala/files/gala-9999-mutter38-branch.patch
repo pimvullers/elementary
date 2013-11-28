@@ -1,12 +1,12 @@
 === modified file 'CMakeLists.txt'
---- CMakeLists.txt	2013-09-28 22:17:35 +0000
-+++ CMakeLists.txt	2013-10-10 07:33:41 +0000
+--- CMakeLists.txt	2013-11-16 16:18:45 +0000
++++ CMakeLists.txt	2013-11-28 10:12:02 +0000
 @@ -31,10 +31,10 @@
  list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
  
  configure_file (${CMAKE_SOURCE_DIR}/src/Config.vala.cmake ${CMAKE_BINARY_DIR}/src/Config.vala)
 -add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\")
-+add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" -DGNOME_DESKTOP_USE_UNSTABLE_API)
++add_definitions(-DGETTEXT_PACKAGE=\"${GETTEXT_PACKAGE}\" -DGNOME_DESKTOP_USE_UNSTABLE_API -w)
  
  find_package(PkgConfig)
 -pkg_check_modules(DEPS REQUIRED libmutter>=3.4 granite clutter-1.0>=1.9.16 clutter-gtk-1.0 libbamf3 xfixes gee-1.0 plank)
@@ -14,19 +14,19 @@
  
  set (MUTTER36_FLAGS "")
  pkg_check_modules(MUTTER36 QUIET libmutter>=3.5)
-@@ -77,6 +77,11 @@
+@@ -84,6 +84,11 @@
      src/TextShadowEffect.vala
      src/Utils.vala
      src/Zooming.vala
-+    src/Background/Animation.vala
 +    src/Background/Background.vala
 +    src/Background/BackgroundCache.vala
 +    src/Background/BackgroundManager.vala
++    src/Background/SlideShow.vala
 +    src/Background/SystemBackground.vala
      src/Widgets/AppIcon.vala
      src/Widgets/WindowOverview.vala
      src/Widgets/WindowSwitcher.vala
-@@ -92,6 +97,7 @@
+@@ -99,6 +104,7 @@
      clutter-gtk-1.0
      gdk-x11-3.0
      gdesktopenums-3.0
@@ -36,93 +36,12 @@
      -g
 
 === modified file 'data/texture.png'
-Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	2013-10-10 07:33:41 +0000 differ
+Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	2013-11-28 10:12:02 +0000 differ
 === added directory 'src/Background'
-=== added file 'src/Background/Animation.vala'
---- src/Background/Animation.vala	1970-01-01 00:00:00 +0000
-+++ src/Background/Animation.vala	2013-10-10 07:33:41 +0000
-@@ -0,0 +1,76 @@
-+//  
-+//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
-+// 
-+//  This program is free software: you can redistribute it and/or modify
-+//  it under the terms of the GNU General Public License as published by
-+//  the Free Software Foundation, either version 3 of the License, or
-+//  (at your option) any later version.
-+// 
-+//  This program is distributed in the hope that it will be useful,
-+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+//  GNU General Public License for more details.
-+// 
-+//  You should have received a copy of the GNU General Public License
-+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+// 
-+
-+namespace Gala
-+{
-+	public class Animation : Object
-+	{
-+		public string filename { get; construct set; }
-+		public Meta.Screen screen { get; construct set; }
-+
-+		public Gee.LinkedList<string> key_frame_files { get; private set; }
-+		public double transition_progress { get; private set; default = 0.0; }
-+		public double transition_duration { get; private set; default = 0.0; }
-+		public bool loaded { get; private set; default = false; }
-+
-+		Gnome.BGSlideShow? show = null;
-+
-+		public Animation (Meta.Screen screen, string filename)
-+		{
-+			Object (filename: filename, screen: screen);
-+			key_frame_files = new Gee.LinkedList<string> ();
-+		}
-+
-+		public async void load ()
-+		{
-+			show = new Gnome.BGSlideShow (filename);
-+
-+			//FIXME yield show.load_async (null);
-+			show.load ();
-+			loaded = true;
-+		}
-+
-+		public void update (int monitor_index)
-+		{
-+			key_frame_files = new Gee.LinkedList<string> ();
-+
-+			if (show == null)
-+				return;
-+
-+			if (show.get_num_slides () < 1)
-+				return;
-+
-+			var monitor = screen.get_monitor_geometry (monitor_index);
-+
-+			bool is_fixed;
-+			string file1, file2;
-+			double progress, duration;
-+			show.get_current_slide (monitor.width, monitor.height, out progress, 
-+				out duration, out is_fixed, out file1, out file2);
-+
-+			transition_progress = progress;
-+			transition_duration = duration;
-+
-+			if (file1 != null)
-+				key_frame_files.add (file1);
-+
-+			if (file2 != null)
-+				key_frame_files.add (file2);
-+		}
-+	}
-+}
-+
-
 === added file 'src/Background/Background.vala'
 --- src/Background/Background.vala	1970-01-01 00:00:00 +0000
-+++ src/Background/Background.vala	2013-10-10 07:33:41 +0000
-@@ -0,0 +1,381 @@
++++ src/Background/Background.vala	2013-11-28 10:12:02 +0000
+@@ -0,0 +1,194 @@
 +//  
 +//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
 +// 
@@ -140,375 +59,188 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 +// 
 +
-+// Code has been ported from gnome-shell's js/ui/background.js
-+
 +namespace Gala
 +{
-+	public class Background : Object
++#if HAS_MUTTER38
++	/**
++	 * Group that holds a pattern at the very bottom and then an image showing the
++	 * current wallpaper above (and one more additional image for transitions).
++	 * It listens to changes on the provided settings object and updates accordingly.
++	 */
++	public class Background : Meta.BackgroundGroup
 +	{
-+		const string BACKGROUND_SCHEMA = "org.gnome.desktop.background";
-+		const string PRIMARY_COLOR_KEY = "primary-color";
-+		const string SECONDARY_COLOR_KEY = "secondary-color";
-+		const string COLOR_SHADING_TYPE_KEY = "color-shading-type";
-+		const string BACKGROUND_STYLE_KEY = "picture-options";
-+		const string PICTURE_OPACITY_KEY = "picture-opacity";
-+		const string PICTURE_URI_KEY = "picture-uri";
++		const uint ANIMATION_TRANSITION_DURATION = 1500;
 +
-+		const uint FADE_ANIMATION_TIME = 1000;
++		public Meta.Screen screen { get; construct; }
++		public int monitor { get; construct; }
++		public Settings settings { get; construct; }
 +
-+		// These parameters affect how often we redraw.
-+		// The first is how different (percent crossfaded) the slide show
-+		// has to look before redrawing and the second is the minimum
-+		// frequency (in seconds) we're willing to wake up
-+		const double ANIMATION_OPACITY_STEP_INCREMENT = 4.0;
-+		const double ANIMATION_MIN_WAKEUP_INTERVAL = 1.0;
++		Meta.BackgroundActor pattern;
++		Clutter.Actor? image = null;
 +
-+		public Meta.BackgroundEffects effects { get; construct set; }
-+		public Settings settings { get; construct set; }
-+		public int monitor_index { get; construct set; }
-+
-+		public Meta.BackgroundGroup actor { get; private set; }
-+		public bool is_loaded { get; private set; }
-+
-+		// those two are set by the BackgroundManager
-+		internal ulong change_signal_id = 0;
-+		internal ulong loaded_signal_id = 0;
-+
-+		float _brightness;
-+		public float brightness {
-+			get {
-+				return _brightness;
-+			}
-+			set {
-+				_brightness = value;
-+				if (pattern != null && pattern.content != null)
-+					(pattern.content as Meta.Background).brightness = value;
-+
-+				foreach (var image in images) {
-+					if (image != null && image.content != null)
-+						(image.content as Meta.Background).brightness = brightness;
-+				}
-+			}
-+		}
-+
-+		float _vignette_sharpness;
-+		public float vignette_sharpness {
-+			get {
-+				return _vignette_sharpness;
-+			}
-+			set {
-+				_vignette_sharpness = value;
-+				if (pattern != null && pattern.content != null)
-+					(pattern.content as Meta.Background).vignette_sharpness = value;
-+
-+				foreach (var image in images) {
-+					if (image != null && image.content != null)
-+						(image.content as Meta.Background).vignette_sharpness = vignette_sharpness;
-+				}
-+			}
-+		}
-+
-+		GDesktop.BackgroundStyle style;
-+
-+		Meta.BackgroundActor? pattern;
-+		BackgroundCache cache;
-+
-+		Animation animation;
-+
-+		Cancellable? cancellable = null;
-+		uint update_animation_timeout_id = 0;
-+
-+		Meta.BackgroundActor images[2];
-+		Gee.HashMap<string,ulong> file_watches;
-+
-+		string filename;
-+		uint num_pending_images;
-+
-+		public signal void changed ();
-+		public signal void loaded ();
-+
-+		public Background (int monitor_index, Meta.BackgroundEffects effects, Settings settings)
++		public Background (Meta.Screen screen, int monitor, Settings settings)
 +		{
-+			Object (monitor_index: monitor_index, effects: effects, settings: settings);
-+			actor = new Meta.BackgroundGroup ();
-+
-+			file_watches = new Gee.HashMap<string,ulong> ();
-+			pattern = null;
-+			// contains a single image for static backgrounds and
-+			// two images (from and to) for slide shows
-+			images = { null, null };
-+
-+			brightness = 1.0f;
-+			vignette_sharpness = 0.2f;
-+			cancellable = new Cancellable ();
-+			is_loaded = false;
-+
-+			settings.changed.connect (() => {
-+				changed ();
-+			});
-+
-+			load ();
-+
-+			actor.destroy.connect (destroy);
++			Object (screen: screen, monitor: monitor, settings: settings);
 +		}
-+
-+		public void destroy ()
++		
++		construct
 +		{
-+			if (cancellable != null)
-+				cancellable.cancel ();
-+
-+			if (update_animation_timeout_id != 0) {
-+				Source.remove (update_animation_timeout_id);
-+				update_animation_timeout_id = 0;
-+			}
-+
-+			foreach (var key in file_watches.keys) {
-+				cache.disconnect (file_watches.get (key));
-+			}
-+			file_watches = null;
-+
-+			if (pattern != null) {
-+				if (pattern.content != null)
-+					cache.remove_pattern_content (pattern.content as Meta.Background);
-+
-+				pattern.destroy ();
-+				pattern = null;
-+			}
-+
-+			foreach (var image in images) {
-+				if (image == null)
-+					continue;
-+
-+				if (image.content != null)
-+					cache.remove_image_content (image.content as Meta.Background);
-+
-+				image.destroy ();
-+			}
-+		}
-+
-+		public void set_loaded ()
-+		{
-+			if (is_loaded)
-+				return;
-+
-+			is_loaded = true;
-+
-+			Idle.add (() => {
-+				loaded ();
-+				return false;
-+			});
-+		}
-+
-+		public void load_pattern ()
-+		{
-+			var color = Clutter.Color.from_string (settings.get_string (PRIMARY_COLOR_KEY));
-+			var second_color = Clutter.Color.from_string (settings.get_string (SECONDARY_COLOR_KEY));
-+
-+			var shading_type = (GDesktop.BackgroundShading)settings.get_enum (COLOR_SHADING_TYPE_KEY);
-+
-+			var content = cache.get_pattern_content (monitor_index, color, second_color, shading_type, effects);
-+
 +			pattern = new Meta.BackgroundActor ();
-+			actor.add_child (pattern);
++			pattern.add_constraint (new Clutter.BindConstraint (this, Clutter.BindCoordinate.SIZE, 0));
++			add_child (pattern);
 +
-+			pattern.content = content;
++			load (null);
++
++			settings.changed.connect (load);
 +		}
 +
-+		public void watch_cache_file (string filename)
++		~Background ()
 +		{
-+			if (file_watches.has_key (filename))
-+				return;
-+
-+			var signal_id = cache.file_changed.connect ((changed_file) => {
-+				if (changed_file == filename) {
-+					changed ();
-+				}
-+			});
-+
-+			file_watches.set (filename, signal_id);
++			settings.changed.disconnect (load);
 +		}
 +
-+		public void add_image (Meta.Background content, int index, string filename) {
-+			content.brightness = brightness;
-+			content.vignette_sharpness = vignette_sharpness;
-+
-+			var actor = new Meta.BackgroundActor ();
-+			actor.content = content;
-+
-+			// The background pattern is the first actor in
-+			// the group, and all images should be above that.
-+			this.actor.insert_child_at_index (actor, index + 1);
-+
-+			images[index] = actor;
-+			watch_cache_file (filename);
-+		}
-+
-+		public void update_image (Meta.Background content, int index, string filename) {
-+			content.brightness = brightness;
-+			content.vignette_sharpness = vignette_sharpness;
-+
-+			cache.remove_image_content (images[index].content as Meta.Background);
-+			images[index].content = content;
-+			watch_cache_file (filename);
-+		}
-+
-+		public void update_animation_progress ()
++		/**
++		 * (Re)loads all components if key_changed is null or only the key_changed component
++		 */
++		void load (string? key_changed)
 +		{
-+			if (images[1] != null)
-+				images[1].opacity = (uint)(animation.transition_progress * 255);
++			var all = key_changed == null;
++			var cache = BackgroundCache.get_default ();
 +
-+			queue_update_animation();
-+		}
++			// update images
++			if (all || key_changed == "picture-uri" || key_changed == "picture-options") {
++				var style = style_string_to_enum (settings.get_string ("picture-options"));
++				var uri = settings.get_string ("picture-uri");
 +
-+		public void update_animation ()
-+		{
-+			update_animation_timeout_id = 0;
++				string filename;
++				if (GLib.Uri.parse_scheme (uri) != null)
++					filename = File.new_for_uri (uri).get_path ();
++				else
++					filename = uri;
 +
-+			animation.update (monitor_index);
-+			var files = animation.key_frame_files;
++				// no image at all or malformed picture-uri
++				if (filename == null || filename == "" || style == GDesktop.BackgroundStyle.NONE) {
++					set_current (null);
++				// animation
++				} else if (filename.has_suffix (".xml")) {
++					var slides = new SlideShow (filename, screen, 0, style);
 +
-+			if (files.size == 0) {
-+				set_loaded ();
-+				queue_update_animation ();
-+				return;
-+			}
-+
-+			num_pending_images = files.size;
-+			for (var i = 0; i < files.size; i++) {
-+				var image = images[i];
-+				if (image != null && image.content != null &&
-+					(image.content as Meta.Background).get_filename () == files.get (i)) {
-+
-+					num_pending_images--;
-+					if (num_pending_images == 0)
-+						update_animation_progress ();
-+
-+					continue;
-+				}
-+
-+				cache.get_image_content (monitor_index, style, files[i], effects,
-+					this, get_update_animation_callback (i), cancellable);
-+			}
-+		}
-+
-+		// FIXME wrap callback method to keep the i at the correct value, I suppose
-+		//	   we should find a nicer way to do this
-+		PendingFileLoadFinished get_update_animation_callback (int i) {
-+			return (userdata, content) => {
-+				var self = userdata as Background;
-+				self.num_pending_images--;
-+
-+				if (content == null) {
-+					self.set_loaded ();
-+					if (self.num_pending_images == 0)
-+						self.update_animation_progress ();
-+					return;
-+				}
-+
-+				if (self.images[i] == null) {
-+					self.add_image (content, i, self.animation.key_frame_files.get (i));
++					slides.load.begin ((obj, res) => {
++						if (!slides.load.end (res))
++							set_current (null);
++						else
++							set_current (slides);
++					});
++				// normal wallpaper
 +				} else {
-+					self.update_image (content, i, self.animation.key_frame_files.get (i));
-+				}
++					cache.load_image.begin (filename, monitor, style, (obj, res) => {
++						var content = cache.load_image.end (res);
++						if (content == null) {
++							set_current (null);
++							return;
++						}
 +
-+				if (self.num_pending_images == 0) {
-+					self.set_loaded ();
-+					self.update_animation_progress ();
++						var new_image = new Meta.BackgroundActor ();
++						new_image.content = content;
++						set_current (new_image);
++					});
 +				}
-+			};
++			}
++
++			// update image opacity
++			if (all || key_changed == "picture-opacity") {
++				if (image != null)
++					image.opacity = (uint8)(settings.get_int ("picture-opacity") / 100.0 * 255);
++			}
++
++			// update pattern
++			if (all
++				|| key_changed == "primary-color"
++				|| key_changed == "secondary-color"
++				|| key_changed == "color-shading-type") {
++				var primary_color = Clutter.Color.from_string (settings.get_string ("primary-color"));
++				var secondary_color = Clutter.Color.from_string (settings.get_string ("secondary-color"));
++				var shading_type = shading_string_to_enum (settings.get_string ("color-shading-type"));
++				pattern.content = cache.load_pattern (monitor, primary_color, secondary_color, shading_type);
++			}
 +		}
 +
-+		public void queue_update_animation ()
++		/**
++		 * Fade a new image over the old, then destroy the old one and replace it with the new one
++		 * if new_image is null, fade out and destroy the current image to show the pattern
++		 */
++		void set_current (Clutter.Actor? new_image)
 +		{
-+			if (update_animation_timeout_id != 0)
-+				return;
-+
-+			if (cancellable == null || cancellable.is_cancelled ())
-+				return;
-+
-+			if (animation.transition_duration == 0.0)
-+				return;
-+
-+			var n_steps = 255 / ANIMATION_OPACITY_STEP_INCREMENT;
-+			var time_per_step = (uint)((animation.transition_duration * 1000) / n_steps);
-+
-+			var interval = uint.max ((uint)(ANIMATION_MIN_WAKEUP_INTERVAL * 1000), time_per_step);
-+
-+			if (interval > uint.MAX)
-+				return;
-+
-+			update_animation_timeout_id = Timeout.add (interval, () => {
-+				update_animation_timeout_id = 0;
-+				update_animation ();
-+				return false;
-+			});
-+		}
-+
-+		public void load_animation (string filename)
-+		{
-+			cache.get_animation.begin (filename, (obj, res) => {
-+				animation = cache.get_animation.end (res);
-+
-+				if (animation == null || cancellable.is_cancelled ()) {
-+					set_loaded ();
-+					return;
-+				}
-+
-+				update_animation ();
-+				watch_cache_file (filename);
-+			});
-+		}
-+
-+		public void load_file (string filename)
-+		{
-+			this.filename = filename;
-+			cache.get_image_content (monitor_index, style, filename, effects, this, (userdata, content) => {
-+				var self = userdata as Background;
-+				if (content == null) {
-+					if (!self.cancellable.is_cancelled ())
-+						self.load_animation (self.filename);
-+					return;
-+				}
-+
-+				self.add_image (content, 0, self.filename);
-+				self.set_loaded ();
-+			}, cancellable);
-+		}
-+
-+		public void load ()
-+		{
-+			cache = BackgroundCache.get_default ();
-+
-+			load_pattern ();
-+
-+			style = (GDesktop.BackgroundStyle)settings.get_enum (BACKGROUND_STYLE_KEY);
-+			if (style == GDesktop.BackgroundStyle.NONE) {
-+				set_loaded ();
++			if (new_image == null) {
++				if (image != null)
++					image.animate (Clutter.AnimationMode.EASE_OUT_QUAD, ANIMATION_TRANSITION_DURATION,
++						opacity: 0).completed.connect (() => {
++						image.destroy ();
++					});
 +				return;
 +			}
 +
-+			var uri = settings.get_string (PICTURE_URI_KEY);
-+			string filename;
-+			if (Uri.parse_scheme (uri) != null)
-+				filename = File.new_for_uri (uri).get_path ();
-+			else
-+				filename = uri;
++			new_image.opacity = 0;
++			new_image.add_constraint (new Clutter.BindConstraint (this, Clutter.BindCoordinate.SIZE, 0));
++			insert_child_above (new_image, null);
 +
-+			if (filename == null) {
-+				set_loaded ();
-+				return;
++			var dest_opacity = (uint8)(settings.get_int ("picture-opacity") / 100.0 * 255);
++			new_image.animate (Clutter.AnimationMode.EASE_OUT_QUAD, ANIMATION_TRANSITION_DURATION,
++				opacity: dest_opacity).completed.connect (() => {
++				if (image != null)
++					image.destroy ();
++				image = new_image;
++			});
++		}
++
++		/**
++		 *  translates the string returned from gsettings for the color-shading-type key to the
++		 *  appropriate GDesktop.BackgroundShading enum value
++		 */
++		static GDesktop.BackgroundShading shading_string_to_enum (string shading)
++		{
++			switch (shading) {
++				case "horizontal":
++					return GDesktop.BackgroundShading.HORIZONTAL;
++				case "vertical":
++					return GDesktop.BackgroundShading.VERTICAL;
 +			}
 +
-+			load_file (filename);
++			return GDesktop.BackgroundShading.SOLID;
++		}
++
++		/**
++		 *  translates the string returned from gsettings for the picture-options key to the
++		 *  appropriate GDesktop.BackgroundStyle enum value
++		 */
++		static GDesktop.BackgroundStyle style_string_to_enum (string style)
++		{
++			switch (style) {
++				case "wallpaper":
++					return GDesktop.BackgroundStyle.WALLPAPER;
++				case "centered":
++					return GDesktop.BackgroundStyle.CENTERED;
++				case "scaled":
++					return GDesktop.BackgroundStyle.SCALED;
++				case "stretched":
++					return GDesktop.BackgroundStyle.STRETCHED;
++				case "zoom":
++					return GDesktop.BackgroundStyle.ZOOM;
++				case "spanned":
++					return GDesktop.BackgroundStyle.SPANNED;
++			}
++
++			return GDesktop.BackgroundStyle.NONE;
 +		}
 +	}
++#endif
 +}
 +
 
 === added file 'src/Background/BackgroundCache.vala'
 --- src/Background/BackgroundCache.vala	1970-01-01 00:00:00 +0000
-+++ src/Background/BackgroundCache.vala	2013-10-10 07:33:41 +0000
-@@ -0,0 +1,284 @@
++++ src/Background/BackgroundCache.vala	2013-11-28 10:12:02 +0000
+@@ -0,0 +1,119 @@
 +//  
 +//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
 +// 
@@ -528,276 +260,111 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +
 +namespace Gala
 +{
-+	public delegate void PendingFileLoadFinished (Object userdata, Meta.Background? content);
-+
-+	struct PendingFileLoad
-+	{
-+		string filename;
-+		GDesktop.BackgroundStyle style;
-+		Gee.LinkedList<PendingFileLoadCaller?> callers;
-+	}
-+
-+	struct PendingFileLoadCaller
-+	{
-+		bool should_copy;
-+		int monitor_index;
-+		Meta.BackgroundEffects effects;
-+		PendingFileLoadFinished on_finished;
-+		Object userdata;
-+	}
-+
++#if HAS_MUTTER38
 +	public class BackgroundCache : Object
 +	{
++		struct WaitingCallback
++		{
++			SourceFunc func;
++			string hash;
++		}
++
 +		static BackgroundCache? instance = null;
 +
-+		Meta.Screen screen;
-+
-+		Gee.LinkedList<Meta.Background> patterns;
-+		Gee.LinkedList<Meta.Background> images;
-+		Gee.LinkedList<PendingFileLoad?> pending_file_loads;
-+		Gee.HashMap<string,FileMonitor> file_monitors;
-+
-+		string animation_filename;
-+		Animation animation;
-+
-+		public signal void file_changed (string filename);
-+
-+		public BackgroundCache (Meta.Screen _screen)
-+		{
-+			screen = _screen;
-+
-+			patterns = new Gee.LinkedList<Meta.Background> ();
-+			images = new Gee.LinkedList<Meta.Background> ();
-+			pending_file_loads = new Gee.LinkedList<PendingFileLoad?> ();
-+			file_monitors = new Gee.HashMap<string,FileMonitor> ();
-+		}
-+
-+		public Meta.Background get_pattern_content (int monitor_index, Clutter.Color color,
-+			Clutter.Color second_color, GDesktop.BackgroundShading shading_type, Meta.BackgroundEffects effects)
-+		{
-+			Meta.Background? content = null, candidate_content = null;
-+
-+			foreach (var pattern in patterns) {
-+				if (pattern == null)
-+					continue;
-+
-+				if (pattern.get_shading() != shading_type)
-+					continue;
-+
-+				if (color.equal(pattern.get_color ()))
-+					continue;
-+
-+				if (shading_type != GDesktop.BackgroundShading.SOLID &&
-+					!second_color.equal(pattern.get_second_color ()))
-+					continue;
-+
-+				candidate_content = pattern;
-+
-+				if (effects != pattern.effects)
-+					continue;
-+
-+				break;
-+			}
-+
-+			if (candidate_content != null) {
-+				content = candidate_content.copy (monitor_index, effects);
-+			} else {
-+				content = new Meta.Background (screen, monitor_index, effects);
-+
-+				if (shading_type == GDesktop.BackgroundShading.SOLID) {
-+					content.load_color (color);
-+				} else {
-+					content.load_gradient (shading_type, color, second_color);
-+				}
-+			}
-+
-+			patterns.add (content);
-+
-+			return content;
-+		}
-+
-+		public void monitor_file (string filename)
-+		{
-+			if (file_monitors.has_key (filename))
-+				return;
-+
-+			var file = File.new_for_path (filename);
-+			try {
-+				var monitor = file.monitor (FileMonitorFlags.NONE);
-+
-+				//TODO maybe do this in a cleaner way
-+				ulong signal_id = 0;
-+				signal_id = monitor.changed.connect (() => {
-+					foreach (var image in images) {
-+						if (image.get_filename () == filename)
-+							images.remove (image);
-+					}
-+
-+					monitor.disconnect (signal_id);
-+
-+					file_changed (filename);
-+				});
-+
-+				file_monitors.set (filename, monitor);
-+			} catch (Error e) { warning (e.message); }
-+		}
-+
-+		public void remove_content (Gee.LinkedList<Meta.Background> content_list, Meta.Background content) {
-+			content_list.remove (content);
-+		}
-+
-+		public void remove_pattern_content (Meta.Background content) {
-+			remove_content (patterns, content);
-+		}
-+
-+		public void remove_image_content (Meta.Background content) {
-+			var filename = content.get_filename();
-+
-+			if (filename != null && file_monitors.has_key (filename))
-+				//TODO disconnect filemonitor and delete it properly
-+				file_monitors.unset (filename);
-+
-+			remove_content(images, content);
-+		}
-+
-+		//FIXME as we may have to get a number of callbacks fired when this finishes,
-+		//	  we can't use vala's async system, but use a callback based system instead
-+		public void load_image_content (int monitor_index,
-+			GDesktop.BackgroundStyle style, string filename, Meta.BackgroundEffects effects,
-+			Object userdata, PendingFileLoadFinished on_finished, Cancellable? cancellable = null)
-+		{
-+			foreach (var pending_file_load in pending_file_loads) {
-+				if (pending_file_load.filename == filename &&
-+					pending_file_load.style == style) {
-+					pending_file_load.callers.add ({true, monitor_index, effects, on_finished, userdata});
-+					return;
-+				}
-+			}
-+
-+			PendingFileLoad load = {filename, style, new Gee.LinkedList<PendingFileLoadCaller?> ()};
-+			load.callers.add ({false, monitor_index, effects, on_finished, userdata});
-+			pending_file_loads.add (load);
-+
-+			var content = new Meta.Background (screen, monitor_index, effects);
-+			content.load_file_async.begin (filename, style, cancellable, (obj, res) => {
-+				try {
-+				  content.load_file_async.end (res);
-+
-+				  monitor_file (filename);
-+				  images.add (content);
-+				} catch (Error e) {
-+				  content = null;
-+				}
-+
-+				foreach (var pending_load in pending_file_loads) {
-+					if (pending_load.filename != filename ||
-+						pending_load.style != style)
-+						continue;
-+
-+					foreach (var caller in pending_load.callers) {
-+						if (caller.on_finished != null) {
-+							if (content != null && caller.should_copy) {
-+								content = (obj as Meta.Background).copy (caller.monitor_index, caller.effects);
-+							}
-+
-+							caller.on_finished (caller.userdata, content);
-+						}
-+					}
-+
-+					pending_file_loads.remove (pending_load);
-+				}
-+			});
-+		}
-+
-+		public void get_image_content (int monitor_index, GDesktop.BackgroundStyle style, 
-+			string filename, Meta.BackgroundEffects effects, Object userdata, 
-+			PendingFileLoadFinished on_finished, Cancellable? cancellable = null)
-+		{
-+			Meta.Background content = null, candidate_content = null;
-+			foreach (var image in images) {
-+				if (image == null)
-+					continue;
-+
-+				if (image.get_style () != style)
-+					continue;
-+
-+				if (image.get_filename () != filename)
-+					continue;
-+
-+				if (style == GDesktop.BackgroundStyle.SPANNED &&
-+					image.monitor != monitor_index)
-+					continue;
-+
-+				candidate_content = image;
-+
-+				if (effects != image.effects)
-+					continue;
-+
-+				break;
-+			}
-+
-+			if (candidate_content != null) {
-+				content = candidate_content.copy (monitor_index, effects);
-+
-+				if (cancellable != null && cancellable.is_cancelled ())
-+					content = null;
-+				else
-+					images.add (content);
-+
-+				on_finished (userdata, content);
-+			} else {
-+				load_image_content (monitor_index, style, filename, effects, userdata, on_finished, cancellable);
-+			}
-+		}
-+
-+		public async Animation get_animation (string filename)
-+		{
-+			Animation animation;
-+
-+			if (animation_filename == filename) {
-+				animation = this.animation;
-+
-+				//FIXME do we need those Idles?
-+				Idle.add (() => {
-+					get_animation.callback ();
-+					return false;
-+				});
-+			} else {
-+				animation = new Animation (screen, filename);
-+
-+				yield animation.load ();
-+
-+				monitor_file (filename);
-+				animation_filename = filename;
-+				this.animation = animation;
-+
-+				Idle.add (() => {
-+					get_animation.callback ();
-+					return false;
-+				});
-+			}
-+
-+			yield;
-+			return animation;
-+		}
-+		
 +		public static void init (Meta.Screen screen)
 +		{
 +			instance = new BackgroundCache (screen);
 +		}
 +
 +		public static BackgroundCache get_default ()
++			requires (instance != null)
 +		{
 +			return instance;
 +		}
++		
++		public Meta.Screen screen { get; construct; }
++
++		Gee.HashMap<string,Meta.Background> image_cache;
++		Gee.HashMap<string,Meta.Background> pattern_cache;
++		Gee.LinkedList<WaitingCallback?> waiting_callbacks;
++
++		BackgroundCache (Meta.Screen screen)
++		{
++			Object (screen: screen);
++		}
++		
++		construct
++		{
++			image_cache = new Gee.HashMap<string,Meta.Background> ();
++			pattern_cache = new Gee.HashMap<string,Meta.Background> ();
++			waiting_callbacks = new Gee.LinkedList<WaitingCallback?> ();
++		}
++
++		public async Meta.Background? load_image (string file, int monitor,
++			GDesktop.BackgroundStyle style)
++		{
++			string hash = "%s#%i".printf (file, style);
++			Meta.Background? content = image_cache.get (hash);
++
++			if (content != null) {
++				// the content has been created, but the file is still loading, so we wait
++				if (content.get_filename () == null) {
++					waiting_callbacks.add ({ load_image.callback, hash });
++					yield;
++				}
++
++				return content.copy (monitor, Meta.BackgroundEffects.NONE);
++			}
++
++			content = new Meta.Background (screen, monitor, Meta.BackgroundEffects.NONE);
++
++			image_cache.set (hash, content);
++
++			try {
++				yield content.load_file_async (file, style, null);
++			} catch (Error e) {
++				warning (e.message);
++				return null;
++			}
++
++			foreach (var callback in waiting_callbacks) {
++				if (callback.hash == hash) {
++					callback.func ();
++					waiting_callbacks.remove (callback);
++				}
++			}
++
++			return content;
++		}
++
++		public Meta.Background load_pattern (int monitor, Clutter.Color primary, Clutter.Color secondary,
++			GDesktop.BackgroundShading shading_type)
++		{
++			string hash = "%s#%s#%i".printf (primary.to_string (), secondary.to_string (), shading_type);
++			Meta.Background? content = pattern_cache.get (hash);
++
++			if (content != null)
++				return content.copy (monitor, Meta.BackgroundEffects.NONE);
++
++			content = new Meta.Background (screen, monitor, Meta.BackgroundEffects.NONE);
++			if (shading_type == GDesktop.BackgroundShading.SOLID)
++				content.load_color (primary);
++			else
++				content.load_gradient (shading_type, primary, secondary);
++
++			pattern_cache.set (hash, content);
++
++			return content;
++		}
 +	}
++#endif
 +}
 +
 
 === added file 'src/Background/BackgroundManager.vala'
 --- src/Background/BackgroundManager.vala	1970-01-01 00:00:00 +0000
-+++ src/Background/BackgroundManager.vala	2013-10-10 07:33:41 +0000
-@@ -0,0 +1,121 @@
++++ src/Background/BackgroundManager.vala	2013-11-28 10:12:02 +0000
+@@ -0,0 +1,61 @@
 +//  
 +//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
 +// 
@@ -817,112 +384,220 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +
 +namespace Gala
 +{
-+	public class BackgroundManager : Object
++#if HAS_MUTTER38
++	public class BackgroundManager : Meta.BackgroundGroup
 +	{
-+		const string BACKGROUND_SCHEMA = "org.gnome.desktop.background";
-+		const uint FADE_ANIMATION_TIME = 1000;
++		public Meta.Screen screen { get; construct; }
 +
-+		public Meta.BackgroundEffects effects { get; construct set; }
-+		public int monitor_index { get; construct set; }
-+		public bool control_position { get; construct set; }
-+
-+		public Settings settings { get; construct set; }
-+		public Meta.Screen screen { get; construct set; }
-+
-+		public Clutter.Actor container { get; construct set; }
-+		public Background background { get; private set; }
-+		Background? new_background = null;
-+
-+		public signal void changed ();
-+
-+		public BackgroundManager (Meta.Screen screen, Clutter.Actor container, int monitor_index,
-+			Meta.BackgroundEffects effects, bool control_position, string settings_schema = BACKGROUND_SCHEMA)
++		public BackgroundManager (Meta.Screen screen)
 +		{
-+			Object (settings: new Settings (settings_schema), 
-+				container: container,
-+				effects: effects,
-+				monitor_index: monitor_index,
-+				screen: screen,
-+				control_position: control_position);
++			Object (screen: screen);
++		}
++		
++		construct
++		{
++			screen.monitors_changed.connect (update);
 +
-+			background = create_background ();
++			update ();
 +		}
 +
-+		public void destroy ()
++		~BackgroundManager ()
 +		{
-+			if (new_background != null) {
-+				new_background.actor.destroy();
-+				new_background = null;
-+			}
-+
-+			if (background != null) {
-+				background.actor.destroy();
-+				background = null;
-+			}
++			screen.monitors_changed.disconnect (update);
 +		}
 +
-+		public void update_background (Background background, int monitor_index) {
-+			var new_background = create_background ();
-+			new_background.vignette_sharpness = background.vignette_sharpness;
-+			new_background.brightness = background.brightness;
-+			new_background.actor.visible = background.actor.visible;
-+
-+			new_background.loaded_signal_id = new_background.loaded.connect (() => {
-+				new_background.disconnect (new_background.loaded_signal_id);
-+				new_background.loaded_signal_id = 0;
-+				background.actor.animate(Clutter.AnimationMode.EASE_OUT_QUAD, FADE_ANIMATION_TIME,
-+					opacity : 0).completed.connect (() => {
-+						if (this.new_background == new_background) {
-+							this.background = new_background;
-+							this.new_background = null;
-+						} else {
-+							new_background.actor.destroy ();
-+						}
-+
-+						background.actor.destroy ();
-+
-+						changed ();
-+				});
-+			});
-+
-+			this.new_background = new_background;
-+		}
-+
-+		public Background create_background ()
++		void update ()
 +		{
-+			var background = new Background (monitor_index, effects, settings);
-+			container.add_child (background.actor);
++			remove_all_children ();
 +
-+			var monitor = screen.get_monitor_geometry (monitor_index);
-+			background.actor.set_size(monitor.width, monitor.height);
-+			if (control_position) {
-+				background.actor.set_position (monitor.x, monitor.y);
-+				background.actor.lower_bottom ();
++			var settings = BackgroundSettings.get_default ().schema;
++
++			for (var i = 0; i < screen.get_n_monitors (); i++) {
++				var geom = screen.get_monitor_geometry (i);
++				var background = new Background (screen, i, settings);
++
++				background.set_position (geom.x, geom.y);
++				background.set_size (geom.width, geom.height);
++
++				add_child (background);
 +			}
-+
-+			background.change_signal_id = background.changed.connect (() => {
-+				background.disconnect (background.change_signal_id);
-+				update_background (background, monitor_index);
-+				background.change_signal_id = 0;
-+			});
-+
-+			background.actor.destroy.connect (() => {
-+				if (background.change_signal_id != 0)
-+					background.disconnect (background.change_signal_id);
-+
-+				if (background.loaded_signal_id != 0)
-+					background.disconnect (background.loaded_signal_id);
-+			});
-+
-+			return background;
 +		}
 +	}
++#endif
++}
++
+
+=== added file 'src/Background/SlideShow.vala'
+--- src/Background/SlideShow.vala	1970-01-01 00:00:00 +0000
++++ src/Background/SlideShow.vala	2013-11-28 10:12:02 +0000
+@@ -0,0 +1,163 @@
++//  
++//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
++// 
++//  This program is free software: you can redistribute it and/or modify
++//  it under the terms of the GNU General Public License as published by
++//  the Free Software Foundation, either version 3 of the License, or
++//  (at your option) any later version.
++// 
++//  This program is distributed in the hope that it will be useful,
++//  but WITHOUT ANY WARRANTY; without even the implied warranty of
++//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++//  GNU General Public License for more details.
++// 
++//  You should have received a copy of the GNU General Public License
++//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
++// 
++
++namespace Gala
++{
++#if HAS_MUTTER38
++	public class SlideShow : Meta.BackgroundGroup
++	{
++		const double ANIMATION_OPACITY_STEP_INCREMENT = 4.0;
++		const double ANIMATION_MIN_WAKEUP_INTERVAL = 1.0;
++
++		public string file { get; construct set; }
++		public Meta.Screen screen { get; construct set; }
++		public int monitor { get; construct set; }
++		public GDesktop.BackgroundStyle style { get; construct set; }
++
++		Gnome.BGSlideShow? animation = null;
++
++		double animation_duration = 0.0;
++		double animation_progress = 0.0;
++
++		uint update_animation_timeout_id;
++
++		Meta.BackgroundActor image_from;
++		Meta.BackgroundActor image_to;
++
++		public SlideShow (string file, Meta.Screen screen, int monitor, GDesktop.BackgroundStyle style)
++		{
++			Object (file: file, screen: screen, monitor: monitor, style: style);
++		}
++
++		construct
++		{
++			var geom = screen.get_monitor_geometry (monitor);
++			width = geom.width;
++			height = geom.height;
++
++			image_to = new Meta.BackgroundActor ();
++			image_from = new Meta.BackgroundActor ();
++
++			add_child (image_from);
++			add_child (image_to);
++		}
++
++		~SlideShow ()
++		{
++			if (update_animation_timeout_id > 0)
++				Source.remove (update_animation_timeout_id);
++		}
++
++		public async bool load ()
++		{
++			animation = new Gnome.BGSlideShow (file);
++			try {
++				animation.load_async (null, (obj, res) => {
++					load.callback ();
++				});
++				yield;
++
++				yield update_animation ();
++
++				return true;
++			} catch (Error e) {
++				warning (e.message);
++			}
++			
++			return false;
++		}
++
++		/**
++		 * SlideShow animation related functions
++		 */
++		async void update_animation ()
++		{
++			if (animation == null)
++				return;
++
++			update_animation_timeout_id = 0;
++
++			bool is_fixed;
++			string file_from, file_to;
++			double progress, duration;
++			animation.get_current_slide ((int)width, (int)height, out progress,
++				out duration, out is_fixed, out file_from, out file_to);
++
++			animation_duration = duration;
++			animation_progress = progress;
++
++			if (file_from == null && file_to == null) {
++				queue_update_animation ();
++				return;
++			}
++
++			if (image_from.content == null
++				|| (image_from.content as Meta.Background).get_filename () != file_from) {
++				yield update_image (image_from, file_from);
++			}
++			if (image_to.content == null
++				|| (image_to.content as Meta.Background).get_filename () != file_to) {
++				yield update_image (image_to, file_to);
++			}
++
++			update_animation_progress ();
++		}
++
++		/**
++		 * Returns the passed orig_image with the correct content or a new one if orig_image was null
++		 */
++		async void update_image (Meta.BackgroundActor image, string? file)
++		{
++			if (file == null) {
++				image.visible = false;
++				return;
++			}
++
++			image.visible = true;
++			image.content = yield BackgroundCache.get_default ().load_image (file, monitor, style);
++		}
++
++		void queue_update_animation ()
++		{
++			if (update_animation_timeout_id != 0 || animation_duration == 0.0)
++				return;
++
++			var n_steps = 255 / ANIMATION_OPACITY_STEP_INCREMENT;
++			var time_per_step = (uint)((animation_duration * 1000) / n_steps);
++			var interval = uint.max ((uint)(ANIMATION_MIN_WAKEUP_INTERVAL * 1000), time_per_step);
++
++			if (interval > uint.MAX)
++				return;
++
++			update_animation_timeout_id = Clutter.Threads.Timeout.add (interval, () => {
++				update_animation_timeout_id = 0;
++				update_animation.begin ();
++				return false;
++			});
++		}
++
++		void update_animation_progress ()
++		{
++			if (image_to != null)
++				image_to.opacity = (uint)(animation_progress * 255);
++
++			queue_update_animation ();
++		}
++	}
++#endif
 +}
 +
 
 === added file 'src/Background/SystemBackground.vala'
 --- src/Background/SystemBackground.vala	1970-01-01 00:00:00 +0000
-+++ src/Background/SystemBackground.vala	2013-10-10 07:33:41 +0000
++++ src/Background/SystemBackground.vala	2013-11-28 10:12:02 +0000
 @@ -0,0 +1,39 @@
 +//  
 +//  Copyright (C) 2013 Tom Beckmann, Rico Tzschichholz
@@ -943,30 +618,30 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +
 +namespace Gala
 +{
-+	public class SystemBackground : Object
++#if HAS_MUTTER38
++	public class SystemBackground : Meta.BackgroundActor
 +	{
-+		public Meta.BackgroundActor actor { get; private set; }
-+
-+		public signal void loaded ();
-+
 +		public SystemBackground ()
 +		{
-+			actor = new Meta.BackgroundActor ();
-+
-+			BackgroundCache.get_default ().get_image_content (0, GDesktop.BackgroundStyle.WALLPAPER,
-+				Config.PKGDATADIR + "/texture.png", Meta.BackgroundEffects.NONE, this, (userdata, content) => {
-+				var self = userdata as SystemBackground;
-+				self.actor.content = content;
-+				self.loaded ();
++			Object ();
++		}
++		
++		construct
++		{
++			var cache = BackgroundCache.get_default ();
++			cache.load_image.begin (Config.PKGDATADIR + "/texture.png", 0,
++				GDesktop.BackgroundStyle.WALLPAPER, (obj, res) => {
++				content = cache.load_image.end (res);
 +			});
 +		}
 +	}
++#endif
 +}
 +
 
 === modified file 'src/Plugin.vala'
 --- src/Plugin.vala	2013-09-28 22:17:35 +0000
-+++ src/Plugin.vala	2013-10-10 07:33:41 +0000
++++ src/Plugin.vala	2013-11-28 10:12:02 +0000
 @@ -51,8 +51,8 @@
  		ScreenSaver? screensaver;
  		
@@ -978,15 +653,17 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  #endif
  		
  		Window? moving; //place for the window that is being moved over
-@@ -90,6 +90,7 @@
+@@ -90,6 +90,9 @@
  			var screen = get_screen ();
  			
  			DBus.init (this);
++#if HAS_MUTTER38
 +			BackgroundCache.init (screen);
++#endif
  			
  			// Due to a bug which enables access to the stage when using multiple monitors
  			// in the screensaver, we have to listen for changes and make sure the input area
-@@ -102,12 +103,44 @@
+@@ -102,12 +105,41 @@
  			
  			var stage = Compositor.get_stage_for_screen (screen) as Clutter.Stage;
  			
@@ -1009,9 +686,9 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +		     */
 +
 +			var system_background = new SystemBackground ();
-+			system_background.actor.add_constraint (new Clutter.BindConstraint (stage,
++			system_background.add_constraint (new Clutter.BindConstraint (stage,
 +				Clutter.BindCoordinate.ALL, 0));
-+			stage.insert_child_below (system_background.actor, null);
++			stage.insert_child_below (system_background, null);
 +
 +			ui_group = new Clutter.Actor ();
 +			ui_group.reactive = true;
@@ -1021,18 +698,15 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +			stage.remove_child (window_group);
 +			ui_group.add_child (window_group);
 +
-+			background_group = new Meta.BackgroundGroup ();
++			background_group = new BackgroundManager (screen);
 +			window_group.add_child (background_group);
 +			window_group.set_child_below_sibling (background_group, null);
-+
-+			setup_background_managers ();
-+			screen.monitors_changed.connect (setup_background_managers);
 +#endif
 +
  			workspace_view = new WorkspaceView (this);
  			workspace_view.visible = false;
  			
-@@ -116,13 +149,18 @@
+@@ -116,13 +148,18 @@
  			zooming = new Zooming (this);
  			window_overview = new WindowOverview (this);
  			
@@ -1055,7 +729,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  #endif
  			
  			/*keybindings*/
-@@ -189,8 +227,15 @@
+@@ -189,8 +226,15 @@
  				workspace_view.show (true);
  			});
  			
@@ -1071,25 +745,26 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  			
  			KeyBinding.set_custom_handler ("switch-to-workspace-up", () => {});
  			KeyBinding.set_custom_handler ("switch-to-workspace-down", () => {});
-@@ -281,6 +326,17 @@
+@@ -217,6 +261,9 @@
+ 
+ #if HAS_MUTTER38
+ 			stage.show ();
++
++			// let the session manager move to the next phase
++			Meta.register_with_session ();
+ 			
+ 			return false;
+ #endif
+@@ -281,7 +328,7 @@
  			else
  				Utils.set_input_area (screen, InputArea.NONE);
  		}
+-		
 +
-+		void setup_background_managers ()
-+		{
-+			background_group.destroy_all_children ();
-+
-+			var screen = get_screen ();
-+			for (var i = 0; i < screen.get_n_monitors (); i++) {
-+				new BackgroundManager (screen, background_group, i,
-+					Meta.BackgroundEffects.NONE, true);
-+			}
-+		}
- 		
  		public uint32[] get_all_xids ()
  		{
-@@ -346,6 +402,10 @@
+ 			var list = new Gee.ArrayList<uint32> ();
+@@ -346,6 +393,10 @@
  #else
  			base.begin_modal (x_get_stage_window (Compositor.get_stage_for_screen (screen)), {}, 0, display.get_current_time ());
  #endif
@@ -1100,7 +775,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		}
  		
  		public new void end_modal ()
-@@ -355,7 +415,12 @@
+@@ -355,7 +406,12 @@
  				return;
  			
  			update_input_area ();
@@ -1114,7 +789,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		}
  		
  		public void get_current_cursor_position (out int x, out int y)
-@@ -786,7 +851,7 @@
+@@ -786,7 +842,7 @@
  		/*workspace switcher*/
  		List<WindowActor>? win;
  		List<Clutter.Actor>? par; //class space for kill func
@@ -1123,7 +798,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		Clutter.Actor? in_group;
  		Clutter.Actor? out_group;
  		Clutter.Actor? moving_window_container;
-@@ -834,6 +899,8 @@
+@@ -834,6 +890,8 @@
  			var group = Compositor.get_window_group_for_screen (screen);
  #if !HAS_MUTTER38
  			var wallpaper = Compositor.get_background_actor_for_screen (screen);
@@ -1132,7 +807,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  #endif
  			
  			in_group  = new Clutter.Actor ();
-@@ -985,6 +1052,8 @@
+@@ -985,6 +1043,8 @@
  			
  #if !HAS_MUTTER38
  			var wallpaper = Compositor.get_background_actor_for_screen (screen);
@@ -1141,7 +816,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  #endif
  			wallpaper.detach_animation ();
  			wallpaper.x = 0.0f;
-@@ -1003,6 +1072,15 @@
+@@ -1003,6 +1063,15 @@
  		{
  			return x_handle_event (event) != 0;
  		}
@@ -1160,7 +835,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 
 === modified file 'src/Settings.vala'
 --- src/Settings.vala	2013-02-10 14:01:15 +0000
-+++ src/Settings.vala	2013-10-10 07:33:41 +0000
++++ src/Settings.vala	2013-11-28 10:12:02 +0000
 @@ -151,4 +151,29 @@
  			return instance;
  		}
@@ -1194,7 +869,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 
 === modified file 'src/Widgets/WindowOverview.vala'
 --- src/Widgets/WindowOverview.vala	2013-09-28 22:17:35 +0000
-+++ src/Widgets/WindowOverview.vala	2013-10-10 07:33:41 +0000
++++ src/Widgets/WindowOverview.vala	2013-11-28 10:12:02 +0000
 @@ -578,12 +578,10 @@
  
  			screen.window_left_monitor.connect (window_left_monitor);
@@ -1210,7 +885,16 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  			
  			// sort windows by stacking order
  			var windows = screen.get_display ().sort_windows_by_stacking (used_windows);
-@@ -722,12 +720,10 @@
+@@ -693,7 +691,7 @@
+ 			} else {
+ 				close (true);
+ 				//wait for the animation to finish before switching
+-				Timeout.add (400, () => {
++				Clutter.Threads.Timeout.add (400, () => {
+ 					window.get_workspace ().activate_with_focus (window, screen.get_display ().get_current_time ());
+ 					return false;
+ 				});
+@@ -722,15 +720,13 @@
  				exposed.selected.disconnect (thumb_selected);
  			}
  			
@@ -1224,11 +908,15 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +#endif
  			
  			if (animate) {
- 				Timeout.add (300, () => {
+-				Timeout.add (300, () => {
++				Clutter.Threads.Timeout.add (300, () => {
+ 					visible = false;
+ 					ready = true;
+ 					
 
 === modified file 'src/Widgets/WindowSwitcher.vala'
 --- src/Widgets/WindowSwitcher.vala	2013-08-18 21:09:23 +0000
-+++ src/Widgets/WindowSwitcher.vala	2013-10-10 07:33:41 +0000
++++ src/Widgets/WindowSwitcher.vala	2013-11-28 10:12:02 +0000
 @@ -220,6 +220,9 @@
  			var prev_win = current_window;
  			if (action == Meta.KeyBindingAction.SWITCH_GROUP ||
@@ -1249,11 +937,41 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  				event.get_key_symbol () == Clutter.Key.Left) {
  				
  				current_window = display.get_tab_next (Meta.TabList.NORMAL, screen, 
+@@ -255,7 +261,7 @@
+ 			if (prev_window != current_window) {
+ 				dim_windows ();
+ 				// wait for the dimming to finish
+-				Timeout.add (250, () => {
++				Clutter.Threads.Timeout.add (250, () => {
+ 					close (event.time);
+ 					return false;
+ 				});
+
+=== modified file 'src/Widgets/WindowThumb.vala'
+--- src/Widgets/WindowThumb.vala	2013-08-27 06:22:58 +0000
++++ src/Widgets/WindowThumb.vala	2013-11-28 10:12:02 +0000
+@@ -88,7 +88,7 @@
+ 			window.delete (window.get_screen ().get_display ().get_current_time ());
+ 			// see if the window is still alive after the animation ended. If it is, it's pretty certain that it
+ 			// popped up some kind of confirmation dialog, so we focus it
+-			Timeout.add (AnimationSettings.get_default ().close_duration + WAIT_FOR_CONFIRMATION_DIALOG, () => {
++			Clutter.Threads.Timeout.add (AnimationSettings.get_default ().close_duration + WAIT_FOR_CONFIRMATION_DIALOG, () => {
+ 				if (clone != null && clone.source != null && !(clone.source as Meta.WindowActor).is_destroyed ()) {
+ 					clone.source.opacity = 255;
+ 					selected (window);
 
 === modified file 'src/Widgets/WorkspaceThumb.vala'
 --- src/Widgets/WorkspaceThumb.vala	2013-08-09 12:52:20 +0000
-+++ src/Widgets/WorkspaceThumb.vala	2013-10-10 07:33:41 +0000
-@@ -60,7 +60,11 @@
++++ src/Widgets/WorkspaceThumb.vala	2013-11-28 10:12:02 +0000
+@@ -50,6 +50,7 @@
+ 		
+ #if HAS_MUTTER38
+ 		internal Actor wallpaper;
++		Actor wallpaper_manager;
+ #else
+ 		internal Clone wallpaper;
+ #endif
+@@ -60,7 +61,11 @@
  		
  		uint hover_timer = 0;
  		
@@ -1265,41 +983,71 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		{
  			workspace = _workspace;
  			screen = workspace.get_screen ();
-@@ -91,7 +95,8 @@
+@@ -89,9 +94,12 @@
  			
- 			// FIXME find a nice way to draw a border around it, maybe combinable with the indicator using a ShaderEffect
+ 			handle_workspace_switched (-1, screen.get_active_workspace_index (), MotionDirection.LEFT);
+ 			
+-			// FIXME find a nice way to draw a border around it, maybe combinable with the indicator using a ShaderEffect
  #if HAS_MUTTER38
--			wallpaper = new Clutter.Actor ();
-+			//FIXME we probably want to keep the BackgroundManager and not just save its actor
-+			wallpaper = new BackgroundManager (screen, this, 0, Meta.BackgroundEffects.NONE, false).background.actor;
++			wallpaper_manager = new BackgroundManager (screen);
++			//FIXME apparently there are issues with scaling and animating the opacity. The wallpaper will
++			//      start flickering when the opacity changes. Wrapping it in a container solves this.
+ 			wallpaper = new Clutter.Actor ();
++			wallpaper.add_child (wallpaper_manager);
  #else
  			wallpaper = new Clone (Compositor.get_background_actor_for_screen (screen));
  #endif
-@@ -121,7 +126,9 @@
- 			windows.clip_to_allocation = true;
- 			
- 			add_child (indicator);
-+#if !HAS_MUTTER38
- 			add_child (wallpaper);
-+#endif
- 			add_child (windows);
- 			add_child (icons);
- 			add_child (close_button);
-@@ -202,6 +209,10 @@
+@@ -202,6 +210,10 @@
  			indicator.width = width + 2 * INDICATOR_BORDER;
  			(indicator.content as Canvas).set_size ((int)indicator.width, (int)indicator.height);
  
 +#if HAS_MUTTER38
-+			wallpaper.scale_x = width / swidth;
-+			wallpaper.scale_y = THUMBNAIL_HEIGHT / sheight;
++			wallpaper_manager.scale_x = width / swidth;
++			wallpaper_manager.scale_y = THUMBNAIL_HEIGHT / sheight;
 +#endif
  			wallpaper.width = width;
  			windows.width = width;
  
+@@ -270,7 +282,7 @@
+ 					window.delete (screen.get_display ().get_current_time ());
+ 			}
+ 			
+-			GLib.Timeout.add (250, () => {
++			Clutter.Threads.Timeout.add (250, () => {
+ 				//wait for confirmation dialogs to popup
+ 				if (Utils.get_n_windows (workspace) == 0) {
+ 					workspace.window_added.disconnect (handle_window_added);
+@@ -486,7 +498,7 @@
+ 				return;
+ 			
+ 			// we need to wait untill the animation ended, otherwise we get trouble with focus handling
+-			Timeout.add (AnimationSettings.get_default ().workspace_switch_duration + 10, () => {
++			Clutter.Threads.Timeout.add (AnimationSettings.get_default ().workspace_switch_duration + 10, () => {
+ 				// check again, maybe something opened
+ 				if (workspace == null || Utils.get_n_windows (workspace) > 0)
+ 					return false;
+@@ -525,7 +537,7 @@
+ 			workspace.activate (screen.get_display ().get_current_time ());
+ 			
+ 			// wait for the animation to be finished before closing, for aesthetic reasons
+-			Timeout.add (AnimationSettings.get_default ().workspace_switch_duration, () => {
++			Clutter.Threads.Timeout.add (AnimationSettings.get_default ().workspace_switch_duration, () => {
+ 				clicked ();
+ 				return false;
+ 			});
+@@ -551,7 +563,7 @@
+ 			if (hover_timer > 0)
+ 				GLib.Source.remove (hover_timer);
+ 			
+-			hover_timer = Timeout.add (CLOSE_BUTTON_DELAY, () => {
++			hover_timer = Clutter.Threads.Timeout.add (CLOSE_BUTTON_DELAY, () => {
+ 				close_button.visible = true;
+ 				close_button.animate (AnimationMode.EASE_OUT_ELASTIC, 400, scale_x : 1.0f, scale_y : 1.0f);
+ 				return false;
 
 === modified file 'src/Widgets/WorkspaceView.vala'
 --- src/Widgets/WorkspaceView.vala	2013-08-03 11:15:11 +0000
-+++ src/Widgets/WorkspaceView.vala	2013-10-10 07:33:41 +0000
++++ src/Widgets/WorkspaceView.vala	2013-11-28 10:12:02 +0000
 @@ -29,7 +29,9 @@
  		
  		Clutter.Actor thumbnails;
@@ -1310,35 +1058,35 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		
  		bool animating; // delay closing the popup
  		
-@@ -67,13 +69,17 @@
+@@ -67,6 +69,7 @@
  			scroll.content = new Clutter.Canvas ();
  			(scroll.content as Clutter.Canvas).draw.connect (draw_scroll);
  			
-+#if HAS_MUTTER38
-+			plugin.ui_group.button_release_event.connect (outside_clicked);
-+#else
++#if !HAS_MUTTER38
  			click_catcher = new Clutter.Actor ();
  			click_catcher.reactive = true;
  			click_catcher.button_release_event.connect ((e) => {
- 				hide ();
+@@ -74,6 +77,7 @@
  				return true;
  			});
--			Compositor.get_stage_for_screen (screen).add_child (click_catcher);
-+			Compositor.get_stage_for_screen (screen).insert_child_below (click_catcher);
+ 			Compositor.get_stage_for_screen (screen).add_child (click_catcher);
 +#endif
  			
  			add_child (thumbnails);
  			add_child (scroll);
-@@ -114,7 +120,7 @@
+@@ -114,7 +118,11 @@
  		void init_thumbnails ()
  		{
  			foreach (var workspace in screen.get_workspaces ()) {
--				var thumb = new WorkspaceThumb (workspace);
++#if HAS_MUTTER38
 +				var thumb = new WorkspaceThumb (workspace, plugin.background_group);
++#else
+ 				var thumb = new WorkspaceThumb (workspace);
++#endif
  				thumb.clicked.connect (hide);
  				thumb.closed.connect (remove_workspace);
  				thumb.window_on_last.connect (add_workspace);
-@@ -128,6 +134,14 @@
+@@ -128,6 +136,14 @@
  				&& Utils.get_n_windows (screen.get_workspaces ().first ().data) > 0)
  				add_workspace ();
  		}
@@ -1353,16 +1101,30 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  		
  		bool draw_background (Cairo.Context cr)
  		{
-@@ -168,7 +182,7 @@
+@@ -168,7 +184,11 @@
  		
  		void create_workspace_thumb (Meta.Workspace workspace)
  		{
--			var thumb = new WorkspaceThumb (workspace);
++#if HAS_MUTTER38
 +			var thumb = new WorkspaceThumb (workspace, plugin.background_group);
++#else
+ 			var thumb = new WorkspaceThumb (workspace);
++#endif
  			thumb.clicked.connect (hide);
  			thumb.closed.connect (remove_workspace);
  			thumb.window_on_last.connect (add_workspace);
-@@ -414,11 +428,13 @@
+@@ -390,6 +410,10 @@
+ 			
+ 			plugin.begin_modal ();
+ 			
++#if HAS_MUTTER38
++			plugin.ui_group.button_release_event.connect (outside_clicked);
++#endif
++			
+ 			var area = screen.get_monitor_geometry (screen.get_primary_monitor ());
+ 			y = area.height + area.y;
+ 			x = area.x;
+@@ -414,14 +438,16 @@
  			int swidth, sheight;
  			screen.get_size (out swidth, out sheight);
  			
@@ -1375,8 +1137,12 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 +#endif
  			
  			animating = true;
- 			Timeout.add (50, () => {
-@@ -431,13 +447,15 @@
+-			Timeout.add (50, () => {
++			Clutter.Threads.Timeout.add (50, () => {
+ 				animating = false;
+ 				return false;
+ 			}); //catch hot corner hiding problem
+@@ -431,13 +457,17 @@
  			wins.x = 0.0f;
  			
  			animate (Clutter.AnimationMode.EASE_OUT_QUAD, 250, y : (area.height + area.y) - height);
@@ -1389,11 +1155,13 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  			if (!visible || animating)
  				return;
 +
++#if HAS_MUTTER38
 +			plugin.ui_group.button_release_event.disconnect (outside_clicked);
++#endif
  			
  			float width, height;
  			plugin.get_screen ().get_size (out width, out height);
-@@ -454,7 +472,9 @@
+@@ -454,7 +484,9 @@
  				visible = false;
  			});
  			
@@ -1404,9 +1172,22 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
  			var wins = Compositor.get_window_group_for_screen (screen);
  			wins.detach_animation ();
 
+=== modified file 'src/Zooming.vala'
+--- src/Zooming.vala	2012-08-28 15:49:58 +0000
++++ src/Zooming.vala	2013-11-28 10:12:02 +0000
+@@ -67,7 +67,7 @@
+ 				wins.scale_center_x = mx;
+ 				wins.scale_center_y = my;
+ 				
+-				mouse_poll_timer = Timeout.add (MOUSE_POLL_TIME, () => {
++				mouse_poll_timer = Clutter.Threads.Timeout.add (MOUSE_POLL_TIME, () => {
+ 					client_pointer.get_position (null, out mx, out my);
+ 					if (wins.scale_center_x == mx && wins.scale_center_y == my)
+ 						return true;
+
 === modified file 'vapi/gdesktopenums-3.0.vapi'
 --- vapi/gdesktopenums-3.0.vapi	2012-08-19 13:56:07 +0000
-+++ vapi/gdesktopenums-3.0.vapi	2013-10-10 07:33:41 +0000
++++ vapi/gdesktopenums-3.0.vapi	2013-11-28 10:12:02 +0000
 @@ -34,6 +34,20 @@
  		SMART,
  		STRICT
@@ -1431,7 +1212,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 
 === added file 'vapi/gnome-desktop-3.0.deps'
 --- vapi/gnome-desktop-3.0.deps	1970-01-01 00:00:00 +0000
-+++ vapi/gnome-desktop-3.0.deps	2013-10-10 07:33:41 +0000
++++ vapi/gnome-desktop-3.0.deps	2013-11-28 10:12:02 +0000
 @@ -0,0 +1,7 @@
 +atk
 +cairo
@@ -1443,7 +1224,7 @@ Binary files data/texture.png	2013-02-17 00:38:16 +0000 and data/texture.png	201
 
 === added file 'vapi/gnome-desktop-3.0.vapi'
 --- vapi/gnome-desktop-3.0.vapi	1970-01-01 00:00:00 +0000
-+++ vapi/gnome-desktop-3.0.vapi	2013-10-10 07:33:41 +0000
++++ vapi/gnome-desktop-3.0.vapi	2013-11-28 10:12:02 +0000
 @@ -0,0 +1,310 @@
 +/* gnome-desktop-3.0.vapi generated by vapigen, do not modify. */
 +

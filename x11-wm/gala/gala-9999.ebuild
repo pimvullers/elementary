@@ -25,13 +25,16 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/bamf
 	x11-libs/libXfixes
-	>=x11-wm/mutter-3.8"
+	>=x11-wm/mutter-3.4
+	!x11-wm/gala38
+	mutter38? ( gnome-base/gnome-desktop:3 )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
-PDEPEND="mutter38? ( x11-wm/gala38 )"
 
 src_prepare() {
+	use mutter38 && epatch "${FILESDIR}/${P}-mutter38-branch.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
@@ -42,15 +45,7 @@ src_configure() {
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
 
-	use mutter38 || cmake-utils_src_configure
-}
-
-src_compile() {
-	use mutter38 || cmake-utils_src_compile
-}
-
-src_install() {
-	use mutter38 || cmake-utils_src_install
+	cmake-utils_src_configure
 }
 
 pkg_preinst() {
