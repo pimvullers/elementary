@@ -31,7 +31,7 @@
 # Packages depending on EDS 3.6
 #
 #>=net-im/indicator-messages-12
-#>=x11-misc/indicator-datetime-12
+>=x11-misc/indicator-datetime-13
 
 >=x11-misc/indicator-session-12
 
