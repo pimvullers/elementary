@@ -28,6 +28,8 @@ S="${WORKDIR}/ido-12.10.3daily13.03.01"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-drop-gtkstyle.patch"
+
 	# Remove reference to ubuntu gtk+ patch
 	sed -i 's/ubuntu_//' src/idoscalemenuitem.c
 
