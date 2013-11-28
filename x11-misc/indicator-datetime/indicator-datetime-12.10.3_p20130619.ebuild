@@ -33,6 +33,8 @@ S="${WORKDIR}/indicator-datetime-12.10.3daily13.06.19"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-use-gtkstylecontext.patch"
+
 	autotools-utils_src_prepare
 }
 
