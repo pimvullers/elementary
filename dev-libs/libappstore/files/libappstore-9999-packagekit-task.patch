@@ -1,0 +1,35 @@
+=== modified file 'lib/AppsManager.vala'
+--- lib/AppsManager.vala	2013-06-03 18:02:51 +0000
++++ lib/AppsManager.vala	2013-11-29 13:20:55 +0000
+@@ -34,7 +34,7 @@
+         // PackageKit stuffs
+         private Client client;
+         private Control control;
+-        private Task task;
++        private PackageKit.Task task;
+         private Cancellable transaction;
+         
+         // Database stuffs
+@@ -371,7 +371,7 @@
+         public AppsManager (string db) {
+             client = new Client();
+             control = new Control();
+-            task = new Task();
++            task = new PackageKit.Task();
+             transaction = new Cancellable();
+             
+             database_path = db;
+
+=== modified file 'lib/DBManager.vala'
+--- lib/DBManager.vala	2013-03-26 17:12:11 +0000
++++ lib/DBManager.vala	2013-11-29 13:25:10 +0000
+@@ -367,7 +367,7 @@
+             theme.append_search_path ("/usr/share/app-install/icons/");
+ #endif
+             this.db = db;
+-            task = new Task ();
++            task = new PackageKit.Task ();
+             control = new Control ();
+             
+             // PK conf file
+

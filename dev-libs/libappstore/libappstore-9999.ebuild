@@ -32,6 +32,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-packagekit-task.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
