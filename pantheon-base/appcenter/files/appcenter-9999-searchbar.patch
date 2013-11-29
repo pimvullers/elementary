@@ -1,0 +1,22 @@
+=== modified file 'src/Widgets/Toolbar.vala'
+--- src/Widgets/Toolbar.vala	2013-03-21 17:30:13 +0000
++++ src/Widgets/Toolbar.vala	2013-11-29 13:01:23 +0000
+@@ -30,7 +30,7 @@
+         private ToolItem tool;
+         public Image icon;
+         public NavigationButton navigation_button;
+-        public SearchBar searchbar;
++        public Granite.Widgets.SearchBar searchbar;
+         
+         public void update_label (PageType old, PageType current) {
+ 
+@@ -92,7 +92,7 @@
+             space_item.set_expand(true);
+             insert(space_item, -1);
+             
+-            searchbar = new SearchBar(_("Search Apps"));
++            searchbar = new Granite.Widgets.SearchBar(_("Search Apps"));
+             searchbar.margin = 5;
+             insert_with_tool(searchbar, -1);
+         }
+

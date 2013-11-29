@@ -37,6 +37,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-searchbar.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
