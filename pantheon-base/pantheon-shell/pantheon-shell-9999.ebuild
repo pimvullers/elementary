@@ -33,6 +33,8 @@ RDEPEND="${CDEPEND}
 DEPEND="${CDEPEND}"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gala-startup.patch"
+
 	# Use gnome as fallback instead of ubuntu and mutter instead of gala
 	sed -i -e 's/ubuntu/gnome/' -e 's/gala/mutter/' debian/pantheon.session
 
