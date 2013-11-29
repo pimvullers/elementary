@@ -29,6 +29,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-unowned.patch"
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }

@@ -1,0 +1,19 @@
+=== modified file 'Audience/Widgets/VideoPlayer.vala'
+--- Audience/Widgets/VideoPlayer.vala	2013-05-19 17:10:26 +0000
++++ Audience/Widgets/VideoPlayer.vala	2013-11-28 16:40:48 +0000
+@@ -324,12 +324,12 @@
+             playbin.text_tags_changed.connect ((el) => {
+                 var structure = new Gst.Structure.empty ("tags-changed");
+                 structure.set_value ("type", "text");
+-                el.post_message (new Gst.Message.application (el, structure));
++                el.post_message (new Gst.Message.application (el, structure.copy()));
+             });
+             playbin.audio_tags_changed.connect ((el) => {
+                 var structure = new Gst.Structure.empty ("tags-changed");
+                 structure.set_value ("type", "audio");
+-                el.post_message (new Gst.Message.application (el, structure));
++                el.post_message (new Gst.Message.application (el, structure.copy()));
+             });
+             
+             playbin.get_bus ().add_signal_watch ();
+
