@@ -38,6 +38,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-unowned.patch"
+
 	# Disable generation of the translations (if needed)
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
