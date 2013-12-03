@@ -5,7 +5,7 @@
 EAPI=5
 
 VALA_MIN_API_VERSION=0.16
-VALA_MAX_API_VERSION=0.16
+#VALA_MAX_API_VERSION=0.16
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -40,10 +40,10 @@ pkg_setup() {
 }
 
 src_prepare() {
-	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+	epatch "${FILESDIR}/${P}-indicator-files.patch"
+	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
 
-	# Disable slide in animation since it is broken.
-	#epatch "$FILESDIR/${P}-no-animation.patch"
+	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare

@@ -8,7 +8,7 @@ inherit vala autotools-utils
 
 DESCRIPTION="Widgets and other objects used for indicators"
 HOMEPAGE="https://launchpad.net/ido"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/ido_12.10.3daily13.03.01.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/ido_13.10.0%2B14.04.20131127.orig.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="3"
@@ -24,7 +24,7 @@ DEPEND="${RDEPEND}
 	doc? ( dev-util/gtk-doc )"
 
 DOCS=( AUTHORS COPYING ChangeLog NEWS README TODO )
-S="${WORKDIR}/ido-12.10.3daily13.03.01"
+S="${WORKDIR}/ido-13.10.0+14.04.20131127"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {

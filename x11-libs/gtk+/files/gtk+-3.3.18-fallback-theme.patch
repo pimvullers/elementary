@@ -1,0 +1,81 @@
+From 1a3f790830c2db70eb3369e684c3cd8ac3b8051b Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gentoo.org>
+Date: Wed, 14 Mar 2012 23:08:53 -0400
+Subject: [PATCH] settings: fall back to settings.ini gtk theme if requested
+ theme fails
+
+If a gtk3 application is run in gnome2 and the settings daemon uses
+xsettings to request a gtk2 theme with no gtk3 version (which is the
+case by default), then instead of failing to load any theme, we should
+attempt to fall back to the theme specified in settings.ini files.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=654108
+---
+ gtk/gtksettings.c |   23 +++++++++++++++++++++++
+ 1 files changed, 23 insertions(+), 0 deletions(-)
+
+diff --git a/gtk/gtksettings.c b/gtk/gtksettings.c
+index 2e17430..354ba34 100644
+--- a/gtk/gtksettings.c
++++ b/gtk/gtksettings.c
+@@ -115,6 +115,7 @@ struct _GtkSettingsPrivate
+   GtkCssProvider *theme_provider;
+   GtkCssProvider *key_theme_provider;
+   GtkStyleProperties *style;
++  gchar *fallback_gtk_theme_name;
+ };
+ 
+ typedef enum
+@@ -1528,6 +1529,8 @@ gtk_settings_finalize (GObject *object)
+   if (priv->style)
+     g_object_unref (priv->style);
+ 
++  g_free (priv->fallback_gtk_theme_name);
++
+   G_OBJECT_CLASS (gtk_settings_parent_class)->finalize (object);
+ }
+ 
+@@ -1889,6 +1892,12 @@ apply_queued_setting (GtkSettings             *settings,
+       if (pspec->param_id == PROP_COLOR_SCHEME)
+         merge_color_scheme (settings, &tmp_value, qvalue->source);
+ 
++      if (!g_strcmp0 (pspec->name, "gtk-theme-name") && qvalue->source == GTK_SETTINGS_SOURCE_DEFAULT)
++        {
++          g_free (priv->fallback_gtk_theme_name);
++          priv->fallback_gtk_theme_name = g_value_dup_string (&tmp_value);
++        }
++
+       if (priv->property_values[pspec->param_id - 1].source <= qvalue->source)
+         {
+           g_value_copy (&tmp_value, &priv->property_values[pspec->param_id - 1].value);
+@@ -2594,6 +2603,10 @@ _gtk_settings_reset_rc_values (GtkSettings *settings)
+         }
+       i++;
+     }
++
++  g_free (priv->fallback_gtk_theme_name);
++  priv->fallback_gtk_theme_name = NULL;
++
+   g_object_thaw_notify (G_OBJECT (settings));
+   g_free (pspecs);
+ }
+@@ -2881,6 +2894,16 @@ settings_update_theme (GtkSettings *settings)
+ 
+       if (!provider)
+         provider = gtk_css_provider_get_named (theme_name, NULL);
++
++      /* If we failed, fall back to the theme from settings.ini */
++      if (!provider && priv->fallback_gtk_theme_name && *priv->fallback_gtk_theme_name
++          && g_strcmp0 (theme_name, priv->fallback_gtk_theme_name))
++        {
++          provider = gtk_css_provider_get_named (priv->fallback_gtk_theme_name, NULL);
++
++          if (!provider)
++            provider = gtk_css_provider_get_named (priv->fallback_gtk_theme_name, NULL);
++        }
+     }
+ 
+   /* If we didn't find the named theme, fall back */
+-- 
+1.7.8.5
+

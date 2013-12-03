@@ -1,0 +1,12 @@
+diff -Naur indicator-sound-12.10.2+14.04.20131125.orig2/src/service.vala indicator-sound-12.10.2+14.04.20131125/src/service.vala
+--- indicator-sound-12.10.2+14.04.20131125.orig2/src/service.vala	2013-12-03 17:31:58.977246974 +0100
++++ indicator-sound-12.10.2+14.04.20131125/src/service.vala	2013-12-03 17:35:40.959519944 +0100
+@@ -47,7 +47,7 @@
+ 		});
+ 
+ 		if (settings.get_boolean ("show-notify-osd-on-scroll")) {
+-			unowned List<string> caps = Notify.get_server_caps ();
++			List<string> caps = Notify.get_server_caps ();
+ 			if (caps.find_custom ("x-canonical-private-synchronous", strcmp) != null) {
+ 				this.notification = new Notify.Notification ("indicator-sound", "", "");
+ 				this.notification.set_hint_string ("x-canonical-private-synchronous", "indicator-sound");
