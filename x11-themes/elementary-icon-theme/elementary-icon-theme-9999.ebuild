@@ -15,19 +15,13 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-CDEPEND=""
-RDEPEND="${CDEPEND}"
-DEPEND="${CDEPEND}
-	x11-libs/gtk+:2"
+RDEPEND=""
+DEPEND="x11-libs/gtk+:2"
 
 RESTRICT="binchecks strip"
 
 pkg_setup() {
 	DOCS=( AUTHORS COPYING CONTRIBUTORS )
-}
-
-src_prepare() {
-	rm icon-theme.cache
 }
 
 src_install() {
