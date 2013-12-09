@@ -1,0 +1,18 @@
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala indicator-bluetooth-0.0.6+14.04.20131029.1/src/profile.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala	2013-12-09 10:14:45.729064118 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/src/profile.vala	2013-12-09 12:06:10.900519845 +0100
+@@ -149,12 +149,12 @@
+     if (bluetooth.enabled)
+       {
+         a11y = "Bluetooth (on)";
+-        icon_name = "bluetooth-active";
++        icon_name = "bluetooth-active-symbolic";
+       }
+     else
+       {
+         a11y = "Bluetooth (off)";
+-        icon_name = "bluetooth-disabled";
++        icon_name = "bluetooth-disabled-symbolic";
+       }
+ 
+     var icon = new ThemedIcon.with_default_fallbacks (icon_name);

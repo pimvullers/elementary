@@ -1,0 +1,3166 @@
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/COPYING indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/COPYING
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/COPYING	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/COPYING	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,674 @@
++                    GNU GENERAL PUBLIC LICENSE
++                       Version 3, 29 June 2007
++
++ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
++ Everyone is permitted to copy and distribute verbatim copies
++ of this license document, but changing it is not allowed.
++
++                            Preamble
++
++  The GNU General Public License is a free, copyleft license for
++software and other kinds of works.
++
++  The licenses for most software and other practical works are designed
++to take away your freedom to share and change the works.  By contrast,
++the GNU General Public License is intended to guarantee your freedom to
++share and change all versions of a program--to make sure it remains free
++software for all its users.  We, the Free Software Foundation, use the
++GNU General Public License for most of our software; it applies also to
++any other work released this way by its authors.  You can apply it to
++your programs, too.
++
++  When we speak of free software, we are referring to freedom, not
++price.  Our General Public Licenses are designed to make sure that you
++have the freedom to distribute copies of free software (and charge for
++them if you wish), that you receive source code or can get it if you
++want it, that you can change the software or use pieces of it in new
++free programs, and that you know you can do these things.
++
++  To protect your rights, we need to prevent others from denying you
++these rights or asking you to surrender the rights.  Therefore, you have
++certain responsibilities if you distribute copies of the software, or if
++you modify it: responsibilities to respect the freedom of others.
++
++  For example, if you distribute copies of such a program, whether
++gratis or for a fee, you must pass on to the recipients the same
++freedoms that you received.  You must make sure that they, too, receive
++or can get the source code.  And you must show them these terms so they
++know their rights.
++
++  Developers that use the GNU GPL protect your rights with two steps:
++(1) assert copyright on the software, and (2) offer you this License
++giving you legal permission to copy, distribute and/or modify it.
++
++  For the developers' and authors' protection, the GPL clearly explains
++that there is no warranty for this free software.  For both users' and
++authors' sake, the GPL requires that modified versions be marked as
++changed, so that their problems will not be attributed erroneously to
++authors of previous versions.
++
++  Some devices are designed to deny users access to install or run
++modified versions of the software inside them, although the manufacturer
++can do so.  This is fundamentally incompatible with the aim of
++protecting users' freedom to change the software.  The systematic
++pattern of such abuse occurs in the area of products for individuals to
++use, which is precisely where it is most unacceptable.  Therefore, we
++have designed this version of the GPL to prohibit the practice for those
++products.  If such problems arise substantially in other domains, we
++stand ready to extend this provision to those domains in future versions
++of the GPL, as needed to protect the freedom of users.
++
++  Finally, every program is threatened constantly by software patents.
++States should not allow patents to restrict development and use of
++software on general-purpose computers, but in those that do, we wish to
++avoid the special danger that patents applied to a free program could
++make it effectively proprietary.  To prevent this, the GPL assures that
++patents cannot be used to render the program non-free.
++
++  The precise terms and conditions for copying, distribution and
++modification follow.
++
++                       TERMS AND CONDITIONS
++
++  0. Definitions.
++
++  "This License" refers to version 3 of the GNU General Public License.
++
++  "Copyright" also means copyright-like laws that apply to other kinds of
++works, such as semiconductor masks.
++
++  "The Program" refers to any copyrightable work licensed under this
++License.  Each licensee is addressed as "you".  "Licensees" and
++"recipients" may be individuals or organizations.
++
++  To "modify" a work means to copy from or adapt all or part of the work
++in a fashion requiring copyright permission, other than the making of an
++exact copy.  The resulting work is called a "modified version" of the
++earlier work or a work "based on" the earlier work.
++
++  A "covered work" means either the unmodified Program or a work based
++on the Program.
++
++  To "propagate" a work means to do anything with it that, without
++permission, would make you directly or secondarily liable for
++infringement under applicable copyright law, except executing it on a
++computer or modifying a private copy.  Propagation includes copying,
++distribution (with or without modification), making available to the
++public, and in some countries other activities as well.
++
++  To "convey" a work means any kind of propagation that enables other
++parties to make or receive copies.  Mere interaction with a user through
++a computer network, with no transfer of a copy, is not conveying.
++
++  An interactive user interface displays "Appropriate Legal Notices"
++to the extent that it includes a convenient and prominently visible
++feature that (1) displays an appropriate copyright notice, and (2)
++tells the user that there is no warranty for the work (except to the
++extent that warranties are provided), that licensees may convey the
++work under this License, and how to view a copy of this License.  If
++the interface presents a list of user commands or options, such as a
++menu, a prominent item in the list meets this criterion.
++
++  1. Source Code.
++
++  The "source code" for a work means the preferred form of the work
++for making modifications to it.  "Object code" means any non-source
++form of a work.
++
++  A "Standard Interface" means an interface that either is an official
++standard defined by a recognized standards body, or, in the case of
++interfaces specified for a particular programming language, one that
++is widely used among developers working in that language.
++
++  The "System Libraries" of an executable work include anything, other
++than the work as a whole, that (a) is included in the normal form of
++packaging a Major Component, but which is not part of that Major
++Component, and (b) serves only to enable use of the work with that
++Major Component, or to implement a Standard Interface for which an
++implementation is available to the public in source code form.  A
++"Major Component", in this context, means a major essential component
++(kernel, window system, and so on) of the specific operating system
++(if any) on which the executable work runs, or a compiler used to
++produce the work, or an object code interpreter used to run it.
++
++  The "Corresponding Source" for a work in object code form means all
++the source code needed to generate, install, and (for an executable
++work) run the object code and to modify the work, including scripts to
++control those activities.  However, it does not include the work's
++System Libraries, or general-purpose tools or generally available free
++programs which are used unmodified in performing those activities but
++which are not part of the work.  For example, Corresponding Source
++includes interface definition files associated with source files for
++the work, and the source code for shared libraries and dynamically
++linked subprograms that the work is specifically designed to require,
++such as by intimate data communication or control flow between those
++subprograms and other parts of the work.
++
++  The Corresponding Source need not include anything that users
++can regenerate automatically from other parts of the Corresponding
++Source.
++
++  The Corresponding Source for a work in source code form is that
++same work.
++
++  2. Basic Permissions.
++
++  All rights granted under this License are granted for the term of
++copyright on the Program, and are irrevocable provided the stated
++conditions are met.  This License explicitly affirms your unlimited
++permission to run the unmodified Program.  The output from running a
++covered work is covered by this License only if the output, given its
++content, constitutes a covered work.  This License acknowledges your
++rights of fair use or other equivalent, as provided by copyright law.
++
++  You may make, run and propagate covered works that you do not
++convey, without conditions so long as your license otherwise remains
++in force.  You may convey covered works to others for the sole purpose
++of having them make modifications exclusively for you, or provide you
++with facilities for running those works, provided that you comply with
++the terms of this License in conveying all material for which you do
++not control copyright.  Those thus making or running the covered works
++for you must do so exclusively on your behalf, under your direction
++and control, on terms that prohibit them from making any copies of
++your copyrighted material outside their relationship with you.
++
++  Conveying under any other circumstances is permitted solely under
++the conditions stated below.  Sublicensing is not allowed; section 10
++makes it unnecessary.
++
++  3. Protecting Users' Legal Rights From Anti-Circumvention Law.
++
++  No covered work shall be deemed part of an effective technological
++measure under any applicable law fulfilling obligations under article
++11 of the WIPO copyright treaty adopted on 20 December 1996, or
++similar laws prohibiting or restricting circumvention of such
++measures.
++
++  When you convey a covered work, you waive any legal power to forbid
++circumvention of technological measures to the extent such circumvention
++is effected by exercising rights under this License with respect to
++the covered work, and you disclaim any intention to limit operation or
++modification of the work as a means of enforcing, against the work's
++users, your or third parties' legal rights to forbid circumvention of
++technological measures.
++
++  4. Conveying Verbatim Copies.
++
++  You may convey verbatim copies of the Program's source code as you
++receive it, in any medium, provided that you conspicuously and
++appropriately publish on each copy an appropriate copyright notice;
++keep intact all notices stating that this License and any
++non-permissive terms added in accord with section 7 apply to the code;
++keep intact all notices of the absence of any warranty; and give all
++recipients a copy of this License along with the Program.
++
++  You may charge any price or no price for each copy that you convey,
++and you may offer support or warranty protection for a fee.
++
++  5. Conveying Modified Source Versions.
++
++  You may convey a work based on the Program, or the modifications to
++produce it from the Program, in the form of source code under the
++terms of section 4, provided that you also meet all of these conditions:
++
++    a) The work must carry prominent notices stating that you modified
++    it, and giving a relevant date.
++
++    b) The work must carry prominent notices stating that it is
++    released under this License and any conditions added under section
++    7.  This requirement modifies the requirement in section 4 to
++    "keep intact all notices".
++
++    c) You must license the entire work, as a whole, under this
++    License to anyone who comes into possession of a copy.  This
++    License will therefore apply, along with any applicable section 7
++    additional terms, to the whole of the work, and all its parts,
++    regardless of how they are packaged.  This License gives no
++    permission to license the work in any other way, but it does not
++    invalidate such permission if you have separately received it.
++
++    d) If the work has interactive user interfaces, each must display
++    Appropriate Legal Notices; however, if the Program has interactive
++    interfaces that do not display Appropriate Legal Notices, your
++    work need not make them do so.
++
++  A compilation of a covered work with other separate and independent
++works, which are not by their nature extensions of the covered work,
++and which are not combined with it such as to form a larger program,
++in or on a volume of a storage or distribution medium, is called an
++"aggregate" if the compilation and its resulting copyright are not
++used to limit the access or legal rights of the compilation's users
++beyond what the individual works permit.  Inclusion of a covered work
++in an aggregate does not cause this License to apply to the other
++parts of the aggregate.
++
++  6. Conveying Non-Source Forms.
++
++  You may convey a covered work in object code form under the terms
++of sections 4 and 5, provided that you also convey the
++machine-readable Corresponding Source under the terms of this License,
++in one of these ways:
++
++    a) Convey the object code in, or embodied in, a physical product
++    (including a physical distribution medium), accompanied by the
++    Corresponding Source fixed on a durable physical medium
++    customarily used for software interchange.
++
++    b) Convey the object code in, or embodied in, a physical product
++    (including a physical distribution medium), accompanied by a
++    written offer, valid for at least three years and valid for as
++    long as you offer spare parts or customer support for that product
++    model, to give anyone who possesses the object code either (1) a
++    copy of the Corresponding Source for all the software in the
++    product that is covered by this License, on a durable physical
++    medium customarily used for software interchange, for a price no
++    more than your reasonable cost of physically performing this
++    conveying of source, or (2) access to copy the
++    Corresponding Source from a network server at no charge.
++
++    c) Convey individual copies of the object code with a copy of the
++    written offer to provide the Corresponding Source.  This
++    alternative is allowed only occasionally and noncommercially, and
++    only if you received the object code with such an offer, in accord
++    with subsection 6b.
++
++    d) Convey the object code by offering access from a designated
++    place (gratis or for a charge), and offer equivalent access to the
++    Corresponding Source in the same way through the same place at no
++    further charge.  You need not require recipients to copy the
++    Corresponding Source along with the object code.  If the place to
++    copy the object code is a network server, the Corresponding Source
++    may be on a different server (operated by you or a third party)
++    that supports equivalent copying facilities, provided you maintain
++    clear directions next to the object code saying where to find the
++    Corresponding Source.  Regardless of what server hosts the
++    Corresponding Source, you remain obligated to ensure that it is
++    available for as long as needed to satisfy these requirements.
++
++    e) Convey the object code using peer-to-peer transmission, provided
++    you inform other peers where the object code and Corresponding
++    Source of the work are being offered to the general public at no
++    charge under subsection 6d.
++
++  A separable portion of the object code, whose source code is excluded
++from the Corresponding Source as a System Library, need not be
++included in conveying the object code work.
++
++  A "User Product" is either (1) a "consumer product", which means any
++tangible personal property which is normally used for personal, family,
++or household purposes, or (2) anything designed or sold for incorporation
++into a dwelling.  In determining whether a product is a consumer product,
++doubtful cases shall be resolved in favor of coverage.  For a particular
++product received by a particular user, "normally used" refers to a
++typical or common use of that class of product, regardless of the status
++of the particular user or of the way in which the particular user
++actually uses, or expects or is expected to use, the product.  A product
++is a consumer product regardless of whether the product has substantial
++commercial, industrial or non-consumer uses, unless such uses represent
++the only significant mode of use of the product.
++
++  "Installation Information" for a User Product means any methods,
++procedures, authorization keys, or other information required to install
++and execute modified versions of a covered work in that User Product from
++a modified version of its Corresponding Source.  The information must
++suffice to ensure that the continued functioning of the modified object
++code is in no case prevented or interfered with solely because
++modification has been made.
++
++  If you convey an object code work under this section in, or with, or
++specifically for use in, a User Product, and the conveying occurs as
++part of a transaction in which the right of possession and use of the
++User Product is transferred to the recipient in perpetuity or for a
++fixed term (regardless of how the transaction is characterized), the
++Corresponding Source conveyed under this section must be accompanied
++by the Installation Information.  But this requirement does not apply
++if neither you nor any third party retains the ability to install
++modified object code on the User Product (for example, the work has
++been installed in ROM).
++
++  The requirement to provide Installation Information does not include a
++requirement to continue to provide support service, warranty, or updates
++for a work that has been modified or installed by the recipient, or for
++the User Product in which it has been modified or installed.  Access to a
++network may be denied when the modification itself materially and
++adversely affects the operation of the network or violates the rules and
++protocols for communication across the network.
++
++  Corresponding Source conveyed, and Installation Information provided,
++in accord with this section must be in a format that is publicly
++documented (and with an implementation available to the public in
++source code form), and must require no special password or key for
++unpacking, reading or copying.
++
++  7. Additional Terms.
++
++  "Additional permissions" are terms that supplement the terms of this
++License by making exceptions from one or more of its conditions.
++Additional permissions that are applicable to the entire Program shall
++be treated as though they were included in this License, to the extent
++that they are valid under applicable law.  If additional permissions
++apply only to part of the Program, that part may be used separately
++under those permissions, but the entire Program remains governed by
++this License without regard to the additional permissions.
++
++  When you convey a copy of a covered work, you may at your option
++remove any additional permissions from that copy, or from any part of
++it.  (Additional permissions may be written to require their own
++removal in certain cases when you modify the work.)  You may place
++additional permissions on material, added by you to a covered work,
++for which you have or can give appropriate copyright permission.
++
++  Notwithstanding any other provision of this License, for material you
++add to a covered work, you may (if authorized by the copyright holders of
++that material) supplement the terms of this License with terms:
++
++    a) Disclaiming warranty or limiting liability differently from the
++    terms of sections 15 and 16 of this License; or
++
++    b) Requiring preservation of specified reasonable legal notices or
++    author attributions in that material or in the Appropriate Legal
++    Notices displayed by works containing it; or
++
++    c) Prohibiting misrepresentation of the origin of that material, or
++    requiring that modified versions of such material be marked in
++    reasonable ways as different from the original version; or
++
++    d) Limiting the use for publicity purposes of names of licensors or
++    authors of the material; or
++
++    e) Declining to grant rights under trademark law for use of some
++    trade names, trademarks, or service marks; or
++
++    f) Requiring indemnification of licensors and authors of that
++    material by anyone who conveys the material (or modified versions of
++    it) with contractual assumptions of liability to the recipient, for
++    any liability that these contractual assumptions directly impose on
++    those licensors and authors.
++
++  All other non-permissive additional terms are considered "further
++restrictions" within the meaning of section 10.  If the Program as you
++received it, or any part of it, contains a notice stating that it is
++governed by this License along with a term that is a further
++restriction, you may remove that term.  If a license document contains
++a further restriction but permits relicensing or conveying under this
++License, you may add to a covered work material governed by the terms
++of that license document, provided that the further restriction does
++not survive such relicensing or conveying.
++
++  If you add terms to a covered work in accord with this section, you
++must place, in the relevant source files, a statement of the
++additional terms that apply to those files, or a notice indicating
++where to find the applicable terms.
++
++  Additional terms, permissive or non-permissive, may be stated in the
++form of a separately written license, or stated as exceptions;
++the above requirements apply either way.
++
++  8. Termination.
++
++  You may not propagate or modify a covered work except as expressly
++provided under this License.  Any attempt otherwise to propagate or
++modify it is void, and will automatically terminate your rights under
++this License (including any patent licenses granted under the third
++paragraph of section 11).
++
++  However, if you cease all violation of this License, then your
++license from a particular copyright holder is reinstated (a)
++provisionally, unless and until the copyright holder explicitly and
++finally terminates your license, and (b) permanently, if the copyright
++holder fails to notify you of the violation by some reasonable means
++prior to 60 days after the cessation.
++
++  Moreover, your license from a particular copyright holder is
++reinstated permanently if the copyright holder notifies you of the
++violation by some reasonable means, this is the first time you have
++received notice of violation of this License (for any work) from that
++copyright holder, and you cure the violation prior to 30 days after
++your receipt of the notice.
++
++  Termination of your rights under this section does not terminate the
++licenses of parties who have received copies or rights from you under
++this License.  If your rights have been terminated and not permanently
++reinstated, you do not qualify to receive new licenses for the same
++material under section 10.
++
++  9. Acceptance Not Required for Having Copies.
++
++  You are not required to accept this License in order to receive or
++run a copy of the Program.  Ancillary propagation of a covered work
++occurring solely as a consequence of using peer-to-peer transmission
++to receive a copy likewise does not require acceptance.  However,
++nothing other than this License grants you permission to propagate or
++modify any covered work.  These actions infringe copyright if you do
++not accept this License.  Therefore, by modifying or propagating a
++covered work, you indicate your acceptance of this License to do so.
++
++  10. Automatic Licensing of Downstream Recipients.
++
++  Each time you convey a covered work, the recipient automatically
++receives a license from the original licensors, to run, modify and
++propagate that work, subject to this License.  You are not responsible
++for enforcing compliance by third parties with this License.
++
++  An "entity transaction" is a transaction transferring control of an
++organization, or substantially all assets of one, or subdividing an
++organization, or merging organizations.  If propagation of a covered
++work results from an entity transaction, each party to that
++transaction who receives a copy of the work also receives whatever
++licenses to the work the party's predecessor in interest had or could
++give under the previous paragraph, plus a right to possession of the
++Corresponding Source of the work from the predecessor in interest, if
++the predecessor has it or can get it with reasonable efforts.
++
++  You may not impose any further restrictions on the exercise of the
++rights granted or affirmed under this License.  For example, you may
++not impose a license fee, royalty, or other charge for exercise of
++rights granted under this License, and you may not initiate litigation
++(including a cross-claim or counterclaim in a lawsuit) alleging that
++any patent claim is infringed by making, using, selling, offering for
++sale, or importing the Program or any portion of it.
++
++  11. Patents.
++
++  A "contributor" is a copyright holder who authorizes use under this
++License of the Program or a work on which the Program is based.  The
++work thus licensed is called the contributor's "contributor version".
++
++  A contributor's "essential patent claims" are all patent claims
++owned or controlled by the contributor, whether already acquired or
++hereafter acquired, that would be infringed by some manner, permitted
++by this License, of making, using, or selling its contributor version,
++but do not include claims that would be infringed only as a
++consequence of further modification of the contributor version.  For
++purposes of this definition, "control" includes the right to grant
++patent sublicenses in a manner consistent with the requirements of
++this License.
++
++  Each contributor grants you a non-exclusive, worldwide, royalty-free
++patent license under the contributor's essential patent claims, to
++make, use, sell, offer for sale, import and otherwise run, modify and
++propagate the contents of its contributor version.
++
++  In the following three paragraphs, a "patent license" is any express
++agreement or commitment, however denominated, not to enforce a patent
++(such as an express permission to practice a patent or covenant not to
++sue for patent infringement).  To "grant" such a patent license to a
++party means to make such an agreement or commitment not to enforce a
++patent against the party.
++
++  If you convey a covered work, knowingly relying on a patent license,
++and the Corresponding Source of the work is not available for anyone
++to copy, free of charge and under the terms of this License, through a
++publicly available network server or other readily accessible means,
++then you must either (1) cause the Corresponding Source to be so
++available, or (2) arrange to deprive yourself of the benefit of the
++patent license for this particular work, or (3) arrange, in a manner
++consistent with the requirements of this License, to extend the patent
++license to downstream recipients.  "Knowingly relying" means you have
++actual knowledge that, but for the patent license, your conveying the
++covered work in a country, or your recipient's use of the covered work
++in a country, would infringe one or more identifiable patents in that
++country that you have reason to believe are valid.
++
++  If, pursuant to or in connection with a single transaction or
++arrangement, you convey, or propagate by procuring conveyance of, a
++covered work, and grant a patent license to some of the parties
++receiving the covered work authorizing them to use, propagate, modify
++or convey a specific copy of the covered work, then the patent license
++you grant is automatically extended to all recipients of the covered
++work and works based on it.
++
++  A patent license is "discriminatory" if it does not include within
++the scope of its coverage, prohibits the exercise of, or is
++conditioned on the non-exercise of one or more of the rights that are
++specifically granted under this License.  You may not convey a covered
++work if you are a party to an arrangement with a third party that is
++in the business of distributing software, under which you make payment
++to the third party based on the extent of your activity of conveying
++the work, and under which the third party grants, to any of the
++parties who would receive the covered work from you, a discriminatory
++patent license (a) in connection with copies of the covered work
++conveyed by you (or copies made from those copies), or (b) primarily
++for and in connection with specific products or compilations that
++contain the covered work, unless you entered into that arrangement,
++or that patent license was granted, prior to 28 March 2007.
++
++  Nothing in this License shall be construed as excluding or limiting
++any implied license or other defenses to infringement that may
++otherwise be available to you under applicable patent law.
++
++  12. No Surrender of Others' Freedom.
++
++  If conditions are imposed on you (whether by court order, agreement or
++otherwise) that contradict the conditions of this License, they do not
++excuse you from the conditions of this License.  If you cannot convey a
++covered work so as to satisfy simultaneously your obligations under this
++License and any other pertinent obligations, then as a consequence you may
++not convey it at all.  For example, if you agree to terms that obligate you
++to collect a royalty for further conveying from those to whom you convey
++the Program, the only way you could satisfy both those terms and this
++License would be to refrain entirely from conveying the Program.
++
++  13. Use with the GNU Affero General Public License.
++
++  Notwithstanding any other provision of this License, you have
++permission to link or combine any covered work with a work licensed
++under version 3 of the GNU Affero General Public License into a single
++combined work, and to convey the resulting work.  The terms of this
++License will continue to apply to the part which is the covered work,
++but the special requirements of the GNU Affero General Public License,
++section 13, concerning interaction through a network will apply to the
++combination as such.
++
++  14. Revised Versions of this License.
++
++  The Free Software Foundation may publish revised and/or new versions of
++the GNU General Public License from time to time.  Such new versions will
++be similar in spirit to the present version, but may differ in detail to
++address new problems or concerns.
++
++  Each version is given a distinguishing version number.  If the
++Program specifies that a certain numbered version of the GNU General
++Public License "or any later version" applies to it, you have the
++option of following the terms and conditions either of that numbered
++version or of any later version published by the Free Software
++Foundation.  If the Program does not specify a version number of the
++GNU General Public License, you may choose any version ever published
++by the Free Software Foundation.
++
++  If the Program specifies that a proxy can decide which future
++versions of the GNU General Public License can be used, that proxy's
++public statement of acceptance of a version permanently authorizes you
++to choose that version for the Program.
++
++  Later license versions may give you additional or different
++permissions.  However, no additional obligations are imposed on any
++author or copyright holder as a result of your choosing to follow a
++later version.
++
++  15. Disclaimer of Warranty.
++
++  THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY
++APPLICABLE LAW.  EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT
++HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM "AS IS" WITHOUT WARRANTY
++OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO,
++THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
++PURPOSE.  THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM
++IS WITH YOU.  SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF
++ALL NECESSARY SERVICING, REPAIR OR CORRECTION.
++
++  16. Limitation of Liability.
++
++  IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
++WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MODIFIES AND/OR CONVEYS
++THE PROGRAM AS PERMITTED ABOVE, BE LIABLE TO YOU FOR DAMAGES, INCLUDING ANY
++GENERAL, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE
++USE OR INABILITY TO USE THE PROGRAM (INCLUDING BUT NOT LIMITED TO LOSS OF
++DATA OR DATA BEING RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD
++PARTIES OR A FAILURE OF THE PROGRAM TO OPERATE WITH ANY OTHER PROGRAMS),
++EVEN IF SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
++SUCH DAMAGES.
++
++  17. Interpretation of Sections 15 and 16.
++
++  If the disclaimer of warranty and limitation of liability provided
++above cannot be given local legal effect according to their terms,
++reviewing courts shall apply local law that most closely approximates
++an absolute waiver of all civil liability in connection with the
++Program, unless a warranty or assumption of liability accompanies a
++copy of the Program in return for a fee.
++
++                     END OF TERMS AND CONDITIONS
++
++            How to Apply These Terms to Your New Programs
++
++  If you develop a new program, and you want it to be of the greatest
++possible use to the public, the best way to achieve this is to make it
++free software which everyone can redistribute and change under these terms.
++
++  To do so, attach the following notices to the program.  It is safest
++to attach them to the start of each source file to most effectively
++state the exclusion of warranty; and each file should have at least
++the "copyright" line and a pointer to where the full notice is found.
++
++    <one line to give the program's name and a brief idea of what it does.>
++    Copyright (C) <year>  <name of author>
++
++    This program is free software: you can redistribute it and/or modify
++    it under the terms of the GNU General Public License as published by
++    the Free Software Foundation, either version 3 of the License, or
++    (at your option) any later version.
++
++    This program is distributed in the hope that it will be useful,
++    but WITHOUT ANY WARRANTY; without even the implied warranty of
++    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++    GNU General Public License for more details.
++
++    You should have received a copy of the GNU General Public License
++    along with this program.  If not, see <http://www.gnu.org/licenses/>.
++
++Also add information on how to contact you by electronic and paper mail.
++
++  If the program does terminal interaction, make it output a short
++notice like this when it starts in an interactive mode:
++
++    <program>  Copyright (C) <year>  <name of author>
++    This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
++    This is free software, and you are welcome to redistribute it
++    under certain conditions; type `show c' for details.
++
++The hypothetical commands `show w' and `show c' should show the appropriate
++parts of the General Public License.  Of course, your program's commands
++might be different; for a GUI interface, you would use an "about box".
++
++  You should also get your employer (if you work as a programmer) or school,
++if any, to sign a "copyright disclaimer" for the program, if necessary.
++For more information on this, and how to apply and follow the GNU GPL, see
++<http://www.gnu.org/licenses/>.
++
++  The GNU General Public License does not permit incorporating your program
++into proprietary programs.  If your program is a subroutine library, you
++may consider it more useful to permit linking proprietary applications with
++the library.  If this is what you want to do, use the GNU Lesser General
++Public License instead of this License.  But first, please read
++<http://www.gnu.org/philosophy/why-not-lgpl.html>.
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/Makefile.am indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/Makefile.am
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/Makefile.am	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,9 @@
++SUBDIRS = data po src
++
++EXTRA_DIST = \
++  autogen.sh \
++  NEWS \
++  vapi/config.vapi \
++  vapi/rfkill.vapi
++
++DISTCHECK_CONFIGURE_FLAGS = --enable-localinstall
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/NEWS indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/NEWS
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/NEWS	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/NEWS	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,38 @@
++Overview of changes in indicator-bluetooth 13.10.0
++
++    * Add phone profile
++    * Remove dbusmenu, gtk, libindicator dependencies
++    * Remove gnome-bluetooth runtime dependency in phone profile
++
++Overview of changes in indicator-bluetooth 0.0.6
++
++    * Add "Set Up New Device" menu item
++    * Only show indicator if Bluetooth adapter present
++    * Support existing gsettings key to disable indicator
++
++Overview of changes in indicator-bluetooth 0.0.5
++
++    * Add license file
++    * Update copyright date
++
++Overview of changes in indicator-bluetooth 0.0.4
++
++    * Stop items being duplicated on resume from suspend
++
++Overview of changes in indicator-bluetooth 0.0.3
++
++    * Fix service file having incorrect path
++    * Set useful values for accessible description
++
++Overview of changes in indicator-bluetooth 0.0.2
++
++    * Stop feedback loop when settings changed outside of indicator
++    * Implement disconnecting from devices
++    * Add accessible description
++    * Hide devices without controls
++    * Change enable label to match design
++    * Added translations
++
++Overview of changes in indicator-bluetooth 0.0.1
++
++    * First release
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/autogen.sh indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/autogen.sh
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/autogen.sh	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/autogen.sh	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,12 @@
++#!/bin/sh
++
++PKG_NAME="indicator-bluetooth"
++
++which gnome-autogen.sh || {
++	echo "You need gnome-common"
++	exit 1
++}
++
++USE_GNOME2_MACROS=1 \
++. gnome-autogen.sh
++
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/configure.ac indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/configure.ac
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/configure.ac	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/configure.ac	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,64 @@
++AC_INIT([indicator-bluetooth],[13.10.0])
++AM_INIT_AUTOMAKE([1.11 no-dist-gzip dist-xz foreign])
++AC_CONFIG_HEADERS([config.h])
++AM_SILENT_RULES([yes])
++AM_MAINTAINER_MODE
++
++AM_PROG_VALAC([0.16.0])
++AM_PROG_CC_C_O
++LT_INIT
++
++GLIB_GSETTINGS
++
++dnl ###########################################################################
++dnl Dependencies
++dnl ###########################################################################
++
++GLIB_REQUIRED_VERSION=2.36
++GIO_REQUIRED_VERSION=2.36
++URL_DISPATCHER_1_REQUIRED_VERSION=1
++
++PKG_CHECK_MODULES(SERVICE_DEPS, [glib-2.0 >= $GLIB_REQUIRED_VERSION
++                                 gio-unix-2.0 >= $GIO_REQUIRED_VERSION
++                                 url-dispatcher-1 >= $URL_DISPATCHER_1_REQUIRED_VERSION])
++
++
++dnl ##############################
++dnl # Custom Junk
++dnl ##############################
++
++AC_DEFUN([AC_DEFINE_PATH], [
++        test "x$prefix" = xNONE && prefix="$ac_default_prefix"
++        test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
++        ac_define_path=`eval echo [$]$2`
++        ac_define_path=`eval echo [$]ac_define_path`
++        $1="$ac_define_path"
++        AC_SUBST($1)
++        ifelse($3, ,
++                AC_DEFINE_UNQUOTED($1, "$ac_define_path"),
++                AC_DEFINE_UNQUOTED($1, "$ac_define_path", $3))
++])
++
++dnl ###########################
++dnl # Internationalization
++dnl ###########################
++
++IT_PROG_INTLTOOL([0.41.0])
++
++GETTEXT_PACKAGE=indicator-bluetooth
++AC_SUBST(GETTEXT_PACKAGE)
++AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Name of the default get text domain])
++AC_DEFINE_PATH(GNOMELOCALEDIR, "${datadir}/locale", [locale directory])
++
++AM_GLIB_GNU_GETTEXT
++
++dnl ###########################################################################
++dnl Files to generate
++dnl ###########################################################################
++
++AC_OUTPUT([
++Makefile
++data/Makefile
++po/Makefile.in
++src/Makefile
++])
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/Makefile.am indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/Makefile.am
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/Makefile.am	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,23 @@
++
++# the indicator bus file
++indicatorsdir = $(datadir)/unity/indicators
++dist_indicators_DATA = com.canonical.indicator.bluetooth
++
++# the dbus service file
++dbus_servicesdir = $(datadir)/dbus-1/services
++dbus_services_DATA = indicator-bluetooth.service
++
++%.service: %.service.in
++	sed -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
++
++gsettings_SCHEMAS = com.canonical.indicator.bluetooth.gschema.xml
++@INTLTOOL_XML_NOMERGE_RULE@
++@GSETTINGS_RULES@
++
++EXTRA_DIST = \
++  indicator-bluetooth.service.in \
++  com.canonical.indicator.bluetooth.gschema.xml.in
++
++CLEANFILES = \
++  $(dbus_services_DATA) \
++  $(gsettings_SCHEMAS)
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,17 @@
++[Indicator Service]
++Name=indicator-bluetooth
++ObjectPath=/com/canonical/indicator/bluetooth
++Position=70
++
++[desktop]
++ObjectPath=/com/canonical/indicator/bluetooth/desktop
++
++[phone]
++ObjectPath=/com/canonical/indicator/bluetooth/phone
++
++[ubiquity]
++ObjectPath=/com/canonical/indicator/bluetooth/desktop
++
++[phone_greeter]
++ObjectPath=/com/canonical/indicator/bluetooth/phone
++
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth.gschema.xml.in indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth.gschema.xml.in
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth.gschema.xml.in	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/com.canonical.indicator.bluetooth.gschema.xml.in	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,9 @@
++<schemalist>
++  <schema id="com.canonical.indicator.bluetooth" path="/com/canonical/indicator/bluetooth/">
++    <key name="visible" type="b">
++      <default>true</default>
++      <_summary>Whether or not to show the bluetooth indicator in the menu bar.</_summary>
++      <_description>Whether or not to show the bluetooth indicator in the menu bar.</_description>
++    </key>
++  </schema>
++</schemalist>
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/indicator-bluetooth.service.in indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/indicator-bluetooth.service.in
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/indicator-bluetooth.service.in	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/data/indicator-bluetooth.service.in	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,3 @@
++[D-BUS Service]
++Name=com.canonical.indicator.bluetooth
++Exec=@pkglibexecdir@/indicator-bluetooth-service
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/LINGUAS indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/LINGUAS
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/LINGUAS	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/LINGUAS	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,4 @@
++ca
++es
++fr
++pl
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.in indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.in
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.in	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.in	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,15 @@
++# List of source files containing translatable strings.
++# Please keep this file in alphabetical order.
++[encoding: UTF-8]
++data/com.canonical.indicator.bluetooth.gschema.xml.in
++src/bluetooth.vala
++src/bluez.vala
++src/desktop.vala
++src/device.vala
++src/killswitch.vala
++src/main.vala
++src/org-bluez.vala
++src/phone.vala
++src/profile.vala
++src/service.vala
++
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.skip indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.skip
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.skip	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/POTFILES.skip	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,6 @@
++src/bluez.c
++src/desktop.c
++src/indicator-bluetooth.c
++src/indicator-bluetooth-service.c
++src/phone.c
++src/profile.c
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/ca.po indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/ca.po
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/ca.po	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/ca.po	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,54 @@
++# Catalan translation for indicator-bluetooth
++# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
++# This file is distributed under the same license as the indicator-bluetooth package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: indicator-bluetooth\n"
++"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
++"POT-Creation-Date: 2012-12-06 16:29+1300\n"
++"PO-Revision-Date: 2012-12-08 11:18+0000\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: Catalan <ca@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Launchpad-Export-Date: 2013-01-08 06:02+0000\n"
++"X-Generator: Launchpad (build 16402)\n"
++
++#: ../src/indicator-bluetooth-service.vala:48
++msgid "Enabled"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:62
++msgid "Visible"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:111
++msgid "Bluetooth Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:253
++msgid "Connection"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:276
++msgid "Send files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:284
++msgid "Browse files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:293
++msgid "Keyboard Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:301
++msgid "Mouse and Touchpad Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:310
++msgid "Sound Settings..."
++msgstr ""
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/es.po indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/es.po
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/es.po	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/es.po	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,54 @@
++# Spanish translation for indicator-bluetooth
++# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
++# This file is distributed under the same license as the indicator-bluetooth package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: indicator-bluetooth\n"
++"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
++"POT-Creation-Date: 2012-12-06 16:29+1300\n"
++"PO-Revision-Date: 2012-12-15 04:40+0000\n"
++"Last-Translator: Adolfo Jayme Barrientos <fitoschido@gmail.com>\n"
++"Language-Team: Spanish <es@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Launchpad-Export-Date: 2013-01-08 06:02+0000\n"
++"X-Generator: Launchpad (build 16402)\n"
++
++#: ../src/indicator-bluetooth-service.vala:48
++msgid "Enabled"
++msgstr "Activado"
++
++#: ../src/indicator-bluetooth-service.vala:62
++msgid "Visible"
++msgstr "Visible"
++
++#: ../src/indicator-bluetooth-service.vala:111
++msgid "Bluetooth Settings..."
++msgstr "Configuración de Bluetooth…"
++
++#: ../src/indicator-bluetooth-service.vala:253
++msgid "Connection"
++msgstr "Conexión"
++
++#: ../src/indicator-bluetooth-service.vala:276
++msgid "Send files..."
++msgstr "Enviar archivos…"
++
++#: ../src/indicator-bluetooth-service.vala:284
++msgid "Browse files..."
++msgstr "Examinar archivos…"
++
++#: ../src/indicator-bluetooth-service.vala:293
++msgid "Keyboard Settings..."
++msgstr "Configuración del teclado…"
++
++#: ../src/indicator-bluetooth-service.vala:301
++msgid "Mouse and Touchpad Settings..."
++msgstr "Configuración del ratón y touchpad…"
++
++#: ../src/indicator-bluetooth-service.vala:310
++msgid "Sound Settings..."
++msgstr "Configuración de sonido…"
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/fr.po indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/fr.po
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/fr.po	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/fr.po	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,54 @@
++# French translation for indicator-bluetooth
++# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
++# This file is distributed under the same license as the indicator-bluetooth package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: indicator-bluetooth\n"
++"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
++"POT-Creation-Date: 2012-12-06 16:29+1300\n"
++"PO-Revision-Date: 2013-01-23 15:19+0000\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: French <fr@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Launchpad-Export-Date: 2013-01-24 05:34+0000\n"
++"X-Generator: Launchpad (build 16445)\n"
++
++#: ../src/indicator-bluetooth-service.vala:48
++msgid "Enabled"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:62
++msgid "Visible"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:111
++msgid "Bluetooth Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:253
++msgid "Connection"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:276
++msgid "Send files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:284
++msgid "Browse files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:293
++msgid "Keyboard Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:301
++msgid "Mouse and Touchpad Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:310
++msgid "Sound Settings..."
++msgstr ""
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/pl.po indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/pl.po
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/pl.po	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/po/pl.po	2013-12-09 12:07:53.794016358 +0100
+@@ -0,0 +1,54 @@
++# Polish translation for indicator-bluetooth
++# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
++# This file is distributed under the same license as the indicator-bluetooth package.
++# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: indicator-bluetooth\n"
++"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
++"POT-Creation-Date: 2012-12-06 16:29+1300\n"
++"PO-Revision-Date: 2013-01-14 21:45+0000\n"
++"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
++"Language-Team: Polish <pl@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=UTF-8\n"
++"Content-Transfer-Encoding: 8bit\n"
++"X-Launchpad-Export-Date: 2013-01-15 05:31+0000\n"
++"X-Generator: Launchpad (build 16420)\n"
++
++#: ../src/indicator-bluetooth-service.vala:48
++msgid "Enabled"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:62
++msgid "Visible"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:111
++msgid "Bluetooth Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:253
++msgid "Connection"
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:276
++msgid "Send files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:284
++msgid "Browse files..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:293
++msgid "Keyboard Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:301
++msgid "Mouse and Touchpad Settings..."
++msgstr ""
++
++#: ../src/indicator-bluetooth-service.vala:310
++msgid "Sound Settings..."
++msgstr ""
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/Makefile.am indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/Makefile.am
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/Makefile.am	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/Makefile.am	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,38 @@
++pkglibexec_PROGRAMS = indicator-bluetooth-service
++
++indicator_bluetooth_service_SOURCES = \
++	org-bluez.vala \
++	bluetooth.vala \
++	bluez.vala \
++	desktop.vala \
++	device.vala \
++	main.vala \
++	phone.vala \
++	profile.vala \
++	killswitch.vala \
++	service.vala
++
++indicator_bluetooth_service_VALAFLAGS = \
++	--ccode \
++	--vapidir=$(top_srcdir)/vapi/ \
++	--vapidir=./ \
++	--pkg config \
++	--pkg rfkill \
++	--pkg url-dispatcher \
++	--pkg posix \
++	--pkg glib-2.0 \
++	--pkg gio-2.0
++
++# -w to disable warnings for vala-generated code
++indicator_bluetooth_service_CFLAGS = \
++	-DGETTEXT_PACKAGE=\"$(GETTEXT_PACKAGE)\" \
++	-DLOCALE_DIR=\"$(datadir)/locale\" \
++	-w \
++	$(SERVICE_DEPS_CFLAGS)
++
++indicator_bluetooth_service_LDADD = \
++	$(SERVICE_DEPS_LIBS)
++
++CLEANFILES = \
++	$(patsubst %.vala,%.c,$(filter %.vala, $(SOURCES))) \
++	*_vala.stamp
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluetooth.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluetooth.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluetooth.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluetooth.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,52 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++
++/**
++ * Abstract interface for the Bluetooth backend.
++ */
++public interface Bluetooth: Object
++{
++  /* True if there are any bluetooth adapters on this system.
++     This work as a proxy for "does this hardware support bluetooth?" */
++  public abstract bool supported { get; protected set; }
++
++  /* True if bluetooth's enabled on this system.
++     Bluetooth can be soft-blocked by software and hard-blocked physically,
++     eg by a laptop's network killswitch */
++  public abstract bool enabled { get; protected set; }
++
++  /* Try to enable/disable bluetooth. This can fail if it's overridden
++     by the system, eg by a laptop's network killswitch */
++  public abstract void try_set_enabled (bool b);
++
++  /* True if our system can be seen by other bluetooth devices */
++  public abstract bool discoverable { get; protected set; }
++  public abstract void try_set_discoverable (bool discoverable);
++
++  /* Get a list of the Device structs that we know about */
++  public abstract List<unowned Device> get_devices ();
++
++  /* Emitted when one or more of the devices is added, removed, or changed */
++  public signal void devices_changed ();
++
++  /* Try to connect/disconnect a particular device.
++     The device_key argument comes from the Device struct */
++  public abstract void set_device_connected (uint device_key, bool connected);
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluez.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluez.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluez.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/bluez.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,481 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ *   Robert Ancell <robert.ancell@canonical.com>
++ */
++
++
++/**
++ * Bluetooth implementaion which uses org.bluez on DBus 
++ */
++public class Bluez: Bluetooth, Object
++{
++  uint next_device_id = 1;
++  org.bluez.Manager manager;
++  org.bluez.Adapter default_adapter;
++
++  private bool _powered = false;
++
++  private bool powered {
++    get { return _powered; }
++    set { _powered = value; update_enabled(); }
++  }
++
++  private KillSwitch killswitch = null;
++
++  private string adapter_path = null;
++
++  private DBusConnection bus = null;
++
++  /* maps an org.bluez.Device's object_path to the org.bluez.Device proxy */
++  HashTable<string,org.bluez.Device> path_to_proxy;
++
++  /* maps an org.bluez.Device's object_path to our arbitrary unique id */
++  HashTable<string,uint> path_to_id;
++
++  /* maps our arbitrary unique id to an org.bluez.Device's object path */
++  HashTable<uint,string> id_to_path;
++
++  /* maps our arbitrary unique id to a Bluetooth.Device struct for public consumption */
++  HashTable<uint,Device> id_to_device;
++
++  public Bluez (KillSwitch? killswitch)
++  {
++    try
++      {
++        bus = Bus.get_sync (BusType.SYSTEM);
++      }
++    catch (Error e)
++      {
++        critical (@"$(e.message)");
++      }
++
++    if ((killswitch != null) && (killswitch.is_valid()))
++      {
++        this.killswitch = killswitch;
++        killswitch.notify["blocked"].connect (() => update_enabled());
++        update_enabled ();
++      }
++
++    id_to_path    = new HashTable<uint,string> (direct_hash, direct_equal);
++    id_to_device  = new HashTable<uint,Device> (direct_hash, direct_equal);
++    path_to_id    = new HashTable<string,uint> (str_hash, str_equal);
++    path_to_proxy = new HashTable<string,org.bluez.Device> (str_hash, str_equal);
++
++    reset_manager ();
++  }
++
++  private void reset_manager ()
++  {
++    string new_adapter_path = null;
++    try
++      {
++        manager = bus.get_proxy_sync ("org.bluez", "/");
++
++        // if the default adapter changes, update our connections
++        manager.default_adapter_changed.connect ((object_path)
++            => on_default_adapter_changed (object_path));
++
++        // if the current adapter disappears, call clear_adapter()
++        manager.adapter_removed.connect ((object_path) => { 
++            if (object_path == adapter_path)
++              clear_adapter ();
++        });
++
++        // get the current default adapter & watch for future default adapters
++        new_adapter_path = manager.default_adapter ();
++      }
++    catch (Error e)
++      {
++        critical (@"$(e.message)");
++      }
++
++    on_default_adapter_changed (new_adapter_path);
++  }
++
++  private void clear_adapter ()
++  {
++    if (adapter_path != null)
++      debug (@"clearing adapter; was using $adapter_path");
++
++    path_to_proxy.remove_all ();
++    path_to_id.remove_all ();
++    id_to_path.remove_all ();
++    id_to_device.remove_all ();
++
++    default_adapter = null;
++    adapter_path = null;
++
++    discoverable = false;
++    powered = false;
++  }
++
++  void on_default_adapter_changed (string? object_path)
++  {
++    clear_adapter ();
++
++    if (object_path != null) try
++      {
++        adapter_path = object_path;
++        default_adapter = Bus.get_proxy_sync (BusType.SYSTEM,
++                                              "org.bluez",
++                                              adapter_path);
++
++        default_adapter.property_changed.connect (()
++            => on_default_adapter_properties_changed ());
++
++        default_adapter.device_removed.connect ((adapter, path) => {
++          var id = path_to_id.lookup (path);
++          path_to_id.remove (path);
++          id_to_path.remove (id);
++          id_to_device.remove (id);
++          devices_changed ();
++        });
++
++        default_adapter.device_created.connect ((adapter, path)
++            => add_device (path));
++
++        foreach (var device_path in default_adapter.list_devices ())
++          add_device (device_path);
++      }
++    catch (Error e)
++     {
++       critical (@"$(e.message)");
++     }
++
++    on_default_adapter_properties_changed ();
++  }
++
++  /* When the default adapter's properties change,
++     update our own properties "powered" and "discoverable" */
++  private void on_default_adapter_properties_changed ()
++  {
++    bool is_discoverable = false;
++    bool is_powered = false;
++
++    if (default_adapter != null) try
++      {
++        var properties = default_adapter.get_properties ();
++
++        var v = properties.lookup ("Discoverable");
++        is_discoverable = (v != null) && v.get_boolean ();
++
++        v = properties.lookup ("Powered");
++        is_powered = (v != null) && v.get_boolean ();
++      }
++    catch (Error e) 
++     {
++       critical (@"$(e.message)");
++     }
++
++    powered = is_powered;
++    discoverable = is_discoverable;
++  }
++
++  ////
++  ////  bluetooth device UUIDs
++  ////
++
++  private static uint16 get_uuid16_from_uuid_string (string uuid)
++  {
++    uint16 uuid16;
++
++    string[] tokens = uuid.split ("-", 1);
++    if (tokens.length > 0)
++      uuid16 = (uint16) uint64.parse ("0x"+tokens[0]);
++    else
++      uuid16 = 0;
++
++    return uuid16;
++  }
++
++  // A device supports file transfer if OBEXObjectPush is in its uuid list
++  private bool device_supports_file_transfer (uint16[] uuids)
++  {
++    foreach (var uuid16 in uuids)
++      if (uuid16 == 0x1105) // OBEXObjectPush
++        return true;
++
++    return false;
++  }
++
++  // A device supports browsing if OBEXFileTransfer is in its uuid list
++  private bool device_supports_browsing (uint16[] uuids)
++  {
++    foreach (var uuid16 in uuids)
++      if (uuid16 == 0x1106) // OBEXFileTransfer
++        return true;
++
++    return false;
++  }
++
++  ////
++  ////  Connectable Interfaces
++  ////
++
++  /* Headsets, Audio Sinks, and Input devices are connectable.
++   *
++   * This continues the behavior of the old gnome-bluetooth indicator.
++   * But are there other interfaces we care about? */
++  private DBusInterfaceInfo[] get_connectable_interfaces (DBusProxy device)
++  {
++    DBusInterfaceInfo[] connectable_interfaces = {};
++
++    try
++      {
++        var iname = "org.freedesktop.DBus.Introspectable.Introspect";
++        var intro = device.call_sync (iname, null, DBusCallFlags.NONE, -1);
++
++        if ((intro != null) && (intro.n_children() > 0))
++          {
++            var xml = intro.get_child_value(0).get_string();
++            var info = new DBusNodeInfo.for_xml (xml);
++            if (info != null)
++              {
++                foreach (var i in info.interfaces)
++                  {
++                    if ((i.name == "org.bluez.AudioSink") ||
++                        (i.name == "org.bluez.Headset") ||
++                        (i.name == "org.bluez.Input"))
++                      {
++                        connectable_interfaces += i;
++                      }
++                  }
++              }
++          }
++      }
++    catch (Error e)
++      {
++       critical (@"$(e.message)");
++      }
++
++    return connectable_interfaces;
++  }
++
++  private bool device_is_connectable (DBusProxy device)
++  {
++    return get_connectable_interfaces (device).length > 0;
++  }
++
++  // call "Connect" on the specified interface
++  private void device_connect_on_interface (DBusProxy proxy,
++                                            string interface_name)
++  {
++    var object_path = proxy.get_object_path ();
++
++    debug (@"trying to connect to $object_path: $(interface_name)");
++
++    try
++      {
++        bus.call_sync ("org.bluez", object_path, interface_name,
++                       "Connect", null, null, DBusCallFlags.NONE, -1);
++      }
++    catch (Error e)
++      {
++        debug (@"$object_path $interface_name.Connect() failed: $(e.message)");
++      }
++  }
++
++  private void device_connect (org.bluez.Device device)
++  {
++    DBusProxy proxy = device as DBusProxy;
++
++    // call "Connect" on all the interfaces that support it
++    foreach (var i in get_connectable_interfaces (proxy))
++      device_connect_on_interface (proxy, i.name);
++  }
++
++  private void device_disconnect (org.bluez.Device device)
++  {
++    try
++      {
++        device.disconnect ();
++      }
++    catch (Error e)
++      {
++        var object_path = (device as DBusProxy).get_object_path ();
++        critical (@"Unable to disconnect $object_path: $(e.message)");
++      }
++  }
++
++  ////
++  ////  Device Upkeep
++  ////
++
++  private void add_device (string object_path)
++  {
++    if (!path_to_proxy.contains (object_path))
++      {
++        try
++          {
++            org.bluez.Device device = Bus.get_proxy_sync (BusType.SYSTEM,
++                                                          "org.bluez",
++                                                          object_path);
++            path_to_proxy.insert (object_path, device);
++            device.property_changed.connect(() => update_device (device)); 
++            update_device (device);
++          }
++        catch (Error e)
++          {
++            critical (@"$(e.message)");
++          }
++      }
++  }
++
++  /* Update our public Device struct from the org.bluez.Device's properties.
++   *
++   * This is called when we first walk through bluez' Devices on startup,
++   * when the org.bluez.Adapter gets a new device,
++   * and when a device's properties change s.t. we need to rebuild the proxy.
++   */
++  private void update_device (org.bluez.Device device_proxy)
++  {
++    HashTable<string, GLib.Variant> properties;
++
++    try {
++      properties = device_proxy.get_properties ();
++    } catch (Error e) {
++      critical (@"$(e.message)");
++      return;
++    }
++
++    // look up our id for this device.
++    // if we don't have one yet, create one.
++    var object_path = (device_proxy as DBusProxy).get_object_path();
++    var id = path_to_id.lookup (object_path);
++    if (id == 0)
++      {
++        id = next_device_id ++;
++        id_to_path.insert (id, object_path);
++        path_to_id.insert (object_path, id);
++      }
++
++    // look up the device's type
++    Device.Type type;
++    var v = properties.lookup ("Class");
++    if (v == null)
++      type = Device.Type.OTHER;
++    else 
++      type = Device.class_to_device_type (v.get_uint32());
++
++    // look up the device's human-readable name
++    v = properties.lookup ("Alias");
++    if (v == null)
++      v = properties.lookup ("Name");
++    var name = v == null ? _("Unknown") : v.get_string ();
++
++    // look up the device's bus address
++    v = properties.lookup ("Address");
++    var address = v.get_string ();
++
++    // look up the device's bus address
++    v = properties.lookup ("Icon");
++    var icon = new ThemedIcon (v != null ? v.get_string() : "unknown");
++
++    // derive a Connectable flag for this device
++    var is_connectable = device_is_connectable (device_proxy as DBusProxy);
++
++    // look up the device's Connected flag
++    v = properties.lookup ("Connected");
++    var is_connected = (v != null) && v.get_boolean ();
++
++    // derive the uuid-related attributes we care about
++    v = properties.lookup ("UUIDs");
++    string[] uuid_strings = v.dup_strv ();
++    uint16[] uuids = {};
++    foreach (var s in uuid_strings)
++      uuids += get_uuid16_from_uuid_string (s);
++    var supports_browsing = device_supports_browsing (uuids);
++    var supports_file_transfer = device_supports_file_transfer (uuids);
++
++    // update our lookup table with these new attributes
++    id_to_device.insert (id, new Device (id,
++                                         type,
++                                         name,
++                                         address,
++                                         icon,
++                                         is_connectable,
++                                         is_connected,
++                                         supports_browsing,
++                                         supports_file_transfer));
++
++    devices_changed ();
++  }
++
++  /* update the 'enabled' property by looking at the killswitch state
++     and the 'powered' property state */
++  void update_enabled ()
++  {
++    var blocked = (killswitch != null) && killswitch.blocked;
++    debug (@"in upate_enabled, powered is $powered, blocked is $blocked");
++    enabled = powered && !blocked;
++  }
++    
++
++  ////
++  ////  Public API
++  ////
++
++  public void set_device_connected (uint id, bool connected)
++  {
++    var device = id_to_device.lookup (id);
++    var path = id_to_path.lookup (id);
++    var proxy = (path != null) ? path_to_proxy.lookup (path) : null;
++
++    if ((proxy != null)
++        && (device != null)
++        && (device.is_connected != connected))
++      {
++        if (connected)
++          device_connect (proxy);
++        else
++          device_disconnect (proxy);
++      }
++  }
++
++  public void try_set_discoverable (bool b)
++  {
++    if (discoverable != b)
++      {
++        default_adapter.set_property.begin ("Discoverable", new Variant.boolean (b));
++      }
++  }
++
++  public List<unowned Device> get_devices ()
++  {
++    return id_to_device.get_values();
++  }
++
++  public bool supported { get; protected set; default = false; }
++  public bool discoverable { get; protected set; default = false; }
++  public bool enabled { get; protected set; default = false; }
++
++  public void try_set_enabled (bool b)
++  {
++    if (killswitch != null)
++      {
++        debug (@"setting killswitch blocked to $(!b)");
++        killswitch.try_set_blocked (!b);
++      }
++    else if (default_adapter != null)
++      {
++        debug (@"setting bluez Adapter's Powered property to $b");
++        default_adapter.set_property.begin ("Powered", new Variant.boolean (b));
++        powered = b;
++      }
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,283 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++class Desktop: Profile
++{
++  private uint idle_rebuild_id = 0;
++  private Settings settings;
++  private SimpleActionGroup action_group;
++
++  private Menu device_section;
++  private HashTable<uint,SimpleAction> connect_actions;
++
++  protected override void dispose ()
++  {
++    if (idle_rebuild_id != 0)
++      {
++        Source.remove (idle_rebuild_id); 
++        idle_rebuild_id = 0;
++      }
++
++    base.dispose ();
++  }
++
++  public Desktop (Bluetooth bluetooth, SimpleActionGroup action_group)
++  {
++    const string profile_name = "desktop";
++
++    base (bluetooth, profile_name);
++
++    this.action_group = action_group;
++
++    connect_actions = new HashTable<uint,SimpleAction>(direct_hash, direct_equal);
++
++    settings = new Settings ("com.canonical.indicator.bluetooth");
++
++    // build the static actions
++    Action[] actions = {};
++    actions += root_action;
++    actions += create_supported_action (bluetooth);
++    actions += create_enabled_action (bluetooth);
++    actions += create_discoverable_action (bluetooth);
++    actions += create_wizard_action ();
++    actions += create_browse_files_action ();
++    actions += create_send_file_action ();
++    actions += create_show_settings_action ();
++    foreach (var a in actions)
++      action_group.add_action (a);
++
++    build_menu ();
++
++    // know when to show the indicator & when to hide it
++    settings.changed["visible"].connect (()=> update_visibility());
++    bluetooth.notify["enabled"].connect (() => update_visibility());
++    update_visibility ();
++
++    // when devices change, rebuild our device section
++    bluetooth.devices_changed.connect (()=> {
++      if (idle_rebuild_id == 0)
++        idle_rebuild_id = Idle.add (() => {
++          rebuild_device_section ();
++          idle_rebuild_id = 0;
++          return false;
++        });
++    });
++  }
++
++  void update_visibility ()
++  {
++    visible = bluetooth.enabled && settings.get_boolean("visible");
++  }
++
++  ///
++  ///  MenuItems
++  ///
++
++  MenuItem create_device_connection_menuitem (Device device)
++  {
++    var id = device.id;
++    var action_name = @"desktop-device-$(id)-connected";
++
++    var item = new MenuItem (_("Connection"), @"indicator.$action_name");
++    item.set_attribute ("x-canonical-type",
++                        "s", "com.canonical.indicator.switch");
++
++    // if this doesn't already have an action, create one
++    if (!connect_actions.contains (id))
++      {
++        debug (@"creating action for $action_name");
++        var a = new SimpleAction.stateful (action_name,
++                                           null,
++                                           new Variant.boolean (device.is_connected));
++
++        a.activate.connect (()
++          => a.set_state (new Variant.boolean (!a.get_state().get_boolean())));
++
++        a.notify["state"].connect (()
++          => bluetooth.set_device_connected (id, a.get_state().get_boolean()));
++
++        connect_actions.insert (device.id, a);
++        action_group.add_action (a);
++      }
++    else
++      {
++        debug (@"updating action $(device.id) state to $(device.is_connected)");
++        var action = connect_actions.lookup (device.id);
++        action.set_state (new Variant.boolean (device.is_connected));
++      }
++
++    return item;
++  }
++
++  void rebuild_device_section ()
++  {
++    device_section.remove_all ();
++
++    foreach (var device in bluetooth.get_devices())
++      {
++        Menu submenu = new Menu ();
++        MenuItem item;
++
++        if (device.is_connectable)
++          submenu.append_item (create_device_connection_menuitem (device));
++
++        if (device.supports_browsing)
++          submenu.append (_("Browse files…"),
++                          @"indicator.desktop-browse-files::$(device.address)");
++
++        if (device.supports_file_transfer)
++          submenu.append (_("Send files…"),
++                          @"indicator.desktop-send-file::$(device.address)");
++
++        switch (device.device_type)
++          {
++            case Device.Type.KEYBOARD:
++              submenu.append (_("Keyboard Settings…"),
++                              "indicator.desktop-show-settings::keyboard");
++              break;
++
++            case Device.Type.MOUSE:
++            case Device.Type.TABLET:
++              submenu.append (_("Mouse and Touchpad Settings…"),
++                              "indicator.desktop-show-settings::mouse");
++              break;
++
++            case Device.Type.HEADSET:
++            case Device.Type.HEADPHONES:
++            case Device.Type.OTHER_AUDIO:
++              submenu.append (_("Sound Settings…"),
++                              "indicator.desktop-show-settings::sound");
++              break;
++          }
++
++        // only show the device if it's got actions that we can perform on it
++        if (submenu.get_n_items () > 0)
++          {
++            item = new MenuItem (device.name, null);
++            item.set_attribute_value ("icon", device.icon.serialize());
++            item.set_submenu (submenu);
++            device_section.append_item (item);
++          }
++      }
++  }
++
++  void build_menu ()
++  {
++    Menu section;
++    MenuItem item;
++
++    // quick toggles section
++    section = new Menu ();
++    section.append_item (create_enabled_menuitem ());
++    item = new MenuItem (_("Visible"), "indicator.desktop-discoverable");
++    item.set_attribute ("x-canonical-type", "s",
++                        "com.canonical.indicator.switch");
++    section.append_item (item);
++    menu.append_section (null, section);
++
++    // devices section
++    device_section = new Menu ();
++    rebuild_device_section ();
++    menu.append_section (null, device_section);
++
++    // settings section
++    section = new Menu ();
++    section.append (_("Set Up New Device…"),
++                    "indicator.desktop-wizard");
++    section.append (_("Bluetooth Settings…"),
++                    "indicator.desktop-show-settings::bluetooth");
++    menu.append_section (null, section);
++  }
++
++  ///
++  ///  Actions
++  ///
++
++  void show_settings (string panel)
++  {
++    spawn_command_line_async ("gnome-control-center " + panel);
++  }
++
++  Action create_discoverable_action (Bluetooth bluetooth)
++  {
++    var action = new SimpleAction.stateful ("desktop-discoverable",
++                                            null,
++                                            new Variant.boolean (bluetooth.discoverable));
++
++    action.activate.connect (()
++        => action.set_state (new Variant.boolean (!action.get_state().get_boolean())));
++
++    action.notify["state"].connect (()
++        => bluetooth.try_set_discoverable (action.get_state().get_boolean()));
++
++    bluetooth.notify["discoverable"].connect (()
++        => action.set_state (new Variant.boolean (bluetooth.discoverable)));
++
++    return action;
++  }
++
++  Action create_wizard_action ()
++  {
++    var action = new SimpleAction ("desktop-wizard", null);
++
++    action.activate.connect (()
++        => spawn_command_line_async ("bluetooth-wizard"));
++    return action;
++  }
++
++  Action create_browse_files_action ()
++  {
++    var action = new SimpleAction ("desktop-browse-files", VariantType.STRING);
++    action.activate.connect ((action, address) => {
++      var uri = @"obex://[$(address.get_string())]/";
++      var file = File.new_for_uri (uri);
++      file.mount_enclosing_volume.begin (MountMountFlags.NONE,
++                                         null, null, (obj, res) => {
++        try {
++          AppInfo.launch_default_for_uri (uri, null);
++        } catch (Error e) {
++          warning (@"unable to launch '$uri': $(e.message)");
++        }
++      });
++    });
++    return action;
++  }
++
++  Action create_send_file_action ()
++  {
++    var action = new SimpleAction ("desktop-send-file", VariantType.STRING);
++
++    action.activate.connect ((action, address) => {
++      var cmd = @"bluetooth-sendto --device=$(address.get_string())";
++      spawn_command_line_async (cmd);
++    });
++
++    return action;
++  }
++
++  Action create_show_settings_action ()
++  {
++    var action = new SimpleAction ("desktop-show-settings", VariantType.STRING);
++
++    action.activate.connect ((action, panel)
++        => show_settings (panel.get_string()));
++
++    return action;
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/device.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/device.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/device.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/device.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,156 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++public class Device: Object
++{
++  public enum Type
++    {
++      OTHER,
++      COMPUTER,
++      PHONE,
++      MODEM,
++      NETWORK,
++      HEADSET,
++      HEADPHONES,
++      VIDEO,
++      OTHER_AUDIO,
++      JOYPAD,
++      KEYPAD,
++      KEYBOARD,
++      TABLET,
++      MOUSE,
++      PRINTER,
++      CAMERA
++    }
++
++  public Type device_type { get; construct; }
++  public uint id { get; construct; }
++  public string name { get; construct; }
++  public string address { get; construct; }
++  public Icon icon { get; construct; }
++  public bool is_connectable { get; construct; }
++  public bool is_connected { get; construct; }
++  public bool supports_browsing { get; construct; }
++  public bool supports_file_transfer { get; construct; }
++  public string print() {
++    return @"{id:$id, name:$name, address:$address, icon:$(icon.to_string()), device_type:$device_type, is_connectable:$is_connectable, is_connected:$is_connected, supports_browsing:$supports_browsing, supports_file_transfer:$supports_file_transfer}";
++  }
++
++  public Device (uint id,
++                 Type device_type,
++                 string name,
++                 string address,
++                 Icon icon,
++                 bool is_connectable,
++                 bool is_connected,
++                 bool supports_browsing,
++                 bool supports_file_transfer)
++  {
++    Object (id: id,
++            device_type: device_type,
++            name: name,
++            address: address,
++            icon: icon,
++            is_connectable: is_connectable,
++            is_connected: is_connected,
++            supports_browsing: supports_browsing,
++            supports_file_transfer: supports_file_transfer);
++  }
++
++  public static Type class_to_device_type (uint32 c)
++  {
++    switch ((c & 0x1f00) >> 8)
++      {
++        case 0x01:
++          return Type.COMPUTER;
++
++        case 0x02:
++          switch ((c & 0xfc) >> 2)
++            {
++              case 0x01:
++              case 0x02:
++              case 0x03:
++              case 0x05:
++                return Type.PHONE;
++
++              case 0x04:
++                return Type.MODEM;
++            }
++          break;
++
++        case 0x03:
++          return Type.NETWORK;
++
++        case 0x04:
++          switch ((c & 0xfc) >> 2)
++            {
++              case 0x01:
++              case 0x02:
++                return Type.HEADSET;
++
++              case 0x06:
++                return Type.HEADPHONES;
++
++              case 0x0b: // vcr
++              case 0x0c: // video camera
++              case 0x0d: // camcorder
++                return Type.VIDEO;
++
++              default:
++                return Type.OTHER_AUDIO;
++            }
++
++        case 0x05:
++          switch ((c & 0xc0) >> 6)
++            {
++              case 0x00:
++                switch ((c & 0x1e) >> 2)
++                  {
++                    case 0x01:
++                    case 0x02:
++                      return Type.JOYPAD;
++                  }
++                break;
++
++              case 0x01:
++                return Type.KEYBOARD;
++
++              case 0x02:
++                switch ((c & 0x1e) >> 2)
++                  {
++                    case 0x05:
++                      return Type.TABLET;
++
++                    default:
++                      return Type.MOUSE;
++                  }
++            }
++          break;
++
++        case 0x06:
++          if ((c & 0x80) != 0)
++            return Type.PRINTER;
++          if ((c & 0x20) != 0)
++            return Type.CAMERA;
++          break;
++      }
++
++    return 0;
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/killswitch.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/killswitch.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/killswitch.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/killswitch.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,174 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++/**
++ * Monitors whether or not bluetooth is blocked,
++ * either by software (e.g., a session configuration setting)
++ * or by hardware (e.g., user disabled it via a physical switch on her laptop).
++ *
++ * KillSwitchBluetooth uses this as the impl for its Bluetooth.blocked property
++ */
++public interface KillSwitch: Object
++{
++  public abstract bool is_valid ();
++
++  public abstract bool blocked { get; protected set; }
++
++  /* Try to block/unblock bluetooth.
++   * This can fail if the requested state is overruled by a hardware block. */
++  public abstract void try_set_blocked (bool blocked);
++}
++
++/**
++ * KillSwitch impementation for Linux using /dev/rfkill
++ */
++public class RfKillSwitch: KillSwitch, Object
++{
++  public bool blocked { get; protected set; default = false; }
++
++  public void try_set_blocked (bool blocked)
++  {
++    return_if_fail (this.blocked != blocked);
++
++    // Try to soft-block all the bluetooth devices
++    var event = Linux.RfKillEvent() {
++      op    = Linux.RfKillOp.CHANGE_ALL,
++      type  = Linux.RfKillType.BLUETOOTH,
++      soft  = (uint8)blocked
++    };
++
++    /* Write this request to rfkill.
++     * Don't update this object's "blocked" property here --
++     * We'll get the update when on_channel_event() reads it below */
++    var bwritten = Posix.write (fd, &event, sizeof(Linux.RfKillEvent));
++    if (bwritten == -1)
++      warning (@"Could not write rfkill event: $(strerror(errno))");
++  }
++
++  /* represents an entry that we've read from the rfkill file */
++  private class Entry
++  {
++    public uint32 idx;
++    public Linux.RfKillType type;
++    public bool soft;
++    public bool hard;
++  }
++
++  private HashTable<uint32,Entry> entries;
++  private int fd = -1;
++  private IOChannel channel;
++  private uint watch;
++
++  protected override void dispose ()
++  {
++    if (watch != 0)
++      {
++        Source.remove (watch);
++        watch = 0;
++      }
++
++    if (fd != -1)
++      {
++        Posix.close (fd);
++        fd = -1;
++      }
++
++    base.dispose ();
++  }
++
++  public RfKillSwitch ()
++  {
++    entries = new HashTable<uint32,Entry>(direct_hash, direct_equal);
++
++    var path = "/dev/rfkill";
++    fd = Posix.open (path, Posix.O_RDWR | Posix.O_NONBLOCK );
++    if (fd == -1)
++      {
++        warning (@"Can't open $path for use as a killswitch backend: $(strerror(errno))");
++      }
++    else
++      {
++        // read everything that's already there, then watch for more
++        while (read_event());
++        channel = new IOChannel.unix_new (fd);
++        watch = channel.add_watch (IOCondition.IN, on_channel_event);
++      }
++  }
++
++  public bool is_valid ()
++  {
++    return fd != -1;
++  }
++
++  private bool on_channel_event (IOChannel source, IOCondition condition)
++  {
++    read_event ();
++    return true;
++  }
++
++  private bool read_event ()
++  {
++    assert (fd != -1);
++
++    var event = Linux.RfKillEvent();
++    var n = sizeof (Linux.RfKillEvent);
++    var bytesread = Posix.read (fd, &event, n);
++   
++    if (bytesread == n)
++      {
++        process_event (event);
++        return true;
++      }
++
++    return false;
++  }
++
++  private void process_event (Linux.RfKillEvent event)
++  {
++    // we only want things that affect bluetooth
++    if ((event.type != Linux.RfKillType.ALL) &&
++        (event.type != Linux.RfKillType.BLUETOOTH))
++      return;
++
++    switch (event.op)
++      {
++        case Linux.RfKillOp.CHANGE:
++        case Linux.RfKillOp.ADD:
++          Entry entry = new Entry ();
++          entry.idx = event.idx;
++          entry.type = event.type;
++          entry.soft = event.soft != 0;
++          entry.hard = event.hard != 0;
++          entries.insert (entry.idx, entry);
++          break;
++
++        case Linux.RfKillOp.DEL:
++          entries.remove (event.idx);
++          break;
++      }
++
++    /* update our blocked property.
++       it should be true if any bluetooth entry is hard- or soft-blocked */
++    var b = false;
++    foreach (var entry in entries.get_values ())
++      if ((b = (entry.soft || entry.hard)))
++        break;
++    blocked = b;
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/main.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/main.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/main.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/main.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,34 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++public static int main (string[] args)
++{
++  // set up i18n
++  Intl.bind_textdomain_codeset (Config.GETTEXT_PACKAGE, "UTF-8");
++  Intl.setlocale (LocaleCategory.ALL, "");
++  Intl.bindtextdomain (Config.GETTEXT_PACKAGE, Config.GNOMELOCALEDIR);
++  Intl.textdomain (Config.GETTEXT_PACKAGE);
++
++  // create the backend
++  var bluetooth = new Bluez (null);
++ 
++  // start the service
++  var service = new Service (bluetooth);
++  return service.run ();
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/org-bluez.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/org-bluez.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/org-bluez.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/org-bluez.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,293 @@
++/* Generated by vala-dbus-binding-tool 0.4.0. Do not modify! */
++/* Generated with: vala-dbus-binding-tool --gdbus --directory=. */
++using GLib;
++
++namespace org {
++
++	namespace bluez {
++
++		[DBus (name = "org.bluez.Manager", timeout = 120000)]
++		public interface Manager : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "DefaultAdapter")]
++			public abstract GLib.ObjectPath default_adapter() throws DBusError, IOError;
++
++			[DBus (name = "FindAdapter")]
++			public abstract GLib.ObjectPath find_adapter(string pattern) throws DBusError, IOError;
++
++			[DBus (name = "ListAdapters")]
++			public abstract GLib.ObjectPath[] list_adapters() throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "AdapterAdded")]
++			public signal void adapter_added(GLib.ObjectPath adapter);
++
++			[DBus (name = "AdapterRemoved")]
++			public signal void adapter_removed(GLib.ObjectPath adapter);
++
++			[DBus (name = "DefaultAdapterChanged")]
++			public signal void default_adapter_changed(GLib.ObjectPath adapter);
++		}
++
++		[DBus (name = "org.bluez.Manager", timeout = 120000)]
++		public interface ManagerSync : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "DefaultAdapter")]
++			public abstract GLib.ObjectPath default_adapter() throws DBusError, IOError;
++
++			[DBus (name = "FindAdapter")]
++			public abstract GLib.ObjectPath find_adapter(string pattern) throws DBusError, IOError;
++
++			[DBus (name = "ListAdapters")]
++			public abstract GLib.ObjectPath[] list_adapters() throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "AdapterAdded")]
++			public signal void adapter_added(GLib.ObjectPath adapter);
++
++			[DBus (name = "AdapterRemoved")]
++			public signal void adapter_removed(GLib.ObjectPath adapter);
++
++			[DBus (name = "DefaultAdapterChanged")]
++			public signal void default_adapter_changed(GLib.ObjectPath adapter);
++		}
++
++		[DBus (name = "org.bluez.Adapter", timeout = 120000)]
++		public interface Adapter : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "SetProperty")]
++			public abstract async void set_property(string name, GLib.Variant value) throws DBusError, IOError;
++
++			[DBus (name = "RequestSession")]
++			public abstract void request_session() throws DBusError, IOError;
++
++			[DBus (name = "ReleaseSession")]
++			public abstract void release_session() throws DBusError, IOError;
++
++			[DBus (name = "StartDiscovery")]
++			public abstract void start_discovery() throws DBusError, IOError;
++
++			[DBus (name = "StopDiscovery")]
++			public abstract void stop_discovery() throws DBusError, IOError;
++
++			[DBus (name = "ListDevices")]
++			public abstract GLib.ObjectPath[] list_devices() throws DBusError, IOError;
++
++			[DBus (name = "CreateDevice")]
++			public abstract GLib.ObjectPath create_device(string address) throws DBusError, IOError;
++
++			[DBus (name = "CreatePairedDevice")]
++			public abstract GLib.ObjectPath create_paired_device(string address, GLib.ObjectPath agent, string capability) throws DBusError, IOError;
++
++			[DBus (name = "CancelDeviceCreation")]
++			public abstract void cancel_device_creation(string address) throws DBusError, IOError;
++
++			[DBus (name = "RemoveDevice")]
++			public abstract void remove_device(GLib.ObjectPath device) throws DBusError, IOError;
++
++			[DBus (name = "FindDevice")]
++			public abstract GLib.ObjectPath find_device(string address) throws DBusError, IOError;
++
++			[DBus (name = "RegisterAgent")]
++			public abstract void register_agent(GLib.ObjectPath agent, string capability) throws DBusError, IOError;
++
++			[DBus (name = "UnregisterAgent")]
++			public abstract void unregister_agent(GLib.ObjectPath agent) throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "DeviceCreated")]
++			public signal void device_created(GLib.ObjectPath device);
++
++			[DBus (name = "DeviceRemoved")]
++			public signal void device_removed(GLib.ObjectPath device);
++
++			[DBus (name = "DeviceFound")]
++			public signal void device_found(string address, GLib.HashTable<string, GLib.Variant> values);
++
++			[DBus (name = "DeviceDisappeared")]
++			public signal void device_disappeared(string address);
++		}
++
++		[DBus (name = "org.bluez.Adapter", timeout = 120000)]
++		public interface AdapterSync : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "SetProperty")]
++			public abstract void set_property(string name, GLib.Variant value) throws DBusError, IOError;
++
++			[DBus (name = "RequestSession")]
++			public abstract void request_session() throws DBusError, IOError;
++
++			[DBus (name = "ReleaseSession")]
++			public abstract void release_session() throws DBusError, IOError;
++
++			[DBus (name = "StartDiscovery")]
++			public abstract void start_discovery() throws DBusError, IOError;
++
++			[DBus (name = "StopDiscovery")]
++			public abstract void stop_discovery() throws DBusError, IOError;
++
++			[DBus (name = "ListDevices")]
++			public abstract GLib.ObjectPath[] list_devices() throws DBusError, IOError;
++
++			[DBus (name = "CreateDevice")]
++			public abstract GLib.ObjectPath create_device(string address) throws DBusError, IOError;
++
++			[DBus (name = "CreatePairedDevice")]
++			public abstract GLib.ObjectPath create_paired_device(string address, GLib.ObjectPath agent, string capability) throws DBusError, IOError;
++
++			[DBus (name = "CancelDeviceCreation")]
++			public abstract void cancel_device_creation(string address) throws DBusError, IOError;
++
++			[DBus (name = "RemoveDevice")]
++			public abstract void remove_device(GLib.ObjectPath device) throws DBusError, IOError;
++
++			[DBus (name = "FindDevice")]
++			public abstract GLib.ObjectPath find_device(string address) throws DBusError, IOError;
++
++			[DBus (name = "RegisterAgent")]
++			public abstract void register_agent(GLib.ObjectPath agent, string capability) throws DBusError, IOError;
++
++			[DBus (name = "UnregisterAgent")]
++			public abstract void unregister_agent(GLib.ObjectPath agent) throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "DeviceCreated")]
++			public signal void device_created(GLib.ObjectPath device);
++
++			[DBus (name = "DeviceRemoved")]
++			public signal void device_removed(GLib.ObjectPath device);
++
++			[DBus (name = "DeviceFound")]
++			public signal void device_found(string address, GLib.HashTable<string, GLib.Variant> values);
++
++			[DBus (name = "DeviceDisappeared")]
++			public signal void device_disappeared(string address);
++		}
++
++		[DBus (name = "org.bluez.Agent", timeout = 120000)]
++		public interface Agent : GLib.Object {
++
++			[DBus (name = "Authorize")]
++			public abstract void authorize(GLib.ObjectPath device, string uuid) throws DBusError, IOError;
++
++			[DBus (name = "RequestPinCode")]
++			public abstract string request_pin_code(GLib.ObjectPath device) throws DBusError, IOError;
++
++			[DBus (name = "DisplayPasskey")]
++			public abstract void display_passkey(GLib.ObjectPath device, uint passkey) throws DBusError, IOError;
++
++			[DBus (name = "Release")]
++			public abstract void release() throws DBusError, IOError;
++
++			[DBus (name = "Cancel")]
++			public abstract void cancel() throws DBusError, IOError;
++
++			[DBus (name = "RequestConfirmation")]
++			public abstract void request_confirmation(GLib.ObjectPath device, uint passkey) throws DBusError, IOError;
++
++			[DBus (name = "ConfirmModeChange")]
++			public abstract void confirm_mode_change(string mode) throws DBusError, IOError;
++
++			[DBus (name = "RequestPasskey")]
++			public abstract uint request_passkey(GLib.ObjectPath device) throws DBusError, IOError;
++		}
++
++		[DBus (name = "org.bluez.Agent", timeout = 120000)]
++		public interface AgentSync : GLib.Object {
++
++			[DBus (name = "Authorize")]
++			public abstract void authorize(GLib.ObjectPath device, string uuid) throws DBusError, IOError;
++
++			[DBus (name = "RequestPinCode")]
++			public abstract string request_pin_code(GLib.ObjectPath device) throws DBusError, IOError;
++
++			[DBus (name = "DisplayPasskey")]
++			public abstract void display_passkey(GLib.ObjectPath device, uint passkey) throws DBusError, IOError;
++
++			[DBus (name = "Release")]
++			public abstract void release() throws DBusError, IOError;
++
++			[DBus (name = "Cancel")]
++			public abstract void cancel() throws DBusError, IOError;
++
++			[DBus (name = "RequestConfirmation")]
++			public abstract void request_confirmation(GLib.ObjectPath device, uint passkey) throws DBusError, IOError;
++
++			[DBus (name = "ConfirmModeChange")]
++			public abstract void confirm_mode_change(string mode) throws DBusError, IOError;
++
++			[DBus (name = "RequestPasskey")]
++			public abstract uint request_passkey(GLib.ObjectPath device) throws DBusError, IOError;
++		}
++
++		[DBus (name = "org.bluez.Device", timeout = 120000)]
++		public interface Device : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "SetProperty")]
++			public abstract void set_property(string name, GLib.Variant value) throws DBusError, IOError;
++
++			[DBus (name = "DiscoverServices")]
++			public abstract GLib.HashTable<uint, string> discover_services(string pattern) throws DBusError, IOError;
++
++			[DBus (name = "CancelDiscovery")]
++			public abstract void cancel_discovery() throws DBusError, IOError;
++
++			[DBus (name = "Disconnect")]
++			public abstract void disconnect() throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "DisconnectRequested")]
++			public signal void disconnect_requested();
++		}
++
++		[DBus (name = "org.bluez.Device", timeout = 120000)]
++		public interface DeviceSync : GLib.Object {
++
++			[DBus (name = "GetProperties")]
++			public abstract GLib.HashTable<string, GLib.Variant> get_properties() throws DBusError, IOError;
++
++			[DBus (name = "SetProperty")]
++			public abstract void set_property(string name, GLib.Variant value) throws DBusError, IOError;
++
++			[DBus (name = "DiscoverServices")]
++			public abstract GLib.HashTable<uint, string> discover_services(string pattern) throws DBusError, IOError;
++
++			[DBus (name = "CancelDiscovery")]
++			public abstract void cancel_discovery() throws DBusError, IOError;
++
++			[DBus (name = "Disconnect")]
++			public abstract void disconnect() throws DBusError, IOError;
++
++			[DBus (name = "PropertyChanged")]
++			public signal void property_changed(string name, GLib.Variant value);
++
++			[DBus (name = "DisconnectRequested")]
++			public signal void disconnect_requested();
++		}
++	}
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/phone.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/phone.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/phone.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/phone.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,77 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++class Phone: Profile
++{
++  SimpleActionGroup action_group;
++
++  public Phone (Bluetooth bluetooth, SimpleActionGroup action_group)
++  {
++    const string profile_name = "phone";
++    base (bluetooth, profile_name);
++
++    this.bluetooth = bluetooth;
++    this.action_group = action_group;
++
++    // build the static actions
++    Action[] actions = {};
++    actions += root_action;
++    actions += create_supported_action (bluetooth);
++    actions += create_enabled_action (bluetooth);
++    actions += create_settings_action ();
++    foreach (var a in actions)
++      action_group.add_action (a);
++
++    var section = new Menu ();
++    section.append_item (create_enabled_menuitem ());
++    section.append (_("Bluetooth settings…"),
++                    "indicator.phone-show-settings::bluetooth");
++    menu.append_section (null, section);
++
++    // know when to show the indicator & when to hide it
++    bluetooth.notify.connect (() => update_visibility());
++    update_visibility ();
++
++    bluetooth.notify.connect (() => update_root_action_state());
++  }
++
++  void update_visibility ()
++  {
++    visible = bluetooth.enabled;
++  }
++
++  ///
++  ///  Actions
++  ///
++
++  void show_settings (string panel)
++  {
++    UrlDispatch.send ("settings:///system/bluetooth");
++  }
++
++  Action create_settings_action ()
++  {
++    var action = new SimpleAction ("phone-show-settings", VariantType.STRING);
++
++    action.activate.connect ((action, panel)
++        => show_settings (panel.get_string()));
++
++    return action;
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,169 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ */
++
++class Profile: Object
++{
++  protected Bluetooth bluetooth;
++  protected string profile_name;
++  protected Menu root;
++  protected Menu menu;
++  private uint menu_export_id;
++  protected SimpleAction root_action;
++
++  protected bool visible { get; set; default = true; }
++
++  public Profile (Bluetooth bluetooth, string profile_name)
++  {
++    this.bluetooth = bluetooth;
++    this.profile_name = profile_name;
++
++    root_action = new SimpleAction.stateful (@"root-$profile_name",
++                                             null,
++                                             action_state_for_root());
++    notify["visible"].connect (() => update_root_action_state());
++
++    menu = new Menu ();
++
++    var item = create_root_menuitem ();
++    item.set_submenu (menu);
++
++    root = new Menu ();
++    root.append_item (item);
++  }
++
++  public void export_menu (DBusConnection connection, string object_path)
++  {
++    try
++      {
++        debug (@"exporting menu '$profile_name'");
++        menu_export_id = connection.export_menu_model (object_path, root);
++      }
++    catch (Error e)
++      {
++        critical (@"Unable to export menu on $object_path: $(e.message)");
++      }
++  }
++
++  public void unexport_menu (DBusConnection connection)
++  {
++    if (menu_export_id != 0)
++      {
++        debug (@"unexporting menu '$profile_name'");
++        connection.unexport_menu_model (menu_export_id);
++        menu_export_id = 0;
++      }
++  }
++
++  protected void spawn_command_line_async (string command)
++  {
++    try {
++      Process.spawn_command_line_async (command);
++    } catch (Error e) {
++      warning (@"Unable to launch '$command': $(e.message)");
++    }
++  }
++
++  ///
++  ///  Menu Items
++  ///
++
++  protected MenuItem create_enabled_menuitem ()
++  {
++    var item = new MenuItem ("Bluetooth", "indicator.bluetooth-enabled");
++
++    item.set_attribute ("x-canonical-type", "s",
++                        "com.canonical.indicator.switch");
++
++    return item;
++  }
++
++  private MenuItem create_root_menuitem ()
++  {
++    var item = new MenuItem (null, @"indicator.root-$profile_name");
++
++    item.set_attribute ("x-canonical-type", "s",
++                        "com.canonical.indicator.root");
++
++    return item;
++  }
++
++  ///
++  ///  Actions
++  ///
++
++  protected Action create_supported_action (Bluetooth bluetooth)
++  {
++    var action = new SimpleAction.stateful ("bluetooth-supported",
++                                            null,
++                                            new Variant.boolean (bluetooth.supported));
++
++    bluetooth.notify["supported"].connect (()
++        => action.set_state (new Variant.boolean (bluetooth.supported)));
++
++    return action;
++  }
++
++  protected Action create_enabled_action (Bluetooth bluetooth)
++  {
++    var action = new SimpleAction.stateful ("bluetooth-enabled",
++                                            null,
++                                            new Variant.boolean (bluetooth.enabled));
++
++    action.activate.connect (()
++        => action.change_state (new Variant.boolean (!action.get_state().get_boolean())));
++
++    action.change_state.connect ((action, requestedValue)
++        => bluetooth.try_set_enabled (requestedValue.get_boolean()));
++
++    bluetooth.notify["enabled"].connect (()
++        => action.set_state (new Variant.boolean (bluetooth.enabled)));
++
++    return action;
++  }
++
++  protected void update_root_action_state ()
++  {
++    root_action.set_state (action_state_for_root ());
++  }
++
++  protected Variant action_state_for_root ()
++  {
++    string a11y;
++    string icon_name;
++    if (bluetooth.enabled)
++      {
++        a11y = "Bluetooth (on)";
++        icon_name = "bluetooth-active";
++      }
++    else
++      {
++        a11y = "Bluetooth (off)";
++        icon_name = "bluetooth-disabled";
++      }
++
++    var icon = new ThemedIcon.with_default_fallbacks (icon_name);
++
++    var builder = new VariantBuilder (new VariantType ("a{sv}"));
++    builder.add ("{sv}", "visible", new Variant.boolean (visible));
++    builder.add ("{sv}", "accessible-desc", new Variant.string (a11y));
++    builder.add ("{sv}", "icon", icon.serialize());
++    builder.add ("{sv}", "title", new Variant.string (_("Bluetooth")));
++    return builder.end ();
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/service.vala indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/service.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/service.vala	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/service.vala	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,108 @@
++/*
++ * Copyright 2013 Canonical Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 3.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ * Authors:
++ *   Charles Kerr <charles.kerr@canonical.com>
++ *   Robert Ancell <robert.ancell@canonical.com>
++ */
++
++/**
++ * Boilerplate class to own the name on the bus,
++ * to create the profiles, and to export them on the bus.
++ */ 
++public class Service: Object
++{
++  private MainLoop loop;
++  private SimpleActionGroup actions;
++  private HashTable<string,Profile> profiles;
++  private DBusConnection connection;
++  private uint exported_action_id;
++  private const string OBJECT_PATH = "/com/canonical/indicator/bluetooth";
++
++  private void unexport ()
++  {
++    if (connection != null)
++      {
++        profiles.for_each ((name, profile)
++          => profile.unexport_menu (connection));
++
++        if (exported_action_id != 0)
++          {
++            debug (@"unexporting action group '$(OBJECT_PATH)'");
++            connection.unexport_action_group (exported_action_id);
++            exported_action_id = 0;
++          }
++      }
++  }
++
++  public Service (Bluetooth bluetooth)
++  {
++    actions = new SimpleActionGroup ();
++
++    profiles = new HashTable<string,Profile> (str_hash, str_equal);
++    profiles.insert ("phone", new Phone (bluetooth, actions));
++    profiles.insert ("desktop", new Desktop (bluetooth, actions));
++  }
++
++  public int run ()
++  {
++    if (loop != null)
++      {
++        warning ("service is already running");
++        return Posix.EXIT_FAILURE;
++      }
++
++    var own_name_id = Bus.own_name (BusType.SESSION,
++                                    "com.canonical.indicator.bluetooth",
++                                    BusNameOwnerFlags.NONE,
++                                    on_bus_acquired,
++                                    null,
++                                    on_name_lost);
++
++    loop = new MainLoop (null, false);
++    loop.run ();
++
++    // cleanup
++    unexport ();
++    Bus.unown_name (own_name_id);
++    return Posix.EXIT_SUCCESS;
++  }
++
++  void on_bus_acquired (DBusConnection connection, string name)
++  {
++    debug (@"bus acquired: $name");
++    this.connection = connection;
++
++    try
++      {
++        debug (@"exporting action group '$(OBJECT_PATH)'");
++        exported_action_id = connection.export_action_group (OBJECT_PATH,
++                                                             actions);
++      }
++    catch (Error e)
++      {
++        critical (@"Unable to export actions on $OBJECT_PATH: $(e.message)");
++      }
++
++    profiles.for_each ((name, profile)
++        => profile.export_menu (connection, @"$OBJECT_PATH/$name"));
++  }
++
++  void on_name_lost (DBusConnection connection, string name)
++  {
++    debug (@"name lost: $name");
++    loop.quit ();
++  }
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/config.vapi indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/config.vapi
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/config.vapi	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/config.vapi	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,8 @@
++[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "../config.h")]
++namespace Config {
++  public const string GETTEXT_PACKAGE;
++  public const string GNOMELOCALEDIR;
++  public const string PKGDATADIR;
++  public const string PACKAGE_NAME;
++  public const string PACKAGE_VERSION;
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/rfkill.vapi indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/rfkill.vapi
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/rfkill.vapi	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/rfkill.vapi	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,44 @@
++// (C) Michael 'Mickey' Lauer <mickey@vanille-media.de>
++// LGPL2
++// scheduled for inclusion in linux.vapi
++
++namespace Linux
++{
++    /*
++     * RfKill
++     */
++    [CCode (cname = "struct rfkill_event", cheader_filename = "linux/rfkill.h")]
++    public struct RfKillEvent {
++        public uint32 idx;
++        public RfKillType type;
++        public RfKillOp op;
++        public uint8 soft;
++        public uint8 hard;
++    }
++
++    [CCode (cname = "guint8", cprefix = "RFKILL_OP_", cheader_filename = "linux/rfkill.h")]
++    public enum RfKillOp {
++        ADD,
++        DEL,
++        CHANGE,
++        CHANGE_ALL
++    }
++
++    [CCode (cname = "guint8", cprefix = "RFKILL_STATE_", cheader_filename = "linux/rfkill.h")]
++    public enum RfKillState {
++        SOFT_BLOCKED,
++        UNBLOCKED,
++        HARD_BLOCKED
++    }
++
++    [CCode (cname = "guint8", cprefix = "RFKILL_TYPE_", cheader_filename = "linux/rfkill.h")]
++    public enum RfKillType {
++        ALL,
++        WLAN,
++        BLUETOOTH,
++        UWB,
++        WIMAX,
++        WWAN
++    }
++
++} /* namespace Linux */
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/url-dispatcher.vapi indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/url-dispatcher.vapi
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/url-dispatcher.vapi	1970-01-01 01:00:00.000000000 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/indicator-bluetooth-0.0.6+14.04.20131029.1.orig/vapi/url-dispatcher.vapi	2013-12-09 12:07:53.795016371 +0100
+@@ -0,0 +1,9 @@
++[CCode (cprefix = "", lower_case_cprefix = "", cheader_filename = "liburl-dispatcher-1/url-dispatcher.h")]
++
++namespace UrlDispatch
++{
++  public delegate void DispatchCallback ();
++
++  [CCode (cname = "url_dispatch_send")]
++  public static void send (string url, DispatchCallback? func = null);
++}
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala indicator-bluetooth-0.0.6+14.04.20131029.1/src/desktop.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/desktop.vala	2013-12-09 10:14:45.729064118 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/src/desktop.vala	2013-12-09 12:08:35.723218782 +0100
+@@ -82,7 +82,7 @@
+ 
+   void update_visibility ()
+   {
+-    visible = bluetooth.enabled && settings.get_boolean("visible");
++    visible = true;//bluetooth.enabled && settings.get_boolean("visible");
+   }
+ 
+   ///
+diff -Naur indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala indicator-bluetooth-0.0.6+14.04.20131029.1/src/profile.vala
+--- indicator-bluetooth-0.0.6+14.04.20131029.1.orig/src/profile.vala	2013-12-09 10:14:45.729064118 +0100
++++ indicator-bluetooth-0.0.6+14.04.20131029.1/src/profile.vala	2013-12-09 12:06:10.900519845 +0100
+@@ -149,12 +149,12 @@
+     if (bluetooth.enabled)
+       {
+         a11y = "Bluetooth (on)";
+-        icon_name = "bluetooth-active";
++        icon_name = "bluetooth-active-symbolic";
+       }
+     else
+       {
+         a11y = "Bluetooth (off)";
+-        icon_name = "bluetooth-disabled";
++        icon_name = "bluetooth-disabled-symbolic";
+       }
+ 
+     var icon = new ThemedIcon.with_default_fallbacks (icon_name);

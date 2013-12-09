@@ -8,7 +8,7 @@ inherit bzr
 
 DESCRIPTION="Elementary's desktop environment"
 HOMEPAGE="http://www.elementaryos.org/ http://launchpad.net/elementaryos/"
-EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings-luna"
+EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -33,10 +33,8 @@ RDEPEND="${CDEPEND}
 DEPEND="${CDEPEND}"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-gala-startup.patch"
-
 	# Use gnome as fallback instead of ubuntu and mutter instead of gala
-	sed -i -e 's/ubuntu/gnome/' -e 's/gala/mutter/' debian/pantheon.session
+	sed -i -e 's/ubuntu/gnome/' debian/pantheon.session
 
 	# Use gnome-session wrapper that sets XDG_CURRENT_DESKTOP
 	sed -i 's/gnome-session --session=pantheon/pantheon-session/' debian/pantheon.desktop

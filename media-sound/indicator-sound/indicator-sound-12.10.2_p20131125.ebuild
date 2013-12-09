@@ -34,6 +34,7 @@ AUTOTOOLS_AUTORECONF=1
 src_prepare() {
 	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
 	epatch "${FILESDIR}/${P}-unowned.patch"
+	epatch "${FILESDIR}/${P}-symbolic-icons.patch"
 
 	sed -i 's/add_subdirectory(tests)//' CMakeLists.txt
 

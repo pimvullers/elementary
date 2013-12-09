@@ -1,0 +1,42 @@
+diff -Naur indicator-sound-12.10.2+14.04.20131125.orig/src/service.vala indicator-sound-12.10.2+14.04.20131125/src/service.vala
+--- indicator-sound-12.10.2+14.04.20131125.orig/src/service.vala	2013-12-09 12:11:14.343985505 +0100
++++ indicator-sound-12.10.2+14.04.20131125/src/service.vala	2013-12-09 12:14:46.885014361 +0100
+@@ -98,13 +98,13 @@
+ 		if (this.notification != null) {
+ 			string icon;
+ 			if (v <= 0.0)
+-				icon = "notification-audio-volume-off";
++				icon = "notification-audio-volume-off-symbolic";
+ 			else if (v <= 0.3)
+-				icon = "notification-audio-volume-low";
++				icon = "notification-audio-volume-low-symbolic";
+ 			else if (v <= 0.7)
+-				icon = "notification-audio-volume-medium";
++				icon = "notification-audio-volume-medium-symbolic";
+ 			else
+-				icon = "notification-audio-volume-high";
++				icon = "notification-audio-volume-high-symbolic";
+ 
+ 			this.notification.update ("indicator-sound", "", icon);
+ 			this.notification.set_hint_int32 ("value", ((int32) (100 * v)).clamp (-1, 101));
+@@ -147,15 +147,15 @@
+ 		double volume = this.volume_control.get_volume ();
+ 		string icon;
+ 		if (this.volume_control.mute)
+-			icon = "audio-volume-muted-panel";
++			icon = "audio-volume-muted-symbolic";
+ 		else if (volume <= 0.0)
+-			icon = "audio-volume-low-zero-panel";
++			icon = "audio-volume-muted-symbolic";
+ 		else if (volume <= 0.3)
+-			icon = "audio-volume-low-panel";
++			icon = "audio-volume-low-symbolic";
+ 		else if (volume <= 0.7)
+-			icon = "audio-volume-medium-panel";
++			icon = "audio-volume-medium-symbolic";
+ 		else
+-			icon  = "audio-volume-high-panel";
++			icon  = "audio-volume-high-symbolic";
+ 
+ 		string accessible_name;
+ 		if (this.volume_control.mute) {
