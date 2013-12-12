@@ -1,0 +1,24 @@
+Description: Don't let offscreen widget do grabbing
+Author: Cody Russell <bratsche@gnome.org>
+Bug: https://bugzilla.gnome.org/show_bug.cgi?id=607668
+Bug-Ubuntu: https://bugs.launchpad.net/bugs/512427
+
+Index: gtk+-3.6.4/gtk/gtkmain.c
+===================================================================
+--- gtk+-3.6.4.orig/gtk/gtkmain.c	2013-01-10 16:03:45.225595668 +1300
++++ gtk+-3.6.4/gtk/gtkmain.c	2013-01-10 16:03:45.221595668 +1300
+@@ -2043,9 +2043,14 @@
+ {
+   GtkWindowGroup *group;
+   GtkWidget *old_grab_widget;
++  GtkWidget *toplevel;
+ 
+   g_return_if_fail (widget != NULL);
+ 
++  toplevel = gtk_widget_get_toplevel (widget);
++  if (toplevel && gdk_window_get_window_type (gtk_widget_get_window (toplevel)) == GDK_WINDOW_OFFSCREEN)
++    return;
++
+   if (!gtk_widget_has_grab (widget) && gtk_widget_is_sensitive (widget))
+     {
+       _gtk_widget_set_has_grab (widget, TRUE);

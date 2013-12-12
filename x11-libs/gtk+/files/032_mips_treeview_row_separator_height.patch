@@ -1,0 +1,16 @@
+Bug: https://bugzilla.gnome.org/show_bug.cgi?id=702371
+
+--- a/testsuite/gtk/treeview.c
++++ b/testsuite/gtk/treeview.c
+@@ -236,8 +236,10 @@
+   g_test_add_func ("/TreeView/cursor/bug-539377", test_bug_539377);
+   g_test_add_func ("/TreeView/cursor/select-collapsed_row",
+                    test_select_collapsed_row);
++  /* See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=711107
++   * and https://bugzilla.gnome.org/show_bug.cgi?id=702371
+   g_test_add_func ("/TreeView/sizing/row-separator-height",
+-                   test_row_separator_height);
++                   test_row_separator_height);*/
+ 
+   return g_test_run ();
+ }

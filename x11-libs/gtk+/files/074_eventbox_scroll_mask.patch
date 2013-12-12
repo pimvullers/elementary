@@ -1,0 +1,14 @@
+Index: gtk+3.0-3.3.20/gtk/gtkeventbox.c
+===================================================================
+--- gtk+3.0-3.3.20.orig/gtk/gtkeventbox.c	2012-03-18 21:44:21.000000000 +0100
++++ gtk+3.0-3.3.20/gtk/gtkeventbox.c	2012-03-20 18:48:18.365061469 +0100
+@@ -414,7 +414,8 @@
+                         | GDK_BUTTON_RELEASE_MASK
+                         | GDK_EXPOSURE_MASK
+                         | GDK_ENTER_NOTIFY_MASK
+-                        | GDK_LEAVE_NOTIFY_MASK;
++                        | GDK_LEAVE_NOTIFY_MASK
++                        | GDK_SCROLL_MASK;
+ 
+   priv = GTK_EVENT_BOX (widget)->priv;
+ 

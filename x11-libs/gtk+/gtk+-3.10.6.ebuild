@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx
+inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx autotools-utils
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -41,7 +41,7 @@ COMMON_DEPEND="
 		xinerama? ( x11-libs/libXinerama )
 	)
 	wayland? (
-		>=dev-libs/wayland-1.0
+		>=dev-libs/wayland-1.2.0
 		media-libs/mesa[wayland]
 		>=x11-libs/libxkbcommon-0.2
 	)
@@ -87,6 +87,12 @@ RDEPEND="${COMMON_DEPEND}
 "
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
+# automake 1.13 is hard-coded in bundled configure script. Running
+# autoreconf to regenerate.
+AUTOTOOLS_AUTORECONF=1
+
+DOCS=( AUTHORS ChangeLog* HACKING NEWS* README* )
+
 strip_builddir() {
 	local rule=$1
 	shift
@@ -126,38 +132,54 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.in
 	fi
 
-	# automake 1.13 is hard-coded in bundled configure script. Running
-	# autoreconf to regenerate.
-	# eautoreconf
-	# (add 'inherit autotools' again if you want to uncomment this)
+	# Ubuntu patches
+	epatch "${FILESDIR}/016_no_offscreen_widgets_grabbing.patch"
+	epatch "${FILESDIR}/017_no_offscreen_device_grabbing.patch"
+	epatch "${FILESDIR}/018_gdkenumtypes.c_location.patch"
+	epatch "${FILESDIR}/022_disable-viqr-im-for-vi-locale.patch"
+	epatch "${FILESDIR}/032_mips_treeview_row_separator_height.patch"
+	epatch "${FILESDIR}/044_tracker_fts.patch"
+	epatch "${FILESDIR}/060_ignore-random-icons.patch"
+	epatch "${FILESDIR}/071_fix-installation-of-HTML-images.patch"
+	epatch "${FILESDIR}/073_treeview_almost_fixed.patch"
+	epatch "${FILESDIR}/074_eventbox_scroll_mask.patch"
+	epatch "${FILESDIR}/bzg_gtkcellrenderer_grabbing_modifier.patch"
 	epatch "${FILESDIR}/ubuntu_gtk_custom_menu_items.patch"
+	epatch "${FILESDIR}/print-dialog-show-options-of-remote-dnssd-printers.patch"
+	epatch "${FILESDIR}/uimanager-guard-against-nested-node-updates.patch"
+	epatch "${FILESDIR}/git_menu_separator_style.patch"	
+
+	autotools-utils_src_prepare
 }
 
 src_configure() {
 	# Passing --disable-debug is not recommended for production use
 	# need libdir here to avoid a double slash in a path that libtool doesn't
 	# grok so well during install (// between $EPREFIX and usr ...)
-	econf \
-		$(use_enable aqua quartz-backend) \
-		$(use_enable colord) \
-		$(use_enable cups cups auto) \
-		$(usex debug --enable-debug=yes "") \
-		$(use_enable introspection) \
-		$(use_enable packagekit) \
-		$(use_enable wayland wayland-backend) \
-		$(use_enable X x11-backend) \
-		$(use_enable X xcomposite) \
-		$(use_enable X xdamage) \
-		$(use_enable X xfixes) \
-		$(use_enable X xkb) \
-		$(use_enable X xrandr) \
-		$(use_enable xinerama) \
-		--disable-gtk-doc \
-		--disable-papi \
-		--enable-man \
-		--enable-gtk2-dependency \
-		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
+	local myeconfargs=(
+		$(use_enable aqua quartz-backend)
+		$(use_enable colord)
+		$(use_enable cups cups auto)
+		$(usex debug --enable-debug=yes "")
+		$(use_enable introspection)
+		$(use_enable packagekit)
+		$(use_enable wayland wayland-backend)
+		$(use_enable X x11-backend)
+		$(use_enable X xcomposite)
+		$(use_enable X xdamage)
+		$(use_enable X xfixes)
+		$(use_enable X xkb)
+		$(use_enable X xrandr)
+		$(use_enable xinerama)
+		--disable-gtk-doc
+		--disable-papi
+		--enable-man
+		--enable-gtk2-dependency
+		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog
 		--libdir="${EPREFIX}/usr/$(get_libdir)"
+	)
+
+	autotools-utils_src_configure
 }
 
 src_test() {
@@ -176,14 +198,10 @@ src_test() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install
+	autotools-utils_src_install
 
 	insinto /etc/gtk-3.0
 	doins "${FILESDIR}"/settings.ini
-
-	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
-
-	prune_libtool_files --modules
 
 	# add -framework Carbon to the .pc files
 	use aqua && for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
