@@ -1,0 +1,24 @@
+Description: Add Unity to autostart desktop file. 
+ .
+ gnome-settings-daemon (3.8.1-0ubuntu1~raring2) raring; urgency=low
+ .
+   * New upstream release
+   * debian/patches:
+     - 16_use_synchronous_notifications.patch, refreshed
+     - fix_suspend_on_lid_closed.patch, workaround for now.
+     - fix_media_keys_on_unity.patch, we need to watch for unity and
+         fire up the legacy keygrabber.
+   * Update desktop file to also autostart in Unity
+Author: Tim Lunn <tim@feathertop.org>
+
+--- a/data/gnome-settings-daemon.desktop.in.in
++++ b/data/gnome-settings-daemon.desktop.in.in
+@@ -2,7 +2,7 @@
+ Type=Application
+ _Name=GNOME Settings Daemon
+ Exec=@libexecdir@/gnome-settings-daemon-localeexec
+-OnlyShowIn=GNOME;
++OnlyShowIn=GNOME;Unity;
+ NoDisplay=true
+ X-GNOME-Autostart-Phase=Initialization
+ X-GNOME-Autostart-Notify=true

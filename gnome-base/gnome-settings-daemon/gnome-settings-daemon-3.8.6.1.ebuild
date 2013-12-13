@@ -10,7 +10,6 @@ inherit autotools eutils gnome2 systemd virtualx
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
-SRC_URI="${SRC_URI} https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_${PV}-0ubuntu2.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -27,6 +26,7 @@ COMMON_DEPEND="
 	>=dev-libs/glib-2.35.3:2
 	>=x11-libs/gtk+-3.7.8:3
 	>=gnome-base/gnome-desktop-3.7.90:3=
+	<gnome-base/gnome-desktop-3.9:3=
 	>=gnome-base/gsettings-desktop-schemas-3.7.2.1
 	>=gnome-base/librsvg-2.36.2
 	media-fonts/cantarell
@@ -84,19 +84,36 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
-#	epatch "${FILESDIR}/52_sync_background_to_accountsservice.patch"
-#	epatch "${FILESDIR}/53_sync_input_sources_to_accountsservice.patch"
-#	epatch "${FILESDIR}/61_revert_libgnomekbd_drop.patch"
+	# Ubuntu patches
+	epatch "${FILESDIR}/05_disable_corner_tapping.patch"
+	epatch "${FILESDIR}/16_use_synchronous_notifications.patch"
+	epatch "${FILESDIR}/43_disable_locale_settings.patch"
+	epatch "${FILESDIR}/45_suppress-printer-may-not-be-connected-notification.patch"
+	epatch "${FILESDIR}/revert_background_dropping.patch"
+	epatch "${FILESDIR}/52_sync_background_to_accountsservice.patch"
+	epatch "${FILESDIR}/53_sync_input_sources_to_accountsservice.patch"
+	epatch "${FILESDIR}/62_unity_disable_gsd_printer.patch"
 	epatch "${FILESDIR}/63_gnome_disable_background_plugin.patch"
 	epatch "${FILESDIR}/64_restore_terminal_keyboard_shortcut_schema.patch"
+	epatch "${FILESDIR}/90_set_gmenus_xsettings.patch"
+	epatch "${FILESDIR}/disable_three_touch_tap.patch"
 	epatch "${FILESDIR}/correct_logout_action.patch"
-	epatch "${FILESDIR}/fix_broken_user_sounds_permissions.patch"
-#	epatch "${FILESDIR}/git_revert_remove_automount_helper.patch"
-	epatch "${FILESDIR}/git_touchpad_scrolling.patch"
-#	epatch "${FILESDIR}/git_xsettings_segfaults.patch"
 	epatch "${FILESDIR}/migrate_metacity_keys.patch"
-	epatch "${FILESDIR}/revert_background_dropping.patch"
+	epatch "${FILESDIR}/touchscreen_rotation.patch"
+	epatch "${FILESDIR}/nexus-orientation.patch"
+	epatch "${FILESDIR}/fix_broken_user_sounds_permissions.patch"
+	epatch "${FILESDIR}/fix_media_keys_on_unity.patch"
+	epatch "${FILESDIR}/fix_input_switching_on_unity.patch"
+	epatch "${FILESDIR}/fix_screenshots_on_unity.patch"
+	epatch "${FILESDIR}/git_keybindings_add_screen_reader_toggle.patch"
+	epatch "${FILESDIR}/git_revert_gsd-keygrab.patch"
+	epatch "${FILESDIR}/git_revert_remove_automount_helper.patch"
+	epatch "${FILESDIR}/ubuntu-fix-desktop-file.patch"
 	epatch "${FILESDIR}/ubuntu-lid-close-suspend.patch"
+	epatch "${FILESDIR}/git_touchpad_scrolling.patch"
+	epatch "${FILESDIR}/unity-modifier-media-keys.patch"
+	epatch "${FILESDIR}/ubuntu-lid-open-reset-ideletime.patch"
+	epatch "${FILESDIR}/git_xsettings_segfaults.patch"
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=621836
 	# Apparently this change severely affects touchpad usability for some

@@ -1,0 +1,84 @@
+Description: Revert "common: Remove now unused key grab functions"
+    
+    This reverts commit b7f766de2a8f38b1e8cb76d8dfd9ff098c14c257.
+ 
+https://bugzilla.gnome.org/show_bug.cgi?id=693016
+
+Last-Update: <2013-04-25>
+
+--- a/plugins/common/gsd-keygrab.h
++++ b/plugins/common/gsd-keygrab.h
+@@ -42,12 +42,18 @@
+ 				 GsdKeygrabFlags flags,
+ 			         GSList  *screens);
+ 
++void            ungrab_key_unsafe (Key     *key,
++                                   GSList  *screens);
++
+ gboolean        match_xi2_key   (Key           *key,
+                                  XIDeviceEvent *event);
+ 
+ gboolean        key_uses_keycode (const Key *key,
+                                   guint keycode);
+ 
++Key *           parse_key        (const char    *str);
++void            free_key         (Key           *key);
++
+ void            grab_button      (int      deviceid,
+                                   gboolean grab,
+                                   GSList  *screens);
+--- a/plugins/common/gsd-keygrab.c
++++ b/plugins/common/gsd-keygrab.c
+@@ -247,6 +247,13 @@
+         grab_key_internal (key, TRUE, flags, screens);
+ }
+ 
++void
++ungrab_key_unsafe (Key    *key,
++                   GSList *screens)
++{
++        grab_key_internal (key, FALSE, 0, screens);
++}
++
+ static gboolean
+ have_xkb (Display *dpy)
+ {
+@@ -361,6 +368,38 @@
+                 && key_uses_keycode (key, keycode));
+ }
+ 
++Key *
++parse_key (const char *str)
++{
++	Key *key;
++
++	if (str == NULL ||
++	    *str == '\0' ||
++	    g_str_equal (str, "disabled")) {
++		return NULL;
++	}
++
++	key = g_new0 (Key, 1);
++	gtk_accelerator_parse_with_keycode (str, &key->keysym, &key->keycodes, &key->state);
++	if (key->keysym == 0 &&
++	    key->keycodes == NULL &&
++	    key->state == 0) {
++		g_free (key);
++                return NULL;
++	}
++
++	return key;
++}
++
++void
++free_key (Key *key)
++{
++	if (key == NULL)
++		return;
++	g_free (key->keycodes);
++	g_free (key);
++}
++
+ static void
+ grab_button_real (int        deviceid,
+ 		  gboolean   grab,

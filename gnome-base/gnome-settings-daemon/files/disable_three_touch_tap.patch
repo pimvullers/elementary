@@ -1,0 +1,17 @@
+# Description: disable three-touch tap to click by default, it conflicts
+with the unity resize handles, see that email for details:
+https://lists.ubuntu.com/archives/ubuntu-desktop/2012-February/003694.html
+# Forwarded: no, Ubuntu specific since it's for unity
+Index: gnome-settings-daemon-3.6.1/plugins/mouse/gsd-mouse-manager.c
+===================================================================
+--- gnome-settings-daemon-3.6.1.orig/plugins/mouse/gsd-mouse-manager.c	2012-10-26 10:19:49.427004172 +0200
++++ gnome-settings-daemon-3.6.1/plugins/mouse/gsd-mouse-manager.c	2012-10-26 10:19:49.691004186 +0200
+@@ -657,7 +657,7 @@
+                 /* Set RLM mapping for 1/2/3 fingers*/
+                 data[4] = (state) ? ((left_handed) ? 3 : 1) : 0;
+                 data[5] = (state) ? ((left_handed) ? 1 : 3) : 0;
+-                data[6] = (state) ? 2 : 0;
++                data[6] = 0; /* Disable three touch tap so gestures work */
+                 XChangeDeviceProperty (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), xdevice, prop, XA_INTEGER, 8,
+                                        PropModeReplace, data, nitems);
+         }

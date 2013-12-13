@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.8.6.1.ebuild,v 1.2 2013/11/13 19:30:31 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -87,6 +87,34 @@ DEPEND="${COMMON_DEPEND}
 "
 
 src_prepare() {
+	# Ubuntu patches
+	epatch "${FILESDIR}/05_disable_corner_tapping.patch"
+	epatch "${FILESDIR}/${P}-16_use_synchronous_notifications.patch"
+	epatch "${FILESDIR}/${P}-43_disable_locale_settings.patch"
+	epatch "${FILESDIR}/${P}-45_suppress-printer-may-not-be-connected-notification.patch"
+	epatch "${FILESDIR}/${P}-revert_background_dropping.patch"
+	epatch "${FILESDIR}/52_sync_background_to_accountsservice.patch"
+	epatch "${FILESDIR}/${P}-53_sync_input_sources_to_accountsservice.patch"
+	epatch "${FILESDIR}/62_unity_disable_gsd_printer.patch"
+	epatch "${FILESDIR}/63_gnome_disable_background_plugin.patch"
+	epatch "${FILESDIR}/${P}-64_restore_terminal_keyboard_shortcut_schema.patch"
+	epatch "${FILESDIR}/90_set_gmenus_xsettings.patch"
+	epatch "${FILESDIR}/disable_three_touch_tap.patch"
+	epatch "${FILESDIR}/correct_logout_action.patch"
+	epatch "${FILESDIR}/migrate_metacity_keys.patch"
+	epatch "${FILESDIR}/${P}-nexus-orientation.patch"
+	epatch "${FILESDIR}/${P}-fix_broken_user_sounds_permissions.patch"
+	#epatch "${FILESDIR}/${P}-fix_media_keys_on_unity.patch" # Depends on gsd-keygrab revert
+	#epatch "${FILESDIR}/fix_input_switching_on_unity.patch" # Depends on gsd-keygrab revert
+	#epatch "${FILESDIR}/fix_screenshots_on_unity.patch" # Depends on gsd-keygrab revert
+	#epatch "${FILESDIR}/${P}-git_revert_gsd-keygrab.patch"
+	epatch "${FILESDIR}/${P}-git_revert_remove_automount_helper.patch"
+	epatch "${FILESDIR}/ubuntu-fix-desktop-file.patch"
+	epatch "${FILESDIR}/${P}-ubuntu-lid-close-suspend.patch"
+	#epatch "${FILESDIR}/${P}-unity-modifier-media-keys.patch"
+	epatch "${FILESDIR}/ubuntu-lid-open-reset-ideletime.patch"
+	#epatch "${FILESDIR}/git_xsettings_segfaults.patch"
+
 	# https://bugzilla.gnome.org/show_bug.cgi?id=621836
 	# Apparently this change severely affects touchpad usability for some
 	# people, so revert it if USE=short-touchpad-timeout.

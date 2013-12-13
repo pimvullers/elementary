@@ -1,0 +1,26 @@
+From f20df9907933d24519a5e69d565cf25715349fda Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Alejandro=20Pi=C3=B1eiro?= <apinheiro@igalia.com>
+Date: Tue, 13 Aug 2013 20:41:49 +0200
+Subject: [PATCH] Adding shortcut for toggle screen reader
+
+https://bugzilla.gnome.org/show_bug.cgi?id=705929
+---
+ data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in.in b/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in.in
+index a46888d..0af3978 100644
+--- a/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in.in
++++ b/data/org.gnome.settings-daemon.plugins.media-keys.gschema.xml.in.in
+@@ -146,7 +146,7 @@
+       <_description>Binding to show the screen magnifier</_description>
+     </key>
+     <key name="screenreader" type="s">
+-      <default>''</default>
++      <default>'&lt;Alt&gt;&lt;Super&gt;s'</default>
+       <_summary>Toggle screen reader</_summary>
+       <_description>Binding to start the screen reader</_description>
+     </key>
+-- 
+1.8.3.2
+

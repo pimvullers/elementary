@@ -1,0 +1,58 @@
+From 91468c90efa57f89ab2e21634ca03710cb223c43 Mon Sep 17 00:00:00 2001
+From: Tim Lunn <tim@feathertop.org>
+Date: Sun, 9 Jun 2013 11:55:56 +1000
+Subject: [PATCH] Bring back use of gnome-screenshot when running unity.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=681844
+---
+ plugins/media-keys/gsd-media-keys-manager.c | 30 ++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
+
+Index: b/plugins/media-keys/gsd-media-keys-manager.c
+===================================================================
+--- a/plugins/media-keys/gsd-media-keys-manager.c
++++ b/plugins/media-keys/gsd-media-keys-manager.c
+@@ -2340,6 +2340,34 @@
+                   label, g_variant_get_double (percentage));
+         g_free (label);
+ }
++static void
++do_screenshot_action (GsdMediaKeysManager *manager,
++                      MediaKeyType         type)
++{
++        if (!manager->priv->have_legacy_keygrabber)
++                gsd_screenshot_take (type);
++        else {
++                switch (type){
++                case SCREENSHOT_KEY:
++                        execute (manager, "gnome-screenshot", FALSE);
++                        break;
++                case WINDOW_SCREENSHOT_KEY:
++                        execute (manager, "gnome-screenshot --window", FALSE);
++                        break;
++                case AREA_SCREENSHOT_KEY:
++                        execute (manager, "gnome-screenshot --area", FALSE);
++                        break;
++                case SCREENSHOT_CLIP_KEY:
++                        execute (manager, "gnome-screenshot --clipboard", FALSE);
++                        break;
++                case WINDOW_SCREENSHOT_CLIP_KEY:
++                        execute (manager, "gnome-screenshot --window --clipboard", FALSE);
++                        break;
++                case AREA_SCREENSHOT_CLIP_KEY:
++                        execute (manager, "gnome-screenshot --area --clipboard", FALSE);
++                }
++        }
++}
+ 
+ static void
+ do_custom_action (GsdMediaKeysManager *manager,
+@@ -2414,7 +2442,7 @@
+         case WINDOW_SCREENSHOT_CLIP_KEY:
+         case AREA_SCREENSHOT_KEY:
+         case AREA_SCREENSHOT_CLIP_KEY:
+-                gsd_screenshot_take (type);
++                do_screenshot_action (manager, type);
+                 break;
+         case TERMINAL_KEY:
+                 do_terminal_action (manager);

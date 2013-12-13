@@ -1,0 +1,33 @@
+Description: Disable gsd-printer plugin under Unity. We are still using system-config-printer for this, so no need to start another service for this.
+Forwarded: No, Ubuntu specific
+Author: Tim Lunn <tim@feathertop.org>
+Date: Mon, 3 Jun 2013 09:46:56 +1000
+Subject: [PATCH] Disable print notification plugin on unity.
+
+---
+ gnome-settings-daemon/gnome-settings-plugin-info.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+--- a/gnome-settings-daemon/gnome-settings-plugin-info.c
++++ b/gnome-settings-daemon/gnome-settings-plugin-info.c
+@@ -381,6 +381,20 @@
+                 goto out;
+         }
+ 
++        if (g_strcmp0 (g_getenv ("XDG_CURRENT_DESKTOP"), "Unity") == 0
++            && g_strcmp0 (info->priv->name, "Print-notifications") == 0) {
++
++                g_warning ("Disable print plugin under Unity");
++
++                g_object_unref (G_OBJECT (info->priv->module));
++                info->priv->module = NULL;
++
++                /* Mark plugin as unavailable */
++                info->priv->available = FALSE;
++
++                goto out;
++        }
++
+         info->priv->plugin = GNOME_SETTINGS_PLUGIN (gnome_settings_module_new_object (GNOME_SETTINGS_MODULE (info->priv->module)));
+ 
+         g_type_module_unuse (info->priv->module);

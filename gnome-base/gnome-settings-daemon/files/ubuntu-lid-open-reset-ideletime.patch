@@ -1,0 +1,21 @@
+Description: Choose a different key to inject to reset the X11 idle time on
+ resume.
+Author: Stephen M. Webb <stephen.webb@canonical.com>
+Bug-Ubuntu: https://bugs.launchpad.net/unity/+bug/1227920
+Forwarded: https://bugzilla.gnome.org/show_bug.cgi?id=710106
+
+Index: gnome-settings-daemon/plugins/power/gpm-common.c
+===================================================================
+--- gnome-settings-daemon.orig/plugins/power/gpm-common.c	2013-10-11 14:31:10.538433000 -0400
++++ gnome-settings-daemon/plugins/power/gpm-common.c	2013-10-11 15:05:49.482697946 -0400
+@@ -1667,8 +1667,8 @@
+         static gboolean first_keycode = FALSE;
+ 
+         if (inited == FALSE) {
+-                keycode1 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_KEY_Alt_L);
+-                keycode2 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_KEY_Alt_R);
++                keycode1 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_KEY_Shift_L);
++                keycode2 = XKeysymToKeycode (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), GDK_KEY_Shift_R);
+         }
+ 
+         gdk_error_trap_push ();
