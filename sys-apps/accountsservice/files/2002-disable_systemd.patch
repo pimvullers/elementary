@@ -1,0 +1,16 @@
+Description: Remove SystemdService from DBus service file.
+Author: Alessio Treglia <alessio@debian.org>
+Bug-Debian: http://bugs.debian.org/675925
+---
+ data/org.freedesktop.Accounts.service.in |    1 -
+ 1 file changed, 1 deletion(-)
+
+Index: accountsservice-0.6.34/data/org.freedesktop.Accounts.service.in
+===================================================================
+--- accountsservice-0.6.34.orig/data/org.freedesktop.Accounts.service.in	2013-06-26 20:02:05.759804884 +0200
++++ accountsservice-0.6.34/data/org.freedesktop.Accounts.service.in	2013-06-26 20:02:05.751804883 +0200
+@@ -2,4 +2,3 @@
+ Name=org.freedesktop.Accounts
+ Exec=@libexecdir@/accounts-daemon
+ User=root
+-SystemdService=accounts-daemon.service
