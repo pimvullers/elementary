@@ -27,6 +27,23 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd6
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 # Use gtk+:2 for gtk-update-icon-cache
 COMMON_DEPEND="
+	>=dev-libs/atk-2.7.5[introspection?]
+	>=dev-libs/glib-2.37.5:2
+	media-libs/fontconfig
+	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?]
+	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
+	>=x11-libs/gtk+-2.24:2
+	>=x11-libs/pango-1.32.4[introspection?]
+	x11-misc/shared-mime-info
+
+	colord? ( >=x11-misc/colord-0.1.9 )
+	cups? ( >=net-print/cups-1.2 )
+	introspection? ( >=dev-libs/gobject-introspection-1.32 )
+	wayland? (
+		>=dev-libs/wayland-1.2
+		media-libs/mesa[wayland]
+		>=x11-libs/libxkbcommon-0.2
+	)
 	X? (
 		>=app-accessibility/at-spi2-atk-2.5.3
 		x11-libs/libXrender
@@ -40,28 +57,13 @@ COMMON_DEPEND="
 		x11-libs/libXdamage
 		xinerama? ( x11-libs/libXinerama )
 	)
-	wayland? (
-		>=dev-libs/wayland-1.2.0
-		media-libs/mesa[wayland]
-		>=x11-libs/libxkbcommon-0.2
-	)
-	>=dev-libs/glib-2.37.5:2
-	>=x11-libs/pango-1.32.4[introspection?]
-	>=dev-libs/atk-2.7.5[introspection?]
-	>=x11-libs/cairo-1.12.0[aqua?,glib,svg,X?]
-	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
-	>=x11-libs/gtk+-2.24:2
-	media-libs/fontconfig
-	x11-misc/shared-mime-info
-	colord? ( >=x11-misc/colord-0.1.9 )
-	cups? ( >=net-print/cups-1.2 )
-	introspection? ( >=dev-libs/gobject-introspection-1.32 )
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xsl-stylesheets
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
 	dev-util/gdbus-codegen
+	>=dev-util/gtk-doc-am-1.11
 	virtual/pkgconfig
 	X? (
 		x11-proto/xextproto
@@ -70,7 +72,6 @@ DEPEND="${COMMON_DEPEND}
 		x11-proto/damageproto
 		xinerama? ( x11-proto/xineramaproto )
 	)
-	>=dev-util/gtk-doc-am-1.11
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )
@@ -98,7 +99,7 @@ strip_builddir() {
 	shift
 	local directory=$1
 	shift
-	sed -e "s/^\(${rule} =.*\) ${directory} \(.*\)$/\1 \2/" -i $@ \
+	sed -e "s/^\(${rule} =.*\)${directory}\(.*\)$/\1\2/" -i $@ \
 		|| die "Could not strip director ${directory} from build."
 }
 
@@ -109,21 +110,12 @@ src_prepare() {
 	replace-flags -O3 -O2
 	strip-flags
 
-	# FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=654108
-	# epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
-
-	if use test; then
-		# FIXME: multiple reftests fail when run from portage (but succeed when
-		# run from a manual compile in a temp directory)
-		sed -e 's:\(SUBDIRS.*\)reftests:\1:' \
-			-i tests/Makefile.* || die "sed 3 failed"
-	else
+	if ! use test ; then
 		# don't waste time building tests
-		strip_builddir SRC_SUBDIRS tests Makefile.am
-		strip_builddir SRC_SUBDIRS tests Makefile.in
-
 		strip_builddir SRC_SUBDIRS testsuite Makefile.am
 		strip_builddir SRC_SUBDIRS testsuite Makefile.in
+		strip_builddir SRC_SUBDIRS tests Makefile.am
+		strip_builddir SRC_SUBDIRS tests Makefile.in
 	fi
 
 	if ! use examples; then
@@ -193,8 +185,11 @@ src_test() {
 		return 0
 	fi
 
+	# FIXME: this should be handled at eclass level
+	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/gtk" || die
+
 	unset DBUS_SESSION_BUS_ADDRESS
-	Xemake check
+	GSETTINGS_SCHEMA_DIR="${S}/gtk" Xemake check
 }
 
 src_install() {
@@ -204,21 +199,30 @@ src_install() {
 	doins "${FILESDIR}"/settings.ini
 
 	# add -framework Carbon to the .pc files
-	use aqua && for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
-		sed -i -e "s:Libs\: :Libs\: -framework Carbon :" "${ED}"usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
-	done
+	if use aqua ; then
+		for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
+			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
+				-i "${ED}"usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
+		done
+	fi
 }
 
 pkg_preinst() {
 	gnome2_schemas_savelist
+
+	# Make sure loaders.cache belongs to gdk-pixbuf alone
+	local cache="usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache"
+
+	if [[ -e ${EROOT}${cache} ]]; then
+		cp "${EROOT}"${cache} "${ED}"/${cache} || die
+	else
+		touch "${ED}"/${cache} || die
+	fi
 }
 
 pkg_postinst() {
 	gnome2_schemas_update
-
-	local GTK3_MODDIR="${EROOT}usr/$(get_libdir)/gtk-3.0/3.0.0"
-	gtk-query-immodules-3.0  > "${GTK3_MODDIR}/immodules.cache" \
-		|| ewarn "Failed to run gtk-query-immodules-3.0"
+	gnome2_query_immodules_gtk3
 
 	if ! has_version "app-text/evince"; then
 		elog "Please install app-text/evince for print preview functionality."
@@ -229,4 +233,8 @@ pkg_postinst() {
 
 pkg_postrm() {
 	gnome2_schemas_update
+
+	if [[ -z ${REPLACED_BY_VERSIONS} ]]; then
+		rm -f "${EROOT}"usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache
+	fi
 }
