@@ -13,21 +13,18 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
-
 IUSE="+colord +cups debug +i18n input_devices_wacom -openrc-force packagekit policykit +short-touchpad-timeout smartcard +udev"
 REQUIRED_USE="
 	packagekit? ( udev )
 	smartcard? ( udev )
 "
+KEYWORDS="~alpha ~amd64 ~arm ~ppc ~ppc64 ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
-# require colord-0.1.27 dependency for connection type support
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2
-	>=dev-libs/libgweather-3.9.5
 	>=x11-libs/gtk+-3.7.8:3
-	>=gnome-base/gnome-desktop-3.9.0:3=
-	>=gnome-base/gsettings-desktop-schemas-3.9.91
+	>=gnome-base/gnome-desktop-3.9:3=
+	>=gnome-base/gsettings-desktop-schemas-3.9.91.1
 	>=gnome-base/librsvg-2.36.2
 	media-fonts/cantarell
 	media-libs/fontconfig
@@ -46,22 +43,23 @@ COMMON_DEPEND="
 	x11-libs/libXtst
 	x11-libs/libXxf86misc
 
-	input_devices_wacom? (
-		>=dev-libs/libwacom-0.7
-		x11-drivers/xf86-input-wacom )
-
-	>=sci-geosciences/geocode-glib-3.10.0
-	>=app-misc/geoclue-1.99.4:2
+	app-misc/geoclue:2.0
+	>=dev-libs/libgweather-3.9.5:2
+	>=sci-geosciences/geocode-glib-3.10
+	>=sys-auth/polkit-0.103
 
 	colord? ( >=x11-misc/colord-1.0.2:= )
 	cups? ( >=net-print/cups-1.4[dbus] )
 	i18n? ( >=app-i18n/ibus-1.4.99 )
+	input_devices_wacom? (
+		>=dev-libs/libwacom-0.7
+		>=x11-libs/pango-1.20
+		x11-drivers/xf86-input-wacom
+		virtual/udev[gudev] )
 	packagekit? ( >=app-admin/packagekit-base-0.8.1 )
 	smartcard? ( >=dev-libs/nss-3.11.2 )
 	udev? ( virtual/udev[gudev] )
 "
-# TODO: ^ Surround colord with USE flag condition once it is made back optional.
-
 # Themes needed by g-s-d, gnome-shell, gtk+:3 apps to work properly
 # <gnome-color-manager-3.1.1 has file collisions with g-s-d-3.1.x
 # <gnome-power-manager-3.1.3 has file collisions with g-s-d-3.1.x
@@ -75,7 +73,6 @@ RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gnome-control-center-2.22
 	!<gnome-extra/gnome-color-manager-3.1.1
 	!<gnome-extra/gnome-power-manager-3.1.3
-
 "
 # xproto-7.0.15 needed for power plugin
 DEPEND="${COMMON_DEPEND}
@@ -98,7 +95,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.7.90-short-touchpad-timeout.patch"
 
 	# Make colord and wacom optional; requires eautoreconf
-	epatch "${FILESDIR}/${PN}-3.10.0-optional-color-wacom.patch"
+	epatch "${FILESDIR}/${PN}-3.10.2-optional.patch"
 
 	epatch_user
 	eautoreconf

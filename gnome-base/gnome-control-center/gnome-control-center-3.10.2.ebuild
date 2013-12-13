@@ -13,7 +13,6 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-
 IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager +socialweb v4l"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
@@ -28,12 +27,12 @@ QA_CONFIGURE_OPTIONS=".*"
 #
 # kerberos unfortunately means mit-krb5; build fails with heimdal
 COMMON_DEPEND="
-	>=dev-libs/glib-2.37.7:2
+	>=dev-libs/glib-2.37.2:2
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.9.12:3
 	>=gnome-base/gsettings-desktop-schemas-3.9.91
 	>=gnome-base/gnome-desktop-3.9.90:3=
-	>=gnome-base/gnome-settings-daemon-3.8.3[policykit]
+	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
 	>=gnome-base/libgnomekbd-2.91.91
 
 	>=dev-libs/libpwquality-1.2.2
@@ -41,11 +40,10 @@ COMMON_DEPEND="
 	gnome-base/gnome-menus:3
 	gnome-base/libgtop:2
 	media-libs/fontconfig
-	media-libs/clutter
 
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
-	>=sys-auth/polkit-0.103
+	>=sys-auth/polkit-0.97
 	>=sys-power/upower-0.9.1
 	>=x11-libs/libnotify-0.7.3:0=
 
@@ -53,6 +51,7 @@ COMMON_DEPEND="
 		>=gnome-extra/nm-applet-0.9.7.995
 		>=net-misc/networkmanager-0.9.8[modemmanager?]
 	)
+	modemmanager? ( >=net-misc/modemmanager-0.7.990 )
 
 	virtual/opengl
 	x11-apps/xmodmap
@@ -60,15 +59,16 @@ COMMON_DEPEND="
 	x11-libs/libXxf86misc
 	>=x11-libs/libXi-1.2
 
-	bluetooth? ( >=net-wireless/gnome-bluetooth-3.5.5:= )
-	colord? ( >=x11-misc/colord-0.1.29 )
+	bluetooth? ( >=net-wireless/gnome-bluetooth-3.9.3:= )
+	colord? (
+		net-libs/libsoup:2.4
+		>=x11-misc/colord-0.1.34 )
 	cups? (
 		>=net-print/cups-1.4[dbus]
 		>=net-fs/samba-3.6.14-r1[smbclient] )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.9.90 )
-	i18n? ( >=app-i18n/ibus-1.4.99 )
+	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
-	modemmanager? ( >=net-misc/modemmanager-0.7.990 )
 	socialweb? ( net-libs/libsocialweb )
 	v4l? (
 		media-libs/gstreamer:1.0
@@ -76,6 +76,8 @@ COMMON_DEPEND="
 		>=media-video/cheese-3.5.91 )
 	input_devices_wacom? (
 		>=dev-libs/libwacom-0.7
+		>=media-libs/clutter-1.11.3:1.0
+		media-libs/clutter-gtk:1.0
 		>=x11-libs/libXi-1.2 )
 "
 # <gnome-color-manager-3.1.2 has file collisions with g-c-c-3.1.x
@@ -126,18 +128,25 @@ src_prepare() {
 
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}/${PN}-3.10.2-optional.patch"
+	epatch "${FILESDIR}"/${PN}-3.10.2-optional.patch
 
 	# Fix some absolute paths to be appropriate for Gentoo
-	epatch "${FILESDIR}/${PN}-3.8.0-paths-makefiles.patch"
-	epatch "${FILESDIR}/${PN}-3.8.0-paths.patch"
-	epatch "${FILESDIR}/${P}-fixbuild.patch"
+	epatch "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch
 
 	epatch_user
-	eautoreconf
 
-	# panels/datetime/Makefile.am gets touched as a result of something in our
-	# src_prepare(). We need to touch timedated{c,h} to prevent them from being
+	# top-level configure.ac does not use AC_CONFIG_SUBDIRS, so we need this to
+	# avoid libtoolize "We've already been run in this tree" warning, bug #484988
+	local d
+	for d in . egg-list-box; do
+		pushd "${d}" > /dev/null
+		AT_NOELIBTOOLIZE=yes eautoreconf
+		popd > /dev/null
+	done
+	elibtoolize --force
+
+	# panels/datetime/Makefile.am gets touched by "gentoo-paths" patch.
+	# We need to touch timedated{c,h} to prevent them from being
 	# regenerated (bug #415901)
 	# Upstream think they should be removed, preventing compilation errors too
 	# (https://bugzilla.gnome.org/704822)
@@ -159,6 +168,7 @@ src_configure() {
 		$(use_enable i18n ibus) \
 		$(use_enable kerberos) \
 		$(use_enable modemmanager) \
+		$(use_enable networkmanager) \
 		$(use_with socialweb libsocialweb) \
 		$(use_with v4l cheese) \
 		$(use_enable input_devices_wacom wacom)
