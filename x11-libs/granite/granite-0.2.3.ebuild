@@ -4,13 +4,13 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.20
 
 inherit gnome2-utils vala multilib cmake-utils versionator
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="http://launchpad.net/granite"
-SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tar.gz"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tgz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -19,7 +19,6 @@ IUSE="demo nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/gobject-introspection
 	dev-libs/libgee:0[introspection]
 	>=x11-libs/gtk+-3.4:3[introspection]"
 DEPEND="${RDEPEND}

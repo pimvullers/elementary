@@ -92,8 +92,6 @@ PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 # autoreconf to regenerate.
 AUTOTOOLS_AUTORECONF=1
 
-DOCS=( AUTHORS ChangeLog* HACKING NEWS* README* )
-
 strip_builddir() {
 	local rule=$1
 	shift
@@ -194,6 +192,8 @@ src_test() {
 
 src_install() {
 	autotools-utils_src_install
+
+	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
 
 	insinto /etc/gtk-3.0
 	doins "${FILESDIR}"/settings.ini
