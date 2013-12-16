@@ -16,7 +16,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="static-libs"
 
 RDEPEND="
-	app-misc/geoclue
+	app-misc/geoclue:0
 	dev-libs/glib:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
 	dev-libs/libical
