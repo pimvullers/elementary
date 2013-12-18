@@ -1,0 +1,23 @@
+## Description: we need the deprecated schema for upgrade from precise until
+## next LTS in case this package is updated before the overlay-scrollbar one
+## (so still referencing the old key) and that a debconf prompt is loaded:
+## perl-gtk will try to fetch this old schema and crash.
+## Author: Didier Roche <didrocks@ubuntu.com>
+## Bug: https://launchpad.net/bugs/1060249
+Index: gsettings-desktop-schemas-3.3.90/schemas/org.gnome.desktop.interface.gschema.xml.in.in
+===================================================================
+--- gsettings-desktop-schemas-3.3.90.orig/schemas/org.gnome.desktop.interface.gschema.xml.in.in	2012-03-09 13:50:27.149543554 +0000
++++ gsettings-desktop-schemas-3.3.90/schemas/org.gnome.desktop.interface.gschema.xml.in.in	2012-03-09 14:01:45.149549317 +0000
+@@ -250,5 +250,12 @@
+         presses the Alt key.
+       </_description>
+     </key>
++    <key name="ubuntu-overlay-scrollbars" type="b">
++      <default>true</default>
++      <_summary>Enable Overlay Scrollbars</_summary>
++      <_description>
++        Whether overlay scrollbars should be used. Note: Apps require restart.
++      </_description>
++    </key>
+   </schema>
+ </schemalist>
