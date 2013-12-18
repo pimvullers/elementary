@@ -32,6 +32,8 @@ src_prepare() {
 	epatch "${FILESDIR}/ubuntu_overlay-scrollbars.patch"
 	epatch "${FILESDIR}/git_revert_background_key_removal.patch"
 	epatch "${FILESDIR}/git_revert_notifications_key_removal.patch"
+
+	gnome2_src_prepare
 }
 
 src_configure() {
