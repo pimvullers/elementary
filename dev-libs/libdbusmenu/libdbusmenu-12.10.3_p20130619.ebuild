@@ -15,10 +15,11 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_12.10.
 LICENSE="LGPL-2.1 LGPL-3"
 SLOT="3"
 KEYWORDS="~amd64 ~arm ~hppa ~mips ~x86"
-IUSE="debug gtk +introspection"
+IUSE="debug gtk gtk2 +introspection"
 
 RDEPEND=">=dev-libs/glib-2.35.4
-	gtk? ( >=x11-libs/gtk+-3.2:3[introspection?] )
+	gtk? ( x11-libs/gtk+:3[introspection?] )
+	gtk2? ( x11-libs/gtk+:2[introspection?] )
 	introspection? ( >=dev-libs/gobject-introspection-1 )
 	!<${CATEGORY}/${PN}-0.5.1-r200"
 DEPEND="${RDEPEND}
@@ -27,8 +28,14 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	introspection? ( $(vala_depend) )"
 
+REQUIRED_USE="gtk2? ( gtk )"
+
 S="${WORKDIR}/libdbusmenu-12.10.3daily13.06.19~13.04"
 AUTOTOOLS_AUTORECONF=1
+
+pkg_setup() {
+	GTKS="`use gtk2 && echo -n 2` `use gtk && echo -n 3`"
+}
 
 src_prepare() {
 	if use introspection; then
@@ -55,24 +62,31 @@ src_configure() {
 		$(use_enable introspection vala)
 		$(use_enable debug massivedebugging)
 		--with-html-dir=/usr/share/doc/${PF}/html
-		--with-gtk=3
 		HAVE_VALGRIND_TRUE='#'
 		HAVE_VALGRIND_FALSE=
 	)
 
-	autotools-utils_src_configure
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_configure --with-gtk=${gtk}
+	done
+}
+
+src_compile() {
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_compile
+	done
 }
 
 src_test() { :; } #440192
 
 src_install() {
-	autotools-utils_src_install
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_install -j1
+	done
 
 	local a b
 	for a in ${PN}-{glib,gtk}; do
 		b=/usr/share/doc/${PF}/html/${a}
 		[[ -d ${ED}/${b} ]] && dosym ${b} /usr/share/gtk-doc/html/${a}
 	done
-
-	prune_libtool_files
 }
