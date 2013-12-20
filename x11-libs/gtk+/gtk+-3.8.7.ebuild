@@ -3,7 +3,8 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.8.7.ebuild,v 1.5 2013/12/17 19:54:07 pacho Exp $
 
 EAPI="5"
-inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx
+
+inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx autotools
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -153,6 +154,10 @@ src_prepare() {
 	fi
 
 	epatch_user
+
+	# automake 1.13 is hard-coded in bundled configure script. Running
+	# eautoreconf to regenerate.
+	eautoreconf
 }
 
 src_configure() {
