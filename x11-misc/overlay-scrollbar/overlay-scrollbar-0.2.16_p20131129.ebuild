@@ -13,18 +13,22 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="static-libs"
+IUSE="gtk2 +gtk3 static-libs"
+REQUIRED_USE="|| ( gtk2 gtk3 )"
 
 RDEPEND="
 	dev-libs/glib:2
 	x11-libs/cairo
-	x11-libs/gtk+:2
-	x11-libs/gtk+:3"
+	gtk2? ( x11-libs/gtk+:2[ubuntu] )
+	gtk3? ( x11-libs/gtk+:3[ubuntu] )"
 DEPEND="${RDEPEND}"
 
 AUTOTOOLS_AUTORECONF=1
 S="${WORKDIR}/overlay-scrollbar-0.2.16+r359+14.04.20131129"
-GTKS="2 3"
+
+pkg_setup() {
+	GTKS="`use gtk2 && echo -n 2` `use gtk3 && echo -n 3`"
+}
 
 src_prepare() {
 	autotools-utils_src_prepare
@@ -53,4 +57,3 @@ src_install() {
 
 	prune_libtool_files --all
 }
-
