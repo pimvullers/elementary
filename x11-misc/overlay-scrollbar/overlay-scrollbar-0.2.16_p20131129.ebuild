@@ -13,16 +13,18 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
+IUSE="static-libs"
 
 RDEPEND="
 	dev-libs/glib:2
 	x11-libs/cairo
+	x11-libs/gtk+:2
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}"
 
 AUTOTOOLS_AUTORECONF=1
 S="${WORKDIR}/overlay-scrollbar-0.2.16+r359+14.04.20131129"
+GTKS="2 3"
 
 src_prepare() {
 	autotools-utils_src_prepare
@@ -31,8 +33,24 @@ src_prepare() {
 src_configure() {
 	local myeconfargs=(
 		--disable-tests
-		--with-gtk=3
 	)
 
-	autotools-utils_src_configure
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_configure --with-gtk=${gtk}
+	done
 }
+
+src_compile() {
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_compile
+	done
+}
+
+src_install() {
+	for gtk in ${GTKS}; do
+		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_install
+	done
+
+	prune_libtool_files
+}
+
