@@ -15,7 +15,9 @@ LICENSE="GPL-3+"
 SLOT="0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
-IUSE="doc +introspection systemd"
+IUSE="doc +introspection systemd +ubuntu"
+SRC_URI="${SRC_URI}
+	https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_${PV}-0ubuntu6.debian.tar.gz"
 
 # Want glib-2.34 for g_clear_pointer, bug #462938
 RDEPEND="
@@ -50,21 +52,17 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-0.6.35-user-logic.patch"
 
 	# Ubuntu patches
-	epatch "${FILESDIR}/0001-formats-locale-property.patch"
-	#epatch "${FILESDIR}/0002-create-and-manage-groups-like-on-a-ubuntu-system.patch"
-	#epatch "${FILESDIR}/0006-adduser_instead_of_useradd.patch"
-	epatch "${FILESDIR}/0007-add-lightdm-support.patch"
-	epatch "${FILESDIR}/0008-nopasswdlogin-group.patch"
-	epatch "${FILESDIR}/0009-language-tools.patch"
-	epatch "${FILESDIR}/0010-set-language.patch"
-	epatch "${FILESDIR}/0011-add-background-file-support.patch"
-	epatch "${FILESDIR}/0012-add-keyboard-layout-support.patch"
-	epatch "${FILESDIR}/0013-add-has-message-support.patch"
-	epatch "${FILESDIR}/0014-pam-pin.patch"
-	epatch "${FILESDIR}/0015-pam-pin-ubuntu.patch"
-	use systemd || epatch "${FILESDIR}/2002-disable_systemd.patch"
-	epatch "${FILESDIR}/0016-add-input-sources-support.patch"
-	epatch "${FILESDIR}/0017-clean-up-cache-dir.patch"
+	if use ubuntu; then
+		einfo "Applying patches from Ubuntu:"
+		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
+			epatch "${WORKDIR}/debian/patches/${patch}"
+		done
+
+		# Only apply this patch if the systemd USE-flag is not set
+		if ! use systemd; then
+			epatch "${WORKDIR}/debian/patches/2002-disable_systemd.patch"
+		fi
+	fi
 
 	eautoreconf
 	gnome2_src_prepare
