@@ -51,6 +51,6 @@ src_install() {
 		BUILD_DIR=${WORKDIR}/${P}_build${gtk} autotools-utils_src_install
 	done
 
-	prune_libtool_files
+	prune_libtool_files --all
 }
 
