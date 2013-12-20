@@ -3,7 +3,6 @@
 # $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.8.7.ebuild,v 1.5 2013/12/17 19:54:07 pacho Exp $
 
 EAPI="5"
-
 inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx
 
 DESCRIPTION="Gimp ToolKit +"
@@ -16,15 +15,14 @@ SLOT="3"
 #  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
 # I tried this and got it all compiling, but the end result is unusable as it
 # horribly mixes up the backends -- grobian
-IUSE="aqua colord cups debug examples +introspection packagekit test vim-syntax wayland X xinerama"
+IUSE="aqua colord cups debug examples +introspection packagekit test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )"
 
 KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.8.6-0ubuntu3.1.debian.tar.gz"
+	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_${PV}-0ubuntu1.debian.tar.gz"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
@@ -103,18 +101,20 @@ strip_builddir() {
 src_prepare() {
 	gnome2_environment_reset
 
+	# Ubuntu patches
+	if use ubuntu; then
+		einfo "Applying patches from Ubuntu:"
+		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
+			epatch "${WORKDIR}/debian/patches/${patch}"
+		done
+	fi
+
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
 
 	# FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=654108
 	# epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
-
-	# Ubuntu patches
-	sed -i -e '/git_/d' "${WORKDIR}/debian/patches/series"
-	for patch in `grep -v \# "${WORKDIR}/debian/patches/series"`; do
-		epatch "${WORKDIR}/debian/patches/${patch}"
-	done
 
 	# This files shouldn't be in tarball, upstream bug #709974
 	# This needs dev-util/gdbus-codegen in DEPEND

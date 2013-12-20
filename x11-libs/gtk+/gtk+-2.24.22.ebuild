@@ -12,7 +12,7 @@ HOMEPAGE="http://www.gtk.org/"
 LICENSE="LGPL-2+"
 SLOT="2"
 KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="aqua cups debug examples +introspection test vim-syntax xinerama"
+IUSE="aqua cups debug examples +introspection +ubuntu test vim-syntax xinerama"
 SRC_URI="${SRC_URI}
 	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_${PV}-1ubuntu1.debian.tar.gz"
 
@@ -97,9 +97,12 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-2.24.20-darwin-quartz-pasteboard.patch
 
 	# Ubuntu patches
-	for patch in `grep -v \# "${WORKDIR}/debian/patches/series"`; do
-		epatch "${WORKDIR}/debian/patches/${patch}"
-	done
+	if use ubuntu; then
+		einfo "Applying patches from Ubuntu:"
+		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
+			epatch "${WORKDIR}/debian/patches/${patch}"
+		done
+	fi
 
 	# marshalers code was pre-generated with glib-2.31, upstream bug #671763
 	rm -v gdk/gdkmarshalers.c gtk/gtkmarshal.c gtk/gtkmarshalers.c \

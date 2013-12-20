@@ -4,7 +4,7 @@
 
 EAPI="5"
 
-inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx autotools-utils
+inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx autotools
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -16,13 +16,12 @@ SLOT="3"
 #  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
 # I tried this and got it all compiling, but the end result is unusable as it
 # horribly mixes up the backends -- grobian
-IUSE="aqua colord cups debug examples +introspection packagekit test vim-syntax wayland X xinerama"
+IUSE="aqua colord cups debug examples +introspection packagekit test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-
 SRC_URI="${SRC_URI}
 	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_${PV}-0ubuntu2.debian.tar.gz"
 
@@ -91,10 +90,6 @@ RDEPEND="${COMMON_DEPEND}
 "
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
-# automake 1.13 is hard-coded in bundled configure script. Running
-# autoreconf to regenerate.
-AUTOTOOLS_AUTORECONF=1
-
 strip_builddir() {
 	local rule=$1
 	shift
@@ -108,9 +103,12 @@ src_prepare() {
 	gnome2_environment_reset
 
 	# Ubuntu patches
-	for patch in `grep -v \# "${WORKDIR}/debian/patches/series"`; do
-		epatch "${WORKDIR}/debian/patches/${patch}"
-	done
+	if use ubuntu; then
+		einfo "Applying patches from Ubuntu:"
+		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
+			epatch "${WORKDIR}/debian/patches/${patch}"
+		done
+	fi
 
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
@@ -130,54 +128,36 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.in
 	fi
 
-	# Ubuntu patches
-#	epatch "${FILESDIR}/016_no_offscreen_widgets_grabbing.patch"
-#	epatch "${FILESDIR}/017_no_offscreen_device_grabbing.patch"
-#	epatch "${FILESDIR}/018_gdkenumtypes.c_location.patch"
-#	epatch "${FILESDIR}/022_disable-viqr-im-for-vi-locale.patch"
-#	epatch "${FILESDIR}/032_mips_treeview_row_separator_height.patch"
-#	epatch "${FILESDIR}/044_tracker_fts.patch"
-#	epatch "${FILESDIR}/060_ignore-random-icons.patch"
-#	epatch "${FILESDIR}/071_fix-installation-of-HTML-images.patch"
-#	epatch "${FILESDIR}/073_treeview_almost_fixed.patch"
-#	epatch "${FILESDIR}/074_eventbox_scroll_mask.patch"
-#	epatch "${FILESDIR}/bzg_gtkcellrenderer_grabbing_modifier.patch"
-#	epatch "${FILESDIR}/ubuntu_gtk_custom_menu_items.patch"
-#	epatch "${FILESDIR}/print-dialog-show-options-of-remote-dnssd-printers.patch"
-#	epatch "${FILESDIR}/uimanager-guard-against-nested-node-updates.patch"
-#	epatch "${FILESDIR}/git_menu_separator_style.patch"	
-
-	autotools-utils_src_prepare
+	# automake 1.13 is hard-coded in bundled configure script. Running
+	# eautoreconf to regenerate.
+	eautoreconf
 }
 
 src_configure() {
 	# Passing --disable-debug is not recommended for production use
 	# need libdir here to avoid a double slash in a path that libtool doesn't
 	# grok so well during install (// between $EPREFIX and usr ...)
-	local myeconfargs=(
-		$(use_enable aqua quartz-backend)
-		$(use_enable colord)
-		$(use_enable cups cups auto)
-		$(usex debug --enable-debug=yes "")
-		$(use_enable introspection)
-		$(use_enable packagekit)
-		$(use_enable wayland wayland-backend)
-		$(use_enable X x11-backend)
-		$(use_enable X xcomposite)
-		$(use_enable X xdamage)
-		$(use_enable X xfixes)
-		$(use_enable X xkb)
-		$(use_enable X xrandr)
-		$(use_enable xinerama)
-		--disable-gtk-doc
-		--disable-papi
-		--enable-man
-		--enable-gtk2-dependency
-		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog
+	econf \
+		$(use_enable aqua quartz-backend) \
+		$(use_enable colord) \
+		$(use_enable cups cups auto) \
+		$(usex debug --enable-debug=yes "") \
+		$(use_enable introspection) \
+		$(use_enable packagekit) \
+		$(use_enable wayland wayland-backend) \
+		$(use_enable X x11-backend) \
+		$(use_enable X xcomposite) \
+		$(use_enable X xdamage) \
+		$(use_enable X xfixes) \
+		$(use_enable X xkb) \
+		$(use_enable X xrandr) \
+		$(use_enable xinerama) \
+		--disable-gtk-doc \
+		--disable-papi \
+		--enable-man \
+		--enable-gtk2-dependency \
+		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
 		--libdir="${EPREFIX}/usr/$(get_libdir)"
-	)
-
-	autotools-utils_src_configure
 }
 
 src_test() {
@@ -199,12 +179,14 @@ src_test() {
 }
 
 src_install() {
-	autotools-utils_src_install
-
-	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
+	emake DESTDIR="${D}" install
 
 	insinto /etc/gtk-3.0
 	doins "${FILESDIR}"/settings.ini
+
+	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
+
+	prune_libtool_files --modules
 
 	# add -framework Carbon to the .pc files
 	if use aqua ; then

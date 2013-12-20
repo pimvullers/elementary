@@ -16,15 +16,14 @@ SLOT="3"
 #  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
 # I tried this and got it all compiling, but the end result is unusable as it
 # horribly mixes up the backends -- grobian
-IUSE="aqua colord cups debug examples +introspection packagekit test vim-syntax wayland X xinerama"
+IUSE="aqua colord cups debug examples +introspection packagekit test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )"
 
 KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 s390 sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.4.2-0ubuntu0.6.debian.tar.gz"
+	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.4.2-0ubuntu3.debian.tar.gz"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
@@ -94,9 +93,7 @@ strip_builddir() {
 }
 
 src_prepare() {
-	# -O3 and company cause random crashes in applications. Bug #133469
-	replace-flags -O3 -O2
-	strip-flags
+	gnome2_environment_reset
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=654108
 	epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
@@ -108,12 +105,19 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-3.4.4-isnan.patch"
 
 	# Ubuntu patches
-	cp "${FILESDIR}/${P}-018_gdkenumtypes.c_location.patch" \
-		"${WORKDIR}/debian/patches/018_gdkenumtypes.c_location.patch"
-	sed -i -e '/git_/d' "${WORKDIR}/debian/patches/series"
-	for patch in `grep -v \# "${WORKDIR}/debian/patches/series"`; do
-		epatch "${WORKDIR}/debian/patches/${patch}"
-	done
+	if use ubuntu; then
+		einfo "Applying patches from Ubuntu:"
+		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
+			epatch "${WORKDIR}/debian/patches/${patch}"
+		done
+
+		# Fixed Ubuntu GTK+ 3.4.2 patch for use with GTK+ 3.4.4
+		epatch "${FILESDIR}/${P}-018_gdkenumtypes.c_location.patch"
+	fi
+
+	# -O3 and company cause random crashes in applications. Bug #133469
+	replace-flags -O3 -O2
+	strip-flags
 
 	# Non-working test in gentoo's env
 	sed 's:\(g_test_add_func ("/ui-tests/keys-events.*\):/*\1*/:g' \

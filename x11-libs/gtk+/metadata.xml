@@ -13,6 +13,7 @@
 	  in printing</flag>
     <flag name="packagekit">Enable support for the distro-neutral package
 	  manager GUI <pkg>app-admin/packagekit</pkg> in application chooser</flag>
+	<flag name="ubuntu">Apply patches from Ubuntu</flag>
   </use>
   <upstream>
     <remote-id type="cpe">cpe:/a:gtk:gtk%2B</remote-id>

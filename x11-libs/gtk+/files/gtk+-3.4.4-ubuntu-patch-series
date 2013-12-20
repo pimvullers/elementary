@@ -1,0 +1,14 @@
+001_static-linking-dont-query-immodules.patch
+016_no_offscreen_widgets_grabbing.patch
+017_no_offscreen_device_grabbing.patch
+022_disable-viqr-im-for-vi-locale.patch
+044_tracker_fts.patch
+061_multiarch_module_fallback.patch
+043_ubuntu_menu_proxy.patch
+062_ubuntu-set-grab-add.patch
+073_treeview_almost_fixed.patch
+075_expose_gdkwidget_for_gtkrange.patch
+099_eventbox_scroll_mask.patch
+100_overlay_scrollbar_loading.patch
+101_revert_symbolic_icon_search.patch
+git_gtkcellrenderer_grabbing_modifier.patch
