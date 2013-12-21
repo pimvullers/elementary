@@ -1,0 +1,48 @@
+From 90714db611d6ced5202421ef3ba99334f1e9e6ec Mon Sep 17 00:00:00 2001
+From: Matthias Clasen <mclasen@redhat.com>
+Date: Fri, 01 Nov 2013 20:30:06 +0000
+Subject: Fix a possible crash in the presence interface
+
+Improper error handling in gsm_presence_set_status_text() would
+lead to a double free on the next call to that function.
+Found using the dfuzzer tool,
+https://github.com/matusmarhefka/dfuzzer
+---
+diff --git a/gnome-session/gsm-presence.c b/gnome-session/gsm-presence.c
+index f6a022f..93ca1a0 100644
+--- a/gnome-session/gsm-presence.c
++++ b/gnome-session/gsm-presence.c
+@@ -365,6 +365,7 @@ gsm_presence_set_status_text (GsmPresence  *presence,
+         g_return_val_if_fail (GSM_IS_PRESENCE (presence), FALSE);
+ 
+         g_free (presence->priv->status_text);
++	presence->priv->status_text = NULL;
+ 
+         /* check length */
+         if (status_text != NULL && strlen (status_text) > MAX_STATUS_TEXT) {
+@@ -377,11 +378,11 @@ gsm_presence_set_status_text (GsmPresence  *presence,
+ 
+         if (status_text != NULL) {
+                 presence->priv->status_text = g_strdup (status_text);
+-        } else {
+-                presence->priv->status_text = g_strdup ("");
+         }
++
+         g_object_notify (G_OBJECT (presence), "status-text");
+-        g_signal_emit (presence, signals[STATUS_TEXT_CHANGED], 0, presence->priv->status_text);
++        g_signal_emit (presence, signals[STATUS_TEXT_CHANGED], 0,
++                       presence->priv->status_text ? presence->priv->status_text : "");
+         return TRUE;
+ }
+ 
+@@ -457,7 +458,7 @@ gsm_presence_get_property (GObject    *object,
+                 g_value_set_uint (value, self->priv->status);
+                 break;
+         case PROP_STATUS_TEXT:
+-                g_value_set_string (value, self->priv->status_text);
++                g_value_set_string (value, self->priv->status_text ? self->priv->status_text : "");
+                 break;
+         case PROP_IDLE_ENABLED:
+                 g_value_set_boolean (value, self->priv->idle_enabled);
+--
+cgit v0.9.2

@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:gala"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="mutter38"
+IUSE=""
 
 RDEPEND="
 	dev-libs/libgee
@@ -25,7 +25,7 @@ RDEPEND="
 	x11-libs/granite
 	x11-libs/bamf
 	x11-libs/libXfixes
-	>=x11-wm/mutter-3.4
+	>=x11-wm/mutter-3.8
 	gnome-base/gnome-desktop:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)

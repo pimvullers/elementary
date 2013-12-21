@@ -1,0 +1,3 @@
+01_Wcast-align.patch
+04_ignore_shadow_and_padding.patch
+git-background-dont-save-pixbuf.patch
