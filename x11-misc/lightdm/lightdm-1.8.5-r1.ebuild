@@ -1,11 +1,11 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.9.3.ebuild,v 1.1 2013/11/17 20:15:15 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.8.5-r1.ebuild,v 1.1 2013/12/22 13:35:38 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd
 
-TRUNK_VERSION="1.9"
+TRUNK_VERSION="1.8"
 DESCRIPTION="A lightweight display manager"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/LightDM"
 SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
@@ -13,7 +13,7 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="~amd64 ~arm ~ppc ~x86"
 IUSE="+gtk +introspection kde pantheon qt4 razor"
 REQUIRED_USE="|| ( gtk kde pantheon razor )"
 
@@ -42,6 +42,7 @@ PDEPEND="gtk? ( x11-misc/lightdm-gtk-greeter )
 	pantheon? ( pantheon-base/pantheon-greeter )
 	razor? ( razorqt-base/razorqt-lightdm-greeter )"
 
+RESTRICT="test"
 DOCS=( NEWS )
 
 src_prepare() {
@@ -86,6 +87,12 @@ src_configure() {
 src_install() {
 	default
 
+	# Delete apparmor profiles because they only work with Ubuntu's
+	# apparmor package. Bug #494426
+	if [[ -d ${D}/etc/apparmor.d ]]; then
+		rm -r "${D}/etc/apparmor.d" || die \
+			"Failed to remove apparmor profiles"
+	fi
 	insinto /etc/${PN}
 	doins data/{${PN},keys}.conf
 	doins "${FILESDIR}"/Xsession
