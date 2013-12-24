@@ -9,6 +9,14 @@ Author: Tim Lunn <tim@feathertop.org>
 Last-Update: <2013-04-25>
 --- a/plugins/media-keys/gsd-media-keys-manager.c
 +++ b/plugins/media-keys/gsd-media-keys-manager.c
+@@ -36,6 +36,7 @@
+ #include <glib/gi18n.h>
+ #include <gio/gio.h>
+ #include <gdk/gdk.h>
++#include <gdk/gdkx.h>
+ #include <gtk/gtk.h>
+ #include <gio/gdesktopappinfo.h>
+ #include <gio/gunixfdlist.h>
 @@ -78,6 +78,10 @@
  #define SHELL_DBUS_NAME "org.gnome.Shell"
  #define SHELL_DBUS_PATH "/org/gnome/Shell"

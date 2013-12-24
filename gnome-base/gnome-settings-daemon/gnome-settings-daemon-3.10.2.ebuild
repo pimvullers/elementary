@@ -107,13 +107,14 @@ src_prepare() {
 		epatch "${FILESDIR}/${P}-64_restore_terminal_keyboard_shortcut_schema.patch"
 		epatch "${FILESDIR}/${P}-nexus-orientation.patch"
 		epatch "${FILESDIR}/${P}-fix_broken_user_sounds_permissions.patch"
-		#epatch "${FILESDIR}/${P}-fix_media_keys_on_unity.patch" # Depends on gsd-keygrab revert
-		#epatch "${PATCHDIR}/fix_input_switching_on_unity.patch" # Depends on gsd-keygrab revert
-		#epatch "${PATCHDIR}/fix_screenshots_on_unity.patch" # Depends on gsd-keygrab revert
-		#epatch "${FILESDIR}/${P}-git_revert_gsd-keygrab.patch"
+		epatch "${FILESDIR}/${P}-git_revert_remove-unused-keygrab-code.patch"
+		epatch "${FILESDIR}/${P}-git_revert_gsd-keygrab.patch"
+		epatch "${FILESDIR}/${P}-fix_media_keys_on_unity.patch"
+		epatch "${PATCHDIR}/fix_input_switching_on_unity.patch"
+		epatch "${PATCHDIR}/fix_screenshots_on_unity.patch"
 		epatch "${FILESDIR}/${P}-git_revert_remove_automount_helper.patch"
 		epatch "${FILESDIR}/${P}-ubuntu-lid-close-suspend.patch"
-		#epatch "${FILESDIR}/${P}-unity-modifier-media-keys.patch"
+		epatch "${PATCHDIR}/unity-modifier-media-keys.patch"
 	fi
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=621836

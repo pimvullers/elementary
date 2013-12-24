@@ -24,9 +24,9 @@ Last-Update: <2013-04-25>
 +Key *           parse_key        (const char    *str);
 +void            free_key         (Key           *key);
 +
- void            grab_button      (int      deviceid,
-                                   gboolean grab,
-                                   GSList  *screens);
+ void            grab_button      (int        deviceid,
+                                   gboolean   grab,
+                                   GdkScreen *screen);
 --- a/plugins/common/gsd-keygrab.c
 +++ b/plugins/common/gsd-keygrab.c
 @@ -247,6 +247,13 @@
@@ -79,6 +79,6 @@ Last-Update: <2013-04-25>
 +	g_free (key);
 +}
 +
- static void
- grab_button_real (int        deviceid,
- 		  gboolean   grab,
+ void
+ grab_button (int        deviceid,
+              gboolean   grab,
