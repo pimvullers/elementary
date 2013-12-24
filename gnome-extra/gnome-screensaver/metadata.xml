@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<herd>gnome</herd>
+	<longdescription lang="en">
+		A new screensaver that can replace xscreensaver.  It is designed to
+		integrate well with the desktop and provide a control interface that is
+		desktop neutral.
+	</longdescription>
+	<use>
+		<flag name="systemd">Support <pkg>sys-apps/systemd</pkg>'s logind</flag>
+	</use>
+</pkgmetadata>

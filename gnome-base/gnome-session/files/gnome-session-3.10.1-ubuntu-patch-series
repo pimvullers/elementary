@@ -1,0 +1,4 @@
+22_support_autostart_delay.patch
+51_remove_session_saving_from_gui.patch
+53_add_sessionmigration.patch
+103_kill_the_fail_whale.patch
