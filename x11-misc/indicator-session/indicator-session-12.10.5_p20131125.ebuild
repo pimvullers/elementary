@@ -27,6 +27,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${P}-no-icon-cache-update.patch"
 	epatch "${FILESDIR}/${P}-gsettings-path.patch"
 	epatch "${FILESDIR}/${P}-gsettings-compile.patch"
+	epatch "${FILESDIR}/${P}-drop-upstart.patch"
 
 	cmake-utils_src_prepare
 }

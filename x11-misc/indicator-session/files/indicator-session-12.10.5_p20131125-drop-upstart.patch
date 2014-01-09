@@ -1,0 +1,31 @@
+diff -Naur indicator-session-12.10.5+14.04.20131125.orig/data/CMakeLists.txt indicator-session-12.10.5+14.04.20131125/data/CMakeLists.txt
+--- indicator-session-12.10.5+14.04.20131125.orig/data/CMakeLists.txt	2014-01-09 15:27:24.652215856 +0100
++++ indicator-session-12.10.5+14.04.20131125/data/CMakeLists.txt	2014-01-09 15:27:46.440320679 +0100
+@@ -17,27 +17,6 @@
+ 
+ 
+ ##
+-##  Upstart Config File
+-##
+-
+-# where to install
+-set (UPSTART_JOB_DIR "${CMAKE_INSTALL_FULL_DATADIR}/upstart/sessions")
+-message (STATUS "${UPSTART_JOB_DIR} is the Upstart Job install dir")
+-
+-set (UPSTART_JOB_NAME "${CMAKE_PROJECT_NAME}.conf")
+-set (UPSTART_JOB_FILE "${CMAKE_CURRENT_BINARY_DIR}/${UPSTART_JOB_NAME}")
+-set (UPSTART_JOB_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/${UPSTART_JOB_NAME}.in")
+-
+-# build it
+-set (pkglibexecdir "${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}")
+-configure_file ("${UPSTART_JOB_FILE_IN}" "${UPSTART_JOB_FILE}")
+-
+-# install it
+-install (FILES "${UPSTART_JOB_FILE}"
+-         DESTINATION "${UPSTART_JOB_DIR}")
+-
+-
+-##
+ ##  XDG Autostart Config File
+ ##
+ 
