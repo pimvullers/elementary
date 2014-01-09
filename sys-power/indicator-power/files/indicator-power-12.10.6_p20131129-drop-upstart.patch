@@ -1,0 +1,23 @@
+diff -Naur indicator-power-12.10.6+14.04.20131129.orig/data/Makefile.am indicator-power-12.10.6+14.04.20131129/data/Makefile.am
+--- indicator-power-12.10.6+14.04.20131129.orig/data/Makefile.am	2014-01-09 15:32:21.750610531 +0100
++++ indicator-power-12.10.6+14.04.20131129/data/Makefile.am	2014-01-09 15:33:06.486817562 +0100
+@@ -10,19 +10,6 @@
+ dist_indicators_DATA = com.canonical.indicator.power
+ 
+ #
+-# the upstart job file
+-#
+-
+-upstart_jobsdir = $(datadir)/upstart/sessions
+-upstart_jobs_DATA = indicator-power.conf
+-upstart_jobs_in = $(upstart_jobs_DATA:.conf=.conf.in)
+-$(upstart_jobs_DATA): $(upstart_jobs_in)
+-	$(AM_V_GEN) $(SED) -e "s|\@pkglibexecdir\@|$(pkglibexecdir)|" $< > $@
+-BUILT_SOURCES += $(upstart_jobs_DATA)
+-CLEANFILES += $(upstart_jobs_DATA)
+-EXTRA_DIST += $(upstart_jobs_in)
+-
+-#
+ # the xdg autostart job file
+ #
+ 
