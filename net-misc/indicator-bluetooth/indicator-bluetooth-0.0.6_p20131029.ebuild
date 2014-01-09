@@ -16,7 +16,7 @@ KEYWORDS="~amd64 ~x86"
 IUSE="nls static-libs"
 
 RDEPEND="
-	>=dev-libs/glib-2.36:2"
+	>=dev-libs/glib-2.38:2"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
