@@ -18,7 +18,7 @@ KEYWORDS="~amd64"
 IUSE="nls static-libs"
 
 RDEPEND="
-	dev-libs/glib:2
+	>=dev-libs/glib-2.38:2
 	dev-libs/libgee
 	dev-libs/libxml2
 	media-sound/pulseaudio[glib]
