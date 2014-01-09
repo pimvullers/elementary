@@ -1,0 +1,222 @@
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/data/com.canonical.indicator.datetime.gschema.xml indicator-datetime-13.10.0+13.10.20131023.2/data/com.canonical.indicator.datetime.gschema.xml
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/data/com.canonical.indicator.datetime.gschema.xml	2014-01-09 15:06:31.106006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/data/com.canonical.indicator.datetime.gschema.xml	2014-01-09 15:06:41.435057269 +0100
+@@ -64,6 +64,15 @@
+ 			  time-format value is set to custom.
+ 			</description>
+ 		</key>
++		<key name="show-year" type="b">
++			<default>false</default>
++			<summary>Show the year in the indicator</summary>
++			<description>
++			  Puts the year in the panel along with the month and the date.
++			  This setting will be ignored if either the time-format value is set to custom
++			  or if show-date is set to false.
++			</description>
++		</key>
+ 		<key name="show-calendar" type="b">
+ 			<default>true</default>
+ 			<summary>Show the monthly calendar in the indicator</summary>
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/data/datetime-dialog.ui indicator-datetime-13.10.0+13.10.20131023.2/data/datetime-dialog.ui
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/data/datetime-dialog.ui	2014-01-09 15:06:31.106006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/data/datetime-dialog.ui	2014-01-09 15:06:41.436057263 +0100
+@@ -529,7 +529,7 @@
+                           </packing>
+                         </child>
+                         <child>
+-                          <object class="GtkCheckButton" id="showDateTimeCheck">
++                          <object class="GtkCheckButton" id="showDateAndMonthCheck">
+                             <property name="label" translatable="yes">_Date and month</property>
+                             <property name="visible">True</property>
+                             <property name="can_focus">True</property>
+@@ -546,6 +546,45 @@
+                           </packing>
+                         </child>
+                         <child>
++                          <object class="GtkAlignment" id="showYearAlignment">
++                            <property name="visible">True</property>
++                            <property name="can_focus">False</property>
++                            <property name="xalign">0</property>
++                            <property name="yalign">0</property>
++                            <property name="yscale">0</property>
++                            <property name="left_padding">24</property>
++                            <child>
++                              <object class="GtkVBox" id="showYearVbox">
++                                <property name="visible">True</property>
++                                <property name="can_focus">False</property>
++                                <property name="spacing">6</property>
++                                <child>
++                                  <object class="GtkCheckButton" id="showYearCheck">
++                                    <property name="label" translatable="yes">_Year</property>
++                                    <property name="visible">True</property>
++                                    <property name="can_focus">True</property>
++                                    <property name="receives_default">False</property>
++                                    <property name="use_action_appearance">False</property>
++                                    <property name="use_underline">True</property>
++                                    <property name="xalign">0</property>
++                                    <property name="draw_indicator">True</property>
++                                  </object>
++                                  <packing>
++                                    <property name="expand">True</property>
++                                    <property name="fill">True</property>
++                                    <property name="position">0</property>
++                                  </packing>
++                                </child>
++                              </object>
++                            </child>
++                          </object>
++                          <packing>
++                            <property name="expand">False</property>
++                            <property name="fill">True</property>
++                            <property name="position">3</property>
++                          </packing>
++                        </child>
++                        <child>
+                           <object class="GtkVBox" id="vbox5">
+                             <property name="visible">True</property>
+                             <property name="can_focus">False</property>
+@@ -589,7 +628,7 @@
+                           <packing>
+                             <property name="expand">False</property>
+                             <property name="fill">True</property>
+-                            <property name="position">3</property>
++                            <property name="position">4</property>
+                           </packing>
+                         </child>
+                         <child>
+@@ -606,7 +645,7 @@
+                           <packing>
+                             <property name="expand">False</property>
+                             <property name="fill">True</property>
+-                            <property name="position">4</property>
++                            <property name="position">5</property>
+                           </packing>
+                         </child>
+                       </object>
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs.c indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs.c	2014-01-09 15:06:31.105006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs.c	2014-01-09 15:06:41.436057263 +0100
+@@ -699,7 +699,9 @@
+                    "active", G_SETTINGS_BIND_DEFAULT);
+   g_settings_bind (conf, SETTINGS_SHOW_DAY_S, WIG ("showWeekdayCheck"),
+                    "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_DATE_S, WIG ("showDateTimeCheck"),
++  g_settings_bind (conf, SETTINGS_SHOW_DATE_S, WIG ("showDateAndMonthCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_YEAR_S, WIG ("showYearCheck"),
+                    "active", G_SETTINGS_BIND_DEFAULT);
+   g_settings_bind (conf, SETTINGS_SHOW_SECONDS_S, WIG ("showSecondsCheck"),
+                    "active", G_SETTINGS_BIND_DEFAULT);
+@@ -725,6 +727,7 @@
+                    "active", G_SETTINGS_BIND_DEFAULT);
+ 
+   /* Set up sensitivities */
++  add_widget_dependency (WIG ("showDateAndMonthCheck"), WIG ("showYearCheck"));
+   add_widget_dependency (WIG ("showCalendarCheck"), WIG ("calendarOptions"));
+   add_widget_dependency (WIG ("showClockCheck"), WIG ("clockOptions"));
+   add_widget_dependency (WIG ("showLocationsCheck"), WIG ("locationsButton"));
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/service.c indicator-datetime-13.10.0+13.10.20131023.2/src/service.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/service.c	2014-01-09 15:06:31.105006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/service.c	2014-01-09 15:08:30.290585407 +0100
+@@ -468,7 +468,8 @@
+     {
+       gboolean show_day = g_settings_get_boolean (s, SETTINGS_SHOW_DAY_S);
+       gboolean show_date = g_settings_get_boolean (s, SETTINGS_SHOW_DATE_S);
+-      fmt = generate_full_format_string (show_day, show_date, s);
++      gboolean show_year = show_date && g_settings_get_boolean (s, SETTINGS_SHOW_YEAR_S);
++      fmt = generate_full_format_string (show_day, show_date, show_year, s);
+     }
+ 
+   return fmt;
+@@ -1916,6 +1917,7 @@
+     SETTINGS_SHOW_SECONDS_S,
+     SETTINGS_SHOW_DAY_S,
+     SETTINGS_SHOW_DATE_S,
++    SETTINGS_SHOW_YEAR_S,
+     SETTINGS_CUSTOM_TIME_FORMAT_S
+   };
+   const char * const calendar_settings[] = {
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/settings-shared.h indicator-datetime-13.10.0+13.10.20131023.2/src/settings-shared.h
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/settings-shared.h	2014-01-09 15:06:31.105006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/settings-shared.h	2014-01-09 15:06:41.437057258 +0100
+@@ -37,6 +37,7 @@
+ #define SETTINGS_SHOW_SECONDS_S         "show-seconds"
+ #define SETTINGS_SHOW_DAY_S             "show-day"
+ #define SETTINGS_SHOW_DATE_S            "show-date"
++#define SETTINGS_SHOW_YEAR_S            "show-year"
+ #define SETTINGS_CUSTOM_TIME_FORMAT_S   "custom-time-format"
+ #define SETTINGS_SHOW_CALENDAR_S        "show-calendar"
+ #define SETTINGS_SHOW_WEEK_NUMBERS_S    "show-week-numbers"
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.c indicator-datetime-13.10.0+13.10.20131023.2/src/utils.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.c	2014-01-09 15:06:31.105006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/utils.c	2014-01-09 15:06:41.438057256 +0100
+@@ -329,19 +329,31 @@
+ ***/
+ 
+ static const gchar *
+-get_full_date_format_string (gboolean show_day, gboolean show_date)
++get_full_date_format_string (gboolean show_day, gboolean show_date, gboolean show_year)
+ {
+-  const gchar * fmt;
++  const char * fmt;
+ 
+-  if (show_date && show_day)
+-    /* TRANSLATORS: a strftime(3) format showing the date and weekday */
++  if (show_day && show_date && show_year)
++    /* TRANSLATORS: a strftime(3) format showing the weekday, date, and year */
++    fmt = T_("%a %b %e %Y");
++  else if (show_day && show_date)
++    /* TRANSLATORS: a strftime(3) format showing the weekday and date */
+     fmt = T_("%a %b %e");
++  else if (show_day && show_year)
++    /* TRANSLATORS: a strftime(3) format showing the weekday and year. */
++    fmt = T_("%a %Y");
++  else if (show_day)
++    /* TRANSLATORS: a strftime(3) format showing the weekday. */
++    fmt = T_("%a");
++  else if (show_date && show_year)
++    /* TRANSLATORS: a strftime(3) format showing the date and year */
++    fmt = T_("%b %e %Y");
+   else if (show_date)
+     /* TRANSLATORS: a strftime(3) format showing the date */
+     fmt = T_("%b %e");
+-  else if (show_day)
+-    /* TRANSLATORS: a strftime(3) format showing the weekday */
+-    fmt = T_("%a");
++  else if (show_year)
++    /* TRANSLATORS: a strftime(3) format showing the year */
++    fmt = T_("%Y");
+   else
+     fmt = NULL;
+ 
+@@ -400,9 +412,9 @@
+ }
+ 
+ gchar *
+-generate_full_format_string (gboolean show_day, gboolean show_date, GSettings * settings)
++generate_full_format_string (gboolean show_day, gboolean show_date, gboolean show_year, GSettings * settings)
+ {
+-  const gchar * date_fmt = get_full_date_format_string (show_day, show_date);
++  const gchar * date_fmt = get_full_date_format_string (show_day, show_date, show_year);
+   const gchar * time_fmt = get_full_time_format_string (settings);
+   return join_date_and_time_format_strings (date_fmt, time_fmt);
+ }
+@@ -436,6 +448,6 @@
+         break;
+     }
+ 
+-  return generate_full_format_string (show_day, show_date, settings);
++  return generate_full_format_string (show_day, show_date, FALSE, settings);
+ }
+ 
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.h indicator-datetime-13.10.0+13.10.20131023.2/src/utils.h
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.h	2014-01-09 15:06:31.105006843 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/utils.h	2014-01-09 15:06:41.438057256 +0100
+@@ -54,6 +54,7 @@
+ 
+ gchar *       generate_full_format_string          (gboolean      show_day,
+                                                     gboolean      show_date,
++                                                    gboolean      show_year,
+                                                     GSettings   * settings);
+ 
+ gchar *       generate_full_format_string_at_time  (GDateTime   * now,

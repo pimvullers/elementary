@@ -1,0 +1,4495 @@
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/CMakeLists.txt	2014-01-09 14:38:15.578342281 +0100
+@@ -0,0 +1,103 @@
++project (indicator-datetime C CXX)
++cmake_minimum_required (VERSION 2.8.9)
++
++list (APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
++
++set (PROJECT_VERSION "14.04.0")
++set (PACKAGE ${CMAKE_PROJECT_NAME})
++set (GETTEXT_PACKAGE "indicator-datetime")
++add_definitions (-DGETTEXT_PACKAGE="${GETTEXT_PACKAGE}"
++                 -DGNOMELOCALEDIR="${CMAKE_INSTALL_FULL_LOCALEDIR}")
++
++option (enable_tests "Build the package's automatic tests." ON)
++option (enable_lcov "Generate lcov code coverage reports." ON)
++
++##
++##  GNU standard installation directories
++## 
++
++include (GNUInstallDirs)
++if (EXISTS "/etc/debian_version") # Workaround for libexecdir on debian
++  set (CMAKE_INSTALL_LIBEXECDIR "${CMAKE_INSTALL_LIBDIR}")
++  set (CMAKE_INSTALL_FULL_LIBEXECDIR "${CMAKE_INSTALL_FULL_LIBDIR}")
++endif ()
++set (CMAKE_INSTALL_PKGLIBEXECDIR "${CMAKE_INSTALL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")
++set (CMAKE_INSTALL_FULL_PKGLIBEXECDIR "${CMAKE_INSTALL_FULL_LIBEXECDIR}/${CMAKE_PROJECT_NAME}")
++
++##
++##  Check for prerequisites
++##
++
++find_package (PkgConfig REQUIRED)
++include (FindPkgConfig)
++
++pkg_check_modules (SERVICE_DEPS REQUIRED
++                   glib-2.0>=2.36
++                   gio-unix-2.0>=2.36
++                   geoclue>=0.12
++                   libical>=0.48
++                   libecal-1.2>=3.5
++                   libedataserver-1.2>=3.5
++                   libnotify>=0.7.6
++                   url-dispatcher-1>=1
++                   json-glib-1.0>=0.16.2)
++include_directories (${SERVICE_INCLUDE_DIRS})
++
++pkg_check_modules (PANEL_DEPS
++                   glib-2.0>=2.36
++                   gio-unix-2.0>=2.36
++                   gtk+-3.0>=3.1.4
++                   timezonemap
++                   libgnome-control-center
++                   polkit-gobject-1)
++if (PANEL_DEPS_FOUND)
++  set (BUILD_PANEL 1)
++endif ()
++
++##
++##  custom targets
++##
++
++set (ARCHIVE_NAME ${CMAKE_PROJECT_NAME}-${PROJECT_VERSION})
++add_custom_target (dist
++                   COMMAND bzr export --root=${ARCHIVE_NAME} ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.gz
++                   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
++
++add_custom_target (clean-coverage
++                   COMMAND find ${CMAKE_BINARY_DIR} -name '*.gcda' | xargs rm -f)
++
++add_custom_target (cppcheck COMMAND cppcheck --enable=all -q --error-exitcode=2 --inline-suppr
++                   ${CMAKE_SOURCE_DIR}/src
++                   ${CMAKE_SOURCE_DIR}/tests)
++
++##
++##  Actual building
++##
++
++set (CC_WARNING_ARGS " -Wall -Wshadow -Wextra -Wunused -Wformat=2 -Wno-missing-field-initializers")
++
++include_directories (${CMAKE_CURRENT_SOURCE_DIR}/src)
++include_directories (${CMAKE_CURRENT_BINARY_DIR}/src)
++
++# testing & coverage
++if (${enable_tests})
++  set (GTEST_SOURCE_DIR /usr/src/gtest/src)
++  set (GTEST_INCLUDE_DIR ${GTEST_SOURCE_DIR}/..)
++  set (GTEST_LIBS -lpthread)
++  enable_testing ()
++  if (${enable_lcov})
++    include(GCov)
++  endif ()
++endif ()
++
++# actually build things
++add_subdirectory (src)
++if (BUILD_PANEL)
++  add_subdirectory (panel)
++endif ()
++add_subdirectory (data)
++add_subdirectory (po)
++if (${enable_tests})
++  add_subdirectory (tests)
++endif ()
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/INSTALL indicator-datetime-13.10.0+13.10.20131023.2/INSTALL
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/INSTALL	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/INSTALL	2014-01-09 14:30:21.714191027 +0100
+@@ -0,0 +1,75 @@
++#
++# Copyright (C) 2013 Canonical Ltd
++#
++# This program is free software: you can redistribute it and/or modify
++# it under the terms of the GNU General Public License version 3 as
++# published by the Free Software Foundation.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program.  If not, see <http://www.gnu.org/licenses/>.
++#
++
++BUILD DEPENDENCIES
++==================
++
++build dependencies for indicator-datetime-service
++ * glib-2.0 >= 2.36
++ * gio-unix-2.0 >= 2.36
++ * geoclue >= 0.12
++ * libical >= 0.48
++ * libecal-1.2 >= 3.5
++ * libedataserver-1.2 >= 3.5
++ * libnotify >= 0.7.6
++ * url-dispatcher-1 >= 1
++ * json-glib-1.0 >= 0.16.2
++
++
++Additional build dependencies for the gnome-control-center panel:
++ * gtk+-3.0>=3.1.4
++ * timezonemap
++ * libgnome-control-center
++ * polkit-gobject-1
++
++Build dependencies for testing / code coverage:
++ * gcovr (gcovr, 2.4 or later)
++ * lcov (lcov, 1.9 or later)
++ * google test (libgtest-dev, 1.6.0 or later)
++ * cppcheck (cppcheck)
++
++
++Building the code
++-----------------
++ 1. $ cd indicator-datetime-X.Y.Z
++ 2. $ mkdir build
++ 3. $ cd build
++ 4. $ cmake ..
++    or
++    $ cmake -DCMAKE_INSTALL_PREFIX=/your/install/prefix/here ..
++    or
++    $ cmake -GNinja ..
++ 5. $ make
++
++Running the tests
++-----------------
++ 1. $ cd indicator-datetime-X.Y.Z
++ 2. $ mkdir build
++ 3. $ cd build
++ 4. $ cmake ..
++ 5. $ make
++ 6. $ make test
++ 7. $ make cppcheck
++
++Generating Test Coverage Reports
++--------------------------------
++ 1. $ cd indicator-datetime-X.Y.Z
++ 2. $ mkdir build-coverage
++ 3. $ cd build-coverage
++ 4. $ cmake -DCMAKE_BUILD_TYPE=coverage ..
++ 5. $ make
++ 6. $ make coverage-html
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/Makefile.am indicator-datetime-13.10.0+13.10.20131023.2/Makefile.am
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/Makefile.am	2014-01-09 14:18:28.959049686 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+@@ -1,39 +0,0 @@
+-ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+-
+-SUBDIRS = po data src
+-
+-if BUILD_TESTS
+-SUBDIRS += tests
+-# build src first
+-tests: src
+-endif
+-
+-EXTRA_DIST = autogen.sh
+-
+-dist-hook:
+-	@if test -d "$(top_srcdir)/.bzr"; \
+-		then \
+-			echo Creating ChangeLog && \
+-				( cd "$(top_srcdir)" && \
+-				echo '# Generated by Makefile. Do not edit.'; echo; \
+-				$(top_srcdir)/build-aux/missing --run bzr log --gnu-changelog ) > ChangeLog.tmp \
+-				&& mv -f ChangeLog.tmp $(top_distdir)/ChangeLog \
+-				|| (rm -f ChangeLog.tmp; \
+-					echo Failed to generate ChangeLog >&2 ); \
+-        else \
+-			echo Failed to generate ChangeLog: not a branch >&2; \
+-	fi
+-	@if test -d "$(top_srcdir)/.bzr"; \
+-		then \
+-			echo Creating AUTHORS && \
+-				( cd "$(top_srcdir)" && \
+-				echo '# Generated by Makefile. Do not edit.'; echo; \
+-				$(top_srcdir)/build-aux/missing --run  bzr log --long --levels=0 | grep -e "^\s*author:" -e "^\s*committer:" | cut -d ":" -f 2 | cut -d "<" -f 1 | sort -u) > AUTHORS.tmp \
+-				&& mv -f AUTHORS.tmp $(top_distdir)/AUTHORS \
+-				|| (rm -f AUTHORS.tmp; \
+-					echo Failed to generate AUTHORS >&2 ); \
+-        else \
+-			echo Failed to generate AUTHORS: not a branch >&2; \
+-	fi
+-
+-include $(top_srcdir)/Makefile.am.coverage
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/Makefile.am.coverage indicator-datetime-13.10.0+13.10.20131023.2/Makefile.am.coverage
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/Makefile.am.coverage	2014-01-09 14:18:28.959049686 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/Makefile.am.coverage	1970-01-01 01:00:00.000000000 +0100
+@@ -1,48 +0,0 @@
+-
+-# Coverage targets
+-
+-.PHONY: clean-gcno clean-gcda \
+-	coverage-html generate-coverage-html clean-coverage-html \
+-	coverage-gcovr generate-coverage-gcovr clean-coverage-gcovr
+-
+-clean-local: clean-gcno clean-coverage-html clean-coverage-gcovr
+-
+-if HAVE_GCOV
+-
+-clean-gcno:
+-	@echo Removing old coverage instrumentation
+-	-find -name '*.gcno' -print | xargs -r rm
+-
+-clean-gcda:
+-	@echo Removing old coverage results
+-	-find -name '*.gcda' -print | xargs -r rm
+-  
+-coverage-html: clean-gcda
+-	-$(MAKE) $(AM_MAKEFLAGS) -k check
+-	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-html
+-  
+-generate-coverage-html:
+-	@echo Collecting coverage data
+-	$(LCOV) --directory $(top_builddir) --capture --output-file coverage.info --no-checksum --compat-libtool
+-	LANG=C $(GENHTML) --prefix $(top_builddir) --output-directory coveragereport --title "Code Coverage" --legend --show-details coverage.info
+-  
+-clean-coverage-html: clean-gcda
+-	-$(LCOV) --directory $(top_builddir) -z
+-	-rm -rf coverage.info coveragereport
+-
+-if HAVE_GCOVR
+-
+-coverage-gcovr: clean-gcda
+-	-$(MAKE) $(AM_MAKEFLAGS) -k check
+-	$(MAKE) $(AM_MAKEFLAGS) generate-coverage-gcovr
+-	
+-generate-coverage-gcovr:
+-	@echo Generating coverage GCOVR report
+-	$(GCOVR) -x -r $(top_builddir) -o $(top_builddir)/coverage.xml
+-	
+-clean-coverage-gcovr: clean-gcda
+-	-rm -rf $(top_builddir)/coverage.xml
+-
+-endif # HAVE_GCOVR
+-
+-endif # HAVE_GCOV
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/autogen.sh indicator-datetime-13.10.0+13.10.20131023.2/autogen.sh
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/autogen.sh	2014-01-09 14:18:28.961049715 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/autogen.sh	1970-01-01 01:00:00.000000000 +0100
+@@ -1,11 +0,0 @@
+-#!/bin/sh
+-
+-PKG_NAME="indicator-datetime"
+-
+-which gnome-autogen.sh || {
+-	echo "You need gnome-common from GNOME Git"
+-	exit 1
+-}
+-
+-USE_GNOME2_MACROS=1 \
+-. gnome-autogen.sh $@
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/FindIntltool.cmake indicator-datetime-13.10.0+13.10.20131023.2/cmake/FindIntltool.cmake
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/FindIntltool.cmake	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/cmake/FindIntltool.cmake	2014-01-09 14:30:21.714191027 +0100
+@@ -0,0 +1,23 @@
++# FindIntltool.cmake
++#
++# Jim Nelson <jim@yorba.org>
++# Copyright 2012 Yorba Foundation
++
++find_program (INTLTOOL_MERGE_EXECUTABLE intltool-merge)
++
++if (INTLTOOL_MERGE_EXECUTABLE)
++    set (INTLTOOL_MERGE_FOUND TRUE)
++else (INTLTOOL_MERGE_EXECUTABLE)
++    set (INTLTOOL_MERGE_FOUND FALSE)
++endif (INTLTOOL_MERGE_EXECUTABLE)
++
++if (INTLTOOL_MERGE_FOUND)
++    macro (INTLTOOL_MERGE_DESKTOP desktop_id po_dir)
++        add_custom_target (geary.desktop ALL
++            ${INTLTOOL_MERGE_EXECUTABLE} --desktop-style ${CMAKE_SOURCE_DIR}/${po_dir}
++                ${CMAKE_CURRENT_SOURCE_DIR}/${desktop_id}.desktop.in ${desktop_id}.desktop
++        )
++        install (FILES ${CMAKE_CURRENT_BINARY_DIR}/geary.desktop DESTINATION /usr/share/applications) 
++    endmacro (INTLTOOL_MERGE_DESKTOP desktop_id po_dir)
++endif (INTLTOOL_MERGE_FOUND)
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/GCov.cmake indicator-datetime-13.10.0+13.10.20131023.2/cmake/GCov.cmake
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/GCov.cmake	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/cmake/GCov.cmake	2014-01-09 14:30:21.715191024 +0100
+@@ -0,0 +1,50 @@
++if (CMAKE_BUILD_TYPE MATCHES coverage)
++  set(GCOV_FLAGS "${GCOV_FLAGS} --coverage")
++  set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS}    ${GCOV_FLAGS}")
++  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${GCOV_FLAGS}")
++  set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${GCOV_FLAGS}")
++  set(GCOV_LIBS ${GCOV_LIBS} gcov)
++
++  find_program(GCOVR_EXECUTABLE gcovr HINTS ${GCOVR_ROOT} "${GCOVR_ROOT}/bin")
++  if (NOT GCOVR_EXECUTABLE)
++    message(STATUS "Gcovr binary was not found, can not generate XML coverage info.")
++  else ()
++    message(STATUS "Gcovr found, can generate XML coverage info.")
++    add_custom_target (coverage-xml
++      WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
++      COMMAND "${GCOVR_EXECUTABLE}" --exclude="test.*" -x -r "${CMAKE_SOURCE_DIR}" 
++      --object-directory=${CMAKE_BINARY_DIR} -o coverage.xml)
++  endif()
++
++  find_program(LCOV_EXECUTABLE lcov HINTS ${LCOV_ROOT} "${GCOVR_ROOT}/bin")
++  find_program(GENHTML_EXECUTABLE genhtml HINTS ${GENHTML_ROOT})
++  if (NOT LCOV_EXECUTABLE)
++    message(STATUS "Lcov binary was not found, can not generate HTML coverage info.")
++  else ()
++    if(NOT GENHTML_EXECUTABLE)
++      message(STATUS "Genthml binary not found, can not generate HTML coverage info.")
++    else()
++      message(STATUS "Lcov and genhtml found, can generate HTML coverage info.")
++      add_custom_target (coverage-html
++        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
++        COMMAND "${CMAKE_CTEST_COMMAND}" --force-new-ctest-process --verbose
++        COMMAND "${LCOV_EXECUTABLE}" --directory ${CMAKE_BINARY_DIR} --capture | ${CMAKE_SOURCE_DIR}/trim-lcov.py > dconf-lcov.info
++        COMMAND LANG=C "${GENHTML_EXECUTABLE}" --prefix ${CMAKE_BINARY_DIR} --output-directory lcov-html --legend --show-details dconf-lcov.info
++        COMMAND ${CMAKE_COMMAND} -E echo ""
++        COMMAND ${CMAKE_COMMAND} -E echo "file://${CMAKE_BINARY_DIR}/lcov-html/index.html"
++        COMMAND ${CMAKE_COMMAND} -E echo "")
++        #COMMAND "${LCOV_EXECUTABLE}" --directory ${CMAKE_BINARY_DIR} --capture --output-file coverage.info --no-checksum
++        #COMMAND "${GENHTML_EXECUTABLE}" --prefix ${CMAKE_BINARY_DIR} --output-directory coveragereport --title "Code Coverage" --legend --show-details coverage.info
++        #COMMAND ${CMAKE_COMMAND} -E echo "\\#define foo \\\"bar\\\"" 
++        #)
++    endif()
++  endif()
++endif()
++
++
++	#$(MAKE) $(AM_MAKEFLAGS) check
++	#lcov --directory $(top_builddir) --capture --test-name dconf | $(top_srcdir)/trim-lcov.py > dconf-lcov.info
++	#LANG=C genhtml --prefix $(top_builddir) --output-directory lcov-html --legend --show-details dconf-lcov.info
++	#@echo
++	#@echo "     file://$(abs_top_builddir)/lcov-html/index.html"
++	#@echo
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/GdbusCodegen.cmake indicator-datetime-13.10.0+13.10.20131023.2/cmake/GdbusCodegen.cmake
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/GdbusCodegen.cmake	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/cmake/GdbusCodegen.cmake	2014-01-09 14:30:21.715191024 +0100
+@@ -0,0 +1,36 @@
++cmake_minimum_required(VERSION 2.6)
++if(POLICY CMP0011)
++  cmake_policy(SET CMP0011 NEW)
++endif(POLICY CMP0011)
++
++find_program(GDBUS_CODEGEN NAMES gdbus-codegen DOC "gdbus-codegen executable")
++if(NOT GDBUS_CODEGEN)
++  message(FATAL_ERROR "Excutable gdbus-codegen not found")
++endif()
++
++macro(add_gdbus_codegen outfiles name prefix service_xml)
++  add_custom_command(
++    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${name}.h" "${CMAKE_CURRENT_BINARY_DIR}/${name}.c"
++    COMMAND "${GDBUS_CODEGEN}"
++        --interface-prefix "${prefix}"
++        --generate-c-code "${name}"
++        "${service_xml}"
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
++    DEPENDS ${ARGN} "${service_xml}"
++  )
++  list(APPEND ${outfiles} "${CMAKE_CURRENT_BINARY_DIR}/${name}.c")
++endmacro(add_gdbus_codegen)
++
++macro(add_gdbus_codegen_with_namespace outfiles name prefix namespace service_xml)
++  add_custom_command(
++    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${name}.h" "${CMAKE_CURRENT_BINARY_DIR}/${name}.c"
++    COMMAND "${GDBUS_CODEGEN}"
++        --interface-prefix "${prefix}"
++        --generate-c-code "${name}"
++        --c-namespace "${namespace}"
++        "${service_xml}"
++    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
++    DEPENDS ${ARGN} "${service_xml}"
++  )
++  list(APPEND ${outfiles} "${CMAKE_CURRENT_BINARY_DIR}/${name}.c")
++endmacro(add_gdbus_codegen_with_namespace)
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/Translations.cmake indicator-datetime-13.10.0+13.10.20131023.2/cmake/Translations.cmake
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/Translations.cmake	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/cmake/Translations.cmake	2014-01-09 14:30:21.715191024 +0100
+@@ -0,0 +1,41 @@
++# Translations.cmake, CMake macros written for Marlin, feel free to re-use them
++
++macro(add_translations_directory NLS_PACKAGE)
++    add_custom_target (i18n ALL)
++    find_program (MSGFMT_EXECUTABLE msgfmt)
++    file (GLOB PO_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.po)
++    foreach (PO_INPUT ${PO_FILES})
++        get_filename_component (PO_INPUT_BASE ${PO_INPUT} NAME_WE)
++        set (MO_OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PO_INPUT_BASE}.mo)
++        add_custom_command (TARGET i18n COMMAND ${MSGFMT_EXECUTABLE} -o ${MO_OUTPUT} ${PO_INPUT})
++
++        install (FILES ${MO_OUTPUT} DESTINATION
++            ${CMAKE_INSTALL_LOCALEDIR}/${PO_INPUT_BASE}/LC_MESSAGES
++            RENAME ${NLS_PACKAGE}.mo)
++    endforeach (PO_INPUT ${PO_FILES})
++endmacro(add_translations_directory)
++
++
++macro(add_translations_catalog NLS_PACKAGE)
++    add_custom_target (pot COMMENT “Building translation catalog.”)
++    find_program (XGETTEXT_EXECUTABLE xgettext)
++
++
++    set(C_SOURCE "")
++
++    foreach(FILES_INPUT ${ARGN})
++        file (GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${FILES_INPUT}/*.c)
++        foreach(C_FILE ${SOURCE_FILES})
++            set(C_SOURCE ${C_SOURCE} ${C_FILE})
++        endforeach()
++        file (GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/${FILES_INPUT}/*.vala)
++        foreach(C_FILE ${SOURCE_FILES})
++            set(C_SOURCE ${C_SOURCE} ${C_FILE})
++        endforeach()
++    endforeach()
++
++    add_custom_command (TARGET pot COMMAND
++        ${XGETTEXT_EXECUTABLE} -d ${NLS_PACKAGE} -o ${CMAKE_CURRENT_SOURCE_DIR}/${NLS_PACKAGE}.pot
++        ${VALA_SOURCE} ${C_SOURCE} --keyword="_" --keyword="N_" --from-code=UTF-8
++        )
++endmacro()
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/UseGSettings.cmake indicator-datetime-13.10.0+13.10.20131023.2/cmake/UseGSettings.cmake
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/cmake/UseGSettings.cmake	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/cmake/UseGSettings.cmake	2014-01-09 14:35:11.954513905 +0100
+@@ -0,0 +1,20 @@
++# GSettings.cmake, CMake macros written for Marlin, feel free to re-use them.
++
++macro(add_schema SCHEMA_NAME)
++
++    set(PKG_CONFIG_EXECUTABLE pkg-config)
++    set(GSETTINGS_DIR "${CMAKE_INSTALL_FULL_DATAROOTDIR}/glib-2.0/schemas")
++
++    # Run the validator and error if it fails
++    execute_process (COMMAND ${PKG_CONFIG_EXECUTABLE} gio-2.0 --variable glib_compile_schemas  OUTPUT_VARIABLE _glib_compile_schemas OUTPUT_STRIP_TRAILING_WHITESPACE)
++    execute_process (COMMAND ${_glib_compile_schemas} --dry-run --schema-file=${SCHEMA_NAME} ERROR_VARIABLE _schemas_invalid OUTPUT_STRIP_TRAILING_WHITESPACE)
++
++    if (_schemas_invalid)
++      message (SEND_ERROR "Schema validation error: ${_schemas_invalid}")
++    endif (_schemas_invalid)
++
++    # Actually install and recomple schemas
++    message (STATUS "${GSETTINGS_DIR} is the GSettings install dir")
++    install (FILES ${SCHEMA_NAME} DESTINATION ${GSETTINGS_DIR} OPTIONAL)
++endmacro()
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/configure.ac indicator-datetime-13.10.0+13.10.20131023.2/configure.ac
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/configure.ac	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/configure.ac	1970-01-01 01:00:00.000000000 +0100
+@@ -1,190 +0,0 @@
+-AC_INIT([indicator-datetime],
+-        [13.10.0],
+-        [http://bugs.launchpad.net/indicator-datetime],
+-        [indicator-datetime],
+-        [http://launchpad.net/indicator-datetime])
+-AC_COPYRIGHT([Copyright 2009-2011 Canonical])
+-
+-AC_PREREQ([2.64])
+-
+-AC_CONFIG_HEADERS([config.h])
+-AC_CONFIG_SRCDIR([configure.ac])
+-AC_CONFIG_MACRO_DIR([m4])
+-AC_CONFIG_AUX_DIR([build-aux])
+-
+-AM_INIT_AUTOMAKE([check-news 1.11 -Wall])
+-AM_MAINTAINER_MODE([enable])
+-
+-AM_SILENT_RULES([yes])
+-
+-# Check for programs
+-AC_PROG_CC
+-AM_PROG_CC_C_O
+-AC_PROG_CXX
+-AC_HEADER_STDC
+-AM_PROG_AR
+-
+-# Initialize libtool
+-LT_PREREQ([2.2])
+-LT_INIT([disable-static])
+-
+-AC_CHECK_LIB([m],[pow])
+-
+-AC_ARG_ENABLE([deprecations],
+-  [AS_HELP_STRING([--enable-deprecations],
+-    [allow deprecated API usage @<:@default=yes@:>@])],
+-  [],
+-  [enable_deprecations=yes])
+-AS_IF([test "x$enable_deprecations" = xno],
+-  [CFLAGS="$CFLAGS -DG_DISABLE_DEPRECATED -DGDK_DISABLE_DEPRECATED -DGDK_PIXBUF_DISABLE_DEPRECATED -DGTK_DISABLE_DEPRECATED -DGSEAL_ENABLE -DGTK_DISABLE_SINGLE_INCLUDES"]
+-)
+-
+-PKG_PROG_PKG_CONFIG
+-
+-###########################
+-# Dependencies
+-###########################
+-
+-GLIB_REQUIRED_VERSION=2.35.4
+-GIO_REQUIRED_VERSION=2.25.11
+-GEOCLUE_REQUIRED_VERSION=0.12.0
+-ICAL_REQUIRED_VERSION=0.48
+-ECAL_REQUIRED_VERSION=3.5
+-EDS_REQUIRED_VERSION=3.5
+-URL_DISPATCHER_1_REQUIRED_VERSION=1
+-JSON_GLIB_REQUIRED_VERSION=0.16.2
+-
+-GTK3_REQUIRED_VERSION=3.1.4
+-
+-PKG_CHECK_MODULES(SERVICE, [glib-2.0 >= $GLIB_REQUIRED_VERSION
+-                            gio-2.0 >= $GIO_REQUIRED_VERSION
+-                            geoclue >= $GEOCLUE_REQUIRED_VERSION
+-                            libical >= $ICAL_REQUIRED_VERSION
+-                            libecal-1.2 >= $ECAL_REQUIRED_VERSION
+-                            libedataserver-1.2 >= $EDS_REQUIRED_VERSION
+-                            url-dispatcher-1 >= $URL_DISPATCHER_1_REQUIRED_VERSION
+-                            json-glib-1.0 >= $JSON_GLIB_REQUIRED_VERSION])
+-
+-###########################
+-# Control Center panel
+-###########################
+-
+-AC_ARG_WITH([ccpanel],
+-            AS_HELP_STRING([--with-ccpanel], [enable Control Center panel]),,
+-            with_ccpanel=auto)
+-
+-if test x"$with_ccpanel" != x"no" ; then
+-   PKG_CHECK_MODULES([PREF],
+-                     [gio-2.0 >= $GIO_REQUIRED_VERSION
+-                      gtk+-3.0 >= $GTK3_REQUIRED_VERSION
+-                      timezonemap
+-                      libgnome-control-center
+-                      polkit-gobject-1],
+-                     [have_ccpanel=yes],
+-                     [have_ccpanel=no])
+-   if test x${have_ccpanel} = xyes; then
+-      AC_DEFINE(HAVE_CCPANEL, 1, [Define to 1 to enable Control Center panel])
+-      PKG_CHECK_MODULES(LIBMAP, gio-2.0 >= $GIO_REQUIRED_VERSION
+-                                gtk+-3.0 >= $GTK3_REQUIRED_VERSION)
+-   fi
+-   if test x${with_ccpanel} = xyes && test x${have_ccpanel} = xno; then
+-     AC_MSG_ERROR([Control Center panel configured but not found])
+-   fi
+-else
+-   have_ccpanel=no
+-fi
+-AM_CONDITIONAL(BUILD_CCPANEL, test x${have_ccpanel} = xyes)
+-
+-###########################
+-# Grab the GSettings Macros
+-###########################
+-
+-GLIB_GSETTINGS
+-
+-###########################
+-# gcov coverage reporting
+-###########################
+-
+-m4_include([m4/gcov.m4])
+-AC_TDD_GCOV
+-AM_CONDITIONAL([HAVE_GCOV], [test "x$ac_cv_check_gcov" = xyes])
+-AM_CONDITIONAL([HAVE_LCOV], [test "x$ac_cv_check_lcov" = xyes])
+-AM_CONDITIONAL([HAVE_GCOVR], [test "x$ac_cv_check_gcovr" = xyes])
+-AC_SUBST(COVERAGE_CFLAGS)
+-AC_SUBST(COVERAGE_LDFLAGS)
+-
+-###########################
+-# Google Test framework
+-###########################
+-
+-AC_ARG_ENABLE([tests],
+-    [AS_HELP_STRING([--disable-tests], [Disable test scripts and tools (default=auto)])],
+-    [enable_tests=${enableval}],
+-    [enable_tests=auto])
+-if test "x$enable_tests" != "xno"; then
+-    m4_include([m4/gtest.m4])
+-    CHECK_GTEST
+-    CHECK_XORG_GTEST
+-    if test "x$enable_tests" = "xauto"; then
+-        enable_tests=${have_gtest}
+-    elif test "x$enable_tests" = "xyes" && test "x$have_gtest" != "xyes"; then
+-        AC_MSG_ERROR([tests were requested but gtest is not installed.])
+-    fi
+-fi
+-AM_CONDITIONAL([BUILD_TESTS],[test "x$enable_tests" = "xyes"])
+-
+-##############################
+-# Custom Junk
+-##############################
+-
+-AC_DEFUN([AC_DEFINE_PATH], [
+-	test "x$prefix" = xNONE && prefix="$ac_default_prefix"
+-	test "x$exec_prefix" = xNONE && exec_prefix='${prefix}'
+-	ac_define_path=`eval echo [$]$2`
+-	ac_define_path=`eval echo [$]ac_define_path`
+-	$1="$ac_define_path"
+-	AC_SUBST($1)
+-	ifelse($3, ,
+-		AC_DEFINE_UNQUOTED($1, "$ac_define_path"),
+-		AC_DEFINE_UNQUOTED($1, "$ac_define_path", $3))
+-])
+-
+-###########################
+-# Internationalization
+-###########################
+-IT_PROG_INTLTOOL([0.41.0])
+-
+-GETTEXT_PACKAGE=indicator-datetime
+-AC_SUBST(GETTEXT_PACKAGE)
+-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Name of the default get text domain])
+-AC_DEFINE_PATH(GNOMELOCALEDIR, "${datadir}/locale", [locale directory])
+-
+-AM_GLIB_GNU_GETTEXT
+-
+-###########################
+-# Files
+-###########################
+-
+-AC_CONFIG_FILES([
+-Makefile
+-src/Makefile
+-data/Makefile
+-tests/Makefile
+-po/Makefile.in
+-])
+-AC_OUTPUT
+-
+-###########################
+-# Results
+-###########################
+-
+-AC_MSG_NOTICE([
+-
+-Date and Time Indicator Configuration:
+-
+-	Prefix:        $prefix
+-	CC Panel:      $have_ccpanel
+-	CC Panel Dir:  $CCPANELDIR
+-	Unit Tests:    $enable_tests
+-	gcov:          $use_gcov
+-])
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/data/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/data/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/data/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/data/CMakeLists.txt	2014-01-09 14:30:21.715191024 +0100
+@@ -0,0 +1,66 @@
++##
++##  GSettings schema
++##
++
++include (UseGSettings)
++set (SCHEMA_NAME "com.canonical.indicator.datetime.gschema.xml")
++set (SCHEMA_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${SCHEMA_NAME}")
++add_schema (${SCHEMA_FILE})
++
++
++##
++##  DBus Service File
++##
++
++# where to install
++set (DBUS_SERVICE_DIR "${CMAKE_INSTALL_FULL_DATADIR}/dbus-1/services")
++message (STATUS "${DBUS_SERVICE_DIR} is the DBus Service File install dir")
++
++set (SERVICE_NAME "${CMAKE_PROJECT_NAME}.service")
++set (SERVICE_FILE "${CMAKE_CURRENT_BINARY_DIR}/${SERVICE_NAME}")
++set (SERVICE_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/${SERVICE_NAME}.in")
++
++# build it
++set (pkglibexecdir "${CMAKE_INSTALL_FULL_PKGLIBEXECDIR}")
++configure_file ("${SERVICE_FILE_IN}" "${SERVICE_FILE}")
++
++# install it
++install (FILES "${SERVICE_FILE}"
++         DESTINATION "${DBUS_SERVICE_DIR}")
++
++
++##
++##  Unity Indicator File
++##
++
++# where to install
++set (UNITY_INDICATOR_DIR "${CMAKE_INSTALL_FULL_DATAROOTDIR}/unity/indicators")
++message (STATUS "${UNITY_INDICATOR_DIR} is the Unity Indicator install dir")
++
++set (UNITY_INDICATOR_NAME "com.canonical.indicator.datetime")
++set (UNITY_INDICATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${UNITY_INDICATOR_NAME}")
++
++install (FILES "${UNITY_INDICATOR_FILE}"
++         DESTINATION "${UNITY_INDICATOR_DIR}")
++
++
++##
++##  gnome-control-center panel: .ui and .desktop files
++##
++
++if (BUILD_PANEL)
++
++  # the .ui file
++  install (FILES "datetime-dialog.ui"
++           DESTINATION "${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}")
++
++  # the .desktop file
++  set (DESKTOP_NAME "gnome-indicator-datetime-panel.desktop")
++  set (DESKTOP_FILE "${CMAKE_CURRENT_BINARY_DIR}/${DESKTOP_NAME}")
++  set (DESKTOP_FILE_IN "${CMAKE_CURRENT_SOURCE_DIR}/${DESKTOP_NAME}.in")
++  set (ENV{LC_ALL} "C")
++  execute_process (COMMAND intltool-merge -quiet --desktop-style --utf8 "${CMAKE_SOURCE_DIR}/po" "${DESKTOP_FILE_IN}" "${DESKTOP_FILE}")
++  install (FILES ${DESKTOP_FILE}
++           DESTINATION "${CMAKE_INSTALL_DATADIR}/applications")
++
++endif ()
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/data/Makefile.am indicator-datetime-13.10.0+13.10.20131023.2/data/Makefile.am
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/data/Makefile.am	2014-01-09 14:18:28.961049715 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/data/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+@@ -1,45 +0,0 @@
+-BUILT_SOURCES=
+-CLEANFILES=
+-EXTRA_DIST=
+-
+-#
+-# the indicator bus file
+-#
+-
+-indicatorsdir = $(prefix)/share/unity/indicators
+-dist_indicators_DATA = com.canonical.indicator.datetime
+-
+-#
+-# the gsettings
+-#
+-
+-gsettings_SCHEMAS = com.canonical.indicator.datetime.gschema.xml
+-@GSETTINGS_RULES@
+-EXTRA_DIST += $(gsettings_SCHEMAS)
+-
+-#
+-# the dbus service file
+-#
+-
+-dbus_servicesdir = $(datadir)/dbus-1/services
+-dbus_services_DATA = indicator-datetime.service
+-dbus_services_in = $(dbus_services_DATA:.service=.service.in)
+-$(dbus_services_DATA): $(dbus_services_in)
+-	$(AM_V_GEN) $(SED) -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@
+-BUILT_SOURCES += $(dbus_services_DATA)
+-CLEANFILES += $(dbus_services_DATA)
+-EXTRA_DIST += $(dbus_services_in)
+-
+-#
+-# the gnome-control-center panel
+-#
+-
+-if BUILD_CCPANEL
+- pkgdata_DATA = datetime-dialog.ui
+- @INTLTOOL_DESKTOP_RULE@
+- desktopdir = $(datadir)/applications
+- desktop_DATA = gnome-indicator-datetime-panel.desktop
+- EXTRA_DIST += $(desktop_DATA)
+- CLEANFILES += $(desktop_DATA)
+-endif
+-EXTRA_DIST += datetime-dialog.ui $(desktop_DATA:.desktop=.desktop.in)
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/data/indicator-datetime.service.in indicator-datetime-13.10.0+13.10.20131023.2/data/indicator-datetime.service.in
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/data/indicator-datetime.service.in	2014-01-09 14:18:28.961049715 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/data/indicator-datetime.service.in	2014-01-09 14:30:21.715191024 +0100
+@@ -1,3 +1,3 @@
+ [D-BUS Service]
+ Name=com.canonical.indicator.datetime
+-Exec=@libexecdir@/indicator-datetime-service
++Exec=@pkglibexecdir@/indicator-datetime-service
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/m4/gcov.m4 indicator-datetime-13.10.0+13.10.20131023.2/m4/gcov.m4
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/m4/gcov.m4	2014-01-09 14:18:28.959049686 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/m4/gcov.m4	1970-01-01 01:00:00.000000000 +0100
+@@ -1,86 +0,0 @@
+-# Checks for existence of coverage tools:
+-#  * gcov
+-#  * lcov
+-#  * genhtml
+-#  * gcovr
+-# 
+-# Sets ac_cv_check_gcov to yes if tooling is present
+-# and reports the executables to the variables LCOV, GCOVR and GENHTML.
+-AC_DEFUN([AC_TDD_GCOV],
+-[
+-  AC_ARG_ENABLE(gcov,
+-  AS_HELP_STRING([--enable-gcov],
+-		 [enable coverage testing with gcov]),
+-  [use_gcov=$enableval], [use_gcov=no])
+-
+-  if test "x$use_gcov" = "xyes"; then
+-  # we need gcc:
+-  if test "$GCC" != "yes"; then
+-    AC_MSG_ERROR([GCC is required for --enable-gcov])
+-  fi
+-
+-  # Check if ccache is being used
+-  AC_CHECK_PROG(SHTOOL, shtool, shtool)
+-  case `$SHTOOL path $CC` in
+-    *ccache*[)] gcc_ccache=yes;;
+-    *[)] gcc_ccache=no;;
+-  esac
+-
+-  if test "$gcc_ccache" = "yes" && (test -z "$CCACHE_DISABLE" || test "$CCACHE_DISABLE" != "1"); then
+-    AC_MSG_ERROR([ccache must be disabled when --enable-gcov option is used. You can disable ccache by setting environment variable CCACHE_DISABLE=1.])
+-  fi
+-
+-  lcov_version_list="1.6 1.7 1.8 1.9"
+-  AC_CHECK_PROG(LCOV, lcov, lcov)
+-  AC_CHECK_PROG(GENHTML, genhtml, genhtml)
+-
+-  if test "$LCOV"; then
+-    AC_CACHE_CHECK([for lcov version], glib_cv_lcov_version, [
+-      glib_cv_lcov_version=invalid
+-      lcov_version=`$LCOV -v 2>/dev/null | $SED -e 's/^.* //'`
+-      for lcov_check_version in $lcov_version_list; do
+-        if test "$lcov_version" = "$lcov_check_version"; then
+-          glib_cv_lcov_version="$lcov_check_version (ok)"
+-        fi
+-      done
+-    ])
+-  else
+-    lcov_msg="To enable code coverage reporting you must have one of the following lcov versions installed: $lcov_version_list"
+-    AC_MSG_ERROR([$lcov_msg])
+-  fi
+-
+-  case $glib_cv_lcov_version in
+-    ""|invalid[)]
+-      lcov_msg="You must have one of the following versions of lcov: $lcov_version_list (found: $lcov_version)."
+-      AC_MSG_ERROR([$lcov_msg])
+-      LCOV="exit 0;"
+-      ;;
+-  esac
+-
+-  if test -z "$GENHTML"; then
+-    AC_MSG_ERROR([Could not find genhtml from the lcov package])
+-  fi
+-
+-  ac_cv_check_gcov=yes
+-  ac_cv_check_lcov=yes
+-
+-  # Remove all optimization flags from CFLAGS
+-  changequote({,})
+-  CFLAGS=`echo "$CFLAGS" | $SED -e 's/-O[0-9]*//g'`
+-  changequote([,])
+-
+-  # Add the special gcc flags
+-  COVERAGE_CFLAGS="-O0 -fprofile-arcs -ftest-coverage"
+-  COVERAGE_CXXFLAGS="-O0 -fprofile-arcs -ftest-coverage"	
+-  COVERAGE_LDFLAGS="-lgcov"
+-
+-  # Check availability of gcovr
+-  AC_CHECK_PROG(GCOVR, gcovr, gcovr)
+-  if test -z "$GCOVR"; then
+-    ac_cv_check_gcovr=no
+-  else
+-    ac_cv_check_gcovr=yes
+-  fi
+-
+-fi
+-]) # AC_TDD_GCOV
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/m4/gtest.m4 indicator-datetime-13.10.0+13.10.20131023.2/m4/gtest.m4
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/m4/gtest.m4	2014-01-09 14:18:28.959049686 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/m4/gtest.m4	1970-01-01 01:00:00.000000000 +0100
+@@ -1,63 +0,0 @@
+-# Copyright (C) 2012 Canonical, Ltd.
+-#
+-# Permission is hereby granted, free of charge, to any person obtaining a copy
+-# of this software and associated documentation files (the "Software"), to deal
+-# in the Software without restriction, including without limitation the rights
+-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+-# copies of the Software, and to permit persons to whom the Software is
+-# furnished to do so, subject to the following conditions:
+-#
+-# The above copyright notice and this permission notice (including the next
+-# paragraph) shall be included in all copies or substantial portions of the
+-# Software.
+-#
+-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+-# SOFTWARE.
+-
+-# Checks whether the gtest source is available on the system. Allows for
+-# adjusting the include and source path. Sets have_gtest=yes if the source is
+-# present. Sets GTEST_CPPFLAGS and GTEST_SOURCE to the preprocessor flags and
+-# source location respectively.
+-AC_DEFUN([CHECK_GTEST],
+-[
+-  AC_ARG_WITH([gtest-include-path],
+-              [AS_HELP_STRING([--with-gtest-include-path],
+-                              [location of the Google test headers])],
+-              [GTEST_CPPFLAGS="-I$withval"])
+-
+-  AC_ARG_WITH([gtest-source-path],
+-              [AS_HELP_STRING([--with-gtest-source-path],
+-                              [location of the Google test sources, defaults to /usr/src/gtest])],
+-              [GTEST_SOURCE="$withval"],
+-              [GTEST_SOURCE="/usr/src/gtest"])
+-
+-  GTEST_CPPFLAGS="$GTEST_CPPFLAGS -I$GTEST_SOURCE"
+-
+-  AC_LANG_PUSH([C++])
+-
+-  tmp_CPPFLAGS="$CPPFLAGS"
+-  CPPFLAGS="$CPPFLAGS $GTEST_CPPFLAGS"
+-
+-  AC_CHECK_HEADER([gtest/gtest.h])
+-
+-  CPPFLAGS="$tmp_CPPFLAGS"
+-
+-  AC_LANG_POP
+-
+-  AC_CHECK_FILES([$GTEST_SOURCE/src/gtest-all.cc]
+-                 [$GTEST_SOURCE/src/gtest_main.cc],
+-                 [have_gtest_source=yes],
+-                 [have_gtest_source=no])
+-
+-  AS_IF([test "x$ac_cv_header_gtest_gtest_h" = xyes -a \
+-              "x$have_gtest_source" = xyes],
+-        [have_gtest=yes]
+-        [AC_SUBST(GTEST_CPPFLAGS)]
+-        [AC_SUBST(GTEST_SOURCE)],
+-        [have_gtest=no])
+-]) # CHECK_GTEST
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/panel/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/panel/CMakeLists.txt	2014-01-09 14:30:21.716191024 +0100
+@@ -0,0 +1,25 @@
++set (PANEL_LIB "indicator-datetime")
++
++add_definitions (-DPKGDATADIR="${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}")
++
++add_library (${PANEL_LIB} SHARED
++             datetime-prefs.c 
++             datetime-prefs-locations.c
++             datetime-prefs-locations.h
++             ${CMAKE_SOURCE_DIR}/src/utils.c
++             ${CMAKE_SOURCE_DIR}/src/utils.h
++             ${CMAKE_SOURCE_DIR}/src/settings-shared.h)
++
++include_directories (${PANEL_DEPS_INCLUDE_DIRS})
++
++link_directories (${PANEL_DEPS_LIBRARY_DIRS})
++
++set_property (TARGET ${PANEL_LIB}
++              APPEND_STRING PROPERTY COMPILE_FLAGS
++              " -g ${CC_WARNING_ARGS} ${GCOV_FLAGS}")
++
++target_link_libraries (${PANEL_LIB} ${PANEL_DEPS_LIBRARIES} ${GCOV_LIBS})
++
++install (TARGETS ${PANEL_LIB}
++         DESTINATION ${CMAKE_INSTALL_LIBDIR}/control-center-1/panels)
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs-locations.c indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs-locations.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs-locations.c	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs-locations.c	2014-01-09 14:30:21.716191024 +0100
+@@ -0,0 +1,683 @@
++/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
++
++A dialog for setting time and date preferences.
++
++Copyright 2011 Canonical Ltd.
++
++Authors:
++    Michael Terry <michael.terry@canonical.com>
++
++This program is free software: you can redistribute it and/or modify it 
++under the terms of the GNU General Public License version 3, as published 
++by the Free Software Foundation.
++
++This program is distributed in the hope that it will be useful, but 
++WITHOUT ANY WARRANTY; without even the implied warranties of 
++MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
++PURPOSE.  See the GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License along 
++with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#include <stdlib.h>
++#include <time.h> /* time_t */
++#include <glib/gi18n-lib.h>
++#include <gtk/gtk.h>
++#include <timezonemap/timezone-completion.h>
++
++#include "datetime-prefs-locations.h"
++#include "settings-shared.h"
++#include "utils.h"
++
++#define DATETIME_DIALOG_UI_FILE PKGDATADIR "/datetime-dialog.ui"
++
++#define COL_NAME         0
++#define COL_TIME         1
++#define COL_ZONE         2
++#define COL_VISIBLE_NAME 3
++#define COL_ICON         4
++
++static gboolean update_times (GtkWidget * dlg);
++static void save_when_idle (GtkWidget * dlg);
++
++/***
++**** Sorting
++***/
++
++/**
++ * A temporary struct used for sorting
++ */
++struct TimeLocation
++{
++  gchar * collated_name;
++  gint pos;
++  gint32 offset;
++};
++
++static struct TimeLocation*
++time_location_new (const char * zone, const char * name, int pos, time_t now)
++{
++  struct TimeLocation * loc = g_new (struct TimeLocation, 1);
++  GTimeZone * tz = g_time_zone_new (zone);
++  const gint interval = g_time_zone_find_interval (tz, G_TIME_TYPE_UNIVERSAL, now);
++  loc->offset = g_time_zone_get_offset (tz, interval);
++  loc->collated_name = g_utf8_collate_key (name, -1);
++  loc->pos = pos;
++  g_time_zone_unref (tz);
++  return loc;
++}
++
++static void
++time_location_free (struct TimeLocation * loc)
++{
++  g_free (loc->collated_name);
++  g_free (loc);
++}
++
++static GSList*
++time_location_array_new_from_model (GtkTreeModel * model)
++{
++  int pos = 0;
++  GtkTreeIter iter;
++  GSList * list = NULL;
++  const time_t now = time (NULL);
++
++  if (gtk_tree_model_get_iter_first (model, &iter)) do
++    {
++      gchar * zone = NULL;
++      gchar * name = NULL;
++
++      gtk_tree_model_get (model, &iter,
++                          COL_ZONE, &zone,
++                          COL_VISIBLE_NAME, &name,
++                          -1);
++
++      if (zone && name)
++        list = g_slist_prepend (list, time_location_new (zone, name, pos++, now));
++
++      g_free (name);
++      g_free (zone);
++    }
++  while (gtk_tree_model_iter_next (model, &iter));
++
++  return g_slist_reverse (list);
++}
++
++static void
++handle_sort(GtkWidget * button G_GNUC_UNUSED,
++            GtkTreeView * tree_view,
++            GCompareFunc compare)
++{
++  GtkTreeModel * model = gtk_tree_view_get_model (tree_view);
++  GSList * l;
++  GSList * list = g_slist_sort (time_location_array_new_from_model(model), compare);
++
++  gint i;
++  gint * reorder = g_new (gint, g_slist_length(list));
++  for (i=0, l=list; l!=NULL; l=l->next, i++)
++      reorder[i] = ((struct TimeLocation*)l->data)->pos;
++  gtk_list_store_reorder (GTK_LIST_STORE(model), reorder);
++
++  g_free (reorder);
++  g_slist_free_full (list, (GDestroyNotify)time_location_free);
++}
++
++static gint
++time_location_compare_by_name (gconstpointer ga, gconstpointer gb)
++{
++  const struct TimeLocation * a = ga;
++  const struct TimeLocation * b = gb;
++  int ret = g_strcmp0 (a->collated_name, b->collated_name); /* primary key */
++  if (!ret)
++    ret = a->offset - b->offset; /* secondary key */
++  return ret;
++}
++static void
++handle_sort_by_name (GtkWidget * button, GtkTreeView * tree_view)
++{
++  handle_sort (button, tree_view, time_location_compare_by_name);
++}
++
++static gint
++time_location_compare_by_time (gconstpointer ga, gconstpointer gb)
++{
++  const struct TimeLocation * a = ga;
++  const struct TimeLocation * b = gb;
++  int ret = a->offset - b->offset; /* primary key */
++  if (!ret)
++    ret = g_strcmp0 (a->collated_name, b->collated_name); /* secondary key */
++  return ret;
++}
++static void
++handle_sort_by_time (GtkWidget * button, GtkTreeView * tree_view)
++{
++  handle_sort (button, tree_view, time_location_compare_by_time);
++}
++
++static gboolean
++time_location_list_test_sorted (GSList * list, GCompareFunc compare)
++{
++  GSList * l;
++  for (l=list; l!=NULL && l->next!=NULL; l=l->next)
++    if (compare(l->data, l->next->data) > 0)
++      return FALSE;
++  return TRUE;
++}
++static void
++location_model_test_sorted (GtkTreeModel * model, gboolean * is_sorted_by_name, gboolean * is_sorted_by_time)
++{
++  GSList * list = time_location_array_new_from_model(model);
++  *is_sorted_by_name = time_location_list_test_sorted (list, time_location_compare_by_name);
++  *is_sorted_by_time = time_location_list_test_sorted (list, time_location_compare_by_time);
++  g_slist_free_full (list, (GDestroyNotify)time_location_free);
++}
++
++/***
++****
++***/
++
++static void
++handle_add (GtkWidget * button G_GNUC_UNUSED, GtkTreeView * tree)
++{
++  GtkListStore * store = GTK_LIST_STORE (gtk_tree_view_get_model (tree));
++
++  GtkTreeIter iter;
++  gtk_list_store_append (store, &iter);
++
++  GtkTreePath * path = gtk_tree_model_get_path (GTK_TREE_MODEL (store), &iter);
++  gtk_tree_view_set_cursor (tree, path, gtk_tree_view_get_column (tree, 0), TRUE);
++  gtk_tree_path_free (path);
++}
++
++static void
++handle_remove (GtkWidget * button G_GNUC_UNUSED, GtkTreeView * tree)
++{
++  GtkListStore * store = GTK_LIST_STORE (gtk_tree_view_get_model (tree));
++  GtkTreeSelection * selection = gtk_tree_view_get_selection (tree);
++
++  GList * paths = gtk_tree_selection_get_selected_rows (selection, NULL);
++
++  /* Convert all paths to iters so we can safely delete multiple paths.  For a
++     GtkListStore, iters persist past model changes. */
++  GList * tree_iters = NULL;
++  GList * iter;
++  for (iter = paths; iter; iter = iter->next) {
++    GtkTreeIter * tree_iter = g_new(GtkTreeIter, 1);
++    if (gtk_tree_model_get_iter (GTK_TREE_MODEL (store), tree_iter, (GtkTreePath *)iter->data)) {
++      tree_iters = g_list_prepend (tree_iters, tree_iter);
++    }
++    gtk_tree_path_free (iter->data);
++  }
++  g_list_free (paths);
++  
++  // Find the next item to select
++  GtkTreeIter *last_selected = g_list_nth_data(tree_iters, 0);
++  GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL (store), last_selected);
++  GtkTreeIter titer;
++  if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
++    g_debug("Failed to get last selected iter from path");
++  	last_selected = NULL;
++  } else {
++	  if (!gtk_tree_model_iter_next(GTK_TREE_MODEL (store), &titer)) {
++	  	if (gtk_tree_path_prev(path)) {
++	  	  	if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
++	  			g_debug("Failed to get iter from path");
++	  			last_selected = NULL;
++	  		} else {
++		  		last_selected = &titer;
++		  	}
++	  	} else {
++	  		g_debug("handle_remove: Failed to find another location to select (assume single selected)");
++	  		last_selected = NULL;
++	  	}
++	  } else {
++	  	g_debug("Got next item in model");
++		last_selected = &titer;
++	  }
++  }
++ 
++  if (last_selected) {
++	  gboolean clear = TRUE;
++	  path = gtk_tree_model_get_path(GTK_TREE_MODEL (store), last_selected);
++	  
++      // Step over the path to find an item which isn't in the delete list
++	  if (g_list_length(tree_iters) > 1) {
++		  for (iter = tree_iters; iter; iter = iter->next) {
++		  	GtkTreePath *ipath = gtk_tree_model_get_path(GTK_TREE_MODEL (store), (GtkTreeIter *)iter->data);
++		  	if (gtk_tree_path_compare(path, ipath) == 0) {
++		  		clear = FALSE;
++		  		break;
++		  	}
++		  }
++	  	  while (clear == FALSE) {
++			if (gtk_tree_path_prev(path)) {
++				clear = TRUE;
++		  	  	for (iter = tree_iters; iter; iter = iter->next) {
++		  			GtkTreePath *ipath = gtk_tree_model_get_path(GTK_TREE_MODEL (store), (GtkTreeIter *)iter->data);
++		  			if (gtk_tree_path_compare(path, ipath) == 0) {
++		  				clear = FALSE;
++		  				break;
++		  			}
++		  		}
++		  		if (clear) {
++			  		if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
++			  			g_debug("Failed to get iter from path");
++			  			last_selected = NULL;
++			  		} else {
++				  		last_selected = &titer;
++				  	}
++				}
++		  	} else {
++		  		last_selected = NULL;
++		  		break;
++		  	}
++		  }
++	  }
++  }
++  
++  /* Now delete each iterator */
++  for (iter = tree_iters; iter; iter = iter->next) {
++    gtk_list_store_remove (store, (GtkTreeIter *)iter->data);
++    g_free (iter->data);
++  }
++  g_list_free (tree_iters);
++  
++  if (last_selected)
++	  gtk_tree_selection_select_iter(selection, last_selected);
++}
++
++static void
++handle_edit (GtkCellRendererText * renderer G_GNUC_UNUSED,
++             gchar * path,
++             gchar * new_text,
++             GtkListStore * store)
++{
++  GtkTreeIter iter;
++
++  // Manual user edits are always wrong (unless they are undoing a previous
++  // edit), so we set the error icon here if needed.  Common way to get to
++  // this code path is to lose entry focus.
++  if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (store), &iter, path)) {
++    gchar * name;
++    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_NAME, &name, -1);
++    gboolean correct = g_strcmp0 (name, new_text) == 0;
++    g_free (name);
++
++    gtk_list_store_set (store, &iter,
++                        COL_VISIBLE_NAME, new_text,
++                        COL_ICON, correct ? NULL : GTK_STOCK_DIALOG_ERROR,
++                        -1);
++  }
++}
++
++static gboolean
++timezone_selected (GtkEntryCompletion * widget, GtkTreeModel * model,
++                   GtkTreeIter * iter, GtkWidget * dlg)
++{
++  gchar * zone = NULL;
++  gchar * name = NULL;
++
++  gtk_tree_model_get (model, iter,
++                      CC_TIMEZONE_COMPLETION_ZONE, &zone,
++                      CC_TIMEZONE_COMPLETION_NAME, &name,
++                      -1);
++
++  /* if no explicit timezone, try to determine one from latlon */
++  if (!zone || !*zone)
++  {
++    gchar * strlat = NULL;
++    gchar * strlon = NULL;
++    gdouble lat = 0;
++    gdouble lon = 0;
++
++    gtk_tree_model_get (model, iter,
++                        CC_TIMEZONE_COMPLETION_LATITUDE, &strlat,
++                        CC_TIMEZONE_COMPLETION_LONGITUDE, &strlon,
++                        -1);
++
++    if (strlat && *strlat) lat = g_ascii_strtod(strlat, NULL);
++    if (strlon && *strlon) lon = g_ascii_strtod(strlon, NULL);
++
++    CcTimezoneMap * tzmap = CC_TIMEZONE_MAP (g_object_get_data (G_OBJECT (widget), "tzmap"));
++    g_free (zone);
++    zone = g_strdup (cc_timezone_map_get_timezone_at_coords (tzmap, lon, lat));
++
++    g_free (strlat);
++    g_free (strlon);
++  }
++
++  GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (widget), "store"));
++  GtkTreeIter * store_iter = (GtkTreeIter *)g_object_get_data (G_OBJECT (widget), "store_iter");
++  if (store != NULL && store_iter != NULL) {
++    gtk_list_store_set (store, store_iter,
++                        COL_VISIBLE_NAME, name,
++                        COL_ICON, NULL,
++                        COL_NAME, name,
++                        COL_ZONE, zone, -1);
++  }
++
++  update_times (dlg);
++
++  /* cleanup */
++  g_free (name);
++  g_free (zone);
++
++  return FALSE; // Do normal action too
++}
++
++static gboolean
++query_tooltip (GtkTreeView * tree, gint x, gint y, gboolean keyboard_mode,
++               GtkTooltip * tooltip, GtkCellRenderer * cell)
++{
++  GtkTreeModel * model;
++  GtkTreeIter iter;
++  if (!gtk_tree_view_get_tooltip_context (tree, &x, &y, keyboard_mode,
++                                          &model, NULL, &iter))
++    return FALSE;
++
++  const gchar * icon;
++  gtk_tree_model_get (model, &iter, COL_ICON, &icon, -1);
++  if (icon == NULL)
++    return FALSE;
++
++  GtkTreeViewColumn * col = gtk_tree_view_get_column (tree, 0);
++  gtk_tree_view_set_tooltip_cell (tree, tooltip, NULL, col, cell);
++  gtk_tooltip_set_text (tooltip, _("You need to complete this location for it to appear in the menu."));
++  return TRUE;
++}
++
++static void
++handle_edit_started (GtkCellRendererText * renderer G_GNUC_UNUSED,
++                     GtkCellEditable * editable,
++                     gchar * path,
++                     CcTimezoneCompletion * completion)
++{
++  if (GTK_IS_ENTRY (editable)) {
++    GtkEntry *entry = GTK_ENTRY (editable);
++    cc_timezone_completion_watch_entry (completion, entry);
++
++    GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (completion), "store"));
++    GtkTreeIter * store_iter = g_new(GtkTreeIter, 1);
++    if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (store), store_iter, path)) {
++      g_object_set_data_full (G_OBJECT (completion), "store_iter", store_iter, g_free);
++    }
++  }
++}
++
++static gboolean
++update_times (GtkWidget * dlg)
++{
++  /* For each entry, check zone in column 2 and set column 1 to it's time */
++  CcTimezoneCompletion * completion = CC_TIMEZONE_COMPLETION (g_object_get_data (G_OBJECT (dlg), "completion"));
++  GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (completion), "store"));
++  GObject * cell = G_OBJECT (g_object_get_data (G_OBJECT (completion), "name-cell"));
++
++  gboolean editing;
++  g_object_get (cell, "editing", &editing, NULL);
++  if (editing) { /* No updates while editing, it cancels the edit */
++    return TRUE;
++  }
++
++  g_signal_handlers_block_by_func (store, save_when_idle, dlg);
++
++  GSettings * settings = g_settings_new (SETTINGS_INTERFACE);
++  GtkTreeIter iter;
++  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter)) {
++    GDateTime * now = g_date_time_new_now_local ();
++    do {
++      gchar * strzone;
++
++      gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_ZONE, &strzone, -1);
++
++      if (strzone && *strzone) {
++        GTimeZone * tz = g_time_zone_new (strzone);
++        GDateTime * now_tz = g_date_time_to_timezone (now, tz);
++        gchar * format = generate_full_format_string_at_time (now, now_tz, settings);
++        gchar * time_str = g_date_time_format (now_tz, format);
++        gchar * old_time_str;
++
++        gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_TIME, &old_time_str, -1);
++        if (g_strcmp0 (old_time_str, time_str))
++          gtk_list_store_set (store, &iter, COL_TIME, time_str, -1);
++
++        g_free (old_time_str);
++        g_free (time_str);
++        g_free (format);
++        g_date_time_unref (now_tz);
++        g_time_zone_unref (tz);
++      }
++      g_free (strzone);
++    } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &iter));
++    g_date_time_unref (now);
++  }
++
++  g_object_unref (settings);
++
++  g_signal_handlers_unblock_by_func (store, save_when_idle, dlg);
++
++  return TRUE;
++}
++
++static void
++fill_from_settings (GObject * store, GSettings * conf)
++{
++  gchar ** locations = g_settings_get_strv (conf, SETTINGS_LOCATIONS_S);
++
++  gtk_list_store_clear (GTK_LIST_STORE (store));
++
++  gchar ** striter;
++  GtkTreeIter iter;
++  for (striter = locations; *striter; ++striter) {
++    gchar * zone, * name;
++    split_settings_location (*striter, &zone, &name);
++
++    gtk_list_store_append (GTK_LIST_STORE (store), &iter);
++    gtk_list_store_set (GTK_LIST_STORE (store), &iter,
++                        COL_VISIBLE_NAME, name,
++                        COL_ICON, NULL,
++                        COL_NAME, name,
++                        COL_ZONE, zone, -1);
++
++    g_free (zone);
++    g_free (name);
++  }
++
++  g_strfreev (locations);
++}
++
++static void
++save_to_settings (GObject * store, GSettings * conf)
++{
++  gboolean empty = TRUE;
++  GVariantBuilder builder;
++  g_variant_builder_init (&builder, G_VARIANT_TYPE_STRING_ARRAY);
++
++  GtkTreeIter iter;
++  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter)) {
++    GString * gstr = g_string_new (NULL);
++    do {
++      gchar * strname;
++      gchar * strzone;
++      gtk_tree_model_get (GTK_TREE_MODEL (store), &iter,
++                          COL_NAME, &strname,
++                          COL_ZONE, &strzone,
++                          -1);
++      if (strzone && *strzone && strname && *strname) {
++        g_string_printf (gstr, "%s %s", strzone, strname);
++        g_variant_builder_add (&builder, "s", gstr->str);
++        empty = FALSE;
++      }
++      g_free (strname);
++      g_free (strzone);
++    } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &iter));
++    g_string_free (gstr, TRUE);
++  }
++
++  if (empty) {
++    /* Empty list */
++    g_variant_builder_clear (&builder);
++    g_settings_set_strv (conf, SETTINGS_LOCATIONS_S, NULL);
++  }
++  else {
++    g_settings_set_value (conf, SETTINGS_LOCATIONS_S, g_variant_builder_end (&builder));
++  }
++}
++
++static gboolean
++save_now (GtkWidget *dlg)
++{
++  GSettings * conf = G_SETTINGS (g_object_get_data (G_OBJECT (dlg), "conf"));
++  GObject * completion = G_OBJECT (g_object_get_data (G_OBJECT (dlg), "completion"));
++  GObject * store = G_OBJECT (g_object_get_data (completion, "store"));
++
++  save_to_settings (store, conf);
++
++  g_object_set_data (G_OBJECT (dlg), "save-id", GINT_TO_POINTER(0));
++
++  return FALSE;
++}
++
++static void
++save_when_idle (GtkWidget *dlg)
++{
++  guint save_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "save-id"));
++
++  if (save_id == 0) {
++    save_id = g_idle_add ((GSourceFunc)save_now, dlg);
++    g_object_set_data (G_OBJECT (dlg), "save-id", GINT_TO_POINTER(save_id));
++  }
++}
++
++static void
++dialog_closed (GtkWidget * dlg, GObject * store G_GNUC_UNUSED)
++{
++  /* Cleanup a tad */
++  guint time_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "time-id"));
++  g_source_remove (time_id);
++
++  guint save_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "save-id"));
++  if (save_id > 0)
++    g_source_remove (save_id);
++}
++
++static void
++selection_changed (GtkTreeSelection * selection, GtkWidget * remove_button)
++{
++  gint count = gtk_tree_selection_count_selected_rows (selection);
++  gtk_widget_set_sensitive (remove_button, count > 0);
++}
++
++static void
++update_button_sensitivity (GtkWidget * dlg)
++{
++  GObject * odlg = G_OBJECT(dlg);
++  GObject * completion = g_object_get_data(odlg, "completion");
++  GtkTreeModel * model = GTK_TREE_MODEL (g_object_get_data (completion, "store")); 
++  gboolean is_sorted_by_name;
++  gboolean is_sorted_by_time;
++  location_model_test_sorted (model, &is_sorted_by_name, &is_sorted_by_time);
++  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByNameButton")), !is_sorted_by_name);
++  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByTimeButton")), !is_sorted_by_time);
++}
++
++static void
++model_changed (GtkWidget * dlg)
++{
++  update_button_sensitivity (dlg);
++  save_when_idle (dlg);
++}
++
++GtkWidget *
++datetime_setup_locations_dialog (CcTimezoneMap * map)
++{
++  GError * error = NULL;
++  GtkBuilder * builder = gtk_builder_new ();
++  gtk_builder_set_translation_domain (builder, GETTEXT_PACKAGE);
++  gtk_builder_add_from_file (builder, DATETIME_DIALOG_UI_FILE, &error);
++  if (error != NULL) {
++    /* We have to abort, we can't continue without the ui file */
++    g_error ("Could not load ui file %s: %s", DATETIME_DIALOG_UI_FILE, error->message);
++    g_error_free (error);
++    return NULL;
++  }
++
++  GSettings * conf = g_settings_new (SETTINGS_INTERFACE);
++
++#define WIG(name) GTK_WIDGET (gtk_builder_get_object (builder, name))
++
++  GtkWidget * dlg = WIG ("locationsDialog");
++  GtkWidget * tree = WIG ("locationsView");
++  GObject * store = gtk_builder_get_object (builder, "locationsStore");
++
++  /* Configure tree */
++  CcTimezoneCompletion * completion = cc_timezone_completion_new ();
++  g_object_set_data (G_OBJECT (completion), "tzmap", map);
++  g_object_set_data (G_OBJECT (completion), "store", store);
++  g_signal_connect (completion, "match-selected", G_CALLBACK (timezone_selected), dlg);
++
++  GtkCellRenderer * cell = gtk_cell_renderer_text_new ();
++  g_object_set (cell, "editable", TRUE, NULL);
++  g_signal_connect (cell, "editing-started", G_CALLBACK (handle_edit_started), completion);
++  g_signal_connect (cell, "edited", G_CALLBACK (handle_edit), store);
++  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree), -1,
++                                               _("Location"), cell,
++                                               "text", COL_VISIBLE_NAME, NULL);
++  GtkTreeViewColumn * loc_col = gtk_tree_view_get_column (GTK_TREE_VIEW (tree), 0);
++  gtk_tree_view_column_set_expand (loc_col, TRUE);
++  g_object_set_data (G_OBJECT (completion), "name-cell", cell);
++
++  cell = gtk_cell_renderer_pixbuf_new ();
++  gtk_tree_view_column_pack_start (loc_col, cell, FALSE);
++  gtk_tree_view_column_add_attribute (loc_col, cell, "icon-name", COL_ICON);
++
++  gtk_widget_set_has_tooltip (tree, TRUE);
++  g_signal_connect (tree, "query-tooltip", G_CALLBACK (query_tooltip), cell);
++
++  cell = gtk_cell_renderer_text_new ();
++  gtk_cell_renderer_set_alignment (cell, 1.0f, 0.5f);
++  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree), -1,
++                                               _("Time"), cell,
++                                               "text", COL_TIME, NULL);
++
++  GtkTreeSelection * selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
++  gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
++  g_signal_connect (selection, "changed", G_CALLBACK (selection_changed), WIG ("removeButton"));
++  selection_changed (selection, WIG ("removeButton"));
++
++  g_signal_connect (WIG ("addButton"), "clicked", G_CALLBACK (handle_add), tree);
++  g_signal_connect (WIG ("removeButton"), "clicked", G_CALLBACK (handle_remove), tree);
++
++  GtkWidget * w = WIG ("sortByNameButton");
++  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_name), tree);
++  g_object_set_data (G_OBJECT(dlg), "sortByNameButton", w);
++
++  w = WIG ("sortByTimeButton");
++  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_time), tree);
++  g_object_set_data (G_OBJECT(dlg), "sortByTimeButton", w);
++
++  fill_from_settings (store, conf);
++  g_signal_connect_swapped (store, "row-deleted", G_CALLBACK (model_changed), dlg);
++  g_signal_connect_swapped (store, "row-inserted", G_CALLBACK (model_changed), dlg);
++  g_signal_connect_swapped (store, "row-changed", G_CALLBACK (model_changed), dlg);
++  g_signal_connect_swapped (store, "rows-reordered", G_CALLBACK (model_changed), dlg);
++  g_object_set_data_full (G_OBJECT (dlg), "conf", g_object_ref (conf), g_object_unref);
++  g_object_set_data_full (G_OBJECT (dlg), "completion", completion, g_object_unref);
++  g_signal_connect (dlg, "destroy", G_CALLBACK (dialog_closed), store);
++
++  guint time_id = g_timeout_add_seconds (2, (GSourceFunc)update_times, dlg);
++  g_object_set_data (G_OBJECT (dlg), "time-id", GINT_TO_POINTER(time_id));
++  update_times (dlg);
++
++#undef WIG
++
++  g_object_unref (conf);
++  g_object_unref (builder);
++
++  return dlg;
++}
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs-locations.h indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs-locations.h
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs-locations.h	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs-locations.h	2014-01-09 14:30:09.531135122 +0100
+@@ -0,0 +1,35 @@
++/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
++
++A dialog for setting time and date preferences.
++
++Copyright 2011 Canonical Ltd.
++
++Authors:
++    Michael Terry <michael.terry@canonical.com>
++
++This program is free software: you can redistribute it and/or modify it 
++under the terms of the GNU General Public License version 3, as published 
++by the Free Software Foundation.
++
++This program is distributed in the hope that it will be useful, but 
++WITHOUT ANY WARRANTY; without even the implied warranties of 
++MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
++PURPOSE.  See the GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License along 
++with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#ifndef __DATETIME_PREFS_LOCATIONS_H__
++#define __DATETIME_PREFS_LOCATIONS_H__
++
++#include <gtk/gtk.h>
++#include <timezonemap/cc-timezone-map.h>
++
++G_BEGIN_DECLS
++
++GtkWidget * datetime_setup_locations_dialog (CcTimezoneMap * map);
++
++G_END_DECLS
++
++#endif
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs.c indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/panel/datetime-prefs.c	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/panel/datetime-prefs.c	2014-01-09 14:30:21.717191025 +0100
+@@ -0,0 +1,860 @@
++/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
++
++A dialog for setting time and date preferences.
++
++Copyright 2011 Canonical Ltd.
++
++Authors:
++    Ted Gould <ted@canonical.com>
++    Michael Terry <michael.terry@canonical.com>
++
++This program is free software: you can redistribute it and/or modify it 
++under the terms of the GNU General Public License version 3, as published 
++by the Free Software Foundation.
++
++This program is distributed in the hope that it will be useful, but 
++WITHOUT ANY WARRANTY; without even the implied warranties of 
++MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
++PURPOSE.  See the GNU General Public License for more details.
++
++You should have received a copy of the GNU General Public License along 
++with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#include <stdlib.h>
++#include <libintl.h>
++#include <locale.h>
++#include <langinfo.h>
++#include <glib/gi18n-lib.h>
++#include <gdk/gdkkeysyms.h>
++#include <gtk/gtk.h>
++#include <polkit/polkit.h>
++#include <libgnome-control-center/cc-panel.h>
++#include <timezonemap/cc-timezone-map.h>
++#include <timezonemap/timezone-completion.h>
++
++#include "dbus-shared.h"
++#include "settings-shared.h"
++#include "utils.h"
++#include "datetime-prefs-locations.h"
++
++#define DATETIME_DIALOG_UI_FILE PKGDATADIR "/datetime-dialog.ui"
++
++#define INDICATOR_DATETIME_TYPE_PANEL indicator_datetime_panel_get_type()
++
++typedef struct _IndicatorDatetimePanel IndicatorDatetimePanel;
++typedef struct _IndicatorDatetimePanelPrivate IndicatorDatetimePanelPrivate;
++typedef struct _IndicatorDatetimePanelClass IndicatorDatetimePanelClass;
++
++struct _IndicatorDatetimePanel
++{
++  CcPanel parent;
++  IndicatorDatetimePanelPrivate * priv;
++};
++
++struct _IndicatorDatetimePanelPrivate
++{
++  guint                name_watch_id;
++  GtkBuilder *         builder;
++  GDBusProxy *         proxy;
++  GtkWidget *          auto_radio;
++  GtkWidget *          tz_entry;
++  CcTimezoneMap *      tzmap;
++  GtkWidget *          time_spin;
++  GtkWidget *          date_spin;
++  guint                save_time_id;
++  gboolean             user_edited_time;
++  gboolean             changing_time;
++  GtkWidget *          loc_dlg;
++  GSettings *          settings;
++  CcTimezoneCompletion * completion;
++};
++
++struct _IndicatorDatetimePanelClass
++{
++  CcPanelClass parent_class;
++};
++
++G_DEFINE_DYNAMIC_TYPE (IndicatorDatetimePanel, indicator_datetime_panel, CC_TYPE_PANEL)
++
++/* Turns the boolean property into a string gsettings */
++static GVariant *
++bind_hours_set (const GValue       * value,
++                const GVariantType * type G_GNUC_UNUSED,
++                gpointer             user_data)
++{
++  const gchar * output = NULL;
++  gboolean is_12hour_button = (gboolean)GPOINTER_TO_INT(user_data);
++
++  if (g_value_get_boolean(value)) {
++    /* Only do anything if we're setting active = true */
++    output = is_12hour_button ? "12-hour" : "24-hour";
++  } else {
++    return NULL;
++  }
++
++  return g_variant_new_string (output);
++}
++
++/* Turns a string gsettings into a boolean property */
++static gboolean
++bind_hours_get (GValue * value, GVariant * variant, gpointer user_data)
++{
++  const gchar * str = g_variant_get_string(variant, NULL);
++  gboolean output = FALSE;
++  gboolean is_12hour_button = (gboolean)GPOINTER_TO_INT(user_data);
++
++  if (g_strcmp0(str, "locale-default") == 0) {
++    output = (is_12hour_button == is_locale_12h ());
++  } else if (g_strcmp0(str, "12-hour") == 0) {
++    output = is_12hour_button;
++  } else if (g_strcmp0(str, "24-hour") == 0) {
++    output = !is_12hour_button;
++  } else {
++    return FALSE;
++  }
++
++  g_value_set_boolean (value, output);
++  return TRUE;
++}
++
++static void
++widget_dependency_cb (GtkWidget * parent, GParamSpec *pspec G_GNUC_UNUSED, GtkWidget * dependent)
++{
++  gboolean active, sensitive;
++  g_object_get (G_OBJECT (parent),
++                "active", &active,
++                "sensitive", &sensitive, NULL);
++  gtk_widget_set_sensitive (dependent, active && sensitive);
++}
++
++static void
++add_widget_dependency (GtkWidget * parent, GtkWidget * dependent)
++{
++  g_signal_connect (parent, "notify::active", G_CALLBACK(widget_dependency_cb),
++                    dependent);
++  g_signal_connect (parent, "notify::sensitive", G_CALLBACK(widget_dependency_cb),
++                    dependent);
++  widget_dependency_cb (parent, NULL, dependent);
++}
++
++static void
++polkit_dependency_cb (GPermission * permission, GParamSpec *pspec G_GNUC_UNUSED, GtkWidget * dependent)
++{
++  gboolean allowed = FALSE;
++
++  g_object_get (G_OBJECT (permission),
++                "allowed", &allowed, NULL);
++
++  gtk_widget_set_sensitive (dependent, allowed);
++}
++
++static void
++add_polkit_dependency_helper (GtkWidget * parent, GParamSpec *pspec G_GNUC_UNUSED, GtkWidget * dependent)
++{
++  GtkLockButton * button = GTK_LOCK_BUTTON (parent);
++  GPermission * permission = gtk_lock_button_get_permission (button);
++  g_signal_connect (permission, "notify::allowed",
++                    G_CALLBACK(polkit_dependency_cb), dependent);
++  polkit_dependency_cb (permission, NULL, dependent);
++}
++
++static void
++add_polkit_dependency (GtkWidget * parent, GtkWidget * dependent)
++{
++  /* polkit async hasn't finished at this point, so wait for permission to come in */
++  g_signal_connect (parent, "notify::permission", G_CALLBACK(add_polkit_dependency_helper),
++                    dependent);
++  gtk_widget_set_sensitive (dependent, FALSE);
++}
++
++static void
++polkit_perm_ready (GObject *source_object G_GNUC_UNUSED, GAsyncResult *res, gpointer user_data)
++{
++  GError * error = NULL;
++  GPermission * permission = polkit_permission_new_finish (res, &error);
++
++  if (error != NULL) {
++    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
++      g_warning ("Could not get permission object: %s", error->message);
++    g_error_free (error);
++    return;
++  }
++
++  GtkLockButton * button = GTK_LOCK_BUTTON (user_data);
++  gtk_lock_button_set_permission (button, permission);
++}
++
++static void
++dbus_set_answered (GObject *object, GAsyncResult *res, gpointer command)
++{
++  GError * error = NULL;
++  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
++
++  if (error != NULL) {
++    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
++      g_warning("Could not set '%s' using timedated: %s", (gchar *)command, error->message);
++    g_error_free(error);
++    return;
++  }
++
++  g_variant_unref (answers);
++}
++
++static void
++toggle_ntp (GtkWidget * radio, GParamSpec * pspec G_GNUC_UNUSED, IndicatorDatetimePanel * self)
++{
++  gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio));
++
++  g_dbus_proxy_call (self->priv->proxy, "SetNTP", g_variant_new ("(bb)", active, TRUE),
++                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "NTP");
++}
++
++static void
++sync_entry (IndicatorDatetimePanel * self, const gchar * location)
++{
++  gchar * name = get_current_zone_name (location, self->priv->settings);
++  gtk_entry_set_text (GTK_ENTRY (self->priv->tz_entry), name);
++  g_free (name);
++
++  gtk_entry_set_icon_from_stock (GTK_ENTRY (self->priv->tz_entry),
++                                 GTK_ENTRY_ICON_SECONDARY, NULL);
++}
++
++static void
++tz_changed (CcTimezoneMap * map G_GNUC_UNUSED,
++            CcTimezoneLocation * location,
++            IndicatorDatetimePanel * self)
++{
++  if (location == NULL)
++    return;
++
++  gchar * zone;
++  g_object_get (location, "zone", &zone, NULL);
++
++  g_dbus_proxy_call (self->priv->proxy, "SetTimezone", g_variant_new ("(sb)", zone, TRUE),
++                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "timezone");
++
++  sync_entry (self, zone);
++
++  g_free (zone);
++}
++
++static void
++proxy_ready (GObject *object G_GNUC_UNUSED,
++             GAsyncResult *res,
++             IndicatorDatetimePanel * self)
++{
++  GError * error = NULL;
++  IndicatorDatetimePanelPrivate * priv = self->priv;
++  GVariant *value;
++
++  self->priv->proxy = g_dbus_proxy_new_for_bus_finish (res, &error);
++
++  if (error != NULL) {
++    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
++      g_critical("Could not grab DBus proxy for timedated: %s", error->message);
++    g_error_free(error);
++    return;
++  }
++
++  /* And now, do initial proxy configuration */
++  value = g_dbus_proxy_get_cached_property (priv->proxy, "CanNTP");
++  if (value != NULL)
++    {
++      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
++        gtk_widget_set_sensitive (priv->auto_radio, g_variant_get_boolean (value));
++      g_variant_unref (value);
++    }
++
++  value = g_dbus_proxy_get_cached_property (priv->proxy, "NTP");
++  if (value != NULL)
++    {
++      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
++        {
++          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->auto_radio), g_variant_get_boolean (value));
++          g_signal_connect (priv->auto_radio, "notify::active", G_CALLBACK (toggle_ntp), self);
++        }
++      g_variant_unref (value);
++    }
++
++  value = g_dbus_proxy_get_cached_property (priv->proxy, "Timezone");
++  if (value != NULL)
++    {
++      if (g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
++        {
++          const gchar *timezone = g_variant_get_string (value, NULL);
++
++          cc_timezone_map_set_timezone (priv->tzmap, timezone);
++          sync_entry (self, timezone);
++          g_signal_connect (priv->tzmap, "location-changed", G_CALLBACK (tz_changed), self);
++        }
++      g_variant_unref (value);
++    }
++}
++
++#define WIG(name) GTK_WIDGET (gtk_builder_get_object(self->priv->builder, name))
++
++static void
++set_show_clock_check_sensitive (IndicatorDatetimePanel  * self,
++                                gboolean                  sensitive)
++{
++  gtk_widget_set_sensitive (WIG("showClockCheck"), sensitive);
++}
++
++static void
++on_bus_name_appeared (GDBusConnection * connection   G_GNUC_UNUSED,
++                      const char      * name         G_GNUC_UNUSED,
++                      const char      * name_owner,
++                      gpointer          self)
++{
++  set_show_clock_check_sensitive (self, name_owner && *name_owner);
++}
++
++static void
++on_bus_name_vanished (GDBusConnection * connection   G_GNUC_UNUSED,
++                      const char      * name         G_GNUC_UNUSED,
++                      gpointer          self)
++{
++  set_show_clock_check_sensitive (self, FALSE);
++}
++
++static gboolean
++are_spinners_focused (IndicatorDatetimePanel * self)
++{
++  // save_time_id means that we were in focus and haven't finished our save
++  // yet, so act like we are still focused.
++  return self->priv->save_time_id ||
++         gtk_widget_has_focus (self->priv->time_spin) ||
++         gtk_widget_has_focus (self->priv->date_spin);
++}
++
++static gboolean
++save_time (IndicatorDatetimePanel * self)
++{
++  if (self->priv->user_edited_time) {
++    gdouble current_value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (self->priv->date_spin));
++    g_dbus_proxy_call (self->priv->proxy, "SetTime",
++                       g_variant_new ("(xbb)", (gint64) (current_value * G_TIME_SPAN_SECOND), FALSE, TRUE),
++                       G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "time");
++  }
++  self->priv->user_edited_time = FALSE;
++  self->priv->save_time_id = 0;
++  return FALSE;
++}
++
++static gboolean
++spin_focus_in (IndicatorDatetimePanel * self)
++{
++  if (self->priv->save_time_id > 0) {
++    g_source_remove (self->priv->save_time_id);
++    self->priv->save_time_id = 0;
++  }
++  return FALSE;
++}
++
++static gboolean
++spin_focus_out (IndicatorDatetimePanel * self)
++{
++  /* We want to only save when both spinners are unfocused.  But it's difficult
++     to tell who is about to get focus during a focus-out.  So we set an idle
++     callback to save the time if we don't focus in to another spinner by that
++     time. */
++  if (self->priv->save_time_id == 0) {
++    self->priv->save_time_id = g_idle_add ((GSourceFunc)save_time, self);
++  }
++  return FALSE;
++}
++
++static int
++input_time_text (GtkWidget * spinner, gdouble * value, IndicatorDatetimePanel * self)
++{
++  gboolean is_time = (gboolean)GPOINTER_TO_INT (g_object_get_data (G_OBJECT (spinner), "is-time"));
++  const gchar * text = gtk_entry_get_text (GTK_ENTRY (spinner));
++
++  gdouble current_value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spinner));
++  *value = current_value;
++
++  GDateTime * now = g_date_time_new_from_unix_local (current_value);
++  gint year, month, day, hour, minute, second;
++  year = g_date_time_get_year (now);
++  month = g_date_time_get_month (now);
++  day = g_date_time_get_day_of_month (now);
++  hour = g_date_time_get_hour (now);
++  minute = g_date_time_get_minute (now);
++  second = g_date_time_get_second (now);
++  g_date_time_unref (now);
++
++  /* Parse this string as if it were in the output format */
++  gint scanned = 0;
++  gboolean passed = TRUE, skip = FALSE;
++  if (is_time) {
++    gint hour_in, minute_in, second_in;
++
++    if (is_locale_12h ()) { // TODO: make this look-at/watch gsettings?
++      char ampm[51];
++
++      /* coverity[secure_coding] */
++      scanned = sscanf (text, "%u:%u:%u %50s", &hour_in, &minute_in, &second_in, ampm);
++      passed = (scanned == 4);
++
++      if (passed) {
++        const char *pm_str = nl_langinfo (PM_STR);
++        if (g_ascii_strcasecmp (pm_str, ampm) == 0) {
++          hour_in += 12;
++        }
++      }
++    } else {
++      /* coverity[secure_coding] */
++      scanned = sscanf (text, "%u:%u:%u", &hour_in, &minute_in, &second_in);
++      passed = (scanned == 3);
++    }
++
++    if (passed && (hour_in > 23 || minute_in > 59 || second_in > 59)) {
++      passed = FALSE;
++    }
++    if (passed && hour == hour_in && minute == minute_in && second == second_in) {
++      skip = TRUE; // no change
++    } else {
++      hour = hour_in;
++      minute = minute_in;
++      second = second_in;
++    }
++  }
++  else {
++    gint year_in, month_in, day_in;
++
++    /* coverity[secure_coding] */
++    scanned = sscanf (text, "%u-%u-%u", &year_in, &month_in, &day_in);
++
++    if (scanned != 3 || year_in < 1 || year_in > 9999 ||
++        month_in < 1 || month_in > 12 || day_in < 1 || day_in > 31) {
++      passed = FALSE;
++    }
++    if (passed && year == year_in && month == month_in && day == day_in) {
++      skip = TRUE; // no change
++    } else {
++      year = year_in;
++      month = month_in;
++      day = day_in;
++    }
++  }
++
++  if (!passed) {
++    g_warning ("Could not understand %s", text);
++    return TRUE;
++  }
++
++  if (skip) {
++    return TRUE;
++  }
++
++  gboolean prev_changing = self->priv->changing_time;
++  self->priv->changing_time = TRUE;
++  GDateTime * new_time = g_date_time_new_local (year, month, day, hour, minute, second);
++  *value = g_date_time_to_unix (new_time);
++  self->priv->user_edited_time = TRUE;
++  g_date_time_unref (new_time);
++  self->priv->changing_time = prev_changing;
++
++  return TRUE;
++}
++
++static gboolean
++format_time_text (GtkWidget * spinner, gpointer user_data G_GNUC_UNUSED)
++{
++  gboolean is_time = (gboolean)GPOINTER_TO_INT (g_object_get_data (G_OBJECT (spinner), "is-time"));
++
++  const gchar * format;
++  if (is_time) {
++    if (is_locale_12h ()) { // TODO: make this look-at/watch gsettings?
++      format = "%I:%M:%S %p";
++    } else {
++      format = "%H:%M:%S";
++    }
++  }
++  else {
++    // This is intentionally not "%x".  See https://launchpad.net/bugs/1149696
++    // If you are willing to do the hard work of writing a locale-sensitive
++    // date parser, there is an open bug: https://launchpad.net/bugs/729056
++    format = "%Y-%m-%d";
++  }
++
++  GDateTime * datetime = g_date_time_new_from_unix_local (gtk_spin_button_get_value (GTK_SPIN_BUTTON (spinner)));
++  gchar * formatted = g_date_time_format (datetime, format);
++  gtk_entry_set_text (GTK_ENTRY (spinner), formatted);
++  g_date_time_unref (datetime);
++
++  return TRUE;
++}
++
++static void
++spin_copy_value (GtkSpinButton * spinner, IndicatorDatetimePanel * self)
++{
++  GtkSpinButton * other = NULL;
++  if (GTK_WIDGET (spinner) == self->priv->date_spin)
++    other = GTK_SPIN_BUTTON (self->priv->time_spin);
++  else
++    other = GTK_SPIN_BUTTON (self->priv->date_spin);
++
++  if (gtk_spin_button_get_value (spinner) != gtk_spin_button_get_value (other)) {
++    gtk_spin_button_set_value (other, gtk_spin_button_get_value (spinner));
++  }
++  if (!self->priv->changing_time) { /* Means user pressed spin buttons */
++    self->priv->user_edited_time = TRUE;
++  }
++}
++
++static gboolean
++update_spinners (IndicatorDatetimePanel * self)
++{
++  /* Add datetime object to spinner, which will hold the real time value, rather
++     then using the value of the spinner itself.  And don't update while user is
++     editing. */
++  if (!are_spinners_focused (self)) {
++    gboolean prev_changing = self->priv->changing_time;
++    self->priv->changing_time = TRUE;
++    GDateTime * now = g_date_time_new_now_local ();
++    gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->priv->time_spin),
++                               (gdouble)g_date_time_to_unix (now));
++    /* will be copied to other spin button */
++    g_date_time_unref (now);
++    self->priv->changing_time = prev_changing;
++  }
++  return TRUE;
++}
++
++static void
++setup_time_spinners (IndicatorDatetimePanel * self, GtkWidget * time, GtkWidget * date)
++{
++  g_signal_connect (time, "input", G_CALLBACK (input_time_text), self);
++  g_signal_connect (date, "input", G_CALLBACK (input_time_text), self);
++
++  g_signal_connect (time, "output", G_CALLBACK (format_time_text), date);
++  g_signal_connect (date, "output", G_CALLBACK (format_time_text), time);
++
++  g_signal_connect_swapped (time, "focus-in-event", G_CALLBACK (spin_focus_in), self);
++  g_signal_connect_swapped (date, "focus-in-event", G_CALLBACK (spin_focus_in), self);
++
++  g_signal_connect_swapped (time, "focus-out-event", G_CALLBACK (spin_focus_out), self);
++  g_signal_connect_swapped (date, "focus-out-event", G_CALLBACK (spin_focus_out), self);
++
++  g_signal_connect (time, "value-changed", G_CALLBACK (spin_copy_value), self);
++  g_signal_connect (date, "value-changed", G_CALLBACK (spin_copy_value), self);
++
++  g_object_set_data (G_OBJECT (time), "is-time", GINT_TO_POINTER (TRUE));
++  g_object_set_data (G_OBJECT (date), "is-time", GINT_TO_POINTER (FALSE));
++
++  self->priv->time_spin = time;
++  self->priv->date_spin = date;
++
++  /* 2 seconds is what the indicator itself uses */
++  guint time_id = g_timeout_add_seconds (2, (GSourceFunc)update_spinners, self);
++  g_signal_connect_swapped (self->priv->time_spin, "destroy",
++                            G_CALLBACK (g_source_remove), GINT_TO_POINTER (time_id));
++  update_spinners (self);
++}
++
++static void
++show_locations (IndicatorDatetimePanel * self)
++{
++  if (self->priv->loc_dlg == NULL) {
++    self->priv->loc_dlg = datetime_setup_locations_dialog (self->priv->tzmap);
++    GtkWidget * dlg = gtk_widget_get_toplevel (GTK_WIDGET (self));
++    gtk_window_set_type_hint (GTK_WINDOW(self->priv->loc_dlg), GDK_WINDOW_TYPE_HINT_DIALOG);
++    gtk_window_set_transient_for (GTK_WINDOW (self->priv->loc_dlg), GTK_WINDOW (dlg));
++    g_signal_connect (self->priv->loc_dlg, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->priv->loc_dlg);
++    gtk_widget_show_all (self->priv->loc_dlg);
++  }
++  else {
++    gtk_window_present_with_time (GTK_WINDOW (self->priv->loc_dlg), gtk_get_current_event_time ());
++  }
++}
++
++static gboolean
++timezone_selected (GtkEntryCompletion * widget G_GNUC_UNUSED,
++                   GtkTreeModel * model,
++                   GtkTreeIter * iter,
++                   IndicatorDatetimePanel * self)
++{
++  const gchar * name, * zone;
++
++  gtk_tree_model_get (model, iter,
++                      CC_TIMEZONE_COMPLETION_NAME, &name,
++                      CC_TIMEZONE_COMPLETION_ZONE, &zone,
++                      -1);
++
++  if (zone == NULL || zone[0] == 0) {
++    const gchar * strlon, * strlat;
++    gdouble lon = 0.0, lat = 0.0;
++
++    gtk_tree_model_get (model, iter,
++                        CC_TIMEZONE_COMPLETION_LONGITUDE, &strlon,
++                        CC_TIMEZONE_COMPLETION_LATITUDE, &strlat,
++                        -1);
++
++    if (strlon != NULL && strlon[0] != 0) {
++      lon = g_ascii_strtod(strlon, NULL);
++    }
++
++    if (strlat != NULL && strlat[0] != 0) {
++      lat = g_ascii_strtod(strlat, NULL);
++    }
++
++    zone = cc_timezone_map_get_timezone_at_coords (self->priv->tzmap, lon, lat);
++  }
++
++  gchar * tz_name = g_strdup_printf ("%s %s", zone, name);
++  g_settings_set_string (self->priv->settings, SETTINGS_TIMEZONE_NAME_S, tz_name);
++  g_free (tz_name);
++
++  cc_timezone_map_set_timezone (self->priv->tzmap, zone);
++
++  return FALSE; // Do normal action too
++}
++
++static gboolean
++entry_focus_out (GtkEntry * entry,
++                 GdkEventFocus * event G_GNUC_UNUSED,
++                 IndicatorDatetimePanel * self)
++{
++  // If the name left in the entry doesn't match the current timezone name,
++  // show an error icon.  It's always an error for the user to manually type in
++  // a timezone.
++  CcTimezoneLocation * location = cc_timezone_map_get_location (self->priv->tzmap);
++  if (location == NULL)
++    return FALSE;
++
++  gchar * zone;
++  g_object_get (location, "zone", &zone, NULL);
++
++  gchar * name = get_current_zone_name (zone, self->priv->settings);
++  gboolean correct = (g_strcmp0 (gtk_entry_get_text (entry), name) == 0);
++  g_free (name);
++  g_free (zone);
++
++  gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY,
++                                 correct ? NULL : GTK_STOCK_DIALOG_ERROR);
++  gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY,
++                                   _("You need to choose a location to change the time zone."));
++  gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, FALSE);
++  return FALSE;
++}
++
++static void
++indicator_datetime_panel_init (IndicatorDatetimePanel * self)
++{
++  GError * error;
++  GSettings * conf;
++
++  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
++                                            INDICATOR_DATETIME_TYPE_PANEL,
++                                            IndicatorDatetimePanelPrivate);
++
++  self->priv->settings = conf = g_settings_new (SETTINGS_INTERFACE);
++
++  self->priv->builder = gtk_builder_new ();
++  gtk_builder_set_translation_domain (self->priv->builder, GETTEXT_PACKAGE);
++  error = NULL;
++  gtk_builder_add_from_file (self->priv->builder, DATETIME_DIALOG_UI_FILE, &error);
++  if (error != NULL) {
++    /* We have to abort, we can't continue without the ui file */
++    g_error ("Could not load ui file %s: %s", DATETIME_DIALOG_UI_FILE, error->message);
++    g_error_free (error);
++    return;
++  }
++
++
++  /* Add policykit button */
++  GtkWidget * polkit_button = gtk_lock_button_new (NULL);
++  g_object_set (G_OBJECT (polkit_button),
++                "text-unlock", _("Unlock to change these settings"),
++                "text-lock", _("Lock to prevent further changes"),
++                NULL);
++  GtkWidget * alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
++  gtk_container_add (GTK_CONTAINER (alignment), polkit_button);
++  gtk_box_pack_start (GTK_BOX (WIG ("timeDateBox")), alignment, FALSE, TRUE, 0);
++
++  const gchar * polkit_name = "org.gnome.controlcenter.datetime.configure";
++  polkit_permission_new (polkit_name, NULL, NULL, polkit_perm_ready, polkit_button);
++
++  /* Add map */
++  self->priv->tzmap = cc_timezone_map_new ();
++  gtk_container_add (GTK_CONTAINER (WIG ("mapBox")), GTK_WIDGET (self->priv->tzmap));
++  /* Fufill the CC by Attribution license requirements for the Geonames lookup */
++  cc_timezone_map_set_watermark (self->priv->tzmap, "Geonames.org");
++
++  /* And completion entry */
++  self->priv->completion = cc_timezone_completion_new ();
++  cc_timezone_completion_watch_entry (self->priv->completion, GTK_ENTRY (WIG ("timezoneEntry")));
++  g_signal_connect (self->priv->completion, "match-selected", G_CALLBACK (timezone_selected), self);
++  g_signal_connect (WIG ("timezoneEntry"), "focus-out-event", G_CALLBACK (entry_focus_out), self);
++
++  /* Set up settings bindings */
++  g_settings_bind (conf, SETTINGS_SHOW_CLOCK_S, WIG ("showClockCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_DAY_S, WIG ("showWeekdayCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_DATE_S, WIG ("showDateTimeCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_SECONDS_S, WIG ("showSecondsCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind_with_mapping (conf, SETTINGS_TIME_FORMAT_S,
++                                WIG ("show12HourRadio"), "active",
++                                G_SETTINGS_BIND_DEFAULT,
++                                bind_hours_get, bind_hours_set,
++                                GINT_TO_POINTER(TRUE), NULL);
++  g_settings_bind_with_mapping (conf, SETTINGS_TIME_FORMAT_S,
++                                WIG ("show24HourRadio"), "active",
++                                G_SETTINGS_BIND_DEFAULT,
++                                bind_hours_get, bind_hours_set,
++                                GINT_TO_POINTER(FALSE), NULL);
++  g_settings_bind (conf, SETTINGS_SHOW_CALENDAR_S, WIG ("showCalendarCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_WEEK_NUMBERS_S, WIG ("includeWeekNumbersCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_EVENTS_S, WIG ("showEventsCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_DETECTED_S, WIG ("showDetectedCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++  g_settings_bind (conf, SETTINGS_SHOW_LOCATIONS_S, WIG ("showLocationsCheck"),
++                   "active", G_SETTINGS_BIND_DEFAULT);
++
++  /* Set up sensitivities */
++  add_widget_dependency (WIG ("showCalendarCheck"), WIG ("calendarOptions"));
++  add_widget_dependency (WIG ("showClockCheck"), WIG ("clockOptions"));
++  add_widget_dependency (WIG ("showLocationsCheck"), WIG ("locationsButton"));
++  add_widget_dependency (WIG ("manualTimeRadio"), WIG ("manualOptions"));
++  add_polkit_dependency (polkit_button, WIG ("timeDateOptions"));
++
++  /* Hacky proxy test for whether evolution-data-server is installed */
++  gchar * evo_path = g_find_program_in_path ("evolution");
++  gtk_widget_set_sensitive (WIG ("showEventsCheck"), (evo_path != NULL));
++  g_free (evo_path);
++
++  setup_time_spinners (self, WIG ("timeSpinner"), WIG ("dateSpinner"));
++
++  GtkWidget * panel = WIG ("timeDatePanel");
++  self->priv->auto_radio = WIG ("automaticTimeRadio");
++  self->priv->tz_entry = WIG ("timezoneEntry");
++
++  g_signal_connect_swapped (WIG ("locationsButton"), "clicked", G_CALLBACK (show_locations), self);
++
++  /* Grab proxy for settings daemon */
++  g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM, G_DBUS_PROXY_FLAGS_NONE, NULL,
++                            "org.freedesktop.timedate1",
++                            "/org/freedesktop/timedate1",
++                            "org.freedesktop.timedate1",
++                            NULL, (GAsyncReadyCallback)proxy_ready, self);
++
++  /* Grab proxy for datetime service, to see if it's running.  It would
++     actually be more ideal to see if the indicator module itself is running,
++     but that doesn't yet claim a name on the bus.  Presumably the service
++     would have been started by any such indicator, so this will at least tell
++     us if there *was* a datetime module run this session. */
++  self->priv->name_watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
++                                                BUS_NAME,
++                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
++                                                on_bus_name_appeared,
++                                                on_bus_name_vanished,
++                                                self,
++                                                NULL);
++
++#undef WIG
++
++  gtk_widget_show_all (panel);
++  gtk_container_add (GTK_CONTAINER (self), panel);
++}
++
++static void
++indicator_datetime_panel_dispose (GObject * object)
++{
++  IndicatorDatetimePanel * self = (IndicatorDatetimePanel *) object;
++  IndicatorDatetimePanelPrivate * priv = self->priv;
++
++  g_clear_object (&priv->builder);
++  g_clear_object (&priv->proxy);
++  g_clear_object (&priv->settings);
++
++  if (priv->loc_dlg) {
++    gtk_widget_destroy (priv->loc_dlg);
++    priv->loc_dlg = NULL;
++  }
++
++  if (priv->name_watch_id != 0) {
++    g_bus_unwatch_name (priv->name_watch_id);
++    priv->name_watch_id = 0;
++  }
++
++  if (priv->save_time_id) {
++    g_source_remove (priv->save_time_id);
++    priv->save_time_id = 0;
++  }
++
++  if (priv->completion) {
++    cc_timezone_completion_watch_entry (priv->completion, NULL);
++    g_clear_object (&priv->completion);
++  }
++
++  if (priv->tz_entry) {
++    gtk_widget_destroy (priv->tz_entry);
++    priv->tz_entry = NULL;
++  }
++
++  if (priv->time_spin) {
++    gtk_widget_destroy (priv->time_spin);
++    priv->time_spin = NULL;
++  }
++
++  if (priv->date_spin) {
++    gtk_widget_destroy (priv->date_spin);
++    priv->date_spin = NULL;
++  }
++
++  G_OBJECT_CLASS (indicator_datetime_panel_parent_class)->dispose (object);
++}
++
++static void
++indicator_datetime_panel_class_finalize (IndicatorDatetimePanelClass *klass G_GNUC_UNUSED)
++{
++}
++
++static const char *
++indicator_datetime_panel_get_help_uri (CcPanel *panel G_GNUC_UNUSED)
++{
++  return "help:ubuntu-help/clock";
++}
++
++static void
++indicator_datetime_panel_class_init (IndicatorDatetimePanelClass *klass)
++{
++  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
++  CcPanelClass *panel_class = CC_PANEL_CLASS (klass);
++
++  g_type_class_add_private (klass, sizeof (IndicatorDatetimePanelPrivate));
++
++  panel_class->get_help_uri = indicator_datetime_panel_get_help_uri;
++
++  gobject_class->dispose = indicator_datetime_panel_dispose;
++}
++
++void
++g_io_module_load (GIOModule *module)
++{
++  bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
++  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
++
++  indicator_datetime_panel_register_type (G_TYPE_MODULE (module));
++  g_io_extension_point_implement (CC_SHELL_PANEL_EXTENSION_POINT,
++                                  INDICATOR_DATETIME_TYPE_PANEL,
++                                  "indicator-datetime", 0);
++}
++
++void
++g_io_module_unload (GIOModule *module G_GNUC_UNUSED)
++{
++}
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/po/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/po/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/po/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/po/CMakeLists.txt	2014-01-09 14:30:21.717191025 +0100
+@@ -0,0 +1,3 @@
++include (Translations)
++add_translations_directory ("${GETTEXT_PACKAGE}")
++add_translations_catalog ("${GETTEXT_PACKAGE}" ../src/ ../panel)
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/po/POTFILES.in indicator-datetime-13.10.0+13.10.20131023.2/po/POTFILES.in
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/po/POTFILES.in	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/po/POTFILES.in	2014-01-09 14:30:21.717191025 +0100
+@@ -1,7 +1,7 @@
+-src/datetime-prefs.c
+-src/datetime-prefs-locations.c
+ src/service.c
+ src/settings-shared.h
+ src/utils.c
++panel/datetime-prefs.c
++panel/datetime-prefs-locations.c
+ [type: gettext/glade]data/datetime-dialog.ui
+ data/gnome-indicator-datetime-panel.desktop.in
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/src/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/CMakeLists.txt	2014-01-09 14:38:54.294516184 +0100
+@@ -0,0 +1,41 @@
++set (SERVICE_LIB "libindicatordatetimeservice")
++set (SERVICE_EXEC "indicator-datetime-service")
++
++add_definitions (-DTIMEZONE_FILE="/etc/timezone"
++                 -DG_LOG_DOMAIN="Indicator-Datetime")
++
++# let service know how to launch gnome-control-center on the desktop
++if (BUILD_PANEL)
++  add_definitions (-DHAVE_CCPANEL)
++endif ()
++
++add_library (${SERVICE_LIB} STATIC
++             planner.c
++             planner.h
++             planner-eds.c
++             planner-eds.h
++             service.c
++             service.h
++             timezone.c
++             timezone.h
++             timezone-file.c
++             timezone-file.h
++             timezone-geoclue.c
++             timezone-geoclue.h
++             utils.c
++             utils.h
++             dbus-shared.h
++             settings-shared.h)
++include_directories (${SERVICE_DEPS_INCLUDE_DIRS})
++link_directories (${SERVICE_DEPS_LIBRARY_DIRS})
++
++add_executable (${SERVICE_EXEC} main.c)
++target_link_libraries (${SERVICE_EXEC} ${SERVICE_LIB} ${SERVICE_DEPS_LIBRARIES} ${GCOV_LIBS})
++install (TARGETS ${SERVICE_EXEC} RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_PKGLIBEXECDIR})
++
++# common properties
++set_property (TARGET ${SERVICE_LIB} ${SERVICE_EXEC}
++              APPEND_STRING PROPERTY COMPILE_FLAGS
++              " -g ${CC_WARNING_ARGS} ${GCOV_FLAGS}")
++
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/Makefile.am indicator-datetime-13.10.0+13.10.20131023.2/src/Makefile.am
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/Makefile.am	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+@@ -1,84 +0,0 @@
+-
+-SHARED_CFLAGS = \
+-  -Wall \
+-  -Wextra -Wno-missing-field-initializers \
+-  -Werror \
+-  $(SERVICE_CFLAGS) \
+-  $(COVERAGE_CFLAGS) \
+-  -DTIMEZONE_FILE="\"/etc/timezone\"" \
+-  -DG_LOG_DOMAIN=\"Indicator-Datetime\"
+-
+-###
+-###
+-###
+-
+-noinst_LIBRARIES = libindicator-datetime-service.a
+-
+-libindicator_datetime_service_a_CFLAGS = \
+-  $(SHARED_CFLAGS)
+-
+-libindicator_datetime_service_a_SOURCES = \
+-  planner.c \
+-  planner.h \
+-  planner-eds.c \
+-  planner-eds.h \
+-  service.c \
+-  service.h \
+-  timezone.c \
+-  timezone.h \
+-  timezone-file.c \
+-  timezone-file.h \
+-  timezone-geoclue.c \
+-  timezone-geoclue.h \
+-  utils.c \
+-  utils.h \
+-  dbus-shared.h \
+-  settings-shared.h
+-
+-###
+-###
+-###
+-
+-libexec_PROGRAMS = indicator-datetime-service
+-
+-indicator_datetime_service_SOURCES = \
+-  main.c
+-
+-indicator_datetime_service_CFLAGS = \
+-  $(SHARED_CFLAGS)
+-
+-indicator_datetime_service_LDADD = \
+-  libindicator-datetime-service.a \
+-  $(SERVICE_LIBS)
+-
+-indicator_datetime_service_LDFLAGS = \
+-  $(COVERAGE_LDFLAGS)
+-
+-###
+-###
+-###
+-
+-if BUILD_CCPANEL
+-ccpaneldir = $(libdir)/control-center-1/panels/
+-ccpanel_LTLIBRARIES = libindicator-datetime.la
+-
+-libindicator_datetime_la_SOURCES =\
+-	datetime-prefs.c \
+-	datetime-prefs-locations.c \
+-	datetime-prefs-locations.h \
+-	utils.c \
+-	utils.h \
+-	settings-shared.h
+-libindicator_datetime_la_CFLAGS = \
+-	-Wall \
+-	-Werror \
+-	$(PREF_CFLAGS) \
+-	$(COVERAGE_CFLAGS) \
+-	-DTIMEZONE_FILE="\"/etc/timezone\"" \
+-	-DPKGDATADIR="\"$(pkgdatadir)\""
+-libindicator_datetime_la_LIBADD = \
+-	$(PREF_LIBS)
+-libindicator_datetime_la_LDFLAGS = \
+-	$(COVERAGE_LDFLAGS) \
+-	-module -avoid-version
+-endif
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs-locations.c indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs-locations.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs-locations.c	2014-01-09 14:29:59.821090431 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs-locations.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,677 +0,0 @@
+-/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
+-
+-A dialog for setting time and date preferences.
+-
+-Copyright 2011 Canonical Ltd.
+-
+-Authors:
+-    Michael Terry <michael.terry@canonical.com>
+-
+-This program is free software: you can redistribute it and/or modify it 
+-under the terms of the GNU General Public License version 3, as published 
+-by the Free Software Foundation.
+-
+-This program is distributed in the hope that it will be useful, but 
+-WITHOUT ANY WARRANTY; without even the implied warranties of 
+-MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
+-PURPOSE.  See the GNU General Public License for more details.
+-
+-You should have received a copy of the GNU General Public License along 
+-with this program.  If not, see <http://www.gnu.org/licenses/>.
+-*/
+-
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
+-
+-#include <stdlib.h>
+-#include <time.h> /* time_t */
+-#include <glib/gi18n-lib.h>
+-#include <gtk/gtk.h>
+-#include <timezonemap/timezone-completion.h>
+-
+-#include "datetime-prefs-locations.h"
+-#include "settings-shared.h"
+-#include "utils.h"
+-
+-#define DATETIME_DIALOG_UI_FILE PKGDATADIR "/datetime-dialog.ui"
+-
+-#define COL_NAME         0
+-#define COL_TIME         1
+-#define COL_ZONE         2
+-#define COL_VISIBLE_NAME 3
+-#define COL_ICON         4
+-
+-static gboolean update_times (GtkWidget * dlg);
+-static void save_when_idle (GtkWidget * dlg);
+-
+-/***
+-**** Sorting
+-***/
+-
+-/**
+- * A temporary struct used for sorting
+- */
+-struct TimeLocation
+-{
+-  gchar * collated_name;
+-  gint pos;
+-  gint32 offset;
+-};
+-
+-static struct TimeLocation*
+-time_location_new (const char * zone, const char * name, int pos, time_t now)
+-{
+-  struct TimeLocation * loc = g_new (struct TimeLocation, 1);
+-  GTimeZone * tz = g_time_zone_new (zone);
+-  const gint interval = g_time_zone_find_interval (tz, G_TIME_TYPE_UNIVERSAL, now);
+-  loc->offset = g_time_zone_get_offset (tz, interval);
+-  loc->collated_name = g_utf8_collate_key (name, -1);
+-  loc->pos = pos;
+-  g_time_zone_unref (tz);
+-  return loc;
+-}
+-
+-static void
+-time_location_free (struct TimeLocation * loc)
+-{
+-  g_free (loc->collated_name);
+-  g_free (loc);
+-}
+-
+-static GSList*
+-time_location_array_new_from_model (GtkTreeModel * model)
+-{
+-  int pos = 0;
+-  GtkTreeIter iter;
+-  GSList * list = NULL;
+-  const time_t now = time (NULL);
+-
+-  if (gtk_tree_model_get_iter_first (model, &iter)) do
+-    {
+-      gchar * zone = NULL;
+-      gchar * name = NULL;
+-
+-      gtk_tree_model_get (model, &iter,
+-                          COL_ZONE, &zone,
+-                          COL_VISIBLE_NAME, &name,
+-                          -1);
+-
+-      if (zone && name)
+-        list = g_slist_prepend (list, time_location_new (zone, name, pos++, now));
+-
+-      g_free (name);
+-      g_free (zone);
+-    }
+-  while (gtk_tree_model_iter_next (model, &iter));
+-
+-  return g_slist_reverse (list);
+-}
+-
+-static void
+-handle_sort(GtkWidget * button, GtkTreeView * tree_view, GCompareFunc compare)
+-{
+-  GtkTreeModel * model = gtk_tree_view_get_model (tree_view);
+-  GSList * l;
+-  GSList * list = g_slist_sort (time_location_array_new_from_model(model), compare);
+-
+-  gint i;
+-  gint * reorder = g_new (gint, g_slist_length(list));
+-  for (i=0, l=list; l!=NULL; l=l->next, i++)
+-      reorder[i] = ((struct TimeLocation*)l->data)->pos;
+-  gtk_list_store_reorder (GTK_LIST_STORE(model), reorder);
+-
+-  g_free (reorder);
+-  g_slist_free_full (list, (GDestroyNotify)time_location_free);
+-}
+-
+-static gint
+-time_location_compare_by_name (gconstpointer ga, gconstpointer gb)
+-{
+-  const struct TimeLocation * a = ga;
+-  const struct TimeLocation * b = gb;
+-  int ret = g_strcmp0 (a->collated_name, b->collated_name); /* primary key */
+-  if (!ret)
+-    ret = a->offset - b->offset; /* secondary key */
+-  return ret;
+-}
+-static void
+-handle_sort_by_name (GtkWidget * button, GtkTreeView * tree_view)
+-{
+-  handle_sort (button, tree_view, time_location_compare_by_name);
+-}
+-
+-static gint
+-time_location_compare_by_time (gconstpointer ga, gconstpointer gb)
+-{
+-  const struct TimeLocation * a = ga;
+-  const struct TimeLocation * b = gb;
+-  int ret = a->offset - b->offset; /* primary key */
+-  if (!ret)
+-    ret = g_strcmp0 (a->collated_name, b->collated_name); /* secondary key */
+-  return ret;
+-}
+-static void
+-handle_sort_by_time (GtkWidget * button, GtkTreeView * tree_view)
+-{
+-  handle_sort (button, tree_view, time_location_compare_by_time);
+-}
+-
+-static gboolean
+-time_location_list_test_sorted (GSList * list, GCompareFunc compare)
+-{
+-  GSList * l;
+-  for (l=list; l!=NULL && l->next!=NULL; l=l->next)
+-    if (compare(l->data, l->next->data) > 0)
+-      return FALSE;
+-  return TRUE;
+-}
+-static void
+-location_model_test_sorted (GtkTreeModel * model, gboolean * is_sorted_by_name, gboolean * is_sorted_by_time)
+-{
+-  GSList * list = time_location_array_new_from_model(model);
+-  *is_sorted_by_name = time_location_list_test_sorted (list, time_location_compare_by_name);
+-  *is_sorted_by_time = time_location_list_test_sorted (list, time_location_compare_by_time);
+-  g_slist_free_full (list, (GDestroyNotify)time_location_free);
+-}
+-
+-/***
+-****
+-***/
+-
+-static void
+-handle_add (GtkWidget * button, GtkTreeView * tree)
+-{
+-  GtkListStore * store = GTK_LIST_STORE (gtk_tree_view_get_model (tree));
+-
+-  GtkTreeIter iter;
+-  gtk_list_store_append (store, &iter);
+-
+-  GtkTreePath * path = gtk_tree_model_get_path (GTK_TREE_MODEL (store), &iter);
+-  gtk_tree_view_set_cursor (tree, path, gtk_tree_view_get_column (tree, 0), TRUE);
+-  gtk_tree_path_free (path);
+-}
+-
+-static void
+-handle_remove (GtkWidget * button, GtkTreeView * tree)
+-{
+-  GtkListStore * store = GTK_LIST_STORE (gtk_tree_view_get_model (tree));
+-  GtkTreeSelection * selection = gtk_tree_view_get_selection (tree);
+-
+-  GList * paths = gtk_tree_selection_get_selected_rows (selection, NULL);
+-
+-  /* Convert all paths to iters so we can safely delete multiple paths.  For a
+-     GtkListStore, iters persist past model changes. */
+-  GList * tree_iters = NULL;
+-  GList * iter;
+-  for (iter = paths; iter; iter = iter->next) {
+-    GtkTreeIter * tree_iter = g_new(GtkTreeIter, 1);
+-    if (gtk_tree_model_get_iter (GTK_TREE_MODEL (store), tree_iter, (GtkTreePath *)iter->data)) {
+-      tree_iters = g_list_prepend (tree_iters, tree_iter);
+-    }
+-    gtk_tree_path_free (iter->data);
+-  }
+-  g_list_free (paths);
+-  
+-  // Find the next item to select
+-  GtkTreeIter *last_selected = g_list_nth_data(tree_iters, 0);
+-  GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL (store), last_selected);
+-  GtkTreeIter titer;
+-  if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
+-    g_debug("Failed to get last selected iter from path");
+-  	last_selected = NULL;
+-  } else {
+-	  if (!gtk_tree_model_iter_next(GTK_TREE_MODEL (store), &titer)) {
+-	  	if (gtk_tree_path_prev(path)) {
+-	  	  	if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
+-	  			g_debug("Failed to get iter from path");
+-	  			last_selected = NULL;
+-	  		} else {
+-		  		last_selected = &titer;
+-		  	}
+-	  	} else {
+-	  		g_debug("handle_remove: Failed to find another location to select (assume single selected)");
+-	  		last_selected = NULL;
+-	  	}
+-	  } else {
+-	  	g_debug("Got next item in model");
+-		last_selected = &titer;
+-	  }
+-  }
+- 
+-  if (last_selected) {
+-	  gboolean clear = TRUE;
+-	  path = gtk_tree_model_get_path(GTK_TREE_MODEL (store), last_selected);
+-	  
+-      // Step over the path to find an item which isn't in the delete list
+-	  if (g_list_length(tree_iters) > 1) {
+-		  for (iter = tree_iters; iter; iter = iter->next) {
+-		  	GtkTreePath *ipath = gtk_tree_model_get_path(GTK_TREE_MODEL (store), (GtkTreeIter *)iter->data);
+-		  	if (gtk_tree_path_compare(path, ipath) == 0) {
+-		  		clear = FALSE;
+-		  		break;
+-		  	}
+-		  }
+-	  	  while (clear == FALSE) {
+-			if (gtk_tree_path_prev(path)) {
+-				clear = TRUE;
+-		  	  	for (iter = tree_iters; iter; iter = iter->next) {
+-		  			GtkTreePath *ipath = gtk_tree_model_get_path(GTK_TREE_MODEL (store), (GtkTreeIter *)iter->data);
+-		  			if (gtk_tree_path_compare(path, ipath) == 0) {
+-		  				clear = FALSE;
+-		  				break;
+-		  			}
+-		  		}
+-		  		if (clear) {
+-			  		if (!gtk_tree_model_get_iter(GTK_TREE_MODEL (store), &titer, path)) {
+-			  			g_debug("Failed to get iter from path");
+-			  			last_selected = NULL;
+-			  		} else {
+-				  		last_selected = &titer;
+-				  	}
+-				}
+-		  	} else {
+-		  		last_selected = NULL;
+-		  		break;
+-		  	}
+-		  }
+-	  }
+-  }
+-  
+-  /* Now delete each iterator */
+-  for (iter = tree_iters; iter; iter = iter->next) {
+-    gtk_list_store_remove (store, (GtkTreeIter *)iter->data);
+-    g_free (iter->data);
+-  }
+-  g_list_free (tree_iters);
+-  
+-  if (last_selected)
+-	  gtk_tree_selection_select_iter(selection, last_selected);
+-}
+-
+-static void
+-handle_edit (GtkCellRendererText * renderer, gchar * path, gchar * new_text,
+-             GtkListStore * store)
+-{
+-  GtkTreeIter iter;
+-
+-  // Manual user edits are always wrong (unless they are undoing a previous
+-  // edit), so we set the error icon here if needed.  Common way to get to
+-  // this code path is to lose entry focus.
+-  if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (store), &iter, path)) {
+-    gchar * name;
+-    gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_NAME, &name, -1);
+-    gboolean correct = g_strcmp0 (name, new_text) == 0;
+-    g_free (name);
+-
+-    gtk_list_store_set (store, &iter,
+-                        COL_VISIBLE_NAME, new_text,
+-                        COL_ICON, correct ? NULL : GTK_STOCK_DIALOG_ERROR,
+-                        -1);
+-  }
+-}
+-
+-static gboolean
+-timezone_selected (GtkEntryCompletion * widget, GtkTreeModel * model,
+-                   GtkTreeIter * iter, GtkWidget * dlg)
+-{
+-  gchar * zone = NULL;
+-  gchar * name = NULL;
+-
+-  gtk_tree_model_get (model, iter,
+-                      CC_TIMEZONE_COMPLETION_ZONE, &zone,
+-                      CC_TIMEZONE_COMPLETION_NAME, &name,
+-                      -1);
+-
+-  /* if no explicit timezone, try to determine one from latlon */
+-  if (!zone || !*zone)
+-  {
+-    gchar * strlat = NULL;
+-    gchar * strlon = NULL;
+-    gdouble lat = 0;
+-    gdouble lon = 0;
+-
+-    gtk_tree_model_get (model, iter,
+-                        CC_TIMEZONE_COMPLETION_LATITUDE, &strlat,
+-                        CC_TIMEZONE_COMPLETION_LONGITUDE, &strlon,
+-                        -1);
+-
+-    if (strlat && *strlat) lat = g_ascii_strtod(strlat, NULL);
+-    if (strlon && *strlon) lon = g_ascii_strtod(strlon, NULL);
+-
+-    CcTimezoneMap * tzmap = CC_TIMEZONE_MAP (g_object_get_data (G_OBJECT (widget), "tzmap"));
+-    g_free (zone);
+-    zone = g_strdup (cc_timezone_map_get_timezone_at_coords (tzmap, lon, lat));
+-
+-    g_free (strlat);
+-    g_free (strlon);
+-  }
+-
+-  GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (widget), "store"));
+-  GtkTreeIter * store_iter = (GtkTreeIter *)g_object_get_data (G_OBJECT (widget), "store_iter");
+-  if (store != NULL && store_iter != NULL) {
+-    gtk_list_store_set (store, store_iter,
+-                        COL_VISIBLE_NAME, name,
+-                        COL_ICON, NULL,
+-                        COL_NAME, name,
+-                        COL_ZONE, zone, -1);
+-  }
+-
+-  update_times (dlg);
+-
+-  /* cleanup */
+-  g_free (name);
+-  g_free (zone);
+-
+-  return FALSE; // Do normal action too
+-}
+-
+-static gboolean
+-query_tooltip (GtkTreeView * tree, gint x, gint y, gboolean keyboard_mode,
+-               GtkTooltip * tooltip, GtkCellRenderer * cell)
+-{
+-  GtkTreeModel * model;
+-  GtkTreeIter iter;
+-  if (!gtk_tree_view_get_tooltip_context (tree, &x, &y, keyboard_mode,
+-                                          &model, NULL, &iter))
+-    return FALSE;
+-
+-  const gchar * icon;
+-  gtk_tree_model_get (model, &iter, COL_ICON, &icon, -1);
+-  if (icon == NULL)
+-    return FALSE;
+-
+-  GtkTreeViewColumn * col = gtk_tree_view_get_column (tree, 0);
+-  gtk_tree_view_set_tooltip_cell (tree, tooltip, NULL, col, cell);
+-  gtk_tooltip_set_text (tooltip, _("You need to complete this location for it to appear in the menu."));
+-  return TRUE;
+-}
+-
+-static void
+-handle_edit_started (GtkCellRendererText * renderer, GtkCellEditable * editable,
+-                     gchar * path, CcTimezoneCompletion * completion)
+-{
+-  if (GTK_IS_ENTRY (editable)) {
+-    GtkEntry *entry = GTK_ENTRY (editable);
+-    cc_timezone_completion_watch_entry (completion, entry);
+-
+-    GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (completion), "store"));
+-    GtkTreeIter * store_iter = g_new(GtkTreeIter, 1);
+-    if (gtk_tree_model_get_iter_from_string (GTK_TREE_MODEL (store), store_iter, path)) {
+-      g_object_set_data_full (G_OBJECT (completion), "store_iter", store_iter, g_free);
+-    }
+-  }
+-}
+-
+-static gboolean
+-update_times (GtkWidget * dlg)
+-{
+-  /* For each entry, check zone in column 2 and set column 1 to it's time */
+-  CcTimezoneCompletion * completion = CC_TIMEZONE_COMPLETION (g_object_get_data (G_OBJECT (dlg), "completion"));
+-  GtkListStore * store = GTK_LIST_STORE (g_object_get_data (G_OBJECT (completion), "store"));
+-  GObject * cell = G_OBJECT (g_object_get_data (G_OBJECT (completion), "name-cell"));
+-
+-  gboolean editing;
+-  g_object_get (cell, "editing", &editing, NULL);
+-  if (editing) { /* No updates while editing, it cancels the edit */
+-    return TRUE;
+-  }
+-
+-  g_signal_handlers_block_by_func (store, save_when_idle, dlg);
+-
+-  GSettings * settings = g_settings_new (SETTINGS_INTERFACE);
+-  GtkTreeIter iter;
+-  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter)) {
+-    GDateTime * now = g_date_time_new_now_local ();
+-    do {
+-      gchar * strzone;
+-
+-      gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_ZONE, &strzone, -1);
+-
+-      if (strzone && *strzone) {
+-        GTimeZone * tz = g_time_zone_new (strzone);
+-        GDateTime * now_tz = g_date_time_to_timezone (now, tz);
+-        gchar * format = generate_full_format_string_at_time (now, now_tz, settings);
+-        gchar * time_str = g_date_time_format (now_tz, format);
+-        gchar * old_time_str;
+-
+-        gtk_tree_model_get (GTK_TREE_MODEL (store), &iter, COL_TIME, &old_time_str, -1);
+-        if (g_strcmp0 (old_time_str, time_str))
+-          gtk_list_store_set (store, &iter, COL_TIME, time_str, -1);
+-
+-        g_free (old_time_str);
+-        g_free (time_str);
+-        g_free (format);
+-        g_date_time_unref (now_tz);
+-        g_time_zone_unref (tz);
+-      }
+-      g_free (strzone);
+-    } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &iter));
+-    g_date_time_unref (now);
+-  }
+-
+-  g_object_unref (settings);
+-
+-  g_signal_handlers_unblock_by_func (store, save_when_idle, dlg);
+-
+-  return TRUE;
+-}
+-
+-static void
+-fill_from_settings (GObject * store, GSettings * conf)
+-{
+-  gchar ** locations = g_settings_get_strv (conf, SETTINGS_LOCATIONS_S);
+-
+-  gtk_list_store_clear (GTK_LIST_STORE (store));
+-
+-  gchar ** striter;
+-  GtkTreeIter iter;
+-  for (striter = locations; *striter; ++striter) {
+-    gchar * zone, * name;
+-    split_settings_location (*striter, &zone, &name);
+-
+-    gtk_list_store_append (GTK_LIST_STORE (store), &iter);
+-    gtk_list_store_set (GTK_LIST_STORE (store), &iter,
+-                        COL_VISIBLE_NAME, name,
+-                        COL_ICON, NULL,
+-                        COL_NAME, name,
+-                        COL_ZONE, zone, -1);
+-
+-    g_free (zone);
+-    g_free (name);
+-  }
+-
+-  g_strfreev (locations);
+-}
+-
+-static void
+-save_to_settings (GObject * store, GSettings * conf)
+-{
+-  gboolean empty = TRUE;
+-  GVariantBuilder builder;
+-  g_variant_builder_init (&builder, G_VARIANT_TYPE_STRING_ARRAY);
+-
+-  GtkTreeIter iter;
+-  if (gtk_tree_model_get_iter_first (GTK_TREE_MODEL (store), &iter)) {
+-    GString * gstr = g_string_new (NULL);
+-    do {
+-      gchar * strname;
+-      gchar * strzone;
+-      gtk_tree_model_get (GTK_TREE_MODEL (store), &iter,
+-                          COL_NAME, &strname,
+-                          COL_ZONE, &strzone,
+-                          -1);
+-      if (strzone && *strzone && strname && *strname) {
+-        g_string_printf (gstr, "%s %s", strzone, strname);
+-        g_variant_builder_add (&builder, "s", gstr->str);
+-        empty = FALSE;
+-      }
+-      g_free (strname);
+-      g_free (strzone);
+-    } while (gtk_tree_model_iter_next (GTK_TREE_MODEL (store), &iter));
+-    g_string_free (gstr, TRUE);
+-  }
+-
+-  if (empty) {
+-    /* Empty list */
+-    g_variant_builder_clear (&builder);
+-    g_settings_set_strv (conf, SETTINGS_LOCATIONS_S, NULL);
+-  }
+-  else {
+-    g_settings_set_value (conf, SETTINGS_LOCATIONS_S, g_variant_builder_end (&builder));
+-  }
+-}
+-
+-static gboolean
+-save_now (GtkWidget *dlg)
+-{
+-  GSettings * conf = G_SETTINGS (g_object_get_data (G_OBJECT (dlg), "conf"));
+-  GObject * completion = G_OBJECT (g_object_get_data (G_OBJECT (dlg), "completion"));
+-  GObject * store = G_OBJECT (g_object_get_data (completion, "store"));
+-
+-  save_to_settings (store, conf);
+-
+-  g_object_set_data (G_OBJECT (dlg), "save-id", GINT_TO_POINTER(0));
+-
+-  return FALSE;
+-}
+-
+-static void
+-save_when_idle (GtkWidget *dlg)
+-{
+-  guint save_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "save-id"));
+-
+-  if (save_id == 0) {
+-    save_id = g_idle_add ((GSourceFunc)save_now, dlg);
+-    g_object_set_data (G_OBJECT (dlg), "save-id", GINT_TO_POINTER(save_id));
+-  }
+-}
+-
+-static void
+-dialog_closed (GtkWidget * dlg, GObject * store)
+-{
+-  /* Cleanup a tad */
+-  guint time_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "time-id"));
+-  g_source_remove (time_id);
+-
+-  guint save_id = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (dlg), "save-id"));
+-  if (save_id > 0)
+-    g_source_remove (save_id);
+-}
+-
+-static void
+-selection_changed (GtkTreeSelection * selection, GtkWidget * remove_button)
+-{
+-  gint count = gtk_tree_selection_count_selected_rows (selection);
+-  gtk_widget_set_sensitive (remove_button, count > 0);
+-}
+-
+-static void
+-update_button_sensitivity (GtkWidget * dlg)
+-{
+-  GObject * odlg = G_OBJECT(dlg);
+-  GObject * completion = g_object_get_data(odlg, "completion");
+-  GtkTreeModel * model = GTK_TREE_MODEL (g_object_get_data (completion, "store")); 
+-  gboolean is_sorted_by_name;
+-  gboolean is_sorted_by_time;
+-  location_model_test_sorted (model, &is_sorted_by_name, &is_sorted_by_time);
+-  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByNameButton")), !is_sorted_by_name);
+-  gtk_widget_set_sensitive (GTK_WIDGET(g_object_get_data(odlg, "sortByTimeButton")), !is_sorted_by_time);
+-}
+-
+-static void
+-model_changed (GtkWidget * dlg)
+-{
+-  update_button_sensitivity (dlg);
+-  save_when_idle (dlg);
+-}
+-
+-GtkWidget *
+-datetime_setup_locations_dialog (CcTimezoneMap * map)
+-{
+-  GError * error = NULL;
+-  GtkBuilder * builder = gtk_builder_new ();
+-  gtk_builder_set_translation_domain (builder, GETTEXT_PACKAGE);
+-  gtk_builder_add_from_file (builder, DATETIME_DIALOG_UI_FILE, &error);
+-  if (error != NULL) {
+-    /* We have to abort, we can't continue without the ui file */
+-    g_error ("Could not load ui file %s: %s", DATETIME_DIALOG_UI_FILE, error->message);
+-    g_error_free (error);
+-    return NULL;
+-  }
+-
+-  GSettings * conf = g_settings_new (SETTINGS_INTERFACE);
+-
+-#define WIG(name) GTK_WIDGET (gtk_builder_get_object (builder, name))
+-
+-  GtkWidget * dlg = WIG ("locationsDialog");
+-  GtkWidget * tree = WIG ("locationsView");
+-  GObject * store = gtk_builder_get_object (builder, "locationsStore");
+-
+-  /* Configure tree */
+-  CcTimezoneCompletion * completion = cc_timezone_completion_new ();
+-  g_object_set_data (G_OBJECT (completion), "tzmap", map);
+-  g_object_set_data (G_OBJECT (completion), "store", store);
+-  g_signal_connect (completion, "match-selected", G_CALLBACK (timezone_selected), dlg);
+-
+-  GtkCellRenderer * cell = gtk_cell_renderer_text_new ();
+-  g_object_set (cell, "editable", TRUE, NULL);
+-  g_signal_connect (cell, "editing-started", G_CALLBACK (handle_edit_started), completion);
+-  g_signal_connect (cell, "edited", G_CALLBACK (handle_edit), store);
+-  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree), -1,
+-                                               _("Location"), cell,
+-                                               "text", COL_VISIBLE_NAME, NULL);
+-  GtkTreeViewColumn * loc_col = gtk_tree_view_get_column (GTK_TREE_VIEW (tree), 0);
+-  gtk_tree_view_column_set_expand (loc_col, TRUE);
+-  g_object_set_data (G_OBJECT (completion), "name-cell", cell);
+-
+-  cell = gtk_cell_renderer_pixbuf_new ();
+-  gtk_tree_view_column_pack_start (loc_col, cell, FALSE);
+-  gtk_tree_view_column_add_attribute (loc_col, cell, "icon-name", COL_ICON);
+-
+-  gtk_widget_set_has_tooltip (tree, TRUE);
+-  g_signal_connect (tree, "query-tooltip", G_CALLBACK (query_tooltip), cell);
+-
+-  cell = gtk_cell_renderer_text_new ();
+-  gtk_cell_renderer_set_alignment (cell, 1.0f, 0.5f);
+-  gtk_tree_view_insert_column_with_attributes (GTK_TREE_VIEW (tree), -1,
+-                                               _("Time"), cell,
+-                                               "text", COL_TIME, NULL);
+-
+-  GtkTreeSelection * selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (tree));
+-  gtk_tree_selection_set_mode (selection, GTK_SELECTION_MULTIPLE);
+-  g_signal_connect (selection, "changed", G_CALLBACK (selection_changed), WIG ("removeButton"));
+-  selection_changed (selection, WIG ("removeButton"));
+-
+-  g_signal_connect (WIG ("addButton"), "clicked", G_CALLBACK (handle_add), tree);
+-  g_signal_connect (WIG ("removeButton"), "clicked", G_CALLBACK (handle_remove), tree);
+-
+-  GtkWidget * w = WIG ("sortByNameButton");
+-  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_name), tree);
+-  g_object_set_data (G_OBJECT(dlg), "sortByNameButton", w);
+-
+-  w = WIG ("sortByTimeButton");
+-  g_signal_connect (w, "clicked", G_CALLBACK (handle_sort_by_time), tree);
+-  g_object_set_data (G_OBJECT(dlg), "sortByTimeButton", w);
+-
+-  fill_from_settings (store, conf);
+-  g_signal_connect_swapped (store, "row-deleted", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "row-inserted", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "row-changed", G_CALLBACK (model_changed), dlg);
+-  g_signal_connect_swapped (store, "rows-reordered", G_CALLBACK (model_changed), dlg);
+-  g_object_set_data_full (G_OBJECT (dlg), "conf", g_object_ref (conf), g_object_unref);
+-  g_object_set_data_full (G_OBJECT (dlg), "completion", completion, g_object_unref);
+-  g_signal_connect (dlg, "destroy", G_CALLBACK (dialog_closed), store);
+-
+-  guint time_id = g_timeout_add_seconds (2, (GSourceFunc)update_times, dlg);
+-  g_object_set_data (G_OBJECT (dlg), "time-id", GINT_TO_POINTER(time_id));
+-  update_times (dlg);
+-
+-#undef WIG
+-
+-  g_object_unref (conf);
+-  g_object_unref (builder);
+-
+-  return dlg;
+-}
+-
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs-locations.h indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs-locations.h
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs-locations.h	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs-locations.h	1970-01-01 01:00:00.000000000 +0100
+@@ -1,35 +0,0 @@
+-/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
+-
+-A dialog for setting time and date preferences.
+-
+-Copyright 2011 Canonical Ltd.
+-
+-Authors:
+-    Michael Terry <michael.terry@canonical.com>
+-
+-This program is free software: you can redistribute it and/or modify it 
+-under the terms of the GNU General Public License version 3, as published 
+-by the Free Software Foundation.
+-
+-This program is distributed in the hope that it will be useful, but 
+-WITHOUT ANY WARRANTY; without even the implied warranties of 
+-MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
+-PURPOSE.  See the GNU General Public License for more details.
+-
+-You should have received a copy of the GNU General Public License along 
+-with this program.  If not, see <http://www.gnu.org/licenses/>.
+-*/
+-
+-#ifndef __DATETIME_PREFS_LOCATIONS_H__
+-#define __DATETIME_PREFS_LOCATIONS_H__
+-
+-#include <gtk/gtk.h>
+-#include <timezonemap/cc-timezone-map.h>
+-
+-G_BEGIN_DECLS
+-
+-GtkWidget * datetime_setup_locations_dialog (CcTimezoneMap * map);
+-
+-G_END_DECLS
+-
+-#endif
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs.c indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/datetime-prefs.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/datetime-prefs.c	1970-01-01 01:00:00.000000000 +0100
+@@ -1,850 +0,0 @@
+-/* -*- Mode: C; coding: utf-8; indent-tabs-mode: nil; tab-width: 2 -*-
+-
+-A dialog for setting time and date preferences.
+-
+-Copyright 2011 Canonical Ltd.
+-
+-Authors:
+-    Ted Gould <ted@canonical.com>
+-    Michael Terry <michael.terry@canonical.com>
+-
+-This program is free software: you can redistribute it and/or modify it 
+-under the terms of the GNU General Public License version 3, as published 
+-by the Free Software Foundation.
+-
+-This program is distributed in the hope that it will be useful, but 
+-WITHOUT ANY WARRANTY; without even the implied warranties of 
+-MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR 
+-PURPOSE.  See the GNU General Public License for more details.
+-
+-You should have received a copy of the GNU General Public License along 
+-with this program.  If not, see <http://www.gnu.org/licenses/>.
+-*/
+-
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
+-
+-#include <stdlib.h>
+-#include <libintl.h>
+-#include <locale.h>
+-#include <langinfo.h>
+-#include <glib/gi18n-lib.h>
+-#include <gdk/gdkkeysyms.h>
+-#include <gtk/gtk.h>
+-#include <polkit/polkit.h>
+-#include <libgnome-control-center/cc-panel.h>
+-#include <timezonemap/cc-timezone-map.h>
+-#include <timezonemap/timezone-completion.h>
+-
+-#include "dbus-shared.h"
+-#include "settings-shared.h"
+-#include "utils.h"
+-#include "datetime-prefs-locations.h"
+-
+-#define DATETIME_DIALOG_UI_FILE PKGDATADIR "/datetime-dialog.ui"
+-
+-#define INDICATOR_DATETIME_TYPE_PANEL indicator_datetime_panel_get_type()
+-
+-typedef struct _IndicatorDatetimePanel IndicatorDatetimePanel;
+-typedef struct _IndicatorDatetimePanelPrivate IndicatorDatetimePanelPrivate;
+-typedef struct _IndicatorDatetimePanelClass IndicatorDatetimePanelClass;
+-
+-struct _IndicatorDatetimePanel
+-{
+-  CcPanel parent;
+-  IndicatorDatetimePanelPrivate * priv;
+-};
+-
+-struct _IndicatorDatetimePanelPrivate
+-{
+-  guint                name_watch_id;
+-  GtkBuilder *         builder;
+-  GDBusProxy *         proxy;
+-  GtkWidget *          auto_radio;
+-  GtkWidget *          tz_entry;
+-  CcTimezoneMap *      tzmap;
+-  GtkWidget *          time_spin;
+-  GtkWidget *          date_spin;
+-  guint                save_time_id;
+-  gboolean             user_edited_time;
+-  gboolean             changing_time;
+-  GtkWidget *          loc_dlg;
+-  GSettings *          settings;
+-  CcTimezoneCompletion * completion;
+-};
+-
+-struct _IndicatorDatetimePanelClass
+-{
+-  CcPanelClass parent_class;
+-};
+-
+-G_DEFINE_DYNAMIC_TYPE (IndicatorDatetimePanel, indicator_datetime_panel, CC_TYPE_PANEL)
+-
+-/* Turns the boolean property into a string gsettings */
+-static GVariant *
+-bind_hours_set (const GValue * value, const GVariantType * type, gpointer user_data)
+-{
+-  const gchar * output = NULL;
+-  gboolean is_12hour_button = (gboolean)GPOINTER_TO_INT(user_data);
+-
+-  if (g_value_get_boolean(value)) {
+-    /* Only do anything if we're setting active = true */
+-    output = is_12hour_button ? "12-hour" : "24-hour";
+-  } else {
+-    return NULL;
+-  }
+-
+-  return g_variant_new_string (output);
+-}
+-
+-/* Turns a string gsettings into a boolean property */
+-static gboolean
+-bind_hours_get (GValue * value, GVariant * variant, gpointer user_data)
+-{
+-  const gchar * str = g_variant_get_string(variant, NULL);
+-  gboolean output = FALSE;
+-  gboolean is_12hour_button = (gboolean)GPOINTER_TO_INT(user_data);
+-
+-  if (g_strcmp0(str, "locale-default") == 0) {
+-    output = (is_12hour_button == is_locale_12h ());
+-  } else if (g_strcmp0(str, "12-hour") == 0) {
+-    output = is_12hour_button;
+-  } else if (g_strcmp0(str, "24-hour") == 0) {
+-    output = !is_12hour_button;
+-  } else {
+-    return FALSE;
+-  }
+-
+-  g_value_set_boolean (value, output);
+-  return TRUE;
+-}
+-
+-static void
+-widget_dependency_cb (GtkWidget * parent, GParamSpec *pspec, GtkWidget * dependent)
+-{
+-  gboolean active, sensitive;
+-  g_object_get (G_OBJECT (parent),
+-                "active", &active,
+-                "sensitive", &sensitive, NULL);
+-  gtk_widget_set_sensitive (dependent, active && sensitive);
+-}
+-
+-static void
+-add_widget_dependency (GtkWidget * parent, GtkWidget * dependent)
+-{
+-  g_signal_connect (parent, "notify::active", G_CALLBACK(widget_dependency_cb),
+-                    dependent);
+-  g_signal_connect (parent, "notify::sensitive", G_CALLBACK(widget_dependency_cb),
+-                    dependent);
+-  widget_dependency_cb (parent, NULL, dependent);
+-}
+-
+-static void
+-polkit_dependency_cb (GPermission * permission, GParamSpec *pspec, GtkWidget * dependent)
+-{
+-  gboolean allowed = FALSE;
+-
+-  g_object_get (G_OBJECT (permission),
+-                "allowed", &allowed, NULL);
+-
+-  gtk_widget_set_sensitive (dependent, allowed);
+-}
+-
+-static void
+-add_polkit_dependency_helper (GtkWidget * parent, GParamSpec *pspec, GtkWidget * dependent)
+-{
+-  GtkLockButton * button = GTK_LOCK_BUTTON (parent);
+-  GPermission * permission = gtk_lock_button_get_permission (button);
+-  g_signal_connect (permission, "notify::allowed",
+-                    G_CALLBACK(polkit_dependency_cb), dependent);
+-  polkit_dependency_cb (permission, NULL, dependent);
+-}
+-
+-static void
+-add_polkit_dependency (GtkWidget * parent, GtkWidget * dependent)
+-{
+-  /* polkit async hasn't finished at this point, so wait for permission to come in */
+-  g_signal_connect (parent, "notify::permission", G_CALLBACK(add_polkit_dependency_helper),
+-                    dependent);
+-  gtk_widget_set_sensitive (dependent, FALSE);
+-}
+-
+-static void
+-polkit_perm_ready (GObject *source_object, GAsyncResult *res, gpointer user_data)
+-{
+-  GError * error = NULL;
+-  GPermission * permission = polkit_permission_new_finish (res, &error);
+-
+-  if (error != NULL) {
+-    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+-      g_warning ("Could not get permission object: %s", error->message);
+-    g_error_free (error);
+-    return;
+-  }
+-
+-  GtkLockButton * button = GTK_LOCK_BUTTON (user_data);
+-  gtk_lock_button_set_permission (button, permission);
+-}
+-
+-static void
+-dbus_set_answered (GObject *object, GAsyncResult *res, gpointer command)
+-{
+-  GError * error = NULL;
+-  GVariant * answers = g_dbus_proxy_call_finish (G_DBUS_PROXY (object), res, &error);
+-
+-  if (error != NULL) {
+-    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+-      g_warning("Could not set '%s' using timedated: %s", (gchar *)command, error->message);
+-    g_error_free(error);
+-    return;
+-  }
+-
+-  g_variant_unref (answers);
+-}
+-
+-static void
+-toggle_ntp (GtkWidget * radio, GParamSpec * pspec, IndicatorDatetimePanel * self)
+-{
+-  gboolean active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (radio));
+-
+-  g_dbus_proxy_call (self->priv->proxy, "SetNTP", g_variant_new ("(bb)", active, TRUE),
+-                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "NTP");
+-}
+-
+-static void
+-sync_entry (IndicatorDatetimePanel * self, const gchar * location)
+-{
+-  gchar * name = get_current_zone_name (location, self->priv->settings);
+-  gtk_entry_set_text (GTK_ENTRY (self->priv->tz_entry), name);
+-  g_free (name);
+-
+-  gtk_entry_set_icon_from_stock (GTK_ENTRY (self->priv->tz_entry),
+-                                 GTK_ENTRY_ICON_SECONDARY, NULL);
+-}
+-
+-static void
+-tz_changed (CcTimezoneMap * map, CcTimezoneLocation * location, IndicatorDatetimePanel * self)
+-{
+-  if (location == NULL)
+-    return;
+-
+-  gchar * zone;
+-  g_object_get (location, "zone", &zone, NULL);
+-
+-  g_dbus_proxy_call (self->priv->proxy, "SetTimezone", g_variant_new ("(sb)", zone, TRUE),
+-                     G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "timezone");
+-
+-  sync_entry (self, zone);
+-
+-  g_free (zone);
+-}
+-
+-static void
+-proxy_ready (GObject *object, GAsyncResult *res, IndicatorDatetimePanel * self)
+-{
+-  GError * error = NULL;
+-  IndicatorDatetimePanelPrivate * priv = self->priv;
+-  GVariant *value;
+-
+-  self->priv->proxy = g_dbus_proxy_new_for_bus_finish (res, &error);
+-
+-  if (error != NULL) {
+-    if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+-      g_critical("Could not grab DBus proxy for timedated: %s", error->message);
+-    g_error_free(error);
+-    return;
+-  }
+-
+-  /* And now, do initial proxy configuration */
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "CanNTP");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
+-        gtk_widget_set_sensitive (priv->auto_radio, g_variant_get_boolean (value));
+-      g_variant_unref (value);
+-    }
+-
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "NTP");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_BOOLEAN))
+-        {
+-          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->auto_radio), g_variant_get_boolean (value));
+-          g_signal_connect (priv->auto_radio, "notify::active", G_CALLBACK (toggle_ntp), self);
+-        }
+-      g_variant_unref (value);
+-    }
+-
+-  value = g_dbus_proxy_get_cached_property (priv->proxy, "Timezone");
+-  if (value != NULL)
+-    {
+-      if (g_variant_is_of_type (value, G_VARIANT_TYPE_STRING))
+-        {
+-          const gchar *timezone = g_variant_get_string (value, NULL);
+-
+-          cc_timezone_map_set_timezone (priv->tzmap, timezone);
+-          sync_entry (self, timezone);
+-          g_signal_connect (priv->tzmap, "location-changed", G_CALLBACK (tz_changed), self);
+-        }
+-      g_variant_unref (value);
+-    }
+-}
+-
+-#define WIG(name) GTK_WIDGET (gtk_builder_get_object(self->priv->builder, name))
+-
+-static void
+-set_show_clock_check_sensitive (IndicatorDatetimePanel  * self,
+-                                gboolean                  sensitive)
+-{
+-  gtk_widget_set_sensitive (WIG("showClockCheck"), sensitive);
+-}
+-
+-static void
+-on_bus_name_appeared (GDBusConnection * connection   G_GNUC_UNUSED,
+-                      const char      * name         G_GNUC_UNUSED,
+-                      const char      * name_owner,
+-                      gpointer          self)
+-{
+-  set_show_clock_check_sensitive (self, name_owner && *name_owner);
+-}
+-
+-static void
+-on_bus_name_vanished (GDBusConnection * connection   G_GNUC_UNUSED,
+-                      const char      * name         G_GNUC_UNUSED,
+-                      gpointer          self)
+-{
+-  set_show_clock_check_sensitive (self, FALSE);
+-}
+-
+-static gboolean
+-are_spinners_focused (IndicatorDatetimePanel * self)
+-{
+-  // save_time_id means that we were in focus and haven't finished our save
+-  // yet, so act like we are still focused.
+-  return self->priv->save_time_id ||
+-         gtk_widget_has_focus (self->priv->time_spin) ||
+-         gtk_widget_has_focus (self->priv->date_spin);
+-}
+-
+-static gboolean
+-save_time (IndicatorDatetimePanel * self)
+-{
+-  if (self->priv->user_edited_time) {
+-    gdouble current_value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (self->priv->date_spin));
+-    g_dbus_proxy_call (self->priv->proxy, "SetTime",
+-                       g_variant_new ("(xbb)", (gint64) (current_value * G_TIME_SPAN_SECOND), FALSE, TRUE),
+-                       G_DBUS_CALL_FLAGS_NONE, -1, NULL, dbus_set_answered, "time");
+-  }
+-  self->priv->user_edited_time = FALSE;
+-  self->priv->save_time_id = 0;
+-  return FALSE;
+-}
+-
+-static gboolean
+-spin_focus_in (IndicatorDatetimePanel * self)
+-{
+-  if (self->priv->save_time_id > 0) {
+-    g_source_remove (self->priv->save_time_id);
+-    self->priv->save_time_id = 0;
+-  }
+-  return FALSE;
+-}
+-
+-static gboolean
+-spin_focus_out (IndicatorDatetimePanel * self)
+-{
+-  /* We want to only save when both spinners are unfocused.  But it's difficult
+-     to tell who is about to get focus during a focus-out.  So we set an idle
+-     callback to save the time if we don't focus in to another spinner by that
+-     time. */
+-  if (self->priv->save_time_id == 0) {
+-    self->priv->save_time_id = g_idle_add ((GSourceFunc)save_time, self);
+-  }
+-  return FALSE;
+-}
+-
+-static int
+-input_time_text (GtkWidget * spinner, gdouble * value, IndicatorDatetimePanel * self)
+-{
+-  gboolean is_time = (gboolean)GPOINTER_TO_INT (g_object_get_data (G_OBJECT (spinner), "is-time"));
+-  const gchar * text = gtk_entry_get_text (GTK_ENTRY (spinner));
+-
+-  gdouble current_value = gtk_spin_button_get_value (GTK_SPIN_BUTTON (spinner));
+-  *value = current_value;
+-
+-  GDateTime * now = g_date_time_new_from_unix_local (current_value);
+-  gint year, month, day, hour, minute, second;
+-  year = g_date_time_get_year (now);
+-  month = g_date_time_get_month (now);
+-  day = g_date_time_get_day_of_month (now);
+-  hour = g_date_time_get_hour (now);
+-  minute = g_date_time_get_minute (now);
+-  second = g_date_time_get_second (now);
+-  g_date_time_unref (now);
+-
+-  /* Parse this string as if it were in the output format */
+-  gint scanned = 0;
+-  gboolean passed = TRUE, skip = FALSE;
+-  if (is_time) {
+-    gint hour_in, minute_in, second_in;
+-
+-    if (is_locale_12h ()) { // TODO: make this look-at/watch gsettings?
+-      char ampm[51];
+-
+-      /* coverity[secure_coding] */
+-      scanned = sscanf (text, "%u:%u:%u %50s", &hour_in, &minute_in, &second_in, ampm);
+-      passed = (scanned == 4);
+-
+-      if (passed) {
+-        const char *pm_str = nl_langinfo (PM_STR);
+-        if (g_ascii_strcasecmp (pm_str, ampm) == 0) {
+-          hour_in += 12;
+-        }
+-      }
+-    } else {
+-      /* coverity[secure_coding] */
+-      scanned = sscanf (text, "%u:%u:%u", &hour_in, &minute_in, &second_in);
+-      passed = (scanned == 3);
+-    }
+-
+-    if (passed && (hour_in > 23 || minute_in > 59 || second_in > 59)) {
+-      passed = FALSE;
+-    }
+-    if (passed && hour == hour_in && minute == minute_in && second == second_in) {
+-      skip = TRUE; // no change
+-    } else {
+-      hour = hour_in;
+-      minute = minute_in;
+-      second = second_in;
+-    }
+-  }
+-  else {
+-    gint year_in, month_in, day_in;
+-
+-    /* coverity[secure_coding] */
+-    scanned = sscanf (text, "%u-%u-%u", &year_in, &month_in, &day_in);
+-
+-    if (scanned != 3 || year_in < 1 || year_in > 9999 ||
+-        month_in < 1 || month_in > 12 || day_in < 1 || day_in > 31) {
+-      passed = FALSE;
+-    }
+-    if (passed && year == year_in && month == month_in && day == day_in) {
+-      skip = TRUE; // no change
+-    } else {
+-      year = year_in;
+-      month = month_in;
+-      day = day_in;
+-    }
+-  }
+-
+-  if (!passed) {
+-    g_warning ("Could not understand %s", text);
+-    return TRUE;
+-  }
+-
+-  if (skip) {
+-    return TRUE;
+-  }
+-
+-  gboolean prev_changing = self->priv->changing_time;
+-  self->priv->changing_time = TRUE;
+-  GDateTime * new_time = g_date_time_new_local (year, month, day, hour, minute, second);
+-  *value = g_date_time_to_unix (new_time);
+-  self->priv->user_edited_time = TRUE;
+-  g_date_time_unref (new_time);
+-  self->priv->changing_time = prev_changing;
+-
+-  return TRUE;
+-}
+-
+-static gboolean
+-format_time_text (GtkWidget * spinner, gpointer user_data)
+-{
+-  gboolean is_time = (gboolean)GPOINTER_TO_INT (g_object_get_data (G_OBJECT (spinner), "is-time"));
+-
+-  const gchar * format;
+-  if (is_time) {
+-    if (is_locale_12h ()) { // TODO: make this look-at/watch gsettings?
+-      format = "%I:%M:%S %p";
+-    } else {
+-      format = "%H:%M:%S";
+-    }
+-  }
+-  else {
+-    // This is intentionally not "%x".  See https://launchpad.net/bugs/1149696
+-    // If you are willing to do the hard work of writing a locale-sensitive
+-    // date parser, there is an open bug: https://launchpad.net/bugs/729056
+-    format = "%Y-%m-%d";
+-  }
+-
+-  GDateTime * datetime = g_date_time_new_from_unix_local (gtk_spin_button_get_value (GTK_SPIN_BUTTON (spinner)));
+-  gchar * formatted = g_date_time_format (datetime, format);
+-  gtk_entry_set_text (GTK_ENTRY (spinner), formatted);
+-  g_date_time_unref (datetime);
+-
+-  return TRUE;
+-}
+-
+-static void
+-spin_copy_value (GtkSpinButton * spinner, IndicatorDatetimePanel * self)
+-{
+-  GtkSpinButton * other = NULL;
+-  if (GTK_WIDGET (spinner) == self->priv->date_spin)
+-    other = GTK_SPIN_BUTTON (self->priv->time_spin);
+-  else
+-    other = GTK_SPIN_BUTTON (self->priv->date_spin);
+-
+-  if (gtk_spin_button_get_value (spinner) != gtk_spin_button_get_value (other)) {
+-    gtk_spin_button_set_value (other, gtk_spin_button_get_value (spinner));
+-  }
+-  if (!self->priv->changing_time) { /* Means user pressed spin buttons */
+-    self->priv->user_edited_time = TRUE;
+-  }
+-}
+-
+-static gboolean
+-update_spinners (IndicatorDatetimePanel * self)
+-{
+-  /* Add datetime object to spinner, which will hold the real time value, rather
+-     then using the value of the spinner itself.  And don't update while user is
+-     editing. */
+-  if (!are_spinners_focused (self)) {
+-    gboolean prev_changing = self->priv->changing_time;
+-    self->priv->changing_time = TRUE;
+-    GDateTime * now = g_date_time_new_now_local ();
+-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->priv->time_spin),
+-                               (gdouble)g_date_time_to_unix (now));
+-    /* will be copied to other spin button */
+-    g_date_time_unref (now);
+-    self->priv->changing_time = prev_changing;
+-  }
+-  return TRUE;
+-}
+-
+-static void
+-setup_time_spinners (IndicatorDatetimePanel * self, GtkWidget * time, GtkWidget * date)
+-{
+-  g_signal_connect (time, "input", G_CALLBACK (input_time_text), self);
+-  g_signal_connect (date, "input", G_CALLBACK (input_time_text), self);
+-
+-  g_signal_connect (time, "output", G_CALLBACK (format_time_text), date);
+-  g_signal_connect (date, "output", G_CALLBACK (format_time_text), time);
+-
+-  g_signal_connect_swapped (time, "focus-in-event", G_CALLBACK (spin_focus_in), self);
+-  g_signal_connect_swapped (date, "focus-in-event", G_CALLBACK (spin_focus_in), self);
+-
+-  g_signal_connect_swapped (time, "focus-out-event", G_CALLBACK (spin_focus_out), self);
+-  g_signal_connect_swapped (date, "focus-out-event", G_CALLBACK (spin_focus_out), self);
+-
+-  g_signal_connect (time, "value-changed", G_CALLBACK (spin_copy_value), self);
+-  g_signal_connect (date, "value-changed", G_CALLBACK (spin_copy_value), self);
+-
+-  g_object_set_data (G_OBJECT (time), "is-time", GINT_TO_POINTER (TRUE));
+-  g_object_set_data (G_OBJECT (date), "is-time", GINT_TO_POINTER (FALSE));
+-
+-  self->priv->time_spin = time;
+-  self->priv->date_spin = date;
+-
+-  /* 2 seconds is what the indicator itself uses */
+-  guint time_id = g_timeout_add_seconds (2, (GSourceFunc)update_spinners, self);
+-  g_signal_connect_swapped (self->priv->time_spin, "destroy",
+-                            G_CALLBACK (g_source_remove), GINT_TO_POINTER (time_id));
+-  update_spinners (self);
+-}
+-
+-static void
+-show_locations (IndicatorDatetimePanel * self)
+-{
+-  if (self->priv->loc_dlg == NULL) {
+-    self->priv->loc_dlg = datetime_setup_locations_dialog (self->priv->tzmap);
+-    GtkWidget * dlg = gtk_widget_get_toplevel (GTK_WIDGET (self));
+-    gtk_window_set_type_hint (GTK_WINDOW(self->priv->loc_dlg), GDK_WINDOW_TYPE_HINT_DIALOG);
+-    gtk_window_set_transient_for (GTK_WINDOW (self->priv->loc_dlg), GTK_WINDOW (dlg));
+-    g_signal_connect (self->priv->loc_dlg, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->priv->loc_dlg);
+-    gtk_widget_show_all (self->priv->loc_dlg);
+-  }
+-  else {
+-    gtk_window_present_with_time (GTK_WINDOW (self->priv->loc_dlg), gtk_get_current_event_time ());
+-  }
+-}
+-
+-static gboolean
+-timezone_selected (GtkEntryCompletion * widget, GtkTreeModel * model,
+-                   GtkTreeIter * iter, IndicatorDatetimePanel * self)
+-{
+-  const gchar * name, * zone;
+-
+-  gtk_tree_model_get (model, iter,
+-                      CC_TIMEZONE_COMPLETION_NAME, &name,
+-                      CC_TIMEZONE_COMPLETION_ZONE, &zone,
+-                      -1);
+-
+-  if (zone == NULL || zone[0] == 0) {
+-    const gchar * strlon, * strlat;
+-    gdouble lon = 0.0, lat = 0.0;
+-
+-    gtk_tree_model_get (model, iter,
+-                        CC_TIMEZONE_COMPLETION_LONGITUDE, &strlon,
+-                        CC_TIMEZONE_COMPLETION_LATITUDE, &strlat,
+-                        -1);
+-
+-    if (strlon != NULL && strlon[0] != 0) {
+-      lon = g_ascii_strtod(strlon, NULL);
+-    }
+-
+-    if (strlat != NULL && strlat[0] != 0) {
+-      lat = g_ascii_strtod(strlat, NULL);
+-    }
+-
+-    zone = cc_timezone_map_get_timezone_at_coords (self->priv->tzmap, lon, lat);
+-  }
+-
+-  gchar * tz_name = g_strdup_printf ("%s %s", zone, name);
+-  g_settings_set_string (self->priv->settings, SETTINGS_TIMEZONE_NAME_S, tz_name);
+-  g_free (tz_name);
+-
+-  cc_timezone_map_set_timezone (self->priv->tzmap, zone);
+-
+-  return FALSE; // Do normal action too
+-}
+-
+-static gboolean
+-entry_focus_out (GtkEntry * entry, GdkEventFocus * event, IndicatorDatetimePanel * self)
+-{
+-  // If the name left in the entry doesn't match the current timezone name,
+-  // show an error icon.  It's always an error for the user to manually type in
+-  // a timezone.
+-  CcTimezoneLocation * location = cc_timezone_map_get_location (self->priv->tzmap);
+-  if (location == NULL)
+-    return FALSE;
+-
+-  gchar * zone;
+-  g_object_get (location, "zone", &zone, NULL);
+-
+-  gchar * name = get_current_zone_name (zone, self->priv->settings);
+-  gboolean correct = (g_strcmp0 (gtk_entry_get_text (entry), name) == 0);
+-  g_free (name);
+-  g_free (zone);
+-
+-  gtk_entry_set_icon_from_stock (entry, GTK_ENTRY_ICON_SECONDARY,
+-                                 correct ? NULL : GTK_STOCK_DIALOG_ERROR);
+-  gtk_entry_set_icon_tooltip_text (entry, GTK_ENTRY_ICON_SECONDARY,
+-                                   _("You need to choose a location to change the time zone."));
+-  gtk_entry_set_icon_activatable (entry, GTK_ENTRY_ICON_SECONDARY, FALSE);
+-  return FALSE;
+-}
+-
+-static void
+-indicator_datetime_panel_init (IndicatorDatetimePanel * self)
+-{
+-  GError * error;
+-  GSettings * conf;
+-
+-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
+-                                            INDICATOR_DATETIME_TYPE_PANEL,
+-                                            IndicatorDatetimePanelPrivate);
+-
+-  self->priv->settings = conf = g_settings_new (SETTINGS_INTERFACE);
+-
+-  self->priv->builder = gtk_builder_new ();
+-  gtk_builder_set_translation_domain (self->priv->builder, GETTEXT_PACKAGE);
+-  error = NULL;
+-  gtk_builder_add_from_file (self->priv->builder, DATETIME_DIALOG_UI_FILE, &error);
+-  if (error != NULL) {
+-    /* We have to abort, we can't continue without the ui file */
+-    g_error ("Could not load ui file %s: %s", DATETIME_DIALOG_UI_FILE, error->message);
+-    g_error_free (error);
+-    return;
+-  }
+-
+-
+-  /* Add policykit button */
+-  GtkWidget * polkit_button = gtk_lock_button_new (NULL);
+-  g_object_set (G_OBJECT (polkit_button),
+-                "text-unlock", _("Unlock to change these settings"),
+-                "text-lock", _("Lock to prevent further changes"),
+-                NULL);
+-  GtkWidget * alignment = gtk_alignment_new (0.0, 0.5, 0.0, 0.0);
+-  gtk_container_add (GTK_CONTAINER (alignment), polkit_button);
+-  gtk_box_pack_start (GTK_BOX (WIG ("timeDateBox")), alignment, FALSE, TRUE, 0);
+-
+-  const gchar * polkit_name = "org.gnome.controlcenter.datetime.configure";
+-  polkit_permission_new (polkit_name, NULL, NULL, polkit_perm_ready, polkit_button);
+-
+-  /* Add map */
+-  self->priv->tzmap = cc_timezone_map_new ();
+-  gtk_container_add (GTK_CONTAINER (WIG ("mapBox")), GTK_WIDGET (self->priv->tzmap));
+-  /* Fufill the CC by Attribution license requirements for the Geonames lookup */
+-  cc_timezone_map_set_watermark (self->priv->tzmap, "Geonames.org");
+-
+-  /* And completion entry */
+-  self->priv->completion = cc_timezone_completion_new ();
+-  cc_timezone_completion_watch_entry (self->priv->completion, GTK_ENTRY (WIG ("timezoneEntry")));
+-  g_signal_connect (self->priv->completion, "match-selected", G_CALLBACK (timezone_selected), self);
+-  g_signal_connect (WIG ("timezoneEntry"), "focus-out-event", G_CALLBACK (entry_focus_out), self);
+-
+-  /* Set up settings bindings */
+-  g_settings_bind (conf, SETTINGS_SHOW_CLOCK_S, WIG ("showClockCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_DAY_S, WIG ("showWeekdayCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_DATE_S, WIG ("showDateTimeCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_SECONDS_S, WIG ("showSecondsCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind_with_mapping (conf, SETTINGS_TIME_FORMAT_S,
+-                                WIG ("show12HourRadio"), "active",
+-                                G_SETTINGS_BIND_DEFAULT,
+-                                bind_hours_get, bind_hours_set,
+-                                GINT_TO_POINTER(TRUE), NULL);
+-  g_settings_bind_with_mapping (conf, SETTINGS_TIME_FORMAT_S,
+-                                WIG ("show24HourRadio"), "active",
+-                                G_SETTINGS_BIND_DEFAULT,
+-                                bind_hours_get, bind_hours_set,
+-                                GINT_TO_POINTER(FALSE), NULL);
+-  g_settings_bind (conf, SETTINGS_SHOW_CALENDAR_S, WIG ("showCalendarCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_WEEK_NUMBERS_S, WIG ("includeWeekNumbersCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_EVENTS_S, WIG ("showEventsCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_DETECTED_S, WIG ("showDetectedCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-  g_settings_bind (conf, SETTINGS_SHOW_LOCATIONS_S, WIG ("showLocationsCheck"),
+-                   "active", G_SETTINGS_BIND_DEFAULT);
+-
+-  /* Set up sensitivities */
+-  add_widget_dependency (WIG ("showCalendarCheck"), WIG ("calendarOptions"));
+-  add_widget_dependency (WIG ("showClockCheck"), WIG ("clockOptions"));
+-  add_widget_dependency (WIG ("showLocationsCheck"), WIG ("locationsButton"));
+-  add_widget_dependency (WIG ("manualTimeRadio"), WIG ("manualOptions"));
+-  add_polkit_dependency (polkit_button, WIG ("timeDateOptions"));
+-
+-  /* Hacky proxy test for whether evolution-data-server is installed */
+-  gchar * evo_path = g_find_program_in_path ("evolution");
+-  gtk_widget_set_sensitive (WIG ("showEventsCheck"), (evo_path != NULL));
+-  g_free (evo_path);
+-
+-  setup_time_spinners (self, WIG ("timeSpinner"), WIG ("dateSpinner"));
+-
+-  GtkWidget * panel = WIG ("timeDatePanel");
+-  self->priv->auto_radio = WIG ("automaticTimeRadio");
+-  self->priv->tz_entry = WIG ("timezoneEntry");
+-
+-  g_signal_connect_swapped (WIG ("locationsButton"), "clicked", G_CALLBACK (show_locations), self);
+-
+-  /* Grab proxy for settings daemon */
+-  g_dbus_proxy_new_for_bus (G_BUS_TYPE_SYSTEM, G_DBUS_PROXY_FLAGS_NONE, NULL,
+-                            "org.freedesktop.timedate1",
+-                            "/org/freedesktop/timedate1",
+-                            "org.freedesktop.timedate1",
+-                            NULL, (GAsyncReadyCallback)proxy_ready, self);
+-
+-  /* Grab proxy for datetime service, to see if it's running.  It would
+-     actually be more ideal to see if the indicator module itself is running,
+-     but that doesn't yet claim a name on the bus.  Presumably the service
+-     would have been started by any such indicator, so this will at least tell
+-     us if there *was* a datetime module run this session. */
+-  self->priv->name_watch_id = g_bus_watch_name (G_BUS_TYPE_SESSION,
+-                                                BUS_NAME,
+-                                                G_BUS_NAME_WATCHER_FLAGS_NONE,
+-                                                on_bus_name_appeared,
+-                                                on_bus_name_vanished,
+-                                                self,
+-                                                NULL);
+-
+-#undef WIG
+-
+-  gtk_widget_show_all (panel);
+-  gtk_container_add (GTK_CONTAINER (self), panel);
+-}
+-
+-static void
+-indicator_datetime_panel_dispose (GObject * object)
+-{
+-  IndicatorDatetimePanel * self = (IndicatorDatetimePanel *) object;
+-  IndicatorDatetimePanelPrivate * priv = self->priv;
+-
+-  g_clear_object (&priv->builder);
+-  g_clear_object (&priv->proxy);
+-  g_clear_object (&priv->settings);
+-
+-  if (priv->loc_dlg) {
+-    gtk_widget_destroy (priv->loc_dlg);
+-    priv->loc_dlg = NULL;
+-  }
+-
+-  if (priv->name_watch_id != 0) {
+-    g_bus_unwatch_name (priv->name_watch_id);
+-    priv->name_watch_id = 0;
+-  }
+-
+-  if (priv->save_time_id) {
+-    g_source_remove (priv->save_time_id);
+-    priv->save_time_id = 0;
+-  }
+-
+-  if (priv->completion) {
+-    cc_timezone_completion_watch_entry (priv->completion, NULL);
+-    g_clear_object (&priv->completion);
+-  }
+-
+-  if (priv->tz_entry) {
+-    gtk_widget_destroy (priv->tz_entry);
+-    priv->tz_entry = NULL;
+-  }
+-
+-  if (priv->time_spin) {
+-    gtk_widget_destroy (priv->time_spin);
+-    priv->time_spin = NULL;
+-  }
+-
+-  if (priv->date_spin) {
+-    gtk_widget_destroy (priv->date_spin);
+-    priv->date_spin = NULL;
+-  }
+-
+-  G_OBJECT_CLASS (indicator_datetime_panel_parent_class)->dispose (object);
+-}
+-
+-static void
+-indicator_datetime_panel_class_finalize (IndicatorDatetimePanelClass *klass)
+-{
+-}
+-
+-static const char *
+-indicator_datetime_panel_get_help_uri (CcPanel *panel)
+-{
+-  return "help:ubuntu-help/clock";
+-}
+-
+-static void
+-indicator_datetime_panel_class_init (IndicatorDatetimePanelClass *klass)
+-{
+-  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
+-  CcPanelClass *panel_class = CC_PANEL_CLASS (klass);
+-
+-  g_type_class_add_private (klass, sizeof (IndicatorDatetimePanelPrivate));
+-
+-  panel_class->get_help_uri = indicator_datetime_panel_get_help_uri;
+-
+-  gobject_class->dispose = indicator_datetime_panel_dispose;
+-}
+-
+-void
+-g_io_module_load (GIOModule *module)
+-{
+-  bindtextdomain (GETTEXT_PACKAGE, GNOMELOCALEDIR);
+-  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
+-
+-  indicator_datetime_panel_register_type (G_TYPE_MODULE (module));
+-  g_io_extension_point_implement (CC_SHELL_PANEL_EXTENSION_POINT,
+-                                  INDICATOR_DATETIME_TYPE_PANEL,
+-                                  "indicator-datetime", 0);
+-}
+-
+-void
+-g_io_module_unload (GIOModule *module)
+-{
+-}
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/main.c indicator-datetime-13.10.0+13.10.20131023.2/src/main.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/main.c	2014-01-09 14:29:59.821090431 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/main.c	2014-01-09 14:30:21.717191025 +0100
+@@ -17,8 +17,6 @@
+  * with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "config.h"
+-
+ #include <locale.h>
+ #include <stdlib.h> /* exit() */
+ 
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/planner-eds.c indicator-datetime-13.10.0+13.10.20131023.2/src/planner-eds.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/planner-eds.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/planner-eds.c	2014-01-09 14:30:21.717191025 +0100
+@@ -17,8 +17,6 @@
+  * with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "config.h"
+-
+ #include <libical/ical.h>
+ #include <libical/icaltime.h>
+ #include <libecal/libecal.h>
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/service.c indicator-datetime-13.10.0+13.10.20131023.2/src/service.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/service.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/service.c	2014-01-09 14:30:21.718191029 +0100
+@@ -18,8 +18,6 @@
+  * with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "config.h"
+-
+ #include <string.h> /* strstr() */
+ 
+ #include <glib/gi18n.h>
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/timezone-file.c indicator-datetime-13.10.0+13.10.20131023.2/src/timezone-file.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/timezone-file.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/timezone-file.c	2014-01-09 14:30:21.719191035 +0100
+@@ -17,8 +17,6 @@
+  * with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "config.h"
+-
+ #include <gio/gio.h> /* GFile, GFileMonitor */
+ 
+ #include "timezone-file.h"
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/timezone-geoclue.c indicator-datetime-13.10.0+13.10.20131023.2/src/timezone-geoclue.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/timezone-geoclue.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/timezone-geoclue.c	2014-01-09 14:30:21.719191035 +0100
+@@ -17,8 +17,6 @@
+  * with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#include "config.h"
+-
+ #include <geoclue/geoclue-master.h>
+ #include <geoclue/geoclue-master-client.h>
+ 
+@@ -72,7 +70,7 @@
+                         GeoclueAccuracy * accuracy    G_GNUC_UNUSED,
+                         gpointer          gself)
+ {
+-  return on_address_changed(address, timestamp, addy_data, accuracy, NULL, gself);
++  on_address_changed(address, timestamp, addy_data, accuracy, NULL, gself);
+ }
+ 
+ static void
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.c indicator-datetime-13.10.0+13.10.20131023.2/src/utils.c
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/src/utils.c	2014-01-09 14:18:28.960049700 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/src/utils.c	2014-01-09 14:30:21.719191035 +0100
+@@ -20,10 +20,6 @@
+ with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
+-
+ #include <glib/gi18n-lib.h>
+ #include <gio/gio.h>
+ #include <locale.h>
+@@ -104,9 +100,9 @@
+   split_settings_location (tz_name, &old_zone, &old_name);
+   g_free (tz_name);
+ 
+-  // new_name is always just a sanitized version of a timezone.
+-  // old_name is potentially a saved "pretty" version of a timezone name from
+-  // geonames.  So we prefer to use it if available and the zones match.
++  /* new_name is always just a sanitized version of a timezone.
++     old_name is potentially a saved "pretty" version of a timezone name from
++     geonames.  So we prefer to use it if available and the zones match. */
+ 
+   if (g_strcmp0 (old_zone, new_zone) == 0) {
+     rv = old_name;
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/tests/CMakeLists.txt indicator-datetime-13.10.0+13.10.20131023.2/tests/CMakeLists.txt
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/tests/CMakeLists.txt	1970-01-01 01:00:00.000000000 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/tests/CMakeLists.txt	2014-01-09 14:30:21.719191035 +0100
+@@ -0,0 +1,23 @@
++# build the necessary schemas
++set_directory_properties (PROPERTIES
++                          ADDITIONAL_MAKE_CLEAN_FILES gschemas.compiled)
++set_source_files_properties (gschemas.compiled GENERATED)
++
++# GSettings:
++# compile the indicator-datetime schema into a gschemas.compiled file in this directory,
++# and help the tests to find that file by setting -DSCHEMA_DIR
++set (SCHEMA_DIR ${CMAKE_CURRENT_BINARY_DIR})
++add_definitions(-DSCHEMA_DIR="${SCHEMA_DIR}")
++execute_process (COMMAND ${PKG_CONFIG_EXECUTABLE} gio-2.0 --variable glib_compile_schemas
++                 OUTPUT_VARIABLE COMPILE_SCHEMA_EXECUTABLE
++                 OUTPUT_STRIP_TRAILING_WHITESPACE)
++add_custom_command (OUTPUT gschemas.compiled
++                    DEPENDS ${CMAKE_SOURCE_DIR}/data/com.canonical.indicator.session.gschema.xml
++                    COMMAND cp -f ${CMAKE_SOURCE_DIR}/data/*gschema.xml ${SCHEMA_DIR}
++                    COMMAND ${COMPILE_SCHEMA_EXECUTABLE} ${SCHEMA_DIR})
++
++# look for hearder in our src dir, and also in the directories where we autogenerate files...
++include_directories (${CMAKE_SOURCE_DIR}/src)
++include_directories (${CMAKE_CURRENT_BINARY_DIR} ${SERVICE_INCLUDE_DIRS})
++
++
+diff -Naur indicator-datetime-13.10.0+13.10.20131023.2.orig/tests/Makefile.am indicator-datetime-13.10.0+13.10.20131023.2/tests/Makefile.am
+--- indicator-datetime-13.10.0+13.10.20131023.2.orig/tests/Makefile.am	2014-01-09 14:18:28.959049686 +0100
++++ indicator-datetime-13.10.0+13.10.20131023.2/tests/Makefile.am	1970-01-01 01:00:00.000000000 +0100
+@@ -1,58 +0,0 @@
+-TESTS =
+-CLEANFILES =
+-BUILT_SOURCES =
+-check_PROGRAMS =
+-
+-###
+-###
+-###
+-
+-# stock UMB tests on user-visible strings
+-include $(srcdir)/Makefile.am.strings
+-
+-check_LIBRARIES = libgtest.a
+-nodist_libgtest_a_SOURCES = \
+-  $(GTEST_SOURCE)/gtest-all.cc \
+-  $(GTEST_SOURCE)/gtest_main.cc
+-
+-AM_CPPFLAGS = $(GTEST_CPPFLAGS) -I${top_srcdir}/src -Wall -Werror
+-AM_CXXFLAGS = $(GTEST_CXXFLAGS)
+-
+-###
+-###
+-###
+-
+-TEST_LIBS = \
+-        libgtest.a \
+-        $(SERVICE_LIBS) \
+-        $(COVERAGE_LDFLAGS) \
+-        $(XORG_GTEST_LDFLAGS)
+-
+-TEST_CPPFLAGS = \
+-        $(AM_CPPFLAGS) \
+-        $(SERVICE_CFLAGS)
+-
+-BUILT_SOURCES += gschemas.compiled
+-CLEANFILES += gschemas.compiled
+-gschemas.compiled: Makefile
+-	@glib-compile-schemas --targetdir=$(abs_builddir) $(top_builddir)/data
+-
+-###
+-###
+-###
+-
+-TESTS += test-indicator
+-check_PROGRAMS += test-indicator
+-test_indicator_SOURCES = test-indicator.cc
+-test_indicator_LDADD = $(TEST_LIBS)
+-test_indicator_CPPFLAGS = $(TEST_CPPFLAGS) -DSCHEMA_DIR="\"$(top_builddir)/tests/\""
+-
+-###
+-###
+-###
+-
+-TESTS += test-utils
+-check_PROGRAMS += test-utils
+-test_utils_SOURCES = test-utils.cc
+-test_utils_LDADD = $(top_builddir)/src/libindicator-datetime-service.a $(TEST_LIBS)
+-test_utils_CPPFLAGS = $(TEST_CPPFLAGS) -DSCHEMA_DIR="\"$(top_builddir)/tests/\""
