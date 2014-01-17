@@ -29,7 +29,7 @@ RDEPEND="${CDEPEND}
 	>=x11-themes/elementary-theme-3.4
 	x11-wm/gala
 	libnotify? ( || ( pantheon-base/pantheon-notify x11-misc/notify-osd virtual/notification-daemon ) )
-	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
+	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/light-locker x11-misc/xscreensaver ) )"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
