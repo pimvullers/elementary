@@ -1,16 +1,16 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-0.4.0.ebuild,v 1.2 2013/10/06 21:53:34 hasufell Exp $
+# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-0.5.0.ebuild,v 1.1 2014/01/08 21:05:24 hasufell Exp $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit eutils fdo-mime gnome2-utils vala cmake-utils git-2
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="http://www.yorba.org/projects/geary/"
-EGIT_REPO_URI="git://yorba.org/geary"
+EGIT_REPO_URI="git://git.gnome.org/geary"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
@@ -22,7 +22,6 @@ CDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	>=dev-libs/libgee-0.8.5:0.8
-	dev-libs/libunique:3
 	dev-libs/libxml2:2
 	dev-libs/gmime:2.6
 	media-libs/libcanberra
@@ -41,7 +40,9 @@ DEPEND="${CDEPEND}
 DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-{unity,cflags}.patch
+	epatch "${FILESDIR}"/${P}-unity.patch
+	epatch "${FILESDIR}"/${P}-cflags.patch
+	epatch "${FILESDIR}"/${P}-vapigen.patch
 
 	local i
 	if use nls ; then
@@ -67,6 +68,7 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
+		-DVAPIGEN="${VAPIGEN}"
 		$(cmake-utils_use_with ayatana UNITY)
 		-DDESKTOP_VALIDATE=OFF
 	)
