@@ -23,29 +23,12 @@ REQUIRED_USE="
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_${PV}-0ubuntu2.debian.tar.gz"
+	https://launchpad.net/~ricotz/+archive/testing/+files/gtk%2B3.0_3.11.5%2Bgit20140126.9ba0ea3b-0ubuntu1%7E14.04%7Ericotz0.debian.tar.gz"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 # Use gtk+:2 for gtk-update-icon-cache
 COMMON_DEPEND="
-	>=dev-libs/atk-2.7.5[introspection?]
-	>=dev-libs/glib-2.37.5:2
-	media-libs/fontconfig
-	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?]
-	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
-	>=x11-libs/gtk+-2.24:2
-	>=x11-libs/pango-1.32.4[introspection?]
-	x11-misc/shared-mime-info
-
-	colord? ( >=x11-misc/colord-0.1.9 )
-	cups? ( >=net-print/cups-1.2 )
-	introspection? ( >=dev-libs/gobject-introspection-1.32 )
-	wayland? (
-		>=dev-libs/wayland-1.2
-		media-libs/mesa[wayland]
-		>=x11-libs/libxkbcommon-0.2
-	)
 	X? (
 		>=app-accessibility/at-spi2-atk-2.5.3
 		x11-libs/libXrender
@@ -59,13 +42,28 @@ COMMON_DEPEND="
 		x11-libs/libXdamage
 		xinerama? ( x11-libs/libXinerama )
 	)
+	wayland? (
+		>=dev-libs/wayland-1.2
+		media-libs/mesa[wayland]
+		>=x11-libs/libxkbcommon-0.2
+	)
+	>=dev-libs/glib-2.39.0:2
+	>=x11-libs/pango-1.32.4[introspection?]
+	>=dev-libs/atk-2.7.5[introspection?]
+	>=x11-libs/cairo-1.12.0[aqua?,glib,svg,X?]
+	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
+	>=x11-libs/gtk+-2.24:2
+	media-libs/fontconfig
+	x11-misc/shared-mime-info
+	colord? ( >=x11-misc/colord-0.1.9 )
+	cups? ( >=net-print/cups-1.2 )
+	introspection? ( >=dev-libs/gobject-introspection-1.32 )
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xsl-stylesheets
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
 	dev-util/gdbus-codegen
-	>=dev-util/gtk-doc-am-1.11
 	virtual/pkgconfig
 	X? (
 		x11-proto/xextproto
@@ -74,6 +72,7 @@ DEPEND="${COMMON_DEPEND}
 		x11-proto/damageproto
 		xinerama? ( x11-proto/xineramaproto )
 	)
+	>=dev-util/gtk-doc-am-1.11
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )
@@ -95,7 +94,7 @@ strip_builddir() {
 	shift
 	local directory=$1
 	shift
-	sed -e "s/^\(${rule} =.*\)${directory}\(.*\)$/\1\2/" -i $@ \
+	sed -e "s/^\(${rule} =.*\) ${directory} \(.*\)$/\1 \2/" -i $@ \
 		|| die "Could not strip director ${directory} from build."
 }
 
@@ -110,21 +109,25 @@ src_prepare() {
 		done
 	fi
 
-	# Build fails with USE="wayland introspection"
-	# Fixed upstream with commit 8dd899dae (and will be in 3.10.7 tarball)
-	rm "${S}"/gdk/wayland/gtk-shell-client-protocol.h || die
-	rm "${S}"/gdk/wayland/gtk-shell-protocol.c || die
-
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
 
-	if ! use test ; then
+	# FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=654108
+	# epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
+
+	if use test; then
+		# FIXME: multiple reftests fail when run from portage (but succeed when
+		# run from a manual compile in a temp directory)
+		sed -e 's:\(SUBDIRS.*\)reftests:\1:' \
+			-i tests/Makefile.* || die "sed 3 failed"
+	else
 		# don't waste time building tests
-		strip_builddir SRC_SUBDIRS testsuite Makefile.am
-		strip_builddir SRC_SUBDIRS testsuite Makefile.in
 		strip_builddir SRC_SUBDIRS tests Makefile.am
 		strip_builddir SRC_SUBDIRS tests Makefile.in
+
+		strip_builddir SRC_SUBDIRS testsuite Makefile.am
+		strip_builddir SRC_SUBDIRS testsuite Makefile.in
 	fi
 
 	if ! use examples; then
