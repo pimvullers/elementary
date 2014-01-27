@@ -1,0 +1,65 @@
+From 196ea5ab614e5357da48acf73a373f103e61ee0b Mon Sep 17 00:00:00 2001
+From: Alexandre Rostovtsev <tetromino@gentoo.org>
+Date: Mon, 2 Sep 2013 13:59:18 -0400
+Subject: [PATCH 4/4] gobject: try to link with -Wl,-z,nodelete
+
+Since the type system does not support reloading its data and assumes
+that libgobject remains loaded for the lifetime of the process, we
+should link libgobject with a flag indicating that it can't be unloaded.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=707298
+---
+ configure.ac        | 24 ++++++++++++++++++++++++
+ gobject/Makefile.am |  1 +
+ 2 files changed, 25 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index 907c534..266c45d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3669,6 +3669,30 @@ fi
+ AC_SUBST(GLIB_LINK_FLAGS)
+ 
+ dnl
++dnl Check for -z,nodelete linker flag: the type system assumes that
++dnl libgobject stays loaded for the lifetime of the process
++dnl
++
++AC_ARG_ENABLE([znodelete],
++              [AS_HELP_STRING([--disable-znodelete],
++                              [avoid linking with -z,nodelete])],,
++              [SAVED_LDFLAGS="${LDFLAGS}"
++               AC_MSG_CHECKING([for -z,nodelete linker flag])
++               LDFLAGS=-Wl,-z,nodelete
++               AC_TRY_LINK([], [int main (void) { return 0; }],
++                           AC_MSG_RESULT(yes)
++                           enable_znodelete=yes,
++                           AC_MSG_RESULT(no)
++                           enable_znodelete=no)
++               LDFLAGS="${SAVED_LDFLAGS}"])
++
++if test "x${enable_znodelete}" = "xyes"; then
++  GOBJECT_LINK_FLAGS=-Wl,-z,nodelete
++fi
++
++AC_SUBST(GOBJECT_LINK_FLAGS)
++
++dnl
+ dnl Check for -fvisibility=hidden to determine if we can do GNU-style
+ dnl visibility attributes for symbol export control
+ dnl
+diff --git a/gobject/Makefile.am b/gobject/Makefile.am
+index 1509616..181ad7d 100644
+--- a/gobject/Makefile.am
++++ b/gobject/Makefile.am
+@@ -45,6 +45,7 @@ endif
+ 
+ libgobjectincludedir = $(includedir)/glib-2.0/gobject
+ libgobject_2_0_la_LDFLAGS = $(GLIB_LINK_FLAGS) \
++  $(GOBJECT_LINK_FLAGS) \
+   $(gobject_win32_res_ldflag) \
+   -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
+   -export-dynamic $(no_undefined)
+-- 
+1.8.3.2
+

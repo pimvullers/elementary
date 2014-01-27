@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+  <herd>gnome</herd>
+  <use>
+	<flag name="systemtap">Build support for profiling and tracing using 
+		<pkg>dev-util/systemtap</pkg></flag>
+	<flag name="utils">Install gtester-report utility to generate test
+		report files for your software.</flag>
+  </use>
+</pkgmetadata>

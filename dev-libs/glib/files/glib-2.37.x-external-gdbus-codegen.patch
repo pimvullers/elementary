@@ -1,0 +1,111 @@
+From 81f037771e2992834961cb5db08aece53a02b8ae Mon Sep 17 00:00:00 2001
+From: Priit Laes <plaes@plaes.org>
+Date: Thu, 28 Feb 2013 08:28:01 +0200
+Subject: [PATCH 3/4] Split out gdbus codegen
+
+---
+ configure.ac                                       | 17 ++++++++---------
+ docs/reference/gio/Makefile.am                     |  3 +--
+ gio/Makefile.am                                    |  2 +-
+ gio/tests/Makefile.am                              |  6 ++----
+ gio/tests/gdbus-object-manager-example/Makefile.am |  6 ++----
+ 5 files changed, 14 insertions(+), 20 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 797cb92..907c534 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -378,14 +378,14 @@ AC_SUBST(PERL_PATH)
+ # option to specify python interpreter to use; this just sets $PYTHON, so that
+ # we will fallback to reading $PYTHON if --with-python is not given, and
+ # python.m4 will get the expected input
+-AC_ARG_WITH(python,
+-            AS_HELP_STRING([--with-python=PATH],
+-                           [Path to Python interpreter; searches $PATH if only a program name is given; if not given, searches for a few standard names such as "python3" or "python2"]),
+-            [PYTHON="$withval"], [])
+-if test x"$PYTHON" = xyes; then
+-  AC_MSG_ERROR([--with-python option requires a path or program argument])
+-fi
+-AM_PATH_PYTHON(2.5,,PYTHON="/usr/bin/env python2.5")
++# AC_ARG_WITH(python,
++#             AS_HELP_STRING([--with-python=PATH],
++#                            [Path to Python interpreter; searches $PATH if only a program name is given; if not given, searches for a few standard names such as "python3" or "python2"]),
++#             [PYTHON="$withval"], [])
++# if test x"$PYTHON" = xyes; then
++#   AC_MSG_ERROR([--with-python option requires a path or program argument])
++# fi
++# AM_PATH_PYTHON(2.5,,PYTHON="/usr/bin/env python2.5")
+ 
+ 
+ dnl ***********************
+@@ -3784,7 +3784,6 @@ gobject/glib-mkenums
+ gobject/tests/Makefile
+ gthread/Makefile
+ gio/Makefile
+-gio/gdbus-2.0/codegen/Makefile
+ gio/gdbus-2.0/codegen/config.py
+ gio/gnetworking.h
+ gio/xdgmime/Makefile
+diff --git a/docs/reference/gio/Makefile.am b/docs/reference/gio/Makefile.am
+index 112626b..8ddcdbc 100644
+--- a/docs/reference/gio/Makefile.am
++++ b/docs/reference/gio/Makefile.am
+@@ -151,8 +151,7 @@ man_MANS +=			\
+ 	glib-compile-resources.1	\
+ 	gsettings.1		\
+ 	gresource.1		\
+-	gdbus.1			\
+-	gdbus-codegen.1
++	gdbus.1
+ 
+ XSLTPROC_FLAGS = \
+         --nonet \
+diff --git a/gio/Makefile.am b/gio/Makefile.am
+index 717419f..808b5dd 100644
+--- a/gio/Makefile.am
++++ b/gio/Makefile.am
+@@ -1,6 +1,6 @@
+ include $(top_srcdir)/glib.mk
+ 
+-SUBDIRS = gdbus-2.0/codegen
++SUBDIRS =
+ 
+ if OS_UNIX
+ SUBDIRS += xdgmime
+diff --git a/gio/tests/Makefile.am b/gio/tests/Makefile.am
+index 7224124..5c8baaa 100644
+--- a/gio/tests/Makefile.am
++++ b/gio/tests/Makefile.am
+@@ -359,10 +359,8 @@ gmenumodel_SOURCES                       = $(gdbus_sessionbus_sources) gmenumode
+ nodist_gdbus_test_codegen_SOURCES        = gdbus-test-codegen-generated.c gdbus-test-codegen-generated.h
+ 
+ gdbus-test-codegen.o: gdbus-test-codegen-generated.h
+-gdbus-test-codegen-generated.h gdbus-test-codegen-generated.c: test-codegen.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
+-	$(AM_V_GEN) UNINSTALLED_GLIB_SRCDIR=$(top_srcdir) \
+-		UNINSTALLED_GLIB_BUILDDIR=$(top_builddir) \
+-		$(PYTHON) $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen \
++gdbus-test-codegen-generated.h gdbus-test-codegen-generated.c: test-codegen.xml Makefile
++	$(AM_V_GEN) gdbus-codegen \
+ 		--interface-prefix org.project. \
+ 		--generate-c-code gdbus-test-codegen-generated \
+ 		--c-generate-object-manager \
+diff --git a/gio/tests/gdbus-object-manager-example/Makefile.am b/gio/tests/gdbus-object-manager-example/Makefile.am
+index d6d1412..62ef706 100644
+--- a/gio/tests/gdbus-object-manager-example/Makefile.am
++++ b/gio/tests/gdbus-object-manager-example/Makefile.am
+@@ -11,10 +11,8 @@ GDBUS_GENERATED = \
+ 	gdbus-example-objectmanager-generated-org.gtk.GDBus.Example.ObjectManager.Cat.xml	\
+ 	$(NULL)
+ 
+-$(GDBUS_GENERATED) : gdbus-example-objectmanager.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
+-	$(AM_V_GEN) UNINSTALLED_GLIB_SRCDIR=$(top_srcdir) \
+-		UNINSTALLED_GLIB_BUILDDIR=$(top_builddir) \
+-		$(PYTHON) $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen \
++$(GDBUS_GENERATED) : gdbus-example-objectmanager.xml Makefile
++	$(AM_V_GEN) gdbus-codegen \
+ 		--interface-prefix org.gtk.GDBus.Example.ObjectManager. \
+ 		--c-namespace Example \
+ 		--c-generate-object-manager \
+-- 
+1.8.3.2
+
