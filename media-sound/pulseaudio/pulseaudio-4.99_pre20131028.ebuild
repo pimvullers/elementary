@@ -97,11 +97,9 @@ REQUIRED_USE="bluetooth? ( dbus )"
 pkg_setup() {
 	enewgroup audio 18 # Just make sure it exists
 
-	if use system-wide; then
-		enewgroup pulse-access
-		enewgroup pulse
-		enewuser pulse -1 -1 /var/run/pulse pulse,audio
-	fi
+	enewgroup pulse-access
+	enewgroup pulse
+	enewuser pulse -1 -1 /var/run/pulse pulse,audio
 }
 
 EGIT_BOOTSTRAP="NOCONFIGURE=1 ./bootstrap.sh"
