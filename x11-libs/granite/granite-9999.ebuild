@@ -20,7 +20,7 @@ IUSE="demo nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
-	dev-libs/libgee:0[introspection]
+	dev-libs/libgee:0.8[introspection]
 	>=x11-libs/gtk+-3.4:3[introspection]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -37,6 +37,8 @@ src_prepare() {
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 
 	cmake-utils_src_prepare
 	vala_src_prepare
