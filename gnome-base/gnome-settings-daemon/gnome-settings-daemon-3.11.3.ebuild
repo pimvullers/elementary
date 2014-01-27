@@ -25,7 +25,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebs
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2
 	>=x11-libs/gtk+-3.7.8:3
-	>=gnome-base/gnome-desktop-3.9:3=
+	>=gnome-base/gnome-desktop-3.11:3=
 	>=gnome-base/gsettings-desktop-schemas-3.9.91.1
 	>=gnome-base/librsvg-2.36.2
 	media-fonts/cantarell
@@ -99,21 +99,21 @@ src_prepare() {
 		local PATCHDIR="${WORKDIR}/debian/patches"
 
 		epatch "${FILESDIR}/${P}-16_use_synchronous_notifications.patch"
-		epatch "${FILESDIR}/${P}-43_disable_locale_settings.patch"
-		epatch "${FILESDIR}/${P}-45_suppress-printer-may-not-be-connected-notification.patch"
-		epatch "${FILESDIR}/${P}-revert_background_dropping.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-43_disable_locale_settings.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-45_suppress-printer-may-not-be-connected-notification.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-revert_background_dropping.patch"
 		epatch "${PATCHDIR}/52_sync_background_to_accountsservice.patch"
-		epatch "${FILESDIR}/${P}-53_sync_input_sources_to_accountsservice.patch"
-		epatch "${FILESDIR}/${P}-64_restore_terminal_keyboard_shortcut_schema.patch"
-		epatch "${FILESDIR}/${P}-nexus-orientation.patch"
-		epatch "${FILESDIR}/${P}-fix_broken_user_sounds_permissions.patch"
-		epatch "${FILESDIR}/${P}-git_revert_remove-unused-keygrab-code.patch"
-		epatch "${FILESDIR}/${P}-git_revert_gsd-keygrab.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-53_sync_input_sources_to_accountsservice.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-64_restore_terminal_keyboard_shortcut_schema.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-nexus-orientation.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-fix_broken_user_sounds_permissions.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove-unused-keygrab-code.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_gsd-keygrab.patch"
 		epatch "${FILESDIR}/${P}-fix_media_keys_on_unity.patch"
 		epatch "${PATCHDIR}/fix_input_switching_on_unity.patch"
 		epatch "${PATCHDIR}/fix_screenshots_on_unity.patch"
-		epatch "${FILESDIR}/${P}-git_revert_remove_automount_helper.patch"
-		epatch "${FILESDIR}/${P}-ubuntu-lid-close-suspend.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove_automount_helper.patch"
+		epatch "${FILESDIR}/${PN}-3.10.2-ubuntu-lid-close-suspend.patch"
 		epatch "${PATCHDIR}/unity-modifier-media-keys.patch"
 	fi
 

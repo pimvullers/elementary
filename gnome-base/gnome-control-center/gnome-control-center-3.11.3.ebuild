@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.10.2.ebuild,v 1.1 2013/12/24 17:55:10 pacho Exp $
 
@@ -29,7 +29,7 @@ QA_CONFIGURE_OPTIONS=".*"
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.2:2
 	>=x11-libs/gdk-pixbuf-2.23.0:2
-	>=x11-libs/gtk+-3.9.12:3
+	>=x11-libs/gtk+-3.11.1:3
 	>=gnome-base/gsettings-desktop-schemas-3.9.91
 	>=gnome-base/gnome-desktop-3.9.90:3=
 	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
@@ -59,7 +59,7 @@ COMMON_DEPEND="
 	x11-libs/libXxf86misc
 	>=x11-libs/libXi-1.2
 
-	bluetooth? ( >=net-wireless/gnome-bluetooth-3.9.3:= )
+	bluetooth? ( >=net-wireless/gnome-bluetooth-3.11.3:= )
 	colord? (
 		net-libs/libsoup:2.4
 		>=x11-misc/colord-0.1.34 )
@@ -128,7 +128,7 @@ src_prepare() {
 
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}"/${PN}-3.10.2-optional.patch
+	epatch "${FILESDIR}"/${PN}-3.11.3-optional.patch
 
 	# Fix some absolute paths to be appropriate for Gentoo
 	epatch "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch

@@ -72,12 +72,6 @@ DEPEND="${COMMON_DEPEND}
 # gnome-base/gdm does not provide gnome.desktop anymore
 
 src_prepare() {
-	# Allow people to configure startup apps, bug #464968, upstream bug #663767
-	sed -i -e '/NoDisplay/d' data/gnome-session-properties.desktop.in.in || die
-
-	# Blacklist nv25 (from 'master')
-	epatch "${FILESDIR}"/${PN}-3.8.4-blacklist-nv25.patch
-
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
@@ -86,7 +80,7 @@ src_prepare() {
 		done
 
 		epatch "${FILESDIR}/${PN}-3.8.4-52_xdg_current_desktop.patch"
-		epatch "${FILESDIR}/${P}-95_dbus_request_shutdown.patch"
+		epatch "${FILESDIR}/${PN}-3.10.1-95_dbus_request_shutdown.patch"
 	fi
 
 	gnome2_src_prepare

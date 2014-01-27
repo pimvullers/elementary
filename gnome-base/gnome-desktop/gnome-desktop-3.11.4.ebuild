@@ -1,6 +1,6 @@
 # Copyright 1999-2013 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.10.2.ebuild,v 1.1 2013/12/24 16:29:43 pacho Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-desktop3_3.8.4-0ubuntu2.debian.tar.gz"
+	https://launchpad.net/~ricotz/+archive/testing/+files/gnome-desktop3_3.11.2-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
 SLOT="3/8" # subslot = libgnome-desktop-3 soname version
@@ -29,7 +29,7 @@ COMMON_DEPEND="
 	x11-libs/libxkbfile
 	x11-libs/libX11
 	x11-misc/xkeyboard-config
-	>=gnome-base/gsettings-desktop-schemas-3.5.91
+	>=gnome-base/gsettings-desktop-schemas-3.11.0
 	introspection? ( >=dev-libs/gobject-introspection-0.9.7 )
 "
 RDEPEND="${COMMON_DEPEND}

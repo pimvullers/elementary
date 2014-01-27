@@ -1,0 +1,45 @@
+diff -ur librsvg-2.40.0.old/configure.in librsvg-2.40.0/configure.in
+--- librsvg-2.40.0.old/configure.in	2013-10-14 23:32:04.000000000 +0400
++++ librsvg-2.40.0/configure.in	2013-10-15 11:59:21.653257302 +0400
+@@ -131,6 +131,22 @@
+ 
+ AM_CONDITIONAL([HAVE_GTK_3],[test "$have_gtk_3" = "yes"])
+ 
++# ===========================================================================
++# rsvg-view-3 application
++# ===========================================================================
++
++if test "have_gtk_3"; then
++  AC_MSG_CHECKING([whether to build the rsvg-view-3 application])
++  AC_ARG_ENABLE([rsvg-view],
++    [AS_HELP_STRING([--disable-rsvg-view],[Disable the rsvg-view-3 application (default=yes)])],
++    [],[enable_rsvg_view=yes])
++  AC_MSG_RESULT([$enable_rsvg_view])
++else
++  enable_rsvg_view=no
++fi
++
++AM_CONDITIONAL([ENABLE_RSVG_VIEW],[test "$enable_rsvg_view" = "yes"])
++
+ dnl ===========================================================================
+ dnl GDK-Pixbuf SVG loader
+ dnl ===========================================================================
+@@ -306,5 +322,6 @@
+ 	Build Vala bindings:            ${enable_vala}
+ 	Build GdkPixbuf loader:         ${enable_pixbuf_loader}
+         GTK 3.0:                        ${have_gtk_3}
++    Build rsvg-view-3 application:  ${enable_rsvg_view}
+ 	Build miscellaenous tools:      ${build_misc_tools}
+ "
+diff -ur librsvg-2.40.0.old/Makefile.am librsvg-2.40.0/Makefile.am
+--- librsvg-2.40.0.old/Makefile.am	2013-10-11 22:31:03.000000000 +0400
++++ librsvg-2.40.0/Makefile.am	2013-10-15 11:55:49.639260234 +0400
+@@ -8,7 +8,7 @@
+ lib_LTLIBRARIES = librsvg-@RSVG_API_MAJOR_VERSION@.la
+ 
+ bin_PROGRAMS = rsvg-convert
+-if HAVE_GTK_3
++if ENABLE_RSVG_VIEW
+ bin_PROGRAMS += rsvg-view-3
+ endif
+ 
