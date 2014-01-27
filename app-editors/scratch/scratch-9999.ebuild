@@ -20,7 +20,7 @@ IUSE="nls contractor files pastebin spell terminal webkit"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libpeas
 	gnome-base/gconf:2
 	>=x11-libs/gtk+-3.4:3
