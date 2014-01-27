@@ -24,7 +24,6 @@ RDEPEND="${CDEPEND}
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
 	>=pantheon-base/slingshot-0.7
 	>=pantheon-base/wingpanel-0.2
-	pantheon-base/pantheon-wallpaper
 	pantheon-base/pantheon-settings
 	>=x11-themes/elementary-theme-3.4
 	x11-wm/gala
