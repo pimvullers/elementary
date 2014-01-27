@@ -22,7 +22,7 @@ RDEPEND="
 	dev-libs/dbus-glib
 	dev-libs/glib:2
 	x11-libs/granite
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
 	x11-libs/pango
@@ -38,6 +38,10 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+
+	epatch_user
+
 	# Disable generation of the translations (if needed)
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 

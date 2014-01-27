@@ -18,7 +18,7 @@ IUSE="debug nls static-libs"
 
 CDEPEND="
 	x11-libs/libX11
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libunique:1
 	x11-libs/libwnck:1
 	>=x11-libs/bamf-0.2.58
@@ -67,7 +67,7 @@ src_configure() {
 	local myeconfargs=(
 		$(use_enable debug)
 		$(use_enable nls)
-		--disable-gee-0.8
+		--enable-gee-0.8
 	)
 
 	autotools-utils_src_configure

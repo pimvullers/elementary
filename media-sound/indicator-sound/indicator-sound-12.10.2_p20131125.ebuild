@@ -19,7 +19,7 @@ IUSE="nls static-libs"
 
 RDEPEND="
 	>=dev-libs/glib-2.38:2
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	dev-libs/libxml2
 	media-sound/pulseaudio[glib]
 	x11-libs/libnotify"

@@ -18,7 +18,7 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	media-libs/clutter
 	media-libs/clutter-gtk
 	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
@@ -32,6 +32,10 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+
+	epatch_user
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }

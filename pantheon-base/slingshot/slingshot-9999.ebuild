@@ -19,7 +19,7 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libunity
 	dev-libs/libzeitgeist
 	gnome-base/gnome-menus:0
@@ -32,6 +32,9 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare

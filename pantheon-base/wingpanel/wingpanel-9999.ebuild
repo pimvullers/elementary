@@ -20,7 +20,7 @@ IUSE="bluetooth nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3
 	x11-libs/granite
@@ -41,6 +41,8 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-indicator-files.patch"
+	epatch_user
+
 	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
 
 	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt

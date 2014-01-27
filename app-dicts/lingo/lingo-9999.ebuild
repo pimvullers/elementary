@@ -21,7 +21,7 @@ RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	dev-libs/json-glib
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite"
@@ -35,6 +35,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare

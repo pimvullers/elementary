@@ -22,13 +22,15 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
 	dev-libs/libdbusmenu:3
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
+	sed -i -e 's/gee-1.0/gee-0.8/' configure* unity*.in
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }

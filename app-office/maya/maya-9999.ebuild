@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="http://launchpad.net/maya"
-EBZR_REPO_URI="lp:~elementary-apps/maya/maya-saucy" # lp:maya
+EBZR_REPO_URI="lp:maya"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -19,7 +19,7 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
 	>=gnome-extra/evolution-data-server-3.8
@@ -36,6 +36,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare

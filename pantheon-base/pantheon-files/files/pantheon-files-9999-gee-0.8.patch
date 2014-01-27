@@ -1,0 +1,207 @@
+=== modified file 'libcore/CMakeLists.txt'
+--- libcore/CMakeLists.txt	2013-12-11 21:30:46 +0000
++++ libcore/CMakeLists.txt	2014-01-27 20:13:52 +0000
+@@ -23,7 +23,7 @@
+     granite
+     gtk+-3.0
+     gio-2.0
+-    gee-1.0
++    gee-0.8
+     gmodule-2.0
+     marlincore-C
+ OPTIONS
+@@ -115,7 +115,7 @@
+ 	pango>=1.1.2
+ 	gtk+-3.0>=3.4.0
+ 	gail-3.0
+-    gee-1.0
++    gee-0.8
+ 	sqlite3
+ 	libnotify>=0.7.2)
+ # Link all
+
+=== modified file 'libwidgets/CMakeLists.txt'
+--- libwidgets/CMakeLists.txt	2013-06-01 18:27:00 +0000
++++ libwidgets/CMakeLists.txt	2014-01-27 20:13:52 +0000
+@@ -13,7 +13,7 @@
+ # Check for the deps
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-1.0)
++pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8)
+ 
+ pkg_check_modules (GRANITE REQUIRED "granite")
+ add_definitions (${GRANITE_CFLAGS})
+@@ -41,7 +41,7 @@
+ PACKAGES
+     gtk+-3.0
+     granite
+-    gee-1.0
++    gee-0.8
+     posix
+ OPTIONS
+     --thread
+
+=== modified file 'libwidgets/tests/CMakeLists.txt'
+--- libwidgets/tests/CMakeLists.txt	2013-12-11 21:30:46 +0000
++++ libwidgets/tests/CMakeLists.txt	2014-01-27 20:14:15 +0000
+@@ -5,7 +5,7 @@
+     tests-pathbar.vala
+ PACKAGES
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     posix
+     marlinwidgets
+ OPTIONS
+@@ -15,7 +15,7 @@
+ )
+ 
+ find_package(PkgConfig)
+-pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-1.0)
++pkg_check_modules(DEPS REQUIRED gtk+-3.0 gee-0.8)
+ 
+ add_definitions(${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER})
+ 
+
+=== modified file 'marlin-daemon/CMakeLists.txt'
+--- marlin-daemon/CMakeLists.txt	2013-05-19 09:53:35 +0000
++++ marlin-daemon/CMakeLists.txt	2014-01-27 20:13:52 +0000
+@@ -13,7 +13,7 @@
+ 	pango>=1.1.2
+ 	gtk+-3.0>=3.0.3
+ 	gail-3.0
+-	gee-1.0
++	gee-0.8
+ 	sqlite3
+     dbus-glib-1
+ 	libnotify>=0.7.2)
+@@ -31,7 +31,7 @@
+ PACKAGES
+     gtk+-3.0
+     gio-2.0
+-    gee-1.0
++    gee-0.8
+     sqlite3
+ OPTIONS
+     --thread)
+
+=== modified file 'plugins/contractor/CMakeLists.txt'
+--- plugins/contractor/CMakeLists.txt	2013-12-05 12:27:37 +0000
++++ plugins/contractor/CMakeLists.txt	2014-01-27 20:14:15 +0000
+@@ -1,7 +1,7 @@
+ find_package(PkgConfig)
+ pkg_check_modules(DEPS REQUIRED
+ 	gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     glib-2.0
+     granite)
+ set(CFLAGS
+@@ -15,7 +15,7 @@
+     plugin.vala
+ PACKAGES
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     granite
+     marlincore-C
+     marlincore
+
+=== modified file 'plugins/marlin-ctags/CMakeLists.txt'
+--- plugins/marlin-ctags/CMakeLists.txt	2013-12-05 12:27:37 +0000
++++ plugins/marlin-ctags/CMakeLists.txt	2014-01-27 20:14:15 +0000
+@@ -4,7 +4,7 @@
+ pkg_check_modules(DEPS REQUIRED
+ 	gtk+-3.0
+     gio-2.0
+-    gee-1.0
++    gee-0.8
+ )
+ set(CFLAGS
+ 	${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER}
+@@ -16,7 +16,7 @@
+     plugin.vala
+ PACKAGES
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     posix
+     marlincore-C
+     marlincore
+
+=== modified file 'plugins/marlin-trash/CMakeLists.txt'
+--- plugins/marlin-trash/CMakeLists.txt	2013-12-05 12:27:37 +0000
++++ plugins/marlin-trash/CMakeLists.txt	2014-01-27 20:14:15 +0000
+@@ -3,7 +3,7 @@
+ find_package(PkgConfig)
+ pkg_check_modules(DEPS REQUIRED
+ 	gtk+-3.0
+-    gee-1.0
++    gee-0.8
+ )
+ set(CFLAGS
+ 	${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER}
+@@ -15,7 +15,7 @@
+     plugin.vala
+ PACKAGES
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     marlincore-C
+     marlincore
+ OPTIONS
+
+=== modified file 'plugins/network-places/CMakeLists.txt'
+--- plugins/network-places/CMakeLists.txt	2013-12-05 12:27:37 +0000
++++ plugins/network-places/CMakeLists.txt	2014-01-27 20:14:15 +0000
+@@ -5,7 +5,7 @@
+ find_package(PkgConfig)
+ pkg_check_modules(DEPS REQUIRED
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+ )
+ 
+ set(CFLAGS ${DEPS_CFLAGS} ${DEPS_CFLAGS_OTHER})
+@@ -18,7 +18,7 @@
+     plugin.vala
+ PACKAGES
+     gtk+-3.0
+-    gee-1.0
++    gee-0.8
+     marlincore-C
+     marlincore
+ OPTIONS
+
+=== modified file 'src/CMakeLists.txt'
+--- src/CMakeLists.txt	2013-12-23 20:47:22 +0000
++++ src/CMakeLists.txt	2014-01-27 20:13:52 +0000
+@@ -21,7 +21,7 @@
+     pango>=1.1.2
+     gtk+-3.0>=3.0.3
+     gail-3.0
+-    gee-1.0
++    gee-0.8
+     sqlite3
+     dbus-glib-1
+     libnotify>=0.7.2)
+@@ -70,7 +70,7 @@
+         gtk+-3.0
+         gio-2.0
+         posix
+-        gee-1.0
++        gee-0.8
+         granite
+         libnotify
+         unity
+@@ -117,7 +117,7 @@
+         gtk+-3.0
+         gio-2.0
+         posix
+-        gee-1.0
++        gee-0.8
+         granite
+         libnotify
+         marlincore
+

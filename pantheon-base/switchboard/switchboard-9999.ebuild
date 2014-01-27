@@ -22,7 +22,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	>=x11-libs/granite-0.2.0
 	dev-libs/libunity
-	dev-libs/libgee"
+	dev-libs/libgee:0.8"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
@@ -32,6 +32,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 

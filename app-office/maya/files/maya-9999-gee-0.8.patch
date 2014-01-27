@@ -1,0 +1,295 @@
+=== modified file 'CMakeLists.txt'
+--- CMakeLists.txt	2013-12-23 18:19:22 +0000
++++ CMakeLists.txt	2014-01-24 18:20:22 +0000
+@@ -77,7 +77,7 @@
+ 
+ set (DEPS_PACKAGES
+     gconf-2.0
+-    gee-1.0
++    gee-0.8
+     gio-2.0
+     granite
+     gtk+-3.0
+@@ -93,7 +93,7 @@
+     gthread-2.0
+     glib-2.0
+     gio-2.0
+-    gee-1.0
++    gee-0.8
+     gtk+-3.0>=3.10
+     granite
+     libecal-1.2>=3.8.0
+
+=== modified file 'src/Model/CalendarModel.vala'
+--- src/Model/CalendarModel.vala	2013-12-17 22:19:40 +0000
++++ src/Model/CalendarModel.vala	2014-01-24 18:20:22 +0000
+@@ -60,18 +60,18 @@
+         compute_ranges ();
+ 
+         source_client = new Gee.HashMap<E.Source, E.CalClient> (
+-            (HashFunc) Util.source_hash_func,
+-            (EqualFunc) Util.source_equal_func,
++            (Gee.HashDataFunc<E.Source>?) Util.source_hash_func,
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.source_equal_func,
+             null);
+ 
+         source_events = new Gee.HashMap<E.Source, Gee.Map<string, E.CalComponent>> (
+-            (HashFunc) Util.source_hash_func,
+-            (EqualFunc) Util.source_equal_func,
++            (Gee.HashDataFunc<E.Source>?) Util.source_hash_func,
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.source_equal_func,
+             null);
+ 
+         source_view = new Gee.HashMap<E.Source, E.CalClientView> (
+-            (HashFunc) Util.source_hash_func,
+-            (EqualFunc) Util.source_equal_func,
++            (Gee.HashDataFunc<E.Source>?) Util.source_hash_func,
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.source_equal_func,
+             null);
+ 
+         calendar_trash = new Gee.LinkedList<E.Source> ();
+@@ -275,9 +275,9 @@
+         // create empty source-event map
+ 
+         Gee.Map<string, E.CalComponent> events = new Gee.HashMap<string, E.CalComponent> (
+-            (HashFunc) Util.string_hash_func,
+-            (EqualFunc) Util.string_equal_func,
+-            (EqualFunc) Util.calcomponent_equal_func);
++            (Gee.HashDataFunc<string>?) Util.string_hash_func,
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.string_equal_func,
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.calcomponent_equal_func);
+ 
+         source_events.set (source, events);
+ 
+@@ -459,7 +459,7 @@
+         Gee.Map<string, E.CalComponent> events = source_events.get (source);
+ 
+         Gee.ArrayList<E.CalComponent> added_events = new Gee.ArrayList<E.CalComponent> (
+-            (EqualFunc) Util.calcomponent_equal_func);
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.calcomponent_equal_func);
+ 
+         foreach (var comp in objects) {
+ 
+@@ -483,7 +483,7 @@
+         debug (@"Received $(objects.length()) modified event(s) for source '%s'", source.dup_display_name ());
+ 
+         Gee.Collection<E.CalComponent> updated_events = new Gee.ArrayList<E.CalComponent> (
+-            (EqualFunc) Util.calcomponent_equal_func);
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.calcomponent_equal_func);
+ 
+         foreach (var comp in objects) {
+ 
+@@ -504,7 +504,7 @@
+ 
+         var events = source_events.get (source);
+         Gee.Collection<E.CalComponent> removed_events = new Gee.ArrayList<E.CalComponent> (
+-            (EqualFunc) Util.calcomponent_equal_func);
++            (Gee.EqualDataFunc<E.CalComponent>?) Util.calcomponent_equal_func);
+ 
+         foreach (unowned E.CalComponentId? cid in cids) {
+ 
+@@ -537,4 +537,4 @@
+     }
+ }
+ 
+-}
++}
+\ No newline at end of file
+
+=== modified file 'src/Utils.vala'
+--- src/Utils.vala	2013-12-09 13:45:59 +0000
++++ src/Utils.vala	2014-01-24 18:20:22 +0000
+@@ -132,8 +132,8 @@
+         requires (dr1.days == dr2.days) {
+ 
+         var map = new Gee.TreeMap<DateTime, DateTime>(
+-            (CompareFunc) DateTime.compare,
+-            (EqualFunc) datetime_equal_func);
++            (GLib.CompareDataFunc<E.CalComponent>?) DateTime.compare,
++            (Gee.EqualDataFunc<GLib.DateTime>?) datetime_equal_func);
+ 
+         var i1 = dr1.iterator();
+         var i2 = dr2.iterator();
+@@ -146,15 +146,29 @@
+     }
+ 
+     /* Iterator of DateRange objects */
+-    public class DateIterator : Object, Gee.Iterator<DateTime> {
++    public class DateIterator : Object, Gee.Traversable<DateTime>, Gee.Iterator<DateTime> {
+ 
+         DateTime current;
+         DateRange range;
++        
++        public bool valid { get {return true;} }
++        public bool read_only { get {return false;} }
+ 
+         public DateIterator (DateRange range) {
+             this.range = range;
+             this.current = range.first.add_days (-1);
+         }
++        
++        public bool @foreach (Gee.ForallFunc<DateTime> f) {
++            var element = range.first;
++            while (element.compare(range.last) < 0) {
++                if (f (element) == false) {
++                    return false;
++                }
++                element = element.add_days (1);
++            }
++            return true;
++        }
+ 
+         public bool next () {
+             if (! has_next ())
+@@ -182,10 +196,20 @@
+     }
+ 
+     /* Represents date range from 'first' to 'last' inclusive */
+-    public class DateRange : Object, Gee.Iterable<DateTime> {
++    public class DateRange : Object, Gee.Traversable<DateTime>, Gee.Iterable<DateTime> {
+ 
+         public DateTime first { get; private set; }
+         public DateTime last { get; private set; }
++        
++        public bool @foreach (Gee.ForallFunc<DateTime> f) {
++
++            foreach (var date in this) {
++                if (f (date) == false) {
++                    return false;
++                }
++            }
++            return true;
++        }
+ 
+         public int64 days {
+             get { return last.difference (first) / GLib.TimeSpan.DAY; }
+@@ -219,7 +243,7 @@
+ 
+         public Gee.SortedSet<DateTime> to_set() {
+ 
+-            var @set = new Gee.TreeSet<DateTime> ((CompareFunc) DateTime.compare);
++            var @set = new Gee.TreeSet<DateTime> ((GLib.CompareDataFunc<GLib.DateTime>?) DateTime.compare);
+ 
+             foreach (var date in this)
+                 set.add (date);
+@@ -229,7 +253,7 @@
+ 
+         public Gee.List<DateTime> to_list() {
+ 
+-            var list = new Gee.ArrayList<DateTime> ((EqualFunc) datetime_equal_func);
++            var list = new Gee.ArrayList<DateTime> ((Gee.EqualDataFunc<GLib.DateTime>?) datetime_equal_func);
+ 
+             foreach (var date in this)
+                 list.add (date);
+@@ -448,4 +472,4 @@
+         return "#%02X%02X%02X".printf ((uint)(color.red*255), (uint)(color.green*255), (uint)(color.blue*255));
+     }
+ 
+-}
++}
+\ No newline at end of file
+
+=== modified file 'src/View/Grid/EventButton/EventButton.vala'
+--- src/View/Grid/EventButton/EventButton.vala	2013-08-31 15:14:02 +0000
++++ src/View/Grid/EventButton/EventButton.vala	2014-01-24 18:20:22 +0000
+@@ -54,7 +54,7 @@
+     /**
+      * Compares the given buttons according to date.
+      */
+-    public static CompareFunc<EventButton> compare_buttons = (button1, button2) => {
++    public static GLib.CompareDataFunc<Maya.View.EventButton>? compare_buttons = (button1, button2) => {
+         var comp1 = button1.comp;
+         var comp2 = button2.comp;
+ 
+@@ -63,4 +63,4 @@
+ 
+ }
+ 
+-}
++}
+\ No newline at end of file
+
+=== modified file 'src/View/Grid/Grid.vala'
+--- src/View/Grid/Grid.vala	2013-08-29 17:04:35 +0000
++++ src/View/Grid/Grid.vala	2014-01-24 18:20:22 +0000
+@@ -46,8 +46,8 @@
+         row_spacing = 0;
+ 
+         data = new Gee.HashMap<DateTime, GridDay> (
+-            (HashFunc) DateTime.hash,
+-            (EqualFunc) Util.datetime_equal_func,
++            (Gee.HashDataFunc<GLib.DateTime>?) DateTime.hash,
++            (Gee.EqualDataFunc<GLib.DateTime>?) Util.datetime_equal_func,
+             null);
+     }
+ 
+@@ -82,8 +82,8 @@
+         var new_dates = new_range.to_list();
+ 
+         var data_new = new Gee.HashMap<DateTime, GridDay> (
+-            (HashFunc) DateTime.hash,
+-            (EqualFunc) Util.datetime_equal_func,
++            (Gee.HashDataFunc<GLib.DateTime>?) DateTime.hash,
++            (Gee.EqualDataFunc<GLib.DateTime>?) Util.datetime_equal_func,
+             null);
+ 
+         // Assert that a valid number of weeks should be displayed
+@@ -228,4 +228,4 @@
+     }
+ }
+ 
+-}
++}
+\ No newline at end of file
+
+=== modified file 'src/View/Sidebar/AgendaView.vala'
+--- src/View/Sidebar/AgendaView.vala	2013-08-31 15:14:02 +0000
++++ src/View/Sidebar/AgendaView.vala	2014-01-24 18:20:22 +0000
+@@ -53,8 +53,8 @@
+             row_spacing = 0;
+ 
+             source_widgets = new Gee.HashMap<E.Source, SourceWidget> (
+-                (HashFunc) Util.source_hash_func,
+-                (EqualFunc) Util.source_equal_func,
++                (Gee.HashDataFunc<E.Source>?) Util.source_hash_func,
++                (Gee.EqualDataFunc<E.Source>?) Util.source_equal_func,
+                 null);
+ 
+             try {
+@@ -246,4 +246,3 @@
+ 	}
+ 
+ }
+-
+
+=== modified file 'src/View/Sidebar/SourceWidget.vala'
+--- src/View/Sidebar/SourceWidget.vala	2013-08-26 22:10:40 +0000
++++ src/View/Sidebar/SourceWidget.vala	2014-01-24 18:20:22 +0000
+@@ -176,7 +176,7 @@
+         /**
+          * Compares the given buttons according to date.
+          */
+-        static CompareFunc<E.CalComponent> compare_comps = (comp1, comp2) => {
++        static GLib.CompareDataFunc<E.CalComponent>? compare_comps = (comp1, comp2) => {
+             return Util.compare_events (comp1, comp2);
+         };
+ 
+@@ -320,4 +320,4 @@
+ 
+     }
+ 
+-}
++}
+\ No newline at end of file
+
+=== modified file 'src/maya-calendar.pc.cmake'
+--- src/maya-calendar.pc.cmake	2013-08-30 00:14:47 +0000
++++ src/maya-calendar.pc.cmake	2014-01-24 18:20:22 +0000
+@@ -8,5 +8,4 @@
+ Version: 0.2  
+ Libs: -lmaya-calendar
+ Cflags: -I@DOLLAR@{includedir}/maya-calendar
+-Requires: glib-2.0 gio-2.0 gee-1.0 libpeas-1.0 gtk+-3.0 granite libecalendar-1.2 libedataserver-1.2 libical
+-
++Requires: glib-2.0 gio-2.0 gee-0.8 libpeas-1.0 gtk+-3.0 granite libecalendar-1.2 libedataserver-1.2 libical
+

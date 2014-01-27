@@ -19,13 +19,14 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee:0"
+	dev-libs/libgee:0.8"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
 	epatch "${FILESDIR}/fix-1063970.patch"
+	epatch_user
 
 	cmake-utils_src_prepare
 	vala_src_prepare

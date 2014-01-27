@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/json-glib
 	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	ayatana? ( >=dev-libs/libindicate-0.5.90 )
 	dev-libs/libpeas
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.10 )
@@ -48,6 +48,9 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	# Disable generation of the translations (if needed)
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
 
