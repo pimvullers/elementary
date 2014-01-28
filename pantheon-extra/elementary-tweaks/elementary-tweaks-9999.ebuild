@@ -19,6 +19,9 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-sort.patch"
+	epatch_user
+
 	vala_src_prepare
 	cmake-utils_src_prepare
 }

@@ -1,0 +1,13 @@
+=== modified file 'src/Settings/GnomeSettings.vala'
+--- src/Settings/GnomeSettings.vala	2013-08-05 22:27:27 +0000
++++ src/Settings/GnomeSettings.vala	2014-01-28 07:47:29 +0000
+@@ -73,7 +73,7 @@
+         } catch (Error e) { warning (e.message); }
+     }
+ 
+-    themes.sort(GLib.strcmp);
++    themes.sort((GLib.CompareDataFunc<string>)GLib.strcmp);
+ 
+     foreach (string theme in themes) 
+             return_box.append (theme, theme);
+
