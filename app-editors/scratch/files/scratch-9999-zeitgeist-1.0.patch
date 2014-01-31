@@ -1,0 +1,321 @@
+=== modified file 'CMakeLists.txt'
+--- CMakeLists.txt	2013-09-14 09:21:11 +0000
++++ CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -55,7 +55,7 @@
+   gio-2.0
+   gtk+-3.0
+   granite>=0.3.0
+-  zeitgeist-2.0)
++  zeitgeist-1.0)
+ 
+ find_package (PkgConfig)
+ pkg_check_modules (GTK+ REQUIRED
+
+=== modified file 'README'
+--- README	2013-08-18 08:13:55 +0000
++++ README	2013-11-30 08:48:08 +0000
+@@ -4,7 +4,7 @@
+  - libgtksourceview-3.0-dev
+  - libgranite
+  - libgconf-2.0-dev
+- - libzeitgeist-2.0
++ - libzeitgeist-1.0
+ 
+ Testing and installation
+ ------------------------
+
+=== modified file 'plugins/brackets-completion/CMakeLists.txt'
+--- plugins/brackets-completion/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/brackets-completion/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -10,7 +10,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/browser-preview/CMakeLists.txt'
+--- plugins/browser-preview/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/browser-preview/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -17,7 +17,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/contractor/CMakeLists.txt'
+--- plugins/contractor/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/contractor/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/filemanager/CMakeLists.txt'
+--- plugins/filemanager/CMakeLists.txt	2013-09-14 09:21:11 +0000
++++ plugins/filemanager/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/folder-manager/CMakeLists.txt'
+--- plugins/folder-manager/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/folder-manager/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/open-with/CMakeLists.txt'
+--- plugins/open-with/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/open-with/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -9,7 +9,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/outline/CMakeLists.txt'
+--- plugins/outline/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/outline/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ 	libvala-${VALA_SHORTVER}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/pastebin/CMakeLists.txt'
+--- plugins/pastebin/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/pastebin/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -13,7 +13,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/source-tree/CMakeLists.txt'
+--- plugins/source-tree/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/source-tree/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -9,7 +9,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/spell/CMakeLists.txt'
+--- plugins/spell/CMakeLists.txt	2013-09-14 09:21:11 +0000
++++ plugins/spell/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -29,7 +29,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/strip-trailing-save/CMakeLists.txt'
+--- plugins/strip-trailing-save/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/strip-trailing-save/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -10,7 +10,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/terminal/CMakeLists.txt'
+--- plugins/terminal/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/terminal/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -17,7 +17,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/vim-emulation/CMakeLists.txt'
+--- plugins/vim-emulation/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/vim-emulation/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/word-completion/CMakeLists.txt'
+--- plugins/word-completion/CMakeLists.txt	2013-08-18 08:13:55 +0000
++++ plugins/word-completion/CMakeLists.txt	2013-11-30 08:48:08 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     gee-1.0
+     libpeas-1.0
+-    zeitgeist-2.0
++    zeitgeist-1.0
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'src/MainWindow.vala'
+--- src/MainWindow.vala	2013-09-14 09:21:11 +0000
++++ src/MainWindow.vala	2013-11-30 08:48:08 +0000
+@@ -77,14 +77,14 @@
+             registry = new DataSourceRegistry ();
+ 
+             var ds_event = new Zeitgeist.Event ();
+-            ds_event.actor = "application://scratch-text-editor.desktop";
++            ds_event.set_actor ("application://scratch-text-editor.desktop");
+             ds_event.add_subject (new Zeitgeist.Subject ());
+-            GenericArray<Zeitgeist.Event> ds_events = new GenericArray<Zeitgeist.Event>();
+-            ds_events.add(ds_event);
++            PtrArray ptr_array = new PtrArray.with_free_func (Object.unref);
++            ptr_array.add (ds_event);
+             var ds = new DataSource.full ("scratch-logger",
+                                           _("Zeitgeist Datasource for Scratch"),
+                                           "A data source which logs Open, Close, Save and Move Events",
+-                                          ds_events); // FIXME: templates!
++                                          (owned)ptr_array); // FIXME: templates!
+             registry.register_data_source.begin (ds, null, (obj, res) => {
+                 try {
+                     registry.register_data_source.end (res);
+
+=== modified file 'src/Services/ZeitgeistLogger.vala'
+--- src/Services/ZeitgeistLogger.vala	2013-10-30 19:44:28 +0000
++++ src/Services/ZeitgeistLogger.vala	2013-11-30 08:48:08 +0000
+@@ -27,34 +27,32 @@
+         Zeitgeist.Log zg_log = new Zeitgeist.Log();
+ 
+         public string actor = "application://scratch-text-editor.desktop";
+-        public string event_manifestation = Zeitgeist.ZG.USER_ACTIVITY;
++        public string event_manifestation = ZG_USER_ACTIVITY;
+ 
+         public void open_insert (string? uri, string mimetype) {
+-
++            
+             if (uri == null)
+                 return;
+-
++            
+             var subject = get_subject(uri, mimetype);
+-            var event = new Zeitgeist.Event.full (Zeitgeist.ZG.ACCESS_EVENT,
++            var event = new Event.full (ZG_ACCESS_EVENT,
+                                 event_manifestation,
+                                 actor,
+-                                null);
+-            event.add_subject(subject);
++                                subject, null);
+ 
+             insert_events(event);
+         }
+ 
+         public void close_insert (string? uri, string mimetype) {
+-
+-            if (uri == null)
++            
++            if (uri == null) 
+                 return;
+-
++            
+             var subject = get_subject(uri, mimetype);
+-            var event = new Zeitgeist.Event.full (Zeitgeist.ZG.LEAVE_EVENT,
++            var event = new Event.full (ZG_LEAVE_EVENT,
+                                 event_manifestation,
+                                 actor,
+-                                null);
+-            event.add_subject(subject);
++                                subject, null);
+ 
+             insert_events(event);
+        }
+@@ -62,11 +60,10 @@
+         public void save_insert (string uri, string mimetype) {
+ 
+             var subject = get_subject(uri, mimetype);
+-            var event = new Zeitgeist.Event.full (Zeitgeist.ZG.MODIFY_EVENT,
++            var event = new Event.full (ZG_MODIFY_EVENT,
+                                 event_manifestation,
+                                 actor,
+-                                null);
+-            event.add_subject(subject);
++                                subject, null);
+ 
+             insert_events(event);
+         }
+@@ -74,22 +71,17 @@
+         public void move_insert (string old_uri, string new_uri, string mimetype) {
+ 
+             var subject = get_subject(old_uri, mimetype);
+-            subject.current_uri = new_uri;
+-            var event = new Zeitgeist.Event.full (Zeitgeist.ZG.MOVE_EVENT,
++            subject.set_current_uri(new_uri);
++            var event = new Event.full (ZG_MOVE_EVENT,
+                                 event_manifestation,
+                                 actor,
+-                                null);
+-            event.add_subject(subject);
++                                subject, null);
+ 
+             insert_events(event);
+         }
+ 
+         private void insert_events (Zeitgeist.Event ev) {
+-            GenericArray<Event> events = new GenericArray<Event>();
+-            events.add(ev);
+-            try {
+-                zg_log.insert_events_no_reply (events);
+-            } catch (Error e) { warning (e.message); }
++            zg_log.insert_events_no_reply (ev, null);
+         }
+ 
+         private Subject get_subject(string uri, string mimetype) {
+

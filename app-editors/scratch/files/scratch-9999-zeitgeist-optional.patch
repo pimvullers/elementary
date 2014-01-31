@@ -1,0 +1,361 @@
+=== modified file 'CMakeLists.txt'
+--- CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -44,6 +44,16 @@
+ add_definitions(-DVALA_VERSION="${VALA_SHORTVER}")
+ add_definitions(-w) # Disable gcc warnings
+ 
++option (USE_ZEITGEIST "Use Zeitgeist integration" ON)
++
++if (USE_ZEITGEIST)
++  message ("-- Zeitgeist integration enabled")
++  set (ZEITGEIST_DEPS zeitgeist-2.0)
++  set (ZEITGEIST_OPTIONS --define=HAVE_ZEITGEIST)
++else ()
++  message ("-- Zeitgeist integration disabled")
++endif ()
++
+ # Dependencies
+ set (SCRATCH_DEPS
+   libpeas-1.0
+@@ -55,7 +65,7 @@
+   gio-2.0
+   gtk+-3.0
+   granite>=0.3.0
+-  zeitgeist-2.0)
++  ${ZEITGEIST_DEPS})
+ 
+ find_package (PkgConfig)
+ pkg_check_modules (GTK+ REQUIRED
+
+=== modified file 'plugins/brackets-completion/CMakeLists.txt'
+--- plugins/brackets-completion/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/brackets-completion/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -10,7 +10,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/browser-preview/CMakeLists.txt'
+--- plugins/browser-preview/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/browser-preview/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -17,7 +17,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/contractor/CMakeLists.txt'
+--- plugins/contractor/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/contractor/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/filemanager/CMakeLists.txt'
+--- plugins/filemanager/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/filemanager/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/folder-manager/CMakeLists.txt'
+--- plugins/folder-manager/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/folder-manager/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/open-with/CMakeLists.txt'
+--- plugins/open-with/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/open-with/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -9,7 +9,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/outline/CMakeLists.txt'
+--- plugins/outline/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/outline/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ 	libvala-${VALA_SHORTVER}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/pastebin/CMakeLists.txt'
+--- plugins/pastebin/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/pastebin/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -13,7 +13,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/source-tree/CMakeLists.txt'
+--- plugins/source-tree/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/source-tree/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -9,7 +9,7 @@
+     scratchcore
+     libpeas-1.0
+     gtksourceview-3.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+
+=== modified file 'plugins/spell/CMakeLists.txt'
+--- plugins/spell/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/spell/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -29,7 +29,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/strip-trailing-save/CMakeLists.txt'
+--- plugins/strip-trailing-save/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/strip-trailing-save/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -10,7 +10,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/terminal/CMakeLists.txt'
+--- plugins/terminal/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/terminal/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -17,7 +17,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/vim-emulation/CMakeLists.txt'
+--- plugins/vim-emulation/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/vim-emulation/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -11,7 +11,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'plugins/word-completion/CMakeLists.txt'
+--- plugins/word-completion/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/word-completion/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -12,7 +12,7 @@
+     scratchcore
+     gee-0.8
+     libpeas-1.0
+-    zeitgeist-2.0
++    ${ZEITGEIST_DEPS}
+ OPTIONS
+     --thread
+     --vapidir=${CMAKE_BINARY_DIR}
+
+=== modified file 'src/CMakeLists.txt'
+--- src/CMakeLists.txt	2013-11-23 14:25:49 +0000
++++ src/CMakeLists.txt	2014-01-31 14:58:18 +0000
+@@ -23,6 +23,7 @@
+ OPTIONS
+     --vapidir=${CMAKE_SOURCE_DIR}/vapi
+     --thread
++    ${ZEITGEIST_OPTIONS}
+ GENERATE_VAPI
+     ${LIBNAME}
+ GENERATE_HEADER
+
+=== modified file 'src/MainWindow.vala'
+--- src/MainWindow.vala	2013-12-15 16:22:24 +0000
++++ src/MainWindow.vala	2014-01-31 14:58:18 +0000
+@@ -22,7 +22,9 @@
+ using Gdk;
+ using Pango;
+  
++#if HAVE_ZEITGEIST
+ using Zeitgeist;
++#endif
+ 
+ using Granite.Widgets;
+ using Granite.Services;
+@@ -52,9 +54,11 @@
+         private Granite.Widgets.ThinPaned hp1;
+         private Granite.Widgets.ThinPaned hp2;
+         private Granite.Widgets.ThinPaned vp;
+-        
++
++#if HAVE_ZEITGEIST
+         // Zeitgeist integration
+         private Zeitgeist.DataSourceRegistry registry;
++#endif
+         
+         // Delegates
+         delegate void HookFunc ();
+@@ -74,6 +78,7 @@
+             // Set up layout
+             init_layout ();
+ 
++#if HAVE_ZEITGEIST
+             // Set up the Data Source Registry for Zeitgeist
+             registry = new DataSourceRegistry ();
+ 
+@@ -93,6 +98,7 @@
+                     warning ("%s", reg_err.message);
+                 }
+             });
++#endif
+ 
+ 	    Unix.signal_add (Posix.SIGINT, quit_source_func, Priority.HIGH);
+ 	    Unix.signal_add (Posix.SIGTERM, quit_source_func, Priority.HIGH);
+@@ -707,4 +713,4 @@
+         };
+ 
+     }
+-}
+\ No newline at end of file
++}
+
+=== modified file 'src/Services/Document.vala'
+--- src/Services/Document.vala	2013-12-24 13:40:24 +0000
++++ src/Services/Document.vala	2014-01-31 14:58:18 +0000
+@@ -21,7 +21,9 @@
+ 
+ using Granite.Widgets;
+ using Scratch.Widgets;
++#if HAVE_ZEITGEIST
+ using Zeitgeist;
++#endif
+ 
+ namespace Scratch.Services {
+ 
+@@ -51,8 +53,10 @@
+         // It is used to load file content on focusing
+         private bool loaded = false;
+         
++#if HAVE_ZEITGEIST
+         // Zeitgeist integration
+         private ZeitgeistLogger zg_log = new ZeitgeistLogger();
++#endif
+ 
+         // It is used to not mark files as changed on load
+         private ulong onchange_handler_id = 0;
+@@ -160,8 +164,10 @@
+             // Stop loading
+             this.working = false;
+ 
++#if HAVE_ZEITGEIST
+             // Zeitgeist integration
+             zg_log.open_insert (file.get_uri (), get_mime_type ());
++#endif
+ 
+             // Grab focus
+             this.source_view.grab_focus ();
+@@ -220,8 +226,10 @@
+             if (file != null) {
+                 // Delete backup copy file
+                 delete_backup ();
++#if HAVE_ZEITGEIST
+                 // Zeitgeist integration
+                 zg_log.close_insert (file.get_uri (), get_mime_type ());
++#endif
+             }
+             
+             return ret_value;
+@@ -246,8 +254,10 @@
+                 warning ("Cannot save \"%s\": %s", get_basename (), e.message);
+             }
+ 
++#if HAVE_ZEITGEIST
+             // Zeitgeist integration
+             zg_log.save_insert (file.get_uri (), get_mime_type ());
++#endif
+ 
+             doc_saved ();
+             this.set_saved_status (true);
+@@ -290,8 +300,10 @@
+             this.file = new_dest;
+             this.save ();
+ 
++#if HAVE_ZEITGEIST
+             // Zeitgeist integration
+             zg_log.move_insert (file.get_uri (), new_dest.get_uri (), get_mime_type ());
++#endif
+ 
+             return true;
+         }
+
+=== modified file 'src/Services/ZeitgeistLogger.vala'
+--- src/Services/ZeitgeistLogger.vala	2013-10-30 19:44:28 +0000
++++ src/Services/ZeitgeistLogger.vala	2014-01-31 14:58:18 +0000
+@@ -18,6 +18,7 @@
+   END LICENSE
+ ***/
+ 
++#if HAVE_ZEITGEIST
+ using Zeitgeist;
+ 
+ namespace Scratch.Services {
+@@ -105,4 +106,5 @@
+     }
+ 
+ }
++#endif
+ 
+
