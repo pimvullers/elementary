@@ -15,13 +15,13 @@ EBZR_REPO_URI="lp:switchboard"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls"
+IUSE="nls unity"
 
 RDEPEND="
 	dev-libs/glib:2
 	x11-libs/gtk+:3
 	>=x11-libs/granite-0.2.0
-	dev-libs/libunity
+	unity? ( dev-libs/libunity )
 	dev-libs/libgee:0.8"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -32,6 +32,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-unity-optional.patch"
 	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
@@ -45,6 +46,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
+		$(cmake-utils_use_use unity UNITY)
 	)
 
 	cmake-utils_src_configure

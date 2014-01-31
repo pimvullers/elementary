@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:pantheon-files"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+gvfs nls"
+IUSE="+gvfs nls unity"
 
 RDEPEND="
 	dev-db/sqlite:3
@@ -23,6 +23,7 @@ RDEPEND="
 	dev-libs/glib:2
 	x11-libs/granite
 	dev-libs/libgee:0.8
+	unity? ( dev-libs/libunity )
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
 	x11-libs/pango
@@ -39,7 +40,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-gee-0.8.patch"
-
 	epatch_user
 
 	# Disable generation of the translations (if needed)
@@ -54,6 +54,7 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
+		$(cmake-utils_use_with unity UNITY)
 	)
 
 	cmake-utils_src_configure

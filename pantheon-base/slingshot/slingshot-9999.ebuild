@@ -15,12 +15,12 @@ EBZR_REPO_URI="lp:slingshot"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls -zeitgeist"
+IUSE="nls -unity -zeitgeist"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	dev-libs/libunity
+	unity? ( dev-libs/libunity )
 	zeitgeist? ( dev-libs/libzeitgeist )
 	gnome-base/gnome-menus:0
 	x11-libs/granite
@@ -33,6 +33,7 @@ DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
+	epatch "${FILESDIR}/${P}-unity-optional.patch"
 	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
@@ -47,6 +48,7 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DICONCACHE_UPDATE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
+		$(cmake-utils_use_use unity UNITY)
 		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
 
