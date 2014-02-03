@@ -4,13 +4,11 @@
 
 EAPI="5"
 
-inherit autotools eutils flag-o-matic multilib-minimal user versionator git-2 udev
+inherit autotools eutils flag-o-matic multilib-minimal user versionator udev
 
 DESCRIPTION="A networked sound server with an advanced plugin system"
 HOMEPAGE="http://www.pulseaudio.org/"
-
-EGIT_REPO_URI="git://anongit.freedesktop.org/pulseaudio/pulseaudio.git"
-EGIT_COMMIT="09e88de0afd225189a07fc32b5076a8a7aea3089" # 2013-10-23 06:30:46 (GMT)
+SRC_URI="http://freedesktop.org/software/${PN}/releases/${P}.tar.xz"
 
 # libpulse-simple and libpulse link to libpulse-core; this is daemon's
 # library and can link to gdbm and other GPL-only libraries. In this
@@ -135,8 +133,7 @@ multilib_src_configure() {
 		$(use_enable gnome gconf)
 		$(use_enable gtk gtk3)
 		$(use_enable libsamplerate samplerate)
-		--disable-bluez4
-		$(use_enable bluetooth bluez5)
+		$(use_enable bluetooth bluez)
 		$(use_enable X x11)
 		$(use_enable test default-build-tests)
 		$(use_enable udev)

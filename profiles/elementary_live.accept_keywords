@@ -16,7 +16,7 @@ www-client/midori **
 x11-libs/bamf **
 x11-libs/granite **
 x11-misc/indicator-session **
-x11-misc/indicator-printers **
+#x11-misc/indicator-printers **
 x11-misc/light-locker **
 x11-terms/pantheon-terminal **
 x11-themes/elementary-icon-theme **
