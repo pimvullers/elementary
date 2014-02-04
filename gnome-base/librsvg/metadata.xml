@@ -3,9 +3,6 @@
 <pkgmetadata>
 <herd>gnome</herd>
 <use>
-	<flag name="introspection">Use <pkg>dev-libs/gobject-introspection</pkg> for
-	introspection</flag>
 	<flag name="tools">Build miscellaneous tools</flag>
-	<flag name="vala">Enable bindings for <pkg>dev-lang/vala</pkg></flag>
 </use>
 </pkgmetadata>
