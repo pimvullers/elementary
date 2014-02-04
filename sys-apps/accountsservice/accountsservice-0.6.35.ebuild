@@ -28,6 +28,7 @@ RDEPEND="
 	!systemd? ( sys-auth/consolekit )
 "
 DEPEND="${RDEPEND}
+	app-crypt/gcr
 	dev-libs/libxslt
 	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.15
