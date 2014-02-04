@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~ricotz/+archive/testing/+files/gnome-desktop3_3.11.2-0ubuntu1%7Etrusty1.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gnome-desktop3_3.11.4-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
 SLOT="3/8" # subslot = libgnome-desktop-3 soname version
@@ -57,6 +57,8 @@ src_prepare() {
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
+
+	gnome2_src_prepare
 }
 
 src_configure() {
