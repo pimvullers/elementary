@@ -26,6 +26,7 @@ RDEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-0.9.12 )
 	systemd? ( >=sys-apps/systemd-186 )
 	!systemd? ( sys-auth/consolekit )
+	ubuntu? ( app-crypt/gcr )
 "
 DEPEND="${RDEPEND}
 	dev-libs/libxslt
