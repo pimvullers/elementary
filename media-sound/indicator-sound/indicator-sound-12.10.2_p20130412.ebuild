@@ -20,7 +20,7 @@ IUSE="nls static-libs"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libdbusmenu:3[gtk]
-	dev-libs/libgee
+	dev-libs/libgee:0
 	dev-libs/libindicator:3
 	dev-libs/libxml2
 	media-sound/pulseaudio[glib]
