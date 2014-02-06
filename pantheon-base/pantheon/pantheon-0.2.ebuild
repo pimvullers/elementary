@@ -9,19 +9,17 @@ HOMEPAGE="http://www.elementaryos.org/"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 DEPEND=""
 RDEPEND="
-	app-dicts/lingo
 	app-editors/scratch
 	app-office/dexter
 	app-office/maya
 	dev-libs/contractor
 	mail-client/geary
 	media-sound/noise
-	media-video/audience
 	pantheon-base/pantheon-files
 	pantheon-base/pantheon-shell
 	pantheon-base/switchboard
