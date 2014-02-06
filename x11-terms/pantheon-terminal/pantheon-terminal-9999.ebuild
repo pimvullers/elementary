@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -28,12 +28,10 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=( AUTHORS README )
-}
+DOCS=( AUTHORS README )
 
 src_prepare() {
-	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -44,7 +42,6 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
 
