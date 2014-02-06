@@ -17,7 +17,7 @@ IUSE=""
 
 DEPEND=""
 RDEPEND="${DEPEND}
-	|| ( pantheon-base/pantheon-dock pantheon-base/plank )"
+	pantheon-base/plank"
 
 DOCS=( COPYING )
 

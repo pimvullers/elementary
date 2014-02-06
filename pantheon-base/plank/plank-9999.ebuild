@@ -1,30 +1,31 @@
-EAPI=5
+# Copyright 1999-2014 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
 
-EBZR_UPDATE_CMD="bzr pull --overwrite"
+EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 VALA_USE_DEPEND=vapigen
 
 inherit fdo-mime gnome2-utils vala autotools-utils bzr
 
-DESCRIPTION="The dock for elementary Pantheon, built on the awesome foundation of Plank"
-HOMEPAGE="https://launchpad.net/pantheon-dock"
-EBZR_REPO_URI="lp:pantheon-dock"
+DESCRIPTION="The dock for elementary Pantheon, stupidly simple"
+HOMEPAGE="https://launchpad.net/plank https://launchpad.net/pantheon-dock"
+EBZR_REPO_URI="lp:plank"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE="debug nls static-libs"
 
 CDEPEND="
-	x11-libs/libX11
 	dev-libs/libgee:0.8
 	dev-libs/libunique:1
+	x11-libs/libX11
 	x11-libs/libwnck:1
 	>=x11-libs/bamf-0.2.58
 	>=dev-libs/glib-2.26.0:2
-	>=x11-libs/gtk+-2.22.0:2
-	!pantheon-base/plank"
+	>=x11-libs/gtk+-2.22.0:2"
 RDEPEND="${CDEPEND}
 	x11-themes/pantheon-plank-theme"
 DEPEND="${CDEPEND}
@@ -34,30 +35,14 @@ DEPEND="${CDEPEND}
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
 
-pkg_setup() {
-	AUTOTOOLS_AUTORECONF=yes
-	AUTOTOOLS_IN_SOURCE_BUILD=yes
+AUTOTOOLS_AUTORECONF=yes
+AUTOTOOLS_IN_SOURCE_BUILD=yes
 
-	DOCS=(AUTHORS COPYING COPYRIGHT NEWS README)
-}
-
-#src_unpack() {
-#	local save_sandbox_write=${SANDBOX_WRITE}
-#
-#	if [[ -d ${EBZR_STORE_DIR} ]] ; then
-#		addwrite /
-#		rm -r "${EBZR_STORE_DIR}" \
-#			|| die "${EBZR}: can't rm -r ${EBZR_STORE_DIR}"
-#		SANDBOX_WRITE=${save_sandbox_write}
-#	fi
-#
-#	bzr_src_unpack
-#}
+DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
-	# Drop apport hooks
-	sed -i 's#data/apport/Makefile##' configure.ac
-	sed -i 's#apport##' data/Makefile.am
+	epatch "${FILESDIR}/${PN}-0.5.0-pantheon-support.patch"
+	epatch_user
 
 	autotools-utils_src_prepare
 	vala_src_prepare
@@ -68,8 +53,8 @@ src_configure() {
 		$(use_enable debug)
 		$(use_enable nls)
 		--enable-gee-0.8
+		--disable-apport
 	)
-
 	autotools-utils_src_configure
 }
 
@@ -86,4 +71,3 @@ pkg_postrm() {
 	fdo-mime_desktop_database_update
 	gnome2_icon_cache_update
 }
-

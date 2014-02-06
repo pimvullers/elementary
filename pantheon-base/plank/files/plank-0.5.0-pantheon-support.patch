@@ -1,0 +1,44 @@
+apport: report to the "pantheon-dock" dummy project
+data: add NotShowIn=Pantheon; to desktop-file
+dockpreferences: update internal defaults for "Pantheon"
+
+=== modified file 'data/apport/plank-crashdb.conf'
+--- old/data/apport/plank-crashdb.conf	2012-03-09 21:45:40 +0000
++++ new/data/apport/plank-crashdb.conf	2013-10-13 19:29:22 +0000
+@@ -1,5 +1,5 @@
+ plank = {
+ 	'impl' : 'launchpad',
+-	'project' : 'plank',
++	'project' : 'pantheon-dock',
+ 	'bug_pattern_base' : None,
+ }
+
+=== modified file 'data/plank.desktop.in'
+--- old/data/plank.desktop.in	2012-10-09 16:37:49 +0000
++++ new/data/plank.desktop.in	2013-10-13 19:29:22 +0000
+@@ -8,3 +8,4 @@
+ Icon=plank
+ Terminal=false
+ NoDisplay=false
++NotShowIn=Pantheon;
+
+=== modified file 'lib/DockPreferences.vala'
+--- old/lib/DockPreferences.vala	2013-10-07 15:36:50 +0000
++++ new/lib/DockPreferences.vala	2013-10-13 19:30:02 +0000
+@@ -108,13 +108,13 @@
+ 			
+ 			CurrentWorkspaceOnly = false;
+ 			IconSize = 48;
+-			HideMode = HideType.INTELLIGENT;
++			HideMode = HideType.DODGE_MAXIMIZED;
+ 			UnhideDelay = 0;
+ 			Monitor = -1;
+ 			DockItems = "";
+ 			Position = PositionType.BOTTOM;
+ 			Offset = 0;
+-			Theme = Plank.Drawing.Theme.DEFAULT_NAME;
++			Theme = "Pantheon";
+ 			Alignment = Gtk.Align.CENTER;
+ 			ItemsAlignment = Gtk.Align.CENTER;
+ 			LockItems = false;
+

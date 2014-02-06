@@ -23,7 +23,7 @@ RDEPEND="${CDEPEND}
 	>=gnome-base/gnome-settings-daemon-3.0
 	<gnome-base/gnome-settings-daemon-3.8
 	>=pantheon-base/cerbere-0.2
-	|| ( pantheon-base/pantheon-dock pantheon-base/plank )
+	pantheon-base/plank
 	>=pantheon-base/slingshot-0.7
 	>=pantheon-base/wingpanel-0.2
 	x11-themes/elementary-theme
