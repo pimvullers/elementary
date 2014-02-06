@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -12,7 +12,7 @@ EBZR_REPO_URI="lp:~elementary-os/elementaryos/default-settings-trusty"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS=""
 IUSE=""
 
 DEPEND=""
@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}"
 src_compile() {
 	mv debian/elementary-default-settings.gsettings-override \
 		${P}.gschema.override
-	
+
 	# Replace Open Sans with Droid Sans as we don't have Open Sans yet
 	sed -i -e 's/Open Sans/Droid Sans/'	${P}.gschema.override
 
@@ -37,7 +37,7 @@ src_install() {
 	doins -r midori/config
 
 	insinto /etc/skel/.config/plank/
-	doins -r plank/dock1 
+	doins -r plank/dock1
 
 	insinto /etc/gtk-3.0/
 	doins settings.ini
