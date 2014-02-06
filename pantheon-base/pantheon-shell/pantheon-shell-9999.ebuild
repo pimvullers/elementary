@@ -13,7 +13,7 @@ EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="+libnotify +lightdm +screensaver"
+IUSE="+lightdm +screensaver"
 
 CDEPEND="
 	lightdm? ( >=pantheon-base/pantheon-greeter-1.0 )"
@@ -27,8 +27,7 @@ RDEPEND="${CDEPEND}
 	pantheon-base/pantheon-settings
 	>=x11-themes/elementary-theme-3.4
 	x11-wm/gala
-	libnotify? ( || ( pantheon-base/pantheon-notify x11-misc/notify-osd virtual/notification-daemon ) )
-	screensaver? ( || ( gnome-extra/gnome-screensaver x11-misc/light-locker x11-misc/xscreensaver ) )"
+	screensaver? ( || ( x11-misc/light-locker gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
 DEPEND="${CDEPEND}"
 
 src_prepare() {
