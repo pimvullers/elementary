@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -17,19 +17,17 @@ SLOT="0"
 KEYWORDS=""
 IUSE="nls"
 
-CDEPEND="
-	pantheon-base/libpantheon
+RDEPEND="
 	x11-libs/granite
-	x11-libs/gtk+:3"
-RDEPEND="${CDEPEND}
-	pantheon-base/switchboard"
-DEPEND="${CDEPEND}
+	x11-libs/gtk+:3
+	>=pantheon-base/switchboard-2"
+DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 src_prepare() {
-	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -39,6 +37,5 @@ src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
