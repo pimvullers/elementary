@@ -1,13 +1,14 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI="5"
+EAPI=5
 
+PYTHON_COMPAT=( python{2_6,2_7} )
 VALA_MIN_API_VERSION=0.16
 VALA_USE_DEPEND=vapigen
 
-inherit vala autotools-utils bzr python
+inherit vala autotools-utils python-single-r1 bzr
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
@@ -17,9 +18,6 @@ LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS=""
 IUSE="+introspection doc static-libs"
-
-PYTHON_DEPEND="2"
-RESTRICT_PYTHON_ABIS="3.*"
 
 RDEPEND="
 	dev-libs/dbus-glib
@@ -60,7 +58,5 @@ src_configure() {
 		$(use_enable introspection)
 		VALA_API_GEN="${VAPIGEN}"
 	)
-
 	autotools-utils_src_configure
 }
-
