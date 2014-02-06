@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -26,6 +26,7 @@ RDEPEND="${CDEPEND}
 	pantheon-base/plank
 	>=pantheon-base/slingshot-0.7
 	>=pantheon-base/wingpanel-0.2
+	pantheon-base/pantheon-settings
 	x11-themes/elementary-theme
 	x11-wm/gala
 	screensaver? ( || ( x11-misc/light-locker gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )"
