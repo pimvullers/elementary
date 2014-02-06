@@ -6,26 +6,28 @@ EAPI=5
 
 VALA_MIN_API_VERSION="0.16"
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="A simple service to relaunch pantheon applications"
 HOMEPAGE="https://launchpad.net/cerbere"
-EBZR_REPO_URI="lp:cerbere"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee:0.8"
+	dev-libs/libgee:0"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.2-fix-desktop-file.patch"
+	epatch "${FILESDIR}/${P}-fix-desktop-file.patch"
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch "${FILESDIR}/${P}-watchdog-refactor.patch"
 	epatch_user
 
 	cmake-utils_src_prepare

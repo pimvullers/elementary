@@ -1,0 +1,127 @@
+=== modified file 'src/Watchdog.vala'
+--- src/Watchdog.vala	2012-11-22 23:12:01 +0000
++++ src/Watchdog.vala	2013-11-09 18:17:23 +0000
+@@ -34,64 +34,75 @@
+         processes = new Gee.HashMap<string, ProcessWrapper> ();
+     }
+ 
+-    public void add_process (string command) {
+-        if (command.strip () == "")
+-            return;
+-
+-        // Check if a process for this command has already been created
+-        if (processes.has_key (command))
+-            return;
+-
++    public void add_process (string command)
++        requires (is_valid_command (command)) {
++        
++        if (command_is_monitored (command)) {
++            warning ("Command '%s' is already being monitored.", command);
++            return;
++        }
++        
++        monitor_and_run_command (command);
++    }
++
++    private bool is_valid_command (string command) {
++        return command.strip () != "";
++    }
++
++    private bool command_is_monitored (string command) {
++        return processes.has_key (command);
++    }
++    
++    private void monitor_and_run_command (string command) {
+         var process = new ProcessWrapper (command);
+         processes[command] = process;
+-
+         process.exited.connect (on_process_exit);
+-
+         process.run_async ();
+     }
+ 
+     /**
+-     * Process exit handler.
+-     *
+-     * Respawning occurs here. If the process has crashed more times than max_crashes, it's not
+-     * respawned again. Otherwise, it is assumed that the process exited normally and the crash
+-     * count is reset to 0, which means that only consecutive crashes are counted.
++     * Respawning occurs here. If the process has crashed more times than
++     * max_crashes, it's not respawned again. Otherwise, it is assumed that the
++     * process exited normally and the crash count is reset to 0, which means
++     * that only consecutive crashes are counted.
+      */
+     private void on_process_exit (ProcessWrapper process, bool normal_exit) {
+-        if (normal_exit) {
+-            // Reset crash count. We only want to count consecutive crashes, so that
+-            // if a normal exit is detected, we reset the counter to 0.
++        if (normal_exit)
+             process.reset_crash_count ();
+-        }
+ 
+-        bool remove_process = false;
+         string command = process.command;
+ 
+-        // if still in the process list, relaunch if possible
+-        if (command in App.settings.process_list) {
+-            // Check if the process is still present in the map since it could have been removed
+-            if (processes.has_key (command)) {
+-                // Check if the process already exceeded the maximum number of allowed crashes.
+-                uint max_crashes = App.settings.max_crashes;
+-
+-                if (process.crash_count <= max_crashes) {
+-                    process.run_async (); // Reload right away
+-                } else {
+-                    warning ("'%s' exceeded the maximum number of crashes allowed (%s). It won't be launched again", command, max_crashes.to_string ());
+-                    remove_process = true;
+-                }
+-            } else {
+-                // If a process is not in the map, it means it wasn't re-launched after it exited, so in theory
+-                // this code is never reached.
+-                critical ("Please file a bug at http://launchpad.net/cerbere and attach your .xsession-errors and .xsession-errors.old files.");
+-            }
+-        } else {
++        if (is_not_in_settings (command)) {
+             warning ("'%s' is no longer in settings (not monitored)", command);
+             process.reset_crash_count ();
+-            remove_process = true;
+-        }
+-
+-        if (remove_process)
+-            processes.unset (command);
+-    }
+-}
+\ No newline at end of file
++            unmonitor_command (command);
++            return;
++        }
++
++        if (!command_is_monitored (command)) {
++            critical ("Please file a bug at http://launchpad.net/cerbere and " +
++                      "attach your .xsession-errors and .xsession-errors.old " +
++                      "files.");
++            return;
++        }
++
++        uint max_crashes = App.settings.max_crashes;
++
++        if (process.crash_count > max_crashes) {
++            warning ("'%s' exceeded the maximum number of crashes allowed " +
++                     "(%u). It won't be launched again", command, max_crashes);
++            unmonitor_command (command);
++            return;
++        }
++
++        process.run_async ();
++    }
++    
++    private bool is_not_in_settings (string command) {
++        return !(command in App.settings.process_list);
++    }
++    
++    private void unmonitor_command (string command) {
++        processes.unset (command);
++    }
++}
+

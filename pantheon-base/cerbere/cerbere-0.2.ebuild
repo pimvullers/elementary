@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,7 +25,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}/fix-1063970.patch"
+	epatch "${FILESDIR}/${P}-fix-desktop-file.patch"
+	epatch_user
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -36,7 +37,6 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
 
