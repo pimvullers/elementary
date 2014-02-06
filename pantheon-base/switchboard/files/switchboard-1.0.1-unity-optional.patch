@@ -1,0 +1,65 @@
+diff -Naur switchboard-1.0.1.orig/CMakeLists.txt switchboard-1.0.1/CMakeLists.txt
+--- switchboard-1.0.1.orig/CMakeLists.txt	2014-02-06 19:13:46.439093729 +0100
++++ switchboard-1.0.1/CMakeLists.txt	2014-02-06 19:17:06.619065154 +0100
+@@ -60,8 +60,18 @@
+ 
+ #
+ 
++option (USE_UNITY "Use Unity integration" ON)
++
++if (USE_UNITY)
++  message ("-- Unity integration enabled")
++  set (UNITY_DEPS unity)
++  set (UNITY_OPTIONS --define=HAVE_UNITY)
++else ()
++  message ("-- Unity integration disabled")
++endif ()
++
+ find_package(PkgConfig)
+-pkg_check_modules(DEPS REQUIRED granite gio-2.0 gee-1.0 unity)
++pkg_check_modules(DEPS REQUIRED granite gio-2.0 gee-1.0 ${UNITY_DEPS})
+ add_definitions(${DEPS_CFLAGS})
+ link_directories(${DEPS_LIBRARY_DIRS})
+ find_package(Vala REQUIRED)
+@@ -78,9 +88,11 @@
+     granite
+     gee-1.0
+     gio-2.0
+-    unity
++    ${UNITY_DEPS}
+ CUSTOM_VAPIS
+     vapi/config.vapi
++OPTIONS
++    ${UNITY_OPTIONS}
+     )
+ add_definitions(${CFLAGS} -Wall -Winit-self -Wwrite-strings -Wunreachable-code -Wstrict-prototypes )
+ add_executable(switchboard ${VALA_C})
+diff -Naur switchboard-1.0.1.orig/src/Switchboard.vala switchboard-1.0.1/src/Switchboard.vala
+--- switchboard-1.0.1.orig/src/Switchboard.vala	2014-02-06 19:13:46.437093731 +0100
++++ switchboard-1.0.1/src/Switchboard.vala	2014-02-06 19:22:46.505997521 +0100
+@@ -186,7 +186,9 @@
+                 show_alert(_("No settings found"), _("Install some and re-launch Switchboard"), Gtk.MessageType.WARNING);
+                 search_box.sensitive = false;
+             } else {
++#if HAVE_UNITY
+                 update_libunity_quicklist ();
++#endif
+             }
+             
+             bool found = false;
+@@ -537,6 +539,7 @@
+             build ();
+         }
+ 
++#if HAVE_UNITY
+         // Updates items in quicklist menu using the Unity quicklist api.
+         void update_libunity_quicklist () {
+             // Fetch launcher
+@@ -577,6 +580,7 @@
+ 
+             launcher.quicklist = quicklist;
+         }
++#endif
+     }
+ 
+     static const OptionEntry[] entries = {

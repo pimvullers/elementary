@@ -19,16 +19,16 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
+	dev-libs/libgee:0
 	x11-libs/gtk+:3
 	>=x11-libs/granite-0.2
-	<x11-libs/granite-0.3
-	dev-libs/libgee:0"
+	<x11-libs/granite-0.3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-DOCS=( "${S}/AUTHORS" "${S}/COPYING" )
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-unity-optional.patch"

@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -25,9 +25,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-pkg_setup() {
-	DOCS=(AUTHORS COPYING COPYRIGHT NEWS README)
-}
+DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
 	cmake-utils_src_prepare
@@ -38,6 +36,5 @@ src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
