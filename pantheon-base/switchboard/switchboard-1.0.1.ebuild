@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,26 +14,28 @@ SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-1).x/${PV}/+
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	x11-libs/gtk+:3
-	>=x11-libs/granite-0.2.0
-	dev-libs/libunity
-	dev-libs/libgee"
+	>=x11-libs/granite-0.2
+	<x11-libs/granite-0.3
+	dev-libs/libgee:0"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
-pkg_setup() {
-	DOCS=( AUTHORS COPYING )
-}
+DOCS=( "${S}/AUTHORS" "${S}/COPYING" )
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-unity-optional.patch"
+	epatch_user
+
 	# Disable generation of the translations (if needed)
-	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -41,8 +43,8 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
+		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }

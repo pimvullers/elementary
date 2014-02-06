@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -15,25 +15,24 @@ EBZR_REPO_URI="lp:slingshot"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls -unity -zeitgeist"
+IUSE="nls -zeitgeist"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	unity? ( dev-libs/libunity )
-	zeitgeist? ( dev-libs/libzeitgeist )
-	gnome-base/gnome-menus:0
-	x11-libs/granite
-	>=x11-libs/gtk+-3.2.0:3"
+	gnome-base/gnome-menus:3
+	>=x11-libs/granite-0.3
+	>=x11-libs/gtk+-3.2:3
+	zeitgeist? ( gnome-extra/zeitgeist )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING )
+DOCS=( "${S}/AUTHORS" "${S}/COPYING" )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
-	epatch "${FILESDIR}/${P}-unity-optional.patch"
+	epatch "${FILESDIR}/${PN}-0.7.6.1-gnome-menus-3.patch"
 	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
@@ -47,11 +46,10 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DICONCACHE_UPDATE=OFF
+		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		$(cmake-utils_use_use unity UNITY)
 		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
-
 	cmake-utils_src_configure
 }
 

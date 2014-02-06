@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,25 +14,30 @@ SRC_URI="http://launchpad.net/${PN}/0.x/${PV}/+download/${PN}-launcher-${PV}.tgz
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="nls"
+KEYWORDS="amd64 x86"
+IUSE="nls -zeitgeist"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
-	dev-libs/libunity
-	dev-libs/libzeitgeist
-	gnome-base/gnome-menus:0
-	x11-libs/granite
-	>=x11-libs/gtk+-3.2.0:3"
+	gnome-base/gnome-menus:3
+	<x11-libs/granite-0.3
+	>=x11-libs/gtk+-3.2:3
+	zeitgeist? ( gnome-extra/zeitgeist )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING )
 S="${WORKDIR}/${PN}-launcher-${PV}"
+DOCS=( "${S}/AUTHORS" "${S}/COPYING" )
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-zeitgeist-2.patch"
+	epatch "${FILESDIR}/${P}-optional.patch"
+	epatch "${FILESDIR}/${P}-gnome-menus-3.patch"
+	epatch_user
+
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
@@ -43,9 +48,10 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DICONCACHE_UPDATE=OFF
+		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
+		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
-
 	cmake-utils_src_configure
 }
 

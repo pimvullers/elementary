@@ -25,13 +25,13 @@ RDEPEND="
 	gnome-base/gconf:2
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
-	>=x11-libs/granite-0.3.0
-	zeitgeist? ( dev-libs/libzeitgeist )
+	>=x11-libs/granite-0.3
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
-	terminal? ( x11-libs/vte:2.90 )"
+	terminal? ( x11-libs/vte:2.90 )
+	zeitgeist? ( gnome-extra/zeitgeist )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -43,7 +43,6 @@ pkg_setup() {
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
-#	epatch "${FILESDIR}/${P}-zeitgeist-1.0.patch"
 	epatch_user
 
 	# Translations

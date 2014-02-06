@@ -1,0 +1,331 @@
+diff -Naur slingshot-launcher-0.7.6.1.orig/CMakeLists.txt slingshot-launcher-0.7.6.1/CMakeLists.txt
+--- slingshot-launcher-0.7.6.1.orig/CMakeLists.txt	2014-02-06 15:57:43.489729692 +0100
++++ slingshot-launcher-0.7.6.1/CMakeLists.txt	2014-02-06 15:59:23.442185889 +0100
+@@ -54,11 +54,11 @@
+   message ("-- Zeitgeist integration disabled")
+ endif ()
+ 
+-set (CORE_DEPS "gobject-2.0;glib-2.0;gio-2.0;gio-unix-2.0;gee-1.0;libgnome-menu;libwnck-3.0;gdk-x11-3.0;${UNITY_DEPS};")
++set (CORE_DEPS "gobject-2.0;glib-2.0;gio-2.0;gio-unix-2.0;gee-1.0;libwnck-3.0;gdk-x11-3.0;${UNITY_DEPS};")
+ set (UI_DEPS "gtk+-3.0>=3.2.0;granite;${ZEITGEIST_DEPS};")
+ 
+ find_package (PkgConfig)
+-pkg_check_modules (DEPS REQUIRED "${CORE_DEPS}${UI_DEPS}" gthread-2.0)
++pkg_check_modules (DEPS REQUIRED "${CORE_DEPS}${UI_DEPS};libgnome-menu-3.0")
+ 
+ find_package (Vala REQUIRED)
+ include (ValaVersion)
+@@ -86,6 +86,7 @@
+     ${UI_DEPS}
+ CUSTOM_VAPIS
+     vapi/config.vapi
++    vapi/libgnome-menu-3.0.vapi
+ OPTIONS
+     --thread
+     -g
+diff -Naur slingshot-launcher-0.7.6.1.orig/src/Backend/App.vala slingshot-launcher-0.7.6.1/src/Backend/App.vala
+--- slingshot-launcher-0.7.6.1.orig/src/Backend/App.vala	2014-02-06 15:57:43.490729697 +0100
++++ slingshot-launcher-0.7.6.1/src/Backend/App.vala	2014-02-06 16:27:10.996200362 +0100
+@@ -24,7 +24,7 @@
+     public string exec { get; private set; }
+     public string icon_name { get; private set; default = ""; }
+     public string[] keywords { get; private set;}
+-    public Gdk.Pixbuf icon { get; private set; }
++    public Gdk.Pixbuf? icon { get; private set; default = null; }
+     public double popularity { get; set; }
+     public double relevancy { get; set; }
+     public string desktop_path { get; private set; }
+@@ -36,18 +36,34 @@
+     public signal void launched (App app);
+ 
+     public App (GMenu.TreeEntry entry) {
+-        name = entry.get_display_name ();
+-        description = entry.get_comment () ?? name;
+-        exec = entry.get_exec ();
++        unowned GLib.DesktopAppInfo info = entry.get_app_info ();
++        name = info.get_display_name ().dup ();
++        description = info.get_description ().dup () ?? name;
++        exec = info.get_commandline ().dup ();
+         desktop_id = entry.get_desktop_file_id ();
+-        icon_name = entry.get_icon () ?? "application-default-icon";
+         desktop_path = entry.get_desktop_file_path ();
+ #if HAVE_UNITY
+         keywords = Unity.AppInfoManager.get_default ().get_keywords (desktop_id);
+ #endif
+-        generic_name = entry.get_generic_name ();
++        generic_name = info.get_generic_name ();
++
++	if (info.get_icon () is ThemedIcon) {
++            icon_name = (info.get_icon () as ThemedIcon).get_names ()[0].dup ();
++        } else if (info.get_icon () is LoadableIcon) {
++            try {
++                var ios = (info.get_icon () as LoadableIcon).load (0, null, null);
++                icon = new Gdk.Pixbuf.from_stream_at_scale (ios, Slingshot.settings.icon_size,
++                    Slingshot.settings.icon_size, true, null);
++            } catch {
++                icon_name = "application-default-icon";
++            }
++        } else {
++            icon_name = "application-default-icon";
++        }
++
++        if (icon == null)
++            update_icon ();
+ 
+-        update_icon ();
+         Slingshot.icon_theme.changed.connect (update_icon);
+     }
+ 
+diff -Naur slingshot-launcher-0.7.6.1.orig/src/Backend/AppSystem.vala slingshot-launcher-0.7.6.1/src/Backend/AppSystem.vala
+--- slingshot-launcher-0.7.6.1.orig/src/Backend/AppSystem.vala	2014-02-06 15:57:43.490729697 +0100
++++ slingshot-launcher-0.7.6.1/src/Backend/AppSystem.vala	2014-02-06 16:30:39.391203511 +0100
+@@ -27,7 +27,6 @@
+ #endif
+ 
+     public signal void changed ();
+-    private bool index_changed = false;
+ 
+     construct {
+ 
+@@ -36,43 +35,41 @@
+         rl_service.update_complete.connect (update_popularity);
+ #endif
+ 
+-        apps_menu = GMenu.Tree.lookup ("pantheon-applications.menu", GMenu.TreeFlags.INCLUDE_EXCLUDED);
+-        apps_menu.add_monitor ((menu) => {
++        apps_menu = new GMenu.Tree ("pantheon-applications.menu", GMenu.TreeFlags.INCLUDE_EXCLUDED | GMenu.TreeFlags.SORT_DISPLAY_NAME);
++        apps_menu.changed.connect (update_app_system);
+ 
+-            debug ("Apps menu tree changed. Updating…");
+-            index_changed = true;
+-            update_app_system ();
+-            changed ();
++        apps = new Gee.HashMap<string, Gee.ArrayList<App>> ();
++        categories = new Gee.ArrayList<GMenu.TreeDirectory> ();
+ 
+-        });
+-
+-        apps_menu.set_sort_key (GMenu.TreeSortKey.DISPLAY_NAME);
+         update_app_system ();
+-
+     }
+ 
+     private void update_app_system () {
++        debug ("Updating Applications menu tree...");
+ 
+ #if HAVE_ZEITGEIST
+         rl_service.refresh_popularity ();
+ #endif
+ 
++        apps_menu.load_sync ();
++
+         update_categories_index ();
+         update_apps ();
+ 
++        changed ();
+     }
+ 
+     private void update_categories_index () {
+ 
+-        var root_tree = apps_menu.get_root_directory ();
+-
+-        if (categories == null || index_changed) {
+-            categories = new Gee.ArrayList<GMenu.TreeDirectory> ();
++        categories.clear ();
+ 
+-            foreach (GMenu.TreeItem item in root_tree.get_contents ()) {
+-                if (item.get_type () == GMenu.TreeItemType.DIRECTORY)
+-                    if (((GMenu.TreeDirectory) item).get_is_nodisplay () == false)
+-                        categories.add ((GMenu.TreeDirectory) item);
++        var iter = apps_menu.get_root_directory ().iter ();
++        GMenu.TreeItemType type;
++        while ((type = iter.next ()) != GMenu.TreeItemType.INVALID) {
++            if (type == GMenu.TreeItemType.DIRECTORY) {
++                var dir = iter.get_directory ();
++                if (!dir.get_is_nodisplay ())
++                    categories.add (dir);
+             }
+         }
+ 
+@@ -89,21 +86,10 @@
+ 
+     private void update_apps () {
+ 
+-        if (index_changed) {
+-            apps.clear ();
+-            apps = null;
+-            index_changed = false;
+-        }
+-
+-        if (apps == null) {
+-
+-            apps = new Gee.HashMap<string, Gee.ArrayList<App>> ();
+-
+-            foreach (GMenu.TreeDirectory cat in categories) {
+-                apps.set (cat.get_name (), get_apps_by_category (cat));
+-            }
++        apps.clear ();
+ 
+-        }
++        foreach (var cat in categories)
++            apps.set (cat.get_name (), get_apps_by_category (cat));
+ 
+     }
+ 
+@@ -117,36 +103,24 @@
+ 
+         var app_list = new Gee.ArrayList<App> ();
+ 
+-        foreach (GMenu.TreeItem item in category.get_contents ()) {
+-            App app;
+-            switch (item.get_type ()) {
++        var iter = category.iter ();
++        GMenu.TreeItemType type;
++        while ((type = iter.next ()) != GMenu.TreeItemType.INVALID) {
++            switch (type) {
+                 case GMenu.TreeItemType.DIRECTORY:
+-                    app_list.add_all (get_apps_by_category ((GMenu.TreeDirectory) item));
++                    app_list.add_all (get_apps_by_category (iter.get_directory ()));
+                     break;
+                 case GMenu.TreeItemType.ENTRY:
+-                    if (is_entry ((GMenu.TreeEntry) item)) {
+-                        app = new App ((GMenu.TreeEntry) item);
++                    var app = new App (iter.get_entry ());
+ #if HAVE_ZEITGEIST
+-                        app.launched.connect (rl_service.app_launched);
++                    app.launched.connect (rl_service.app_launched);
+ #endif
+-                        app_list.add (app);
+-                    }
++                    app_list.add (app);
+                     break;
+             }
+         }
+-        return app_list;
+-
+-    }
+-
+-    private bool is_entry (GMenu.TreeEntry entry) {
+ 
+-        if (entry.get_launch_in_terminal () == false
+-            && entry.get_is_excluded () == false
+-            && entry.get_is_nodisplay () == false) {
+-            return true;
+-        } else {
+-            return false;
+-        }
++        return app_list;
+ 
+     }
+ 
+diff -Naur slingshot-launcher-0.7.6.1.orig/vapi/libgnome-menu-3.0.vapi slingshot-launcher-0.7.6.1/vapi/libgnome-menu-3.0.vapi
+--- slingshot-launcher-0.7.6.1.orig/vapi/libgnome-menu-3.0.vapi	1970-01-01 01:00:00.000000000 +0100
++++ slingshot-launcher-0.7.6.1/vapi/libgnome-menu-3.0.vapi	2014-02-06 15:57:54.162778170 +0100
+@@ -0,0 +1,107 @@
++/* libgnome-menu-3.0.vapi generated by vapigen, do not modify. */
++
++[CCode (cprefix = "GMenu", gir_namespace = "GMenu", gir_version = "3.0", lower_case_cprefix = "gmenu_")]
++namespace GMenu {
++	[CCode (cheader_filename = "gmenu-tree.h", type_id = "gmenu_tree_get_type ()")]
++	public class Tree : GLib.Object {
++		[CCode (has_construct_function = false)]
++		public Tree (string menu_basename, GMenu.TreeFlags flags);
++		[CCode (has_construct_function = false)]
++		public Tree.for_path (string menu_path, GMenu.TreeFlags flags);
++		public unowned string get_canonical_menu_path ();
++		public GMenu.TreeDirectory get_directory_from_path (string path);
++		public GMenu.TreeEntry get_entry_by_id (string id);
++		public GMenu.TreeDirectory get_root_directory ();
++		public static void* item_ref (void* item);
++		public static void item_unref (void* item);
++		public bool load_sync () throws GLib.Error;
++		[NoAccessorMethod]
++		public GMenu.TreeFlags flags { get; construct; }
++		[NoAccessorMethod]
++		public string menu_basename { owned get; construct; }
++		[NoAccessorMethod]
++		public string menu_path { owned get; construct; }
++		public signal void changed ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_alias_get_type ()")]
++	[Compact]
++	public class TreeAlias {
++		public GMenu.TreeDirectory get_aliased_directory ();
++		public GMenu.TreeEntry get_aliased_entry ();
++		public GMenu.TreeItemType get_aliased_item_type ();
++		public GMenu.TreeDirectory get_directory ();
++		public GMenu.TreeDirectory get_parent ();
++		public GMenu.Tree get_tree ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_directory_get_type ()")]
++	[Compact]
++	public class TreeDirectory {
++		public unowned string get_comment ();
++		public unowned string get_desktop_file_path ();
++		public unowned string get_generic_name ();
++		public unowned GLib.Icon get_icon ();
++		public bool get_is_nodisplay ();
++		public unowned string get_menu_id ();
++		public unowned string get_name ();
++		public GMenu.TreeDirectory get_parent ();
++		public GMenu.Tree get_tree ();
++		public GMenu.TreeIter iter ();
++		public string make_path (GMenu.TreeEntry entry);
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_entry_get_type ()")]
++	[Compact]
++	public class TreeEntry {
++		public unowned GLib.DesktopAppInfo get_app_info ();
++		public unowned string get_desktop_file_id ();
++		public unowned string get_desktop_file_path ();
++		public bool get_is_excluded ();
++		public bool get_is_nodisplay_recurse ();
++		public bool get_is_unallocated ();
++		public GMenu.TreeDirectory get_parent ();
++		public GMenu.Tree get_tree ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_header_get_type ()")]
++	[Compact]
++	public class TreeHeader {
++		public GMenu.TreeDirectory get_directory ();
++		public GMenu.TreeDirectory get_parent ();
++		public GMenu.Tree get_tree ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_iter_get_type ()")]
++	[Compact]
++	public class TreeIter {
++		public GMenu.TreeAlias get_alias ();
++		public GMenu.TreeDirectory get_directory ();
++		public GMenu.TreeEntry get_entry ();
++		public GMenu.TreeHeader get_header ();
++		public GMenu.TreeSeparator get_separator ();
++		public GMenu.TreeItemType next ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "gmenu_tree_separator_get_type ()")]
++	[Compact]
++	public class TreeSeparator {
++		public GMenu.TreeDirectory get_parent ();
++		public GMenu.Tree get_tree ();
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", cprefix = "GMENU_TREE_FLAGS_", type_id = "gmenu_tree_flags_get_type ()")]
++	[Flags]
++	public enum TreeFlags {
++		NONE,
++		INCLUDE_EXCLUDED,
++		SHOW_EMPTY,
++		INCLUDE_NODISPLAY,
++		SHOW_ALL_SEPARATORS,
++		SORT_DISPLAY_NAME,
++		[CCode (cname = "GMENU_TREE_FLAGS_INCLUDE_UNALLOCATED,")]
++		INCLUDE_UNALLOCATED
++	}
++	[CCode (cheader_filename = "gmenu-tree.h", cprefix = "GMENU_TREE_ITEM_", has_type_id = false)]
++	public enum TreeItemType {
++		INVALID,
++		DIRECTORY,
++		ENTRY,
++		SEPARATOR,
++		HEADER,
++		ALIAS
++	}
++}

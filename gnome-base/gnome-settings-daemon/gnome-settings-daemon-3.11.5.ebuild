@@ -98,7 +98,7 @@ src_prepare() {
 
 		local PATCHDIR="${WORKDIR}/debian/patches"
 
-		epatch "${FILESDIR}/${P}-16_use_synchronous_notifications.patch"
+		epatch "${FILESDIR}/${PN}-3.11.3-16_use_synchronous_notifications.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-43_disable_locale_settings.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-45_suppress-printer-may-not-be-connected-notification.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-revert_background_dropping.patch"
@@ -109,7 +109,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.10.2-fix_broken_user_sounds_permissions.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove-unused-keygrab-code.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_gsd-keygrab.patch"
-		epatch "${FILESDIR}/${P}-fix_media_keys_on_unity.patch"
+		epatch "${FILESDIR}/${PN}-3.11.3-fix_media_keys_on_unity.patch"
 		epatch "${PATCHDIR}/fix_input_switching_on_unity.patch"
 		epatch "${PATCHDIR}/fix_screenshots_on_unity.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove_automount_helper.patch"

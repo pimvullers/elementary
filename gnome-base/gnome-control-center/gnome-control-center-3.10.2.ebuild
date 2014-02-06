@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.10.2.ebuild,v 1.1 2013/12/24 17:55:10 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.10.2.ebuild,v 1.2 2014/02/01 08:59:02 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -65,7 +65,7 @@ COMMON_DEPEND="
 		>=x11-misc/colord-0.1.34 )
 	cups? (
 		>=net-print/cups-1.4[dbus]
-		>=net-fs/samba-3.6.14-r1[smbclient] )
+		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.9.90 )
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )

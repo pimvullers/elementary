@@ -1,10 +1,22 @@
 === modified file 'CMakeLists.txt'
 --- CMakeLists.txt	2013-12-26 00:08:04 +0000
-+++ CMakeLists.txt	2014-01-31 15:19:48 +0000
-@@ -34,8 +34,18 @@
++++ CMakeLists.txt	2014-01-31 17:57:40 +0000
+@@ -34,8 +34,28 @@
  
  # Slingshot
  
+-set (CORE_DEPS "gobject-2.0;glib-2.0;gio-2.0;gio-unix-2.0;gee-1.0;libgnome-menu;libwnck-3.0;gdk-x11-3.0;unity;")
+-set (UI_DEPS "gtk+-3.0>=3.2.0;granite;zeitgeist-2.0;")
++option (USE_UNITY "Use Unity integration" ON)
++
++if (USE_UNITY)
++  message ("-- Unity integration enabled")
++  set (UNITY_DEPS unity)
++  set (UNITY_OPTIONS --define=HAVE_UNITY)
++else ()
++  message ("-- Unity integration disabled")
++endif ()
++
 +option (USE_ZEITGEIST "Use Zeitgeist integration" ON)
 +
 +if (USE_ZEITGEIST)
@@ -15,31 +27,37 @@
 +  message ("-- Zeitgeist integration disabled")
 +endif ()
 +
- set (CORE_DEPS "gobject-2.0;glib-2.0;gio-2.0;gio-unix-2.0;gee-1.0;libgnome-menu;libwnck-3.0;gdk-x11-3.0;unity;")
--set (UI_DEPS "gtk+-3.0>=3.2.0;granite;zeitgeist-2.0;")
++set (CORE_DEPS "gobject-2.0;glib-2.0;gio-2.0;gio-unix-2.0;gee-1.0;libgnome-menu;libwnck-3.0;gdk-x11-3.0;${UNITY_DEPS};")
 +set (UI_DEPS "gtk+-3.0>=3.2.0;granite;${ZEITGEIST_DEPS};")
  
  find_package (PkgConfig)
  pkg_check_modules (DEPS REQUIRED "${CORE_DEPS}${UI_DEPS}" gthread-2.0)
-@@ -69,6 +79,7 @@
+@@ -69,6 +89,8 @@
  OPTIONS
      --thread
      -g
++    ${UNITY_OPTIONS}
 +    ${ZEITGEIST_OPTIONS}
  )
  
  # Comment this out to enable C compiler warnings
-@@ -92,4 +103,4 @@
- add_schema ("org.pantheon.desktop.slingshot.gschema.xml")
+=== modified file 'src/Backend/App.vala'
+--- src/Backend/App.vala	2013-12-26 00:08:04 +0000
++++ src/Backend/App.vala	2014-01-31 17:57:40 +0000
+@@ -42,7 +42,9 @@
+         desktop_id = entry.get_desktop_file_id ();
+         icon_name = entry.get_icon () ?? "application-default-icon";
+         desktop_path = entry.get_desktop_file_path ();
++#if HAVE_UNITY
+         keywords = Unity.AppInfoManager.get_default ().get_keywords (desktop_id);
++#endif
+         generic_name = entry.get_generic_name ();
  
- # Translations
--add_subdirectory (po)
-\ No newline at end of file
-+add_subdirectory (po)
+         update_icon ();
 
 === modified file 'src/Backend/AppSystem.vala'
 --- src/Backend/AppSystem.vala	2013-12-26 00:08:04 +0000
-+++ src/Backend/AppSystem.vala	2014-01-31 15:15:41 +0000
++++ src/Backend/AppSystem.vala	2014-01-31 15:20:32 +0000
 @@ -22,15 +22,19 @@
      private Gee.HashMap<string, Gee.ArrayList<App>> apps = null;
      private GMenu.Tree apps_menu = null;
@@ -98,7 +116,7 @@
 
 === modified file 'src/Backend/RelevancyService.vala'
 --- src/Backend/RelevancyService.vala	2013-12-26 00:08:04 +0000
-+++ src/Backend/RelevancyService.vala	2014-01-31 15:12:44 +0000
++++ src/Backend/RelevancyService.vala	2014-01-31 15:20:32 +0000
 @@ -17,6 +17,7 @@
  //
  //  Thanks to Synapse Developers for this class

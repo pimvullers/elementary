@@ -1,7 +1,5 @@
 0001-Revert-eventbox-also-draw-css-borders-if-specified.patch
 0002-Revert-grid-draw-css-background-and-borders.patch
-0003-Revert-fixed-draw-css-background-and-borders.patch
-015_default-fallback-icon-theme.patch
 016_no_offscreen_widgets_grabbing.patch
 017_no_offscreen_device_grabbing.patch
 018_gdkenumtypes.c_location.patch

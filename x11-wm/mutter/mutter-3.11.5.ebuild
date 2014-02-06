@@ -11,7 +11,6 @@ DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="http://git.gnome.org/browse/mutter/"
 SRC_URI="${SRC_URI}
 	https://launchpad.net/ubuntu/+archive/primary/+files/mutter_3.8.4-0ubuntu2.debian.tar.gz"
-#	https://launchpad.net/~ricotz/+archive/testing/+files/mutter_3.11.4%2Bgit20140121.aab354b7-0ubuntu1%7E14.04%7Ericotz0.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"

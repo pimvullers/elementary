@@ -14,8 +14,8 @@ SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="nls contractor files pastebin spell terminal webkit"
+KEYWORDS="amd64 x86"
+IUSE="nls contractor files pastebin spell terminal webkit -zeitgeist"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -25,13 +25,13 @@ RDEPEND="
 	gnome-base/gconf:2
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
-	>=x11-libs/granite-0.2.0
-	dev-libs/libzeitgeist
+	<x11-libs/granite-0.3
 	files? ( || ( pantheon-base/pantheon-files pantheon-base/marlin ) )
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
-	terminal? ( x11-libs/vte:2.90 )"
+	terminal? ( x11-libs/vte:2.90 )
+	zeitgeist? ( dev-libs/libzeitgeist )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -42,6 +42,9 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
+	epatch_user
+
 	# Translations
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
@@ -66,6 +69,7 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 		$(cmake-utils_use_with contractor CONTRACTOR)
+		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
 
 	cmake-utils_src_configure

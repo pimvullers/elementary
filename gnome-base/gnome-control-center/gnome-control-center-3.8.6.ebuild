@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.8.6.ebuild,v 1.1 2013/11/10 08:59:08 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.8.6.ebuild,v 1.5 2014/02/01 08:59:02 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -15,7 +15,7 @@ LICENSE="GPL-2+"
 SLOT="2"
 
 IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager +socialweb v4l"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # False positives caused by nested configure scripts
 QA_CONFIGURE_OPTIONS=".*"
@@ -63,7 +63,7 @@ COMMON_DEPEND="
 	colord? ( >=x11-misc/colord-0.1.29 )
 	cups? (
 		>=net-print/cups-1.4[dbus]
-		>=net-fs/samba-3.6.14-r1[smbclient] )
+		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.8.1 )
 	i18n? ( >=app-i18n/ibus-1.4.99 )
 	kerberos? ( app-crypt/mit-krb5 )

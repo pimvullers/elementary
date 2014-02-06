@@ -23,7 +23,7 @@ REQUIRED_USE="
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~ricotz/+archive/testing/+files/gtk%2B3.0_3.11.5%2Bgit20140126.9ba0ea3b-0ubuntu1%7E14.04%7Ericotz0.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gtk%2B3.0_3.11.5-0ubuntu1%7Etrusty0.debian.tar.gz"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)

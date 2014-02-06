@@ -1,10 +1,10 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.20
 
 inherit gnome2-utils vala multilib cmake-utils bzr
 
@@ -27,20 +27,17 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-pkg_setup() {
-	DOCS=( AUTHORS COPYING NEWS README )
-}
+DOCS=( "${S}/AUTHORS" "${S}/COPYING" "${S}/NEWS" "${S}/README" )
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-gee-0.8.patch"
+	epatch_user
+
 	# Disable building of the demo application (if needed)
-	use demo || sed -i 's/add_subdirectory (demo)//' CMakeLists.txt
+	use demo || sed -i '/add_subdirectory (demo)/d' CMakeLists.txt
 
 	# Disable generation of the translations (if needed)
-	use nls || sed -i 's/add_subdirectory (po)//' CMakeLists.txt
-
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
-
-	epatch_user
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare

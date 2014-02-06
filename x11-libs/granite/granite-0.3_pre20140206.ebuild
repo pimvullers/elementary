@@ -10,11 +10,11 @@ inherit gnome2-utils vala multilib cmake-utils versionator
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="http://launchpad.net/granite"
-SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tgz"
+SRC_URI="https://code.launchpad.net/~elementary-os/+archive/daily/+files/granite_0.3.0%7Er686%2Bpkg59%7Eubuntu14.04.1.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="demo nls"
 
 RDEPEND="
