@@ -27,7 +27,7 @@ CDEPEND="
 	>=dev-libs/glib-2.26.0:2
 	>=x11-libs/gtk+-2.22.0:2"
 RDEPEND="${CDEPEND}
-	x11-themes/pantheon-plank-theme"
+	x11-themes/plank-theme-pantheon"
 DEPEND="${CDEPEND}
 	$(vala_depend)
 	dev-util/intltool
