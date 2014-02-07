@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -10,27 +10,36 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
-SRC_URI="https://github.com/pimvullers/elementary/raw/master/distfiles/${P}.tar.bz2"
+SRC_URI="https://code.launchpad.net/~elementary-os/+archive/stable/+files/gala_0.1-0%7Er363%2Bpkg18%2Br1%7Eubuntu12.04.1.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE=""
 
 RDEPEND="
-	dev-libs/libgee
+	dev-libs/libgee:0
 	media-libs/clutter
 	media-libs/clutter-gtk
 	pantheon-base/plank
-	x11-libs/granite
+	<x11-libs/granite-0.3
 	x11-libs/bamf
 	x11-libs/libXfixes
-	>=x11-wm/mutter-3.4.1-r2"
+	>=x11-wm/mutter-3.4.1-r2
+	<x11-wm/mutter-3.11"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+src_unpack() {
+	default_src_unpack
+
+	mv "${WORKDIR}/recipe-{debupstream}-0~r{revno}+pkg{revno:packaging}+r1" "${S}"
+}
+
 src_prepare() {
+	epatch_user
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
@@ -40,7 +49,6 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
 

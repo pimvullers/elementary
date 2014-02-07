@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ RDEPEND="
 	media-libs/clutter
 	media-libs/clutter-gtk
 	pantheon-base/plank
-	x11-libs/granite
+	>=x11-libs/granite-0.3
 	x11-libs/bamf
 	x11-libs/libXfixes
 	>=x11-wm/mutter-3.8
@@ -33,7 +33,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-gee-0.8.patch"
-
 	epatch_user
 
 	cmake-utils_src_prepare
@@ -45,7 +44,6 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
 
