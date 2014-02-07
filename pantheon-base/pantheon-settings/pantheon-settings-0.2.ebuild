@@ -7,8 +7,8 @@ EAPI=5
 inherit gnome2-utils bzr
 
 DESCRIPTION="Default settings for the Pantheon Desktop Environment"
-HOMEPAGE="https://code.launchpad.net/~elementary-os/elementaryos/default-settings-saucy"
-EBZR_REPO_URI="lp:~elementary-os/elementaryos/default-settings-saucy"
+HOMEPAGE="https://code.launchpad.net/~elementary-os/elementaryos/default-settings-luna"
+EBZR_REPO_URI="lp:~elementary-os/elementaryos/default-settings-luna"
 
 LICENSE="GPL-2"
 SLOT="0"
