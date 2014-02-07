@@ -19,7 +19,7 @@ KEYWORDS="amd64 x86"
 IUSE="debug nls static-libs"
 
 CDEPEND="
-	dev-libs/libgee:0.8
+	dev-libs/libgee:0
 	dev-libs/libunique:1
 	x11-libs/libX11
 	x11-libs/libwnck:1
@@ -53,7 +53,7 @@ src_configure() {
 	local myeconfargs=(
 		$(use_enable debug)
 		$(use_enable nls)
-		--enable-gee-0.8
+		--disable-gee-0.8
 		--disable-apport
 	)
 	autotools-utils_src_configure
