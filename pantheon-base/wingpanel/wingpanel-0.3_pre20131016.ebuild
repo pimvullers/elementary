@@ -37,11 +37,14 @@ PDEPEND="
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 
 DOCS=( "${S}/AUTHORS" "${S}/COPYING" "${S}/COPYRIGHT" )
-S="${WORKDIR}/recipe-{debupstream}~r{revno}+pkg{revno:packaging}+r1"
+
+src_unpack() {
+	default_src_unpack
+
+	mv "${WORKDIR}/recipe-{debupstream}~r{revno}+pkg{revno:packaging}+r1" "${S}"
+}
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.2.5-indicator-vapi.patch"
-	epatch "${FILESDIR}/${PN}-0.2.5-indicator-arrow.patch"
 	epatch_user
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
