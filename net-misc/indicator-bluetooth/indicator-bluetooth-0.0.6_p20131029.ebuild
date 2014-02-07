@@ -16,7 +16,9 @@ KEYWORDS="~amd64 ~x86"
 IUSE="nls static-libs"
 
 RDEPEND="
-	>=dev-libs/glib-2.38:2"
+	>=dev-libs/glib-2.38:2
+	>=net-wireless/gnome-bluetooth-3
+	<net-wireless/gnome-bluetooth-3.8"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
