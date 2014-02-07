@@ -38,6 +38,8 @@ S="${WORKDIR}/indicator-sound-12.10.2daily13.04.12"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
+	sed -i 's/-Werror//' src/Makefile.am
+
 	autotools-utils_src_prepare
 	vala_src_prepare
 }

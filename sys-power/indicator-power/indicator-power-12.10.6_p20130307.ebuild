@@ -30,6 +30,8 @@ S="${WORKDIR}/indicator-power-12.10.6daily13.03.07"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
+	sed -i 's/-Werror//' src/Makefile.am
+
 	autotools-utils_src_prepare
 }
 
