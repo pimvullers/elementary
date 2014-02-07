@@ -29,11 +29,11 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 PDEPEND="
-	x11-misc/indicator-datetime
-	x11-misc/indicator-session
-	bluetooth? ( net-misc/indicator-bluetooth )
-	power? ( sys-power/indicator-power )
-	sound? ( media-sound/indicator-sound )	"
+	<x11-misc/indicator-datetime-13.10.0_p20131023
+	<x11-misc/indicator-session-12.10.5_p20131125
+	bluetooth? ( <net-misc/indicator-bluetooth-0.0.6_p20131029 )
+	power? ( <sys-power/indicator-power-12.10.6_p20131129 )
+	sound? ( <media-sound/indicator-sound-12.10.2_p20131125 )	"
 
 DOCS=( "${S}/AUTHORS" "${S}/COPYING" "${S}/COPYRIGHT" )
 
