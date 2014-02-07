@@ -1,0 +1,2 @@
+>=net-wireless/gnome-bluetooth-3.9
+>=net-wireless/bluez-5
