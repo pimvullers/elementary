@@ -19,9 +19,9 @@ CDEPEND="
 	lightdm? ( >=pantheon-base/pantheon-greeter-1.0 )"
 RDEPEND="${CDEPEND}
 	>=gnome-base/gnome-session-3.0
-	<gnome-base/gnome-session-3.8
+	<gnome-base/gnome-session-3.10
 	>=gnome-base/gnome-settings-daemon-3.0
-	<gnome-base/gnome-settings-daemon-3.8
+	<gnome-base/gnome-settings-daemon-3.10
 	>=pantheon-base/cerbere-0.2
 	pantheon-base/plank
 	>=pantheon-base/slingshot-0.7

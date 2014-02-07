@@ -24,7 +24,9 @@ COMMON_DEPEND="
 	>=x11-libs/gtk+-3.3.7:3[X,introspection?]
 	>=dev-libs/glib-2.36.0:2
 	>=media-libs/clutter-1.14.3:1.0[introspection?]
+	<media-libs/clutter-1.17:1.0[introspection?]
 	>=media-libs/cogl-1.13.3:1.0=[introspection?]
+	<media-libs/cogl-1.17:1.0=[introspection?]
 	>=media-libs/libcanberra-0.26[gtk3]
 	>=x11-libs/startup-notification-0.7
 	>=x11-libs/libXcomposite-0.2
@@ -70,6 +72,8 @@ src_prepare() {
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
+
+	sed -i 's/--warn-error//' src/Makefile
 
 	gnome2_src_prepare
 }
