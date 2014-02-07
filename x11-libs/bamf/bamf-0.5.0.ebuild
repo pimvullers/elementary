@@ -8,7 +8,7 @@ PYTHON_COMPAT=( python{2_6,2_7} )
 VALA_MIN_API_VERSION=0.16
 VALA_USE_DEPEND=vapigen
 
-inherit vala autotools-utils python-single-r1
+inherit vala autotools-utils python-r1
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
@@ -29,6 +29,7 @@ RDEPEND="
 	>=x11-libs/libwnck-3.4.7:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	${PYTHON_DEPS}
 	dev-libs/libxml2[python]
 	dev-libs/libxslt[python]
 	doc? ( dev-util/gtk-doc )
@@ -36,10 +37,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 DOCS=(AUTHORS COPYING COPYING.LGPL ChangeLog NEWS README TODO)
-
-pkg_setup() {
-	python_set_active_version 2
-}
 
 src_prepare() {
 	sed -i 's/-Werror//' configure
@@ -56,5 +53,6 @@ src_configure() {
 		$(use_enable introspection)
 		VALA_API_GEN="${VAPIGEN}"
 	)
+	python_setup
 	autotools-utils_src_configure
 }
