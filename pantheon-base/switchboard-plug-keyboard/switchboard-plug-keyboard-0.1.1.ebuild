@@ -22,6 +22,7 @@ CDEPEND="
 	pantheon-base/libpantheon
 	x11-libs/granite"
 RDEPEND="${CDEPEND}
+	gnome-base/libgnomekbd
 	pantheon-base/switchboard"
 DEPEND="${CDEPEND}
 	$(vala_depend)
