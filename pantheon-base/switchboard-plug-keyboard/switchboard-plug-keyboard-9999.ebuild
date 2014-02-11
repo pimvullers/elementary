@@ -17,11 +17,13 @@ SLOT="0"
 KEYWORDS=""
 IUSE="nls"
 
-RDEPEND="
+CDEPEND="
 	dev-libs/glib
-	x11-libs/granite
+	x11-libs/granite"
+RDEPEND="${CDEPEND}
+	gnome-base/libgnomekbd
 	>=pantheon-base/switchboard-2"
-DEPEND="${RDEPEND}
+DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"

@@ -18,9 +18,8 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
-	pantheon-base/libpantheon
 	x11-libs/granite
-	pantheon-base/switchboard"
+	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
