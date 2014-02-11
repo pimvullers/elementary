@@ -43,7 +43,7 @@ src_test() {
 }
 
 src_install() {
-	DOCS="AUTHORS ChangeLog HACKING MAINTAINERS NEWS README"
+	DOCS="AUTHORS HACKING MAINTAINERS NEWS README"
 	gnome2_src_install
 
 	insinto /usr/share/${PN}-3.0/language-specs
