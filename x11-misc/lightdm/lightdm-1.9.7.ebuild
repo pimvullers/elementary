@@ -46,7 +46,6 @@ DOCS=( NEWS )
 RESTRICT="test"
 
 src_prepare() {
-	sed -i -e 's:getgroups:lightdm_&:' tests/src/libsystem.c || die #412369
 	sed -i -e '/minimum-uid/s:500:1000:' data/users.conf || die
 
 	epatch "${FILESDIR}"/${PN}-1.7.7-session-wrapper.patch
@@ -81,7 +80,9 @@ src_configure() {
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \
+		--disable-tests \
 		--with-html-dir="${EPREFIX}"/usr/share/doc/${PF}/html
+
 }
 
 src_install() {
