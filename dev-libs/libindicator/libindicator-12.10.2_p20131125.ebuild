@@ -11,11 +11,12 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/libindicator_12.10
 
 LICENSE="GPL-3"
 SLOT="3"
-KEYWORDS="amd64 x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="static-libs"
 
-RDEPEND=">=dev-libs/glib-2.22
-	>=x11-libs/gtk+-3.2:3"
+RDEPEND=">=dev-libs/glib-2.37:2
+	>=x11-libs/gtk+-3.6:3
+	>=x11-libs/libido-13.10"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
