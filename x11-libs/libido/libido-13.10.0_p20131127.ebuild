@@ -16,8 +16,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE="doc static-libs"
 
 RDEPEND="
-	>=dev-libs/glib-2.32:2
-	>=x11-libs/gtk+-3.4:3"
+	>=dev-libs/glib-2.37:2
+	>=x11-libs/gtk+-3.8.2[ubuntu]:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
