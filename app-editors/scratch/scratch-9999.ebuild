@@ -26,6 +26,7 @@ RDEPEND="
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/gtksourceview:3.0
 	>=x11-libs/granite-0.3
+	contractor? ( dev-libs/contractor )
 	files? ( pantheon-base/pantheon-files )
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )

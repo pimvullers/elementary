@@ -17,7 +17,7 @@ IUSE="doc static-libs"
 
 RDEPEND="
 	>=dev-libs/glib-2.37:2
-	>=x11-libs/gtk+-3.8.2[ubuntu]:3"
+	>=x11-libs/gtk+-3.8.2:3[ubuntu]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
