@@ -40,6 +40,7 @@ COMMON_DEPEND="
 	gnome-base/gnome-menus:3
 	gnome-base/libgtop:2
 	media-libs/fontconfig
+	media-libs/grilo:0.2
 
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
@@ -67,6 +68,7 @@ COMMON_DEPEND="
 		>=net-print/cups-1.4[dbus]
 		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.9.90 )
+	>=net-libs/gnome-online-accounts-3.9.90
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
 	socialweb? ( net-libs/libsocialweb )
@@ -128,7 +130,7 @@ src_prepare() {
 
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}"/${PN}-3.11.3-optional.patch
+	epatch "${FILESDIR}"/${PN}-3.11.90-optional.patch
 
 	# Fix some absolute paths to be appropriate for Gentoo
 	epatch "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch
@@ -137,12 +139,9 @@ src_prepare() {
 
 	# top-level configure.ac does not use AC_CONFIG_SUBDIRS, so we need this to
 	# avoid libtoolize "We've already been run in this tree" warning, bug #484988
-	local d
-	for d in . egg-list-box; do
-		pushd "${d}" > /dev/null
-		AT_NOELIBTOOLIZE=yes eautoreconf
-		popd > /dev/null
-	done
+	pushd "." > /dev/null
+	AT_NOELIBTOOLIZE=yes eautoreconf
+	popd > /dev/null
 	elibtoolize --force
 
 	# panels/datetime/Makefile.am gets touched by "gentoo-paths" patch.

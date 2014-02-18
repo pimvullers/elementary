@@ -195,7 +195,7 @@ index 19bebaf..8b4177a 100644
  if test "x$enable_cups" = "xyes"; then
  	AC_MSG_NOTICE([** CUPS (Printers panel)])
  else
-@@ -557,11 +639,21 @@ if test "x$have_cheese" = "xyes"; then
+@@ -557,6 +639,16 @@ if test "x$have_cheese" = "xyes"; then
  else
  	AC_MSG_NOTICE([   Users panel webcam support disabled])
  fi
@@ -204,11 +204,6 @@ index 19bebaf..8b4177a 100644
 +else
 +	AC_MSG_NOTICE([   Online Accounts panel disabled])
 +fi
- if test "x$with_libsocialweb" = "xyes"; then
- 	AC_MSG_NOTICE([** libsocialweb (Background panel Flickr support)])
- else
- 	AC_MSG_NOTICE([   Background panel Flickr support disabled])
- fi
 +if test "x$build_wacom" = "xtrue"; then
 +	AC_MSG_NOTICE([** libwacom (Wacom Graphics Tablet panel)])
 +else

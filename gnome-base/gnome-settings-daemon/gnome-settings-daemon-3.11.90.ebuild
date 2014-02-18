@@ -103,7 +103,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.10.2-45_suppress-printer-may-not-be-connected-notification.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-revert_background_dropping.patch"
 		epatch "${PATCHDIR}/52_sync_background_to_accountsservice.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-53_sync_input_sources_to_accountsservice.patch"
+		epatch "${FILESDIR}/${PN}-3.11.90-53_sync_input_sources_to_accountsservice.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-64_restore_terminal_keyboard_shortcut_schema.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-nexus-orientation.patch"
 		epatch "${FILESDIR}/${PN}-3.10.2-fix_broken_user_sounds_permissions.patch"
@@ -125,7 +125,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.7.90-short-touchpad-timeout.patch"
 
 	# Make colord and wacom optional; requires eautoreconf
-	epatch "${FILESDIR}/${PN}-3.10.2-optional.patch"
+	epatch "${FILESDIR}/${PN}-3.11.90-optional.patch"
 
 	epatch_user
 	eautoreconf
