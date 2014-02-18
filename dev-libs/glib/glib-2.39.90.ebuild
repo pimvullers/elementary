@@ -134,7 +134,7 @@ src_prepare() {
 	fi
 
 	# gdbus-codegen is a separate package
-	epatch "${FILESDIR}/${PN}-2.37.x-external-gdbus-codegen.patch"
+	epatch "${FILESDIR}/${PN}-2.39.90-external-gdbus-codegen.patch"
 
 	# leave python shebang alone
 	sed -e '/${PYTHON}/d' \

@@ -76,11 +76,11 @@ diff --git a/gio/tests/Makefile.am b/gio/tests/Makefile.am
 index 7224124..5c8baaa 100644
 --- a/gio/tests/Makefile.am
 +++ b/gio/tests/Makefile.am
-@@ -359,10 +359,8 @@ gmenumodel_SOURCES                       = $(gdbus_sessionbus_sources) gmenumode
- nodist_gdbus_test_codegen_SOURCES        = gdbus-test-codegen-generated.c gdbus-test-codegen-generated.h
+@@ -436,10 +436,8 @@ gmenumodel_SOURCES                       = $(gdbus_sessionbus_sources) gmenumode
+ gnotification_SOURCES                    = $(gdbus_sessionbus_sources) gnotification.c gnotification-server.h gnotification-server.c
  
  gdbus-test-codegen.o: gdbus-test-codegen-generated.h
--gdbus-test-codegen-generated.h gdbus-test-codegen-generated.c: test-codegen.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
+-gdbus-test-codegen-generated.h: test-codegen.xml Makefile $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen
 -	$(AM_V_GEN) UNINSTALLED_GLIB_SRCDIR=$(top_srcdir) \
 -		UNINSTALLED_GLIB_BUILDDIR=$(top_builddir) \
 -		$(PYTHON) $(top_builddir)/gio/gdbus-2.0/codegen/gdbus-codegen \
