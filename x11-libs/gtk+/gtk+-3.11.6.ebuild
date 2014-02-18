@@ -47,7 +47,7 @@ COMMON_DEPEND="
 		media-libs/mesa[wayland]
 		>=x11-libs/libxkbcommon-0.2
 	)
-	>=dev-libs/glib-2.39.0:2
+	>=dev-libs/glib-2.39.5:2
 	>=x11-libs/pango-1.32.4[introspection?]
 	>=dev-libs/atk-2.7.5[introspection?]
 	>=x11-libs/cairo-1.12.0[aqua?,glib,svg,X?]
