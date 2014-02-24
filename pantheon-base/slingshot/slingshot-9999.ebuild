@@ -32,8 +32,6 @@ DEPEND="${RDEPEND}
 DOCS=( "${S}/AUTHORS" "${S}/COPYING" )
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.7.6.1-gnome-menus-3.patch"
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt

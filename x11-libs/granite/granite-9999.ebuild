@@ -30,7 +30,6 @@ DEPEND="${RDEPEND}
 DOCS=( "${S}/AUTHORS" "${S}/COPYING" "${S}/NEWS" "${S}/README" )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
 	# Disable building of the demo application (if needed)

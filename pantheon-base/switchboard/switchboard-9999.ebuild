@@ -31,7 +31,6 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
 	# Disable generation of the translations (if needed)
