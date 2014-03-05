@@ -34,7 +34,7 @@ index 9f3b7ed..5720d36 100644
  
  dnl ---------------------------------------------------------------------------
  dnl - datetime
-@@ -276,13 +289,22 @@ case $host_os in
+@@ -276,14 +289,23 @@ case $host_os in
        have_wacom=no
      else
        if test x$enable_gudev != xno; then
@@ -57,6 +57,7 @@ index 9f3b7ed..5720d36 100644
        else
          AC_MSG_ERROR([GUdev is necessary to compile Wacom support])
        fi
+       AC_DEFINE_UNQUOTED(HAVE_WACOM, 1, [Define to 1 if wacom support is available])
 -      have_wacom=yes
      fi
      ;;
