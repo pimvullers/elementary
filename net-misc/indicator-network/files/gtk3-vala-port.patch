@@ -1,0 +1,1060 @@
+From: Mathieu Trudel-Lapierre <mathieu.trudel-lapierre@canonical.com>
+Subject: Port indicator-network to Gtk3/new vala APIs and fix the FTBFS.
+
+This is basically just porting it to GTK3 and making sure it looks for the
+right libs in configure.
+
+=== modified file 'configure.ac'
+Index: indicator-network-0.3.8/configure.ac
+===================================================================
+--- indicator-network-0.3.8.orig/configure.ac	2011-03-18 10:47:04.000000000 -0400
++++ indicator-network-0.3.8/configure.ac	2011-09-06 14:20:12.790858313 -0400
+@@ -30,14 +30,14 @@
+ # Dependencies 
+ ###########################
+ 
+-GTK_REQUIRED_VERSION=2.12
++GTK_REQUIRED_VERSION=3.0.0
+ INDICATOR_REQUIRED_VERSION=0.3.0
+ DBUSMENUGTK_REQUIRED_VERSION=0.3.90
+ LIBNOTIFY_REQUIRED_VERSION=0.7.1
+ DBUSMENUGLIB_REQUIRED_VERSION=0.3.90
+ GIO_REQUIRED_VERSION=2.26
+ 
+-PKG_CHECK_MODULES([GTK], [gtk+-2.0 >= $GTK_REQUIRED_VERSION])
++PKG_CHECK_MODULES([GTK], [gtk+-3.0 >= $GTK_REQUIRED_VERSION])
+ AC_SUBST(GTK_CFLAGS)
+ AC_SUBST(GTK_LIBS)
+ 
+@@ -53,12 +53,12 @@
+ AC_SUBST(GOBJECT_CFLAGS)
+ AC_SUBST(GOBJECT_LIBS)
+ 
+-PKG_CHECK_MODULES([INDICATOR], [indicator >= $INDICATOR_REQUIRED_VERSION])
++PKG_CHECK_MODULES([INDICATOR], [indicator3-0.4 >= $INDICATOR_REQUIRED_VERSION])
+ AC_SUBST(INDICATOR_CFLAGS)
+ AC_SUBST(INDICATOR_LIBS)
+ 
+ PKG_CHECK_MODULES([DBUSMENUGTK],
+-		[dbusmenu-gtk-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION])
++		[dbusmenu-gtk3-0.4 >= $DBUSMENUGTK_REQUIRED_VERSION])
+ AC_SUBST(DBUSMENUGTK_CFLAGS)
+ AC_SUBST(DBUSMENUGTK_LIBS)
+ 
+@@ -90,8 +90,8 @@
+ 	INDICATORDIR="${libdir}/indicators/2/"
+ 	INDICATORICONSDIR="${datadir}/indicator-applet/icons/"
+ else
+-	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator`
+-	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator`
++	INDICATORDIR=`$PKG_CONFIG --variable=indicatordir indicator3-0.4`
++	INDICATORICONSDIR=`$PKG_CONFIG --variable=iconsdir indicator3-0.4`
+ fi
+ AC_SUBST(INDICATORDIR)
+ AC_SUBST(INDICATORICONSDIR)
+Index: indicator-network-0.3.8/src/agent/connect-error-dialog.c
+===================================================================
+--- indicator-network-0.3.8.orig/src/agent/connect-error-dialog.c	2010-11-22 11:07:20.000000000 -0500
++++ indicator-network-0.3.8/src/agent/connect-error-dialog.c	2011-09-06 14:20:12.790858313 -0400
+@@ -84,7 +84,7 @@
+ 
+   g_return_if_fail(IS_CONNECT_ERROR_DIALOG(self));
+ 
+-  gtk_widget_hide_all(GTK_WIDGET(self));
++  gtk_widget_hide(GTK_WIDGET(self));
+ }
+ 
+ void connect_error_dialog_show_error(ConnectErrorDialog *self,
+Index: indicator-network-0.3.8/src/agent/passphrase-dialog.c
+===================================================================
+--- indicator-network-0.3.8.orig/src/agent/passphrase-dialog.c	2010-12-09 10:28:30.000000000 -0500
++++ indicator-network-0.3.8/src/agent/passphrase-dialog.c	2011-09-06 14:20:12.790858313 -0400
+@@ -425,7 +425,7 @@
+ 
+   g_debug("%s(): response_id %d", __func__, response_id);
+ 
+-  gtk_widget_hide_all(GTK_WIDGET(self));
++  gtk_widget_hide(GTK_WIDGET(self));
+ 
+   g_free(priv->security_type);
+   priv->security_type = NULL;
+Index: indicator-network-0.3.8/src/agent/pin-dialog.c
+===================================================================
+--- indicator-network-0.3.8.orig/src/agent/pin-dialog.c	2010-11-22 11:07:20.000000000 -0500
++++ indicator-network-0.3.8/src/agent/pin-dialog.c	2011-09-06 14:20:12.800858313 -0400
+@@ -88,7 +88,7 @@
+ 
+   g_debug("%s(): response_id %d", __func__, response_id);
+ 
+-  gtk_widget_hide_all(GTK_WIDGET(self));
++  gtk_widget_hide(GTK_WIDGET(self));
+ 
+   if (response_id != GTK_RESPONSE_ACCEPT)
+     return;
+Index: indicator-network-0.3.8/src/agent/wireless-connect-dialog.c
+===================================================================
+--- indicator-network-0.3.8.orig/src/agent/wireless-connect-dialog.c	2011-01-25 05:06:51.000000000 -0500
++++ indicator-network-0.3.8/src/agent/wireless-connect-dialog.c	2011-09-06 14:20:12.800858313 -0400
+@@ -159,7 +159,7 @@
+ 
+   g_return_if_fail(priv != NULL);
+ 
+-  gtk_widget_hide_all(GTK_WIDGET(self));
++  gtk_widget_hide(GTK_WIDGET(self));
+ 
+   if (response_id != GTK_RESPONSE_ACCEPT)
+     return;
+@@ -179,7 +179,7 @@
+ 
+     connman_service_connect(service, connect_cb, dialog);
+   } else {
+-    name = gtk_combo_box_get_active_text(GTK_COMBO_BOX(priv->network_combo));
++    name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(priv->network_combo));
+     security = gtk_combo_box_get_active(GTK_COMBO_BOX(priv->security_combo));
+     connman_manager_connect_service(priv->manager,
+ 				    CONNMAN_SERVICE_TYPE_WIFI,
+@@ -359,8 +359,7 @@
+ 
+   priv->store = gtk_list_store_new(N_COLUMNS, CONNMAN_TYPE_SERVICE,
+ 				   G_TYPE_STRING);
+-  priv->network_combo = gtk_combo_box_entry_new_with_model(GTK_TREE_MODEL(priv->store),
+-							   COLUMN_NAME);
++  priv->network_combo = gtk_combo_box_new_with_model_and_entry(GTK_TREE_MODEL(priv->store));
+   g_signal_connect(G_OBJECT(priv->network_combo), "changed",
+ 		   G_CALLBACK(network_changed), self);
+   gtk_table_attach(GTK_TABLE(table), priv->network_combo, 1, 2, 0, 1,
+@@ -377,14 +376,14 @@
+ 		    GTK_FILL, 0, 0, 0);
+ 
+ 
+-  priv->security_combo = gtk_combo_box_new_text();
+-  gtk_combo_box_insert_text(GTK_COMBO_BOX(priv->security_combo),
++  priv->security_combo = gtk_combo_box_text_new();
++  gtk_combo_box_text_insert_text(GTK_COMBO_BOX_TEXT(priv->security_combo),
+ 			    CONNMAN_SERVICE_SECURITY_NONE,
+ 			    _("None"));
+-  gtk_combo_box_insert_text(GTK_COMBO_BOX(priv->security_combo),
++  gtk_combo_box_text_insert_text(GTK_COMBO_BOX_TEXT(priv->security_combo),
+ 			    CONNMAN_SERVICE_SECURITY_WEP,
+ 			    _("WEP"));
+-  gtk_combo_box_insert_text(GTK_COMBO_BOX(priv->security_combo),
++  gtk_combo_box_text_insert_text(GTK_COMBO_BOX_TEXT(priv->security_combo),
+ 			    CONNMAN_SERVICE_SECURITY_PSK,
+ 			    _("WPA-PSK"));
+   gtk_combo_box_set_active(GTK_COMBO_BOX(priv->security_combo),
+Index: indicator-network-0.3.8/src/indicator/Makefile.am
+===================================================================
+--- indicator-network-0.3.8.orig/src/indicator/Makefile.am	2011-03-09 08:27:41.000000000 -0500
++++ indicator-network-0.3.8/src/indicator/Makefile.am	2011-09-06 14:20:12.800858313 -0400
+@@ -35,8 +35,8 @@
+ toggleswitch_VALAFLAGS = \
+ 	--ccode \
+ 	--header=toggleswitch.h \
+-        --pkg=gtk+-2.0 \
+-        --pkg=gdk-2.0 \
++        --pkg=gtk+-3.0 \
++        --pkg=gdk-3.0 \
+         --pkg=gee-1.0 \
+         --pkg=pango \
+         --pkg=cairo \
+Index: indicator-network-0.3.8/src/indicator/service-menuitem.c
+===================================================================
+--- indicator-network-0.3.8.orig/src/indicator/service-menuitem.c	2011-03-07 10:57:02.000000000 -0500
++++ indicator-network-0.3.8/src/indicator/service-menuitem.c	2011-09-06 14:20:12.800858313 -0400
+@@ -293,8 +293,9 @@
+ service_menuitem_set_state (ServiceMenuitem * item, ServiceMenuitemState state)
+ {
+ 	GtkCheckMenuItem * check = GTK_CHECK_MENU_ITEM(item);
+-	gboolean old_active = check->active;
+-	gboolean old_inconsist = check->inconsistent;
++	gboolean old_active = gtk_check_menu_item_get_active (check);
++	gboolean old_inconsist = gtk_check_menu_item_get_inconsistent (check);
++	gboolean new_active, new_inconsist;
+ 
+ 	if (item->priv->state == state) {
+ 		return;
+@@ -305,27 +306,30 @@
+ 
+ 	switch (item->priv->state) {
+ 	case SERVICE_MENUITEM_STATE_UNCHECKED:
+-		check->active = FALSE;
+-		check->inconsistent = FALSE;
++		gtk_check_menu_item_set_active (check, FALSE);
++		gtk_check_menu_item_set_inconsistent (check, FALSE);
+ 		break;
+ 	case SERVICE_MENUITEM_STATE_CHECKED:
+-		check->active = TRUE;
+-		check->inconsistent = FALSE;
++		gtk_check_menu_item_set_active (check, TRUE);
++		gtk_check_menu_item_set_inconsistent (check, FALSE);
+ 		break;
+ 	case SERVICE_MENUITEM_STATE_INDETERMINATE:
+-		check->active = TRUE;
+-		check->inconsistent = TRUE;
++		gtk_check_menu_item_set_active (check, TRUE);
++		gtk_check_menu_item_set_inconsistent (check, TRUE);
+ 		break;
+ 	default:
+ 		g_warning("Service Menuitem invalid check state: %d", state);
+ 		return;
+ 	}
+ 
+-	if (old_active != check->active) {
++	new_active = gtk_check_menu_item_get_active (check);
++	new_inconsist = gtk_check_menu_item_get_inconsistent (check);
++
++	if (old_active != new_active) {
+ 		g_object_notify(G_OBJECT(item), "active");
+ 	}
+ 
+-	if (old_inconsist != check->inconsistent) {
++	if (old_inconsist != new_inconsist) {
+ 		g_object_notify(G_OBJECT(item), "inconsistent");
+ 	}
+ 
+Index: indicator-network-0.3.8/src/indicator/toggleswitch.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/indicator/toggleswitch.vala	2011-03-10 08:38:59.000000000 -0500
++++ indicator-network-0.3.8/src/indicator/toggleswitch.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -67,7 +67,7 @@
+ 
+         // Connect signls and callbacks
+         this.style_set.connect(this.on_style_set);
+-        this.expose_event.connect(this.on_expose_event);
++        this.draw.connect(this.on_draw);
+         this.button_press_event.connect(this.on_press);
+         this.button_release_event.connect(this.on_release);
+         this.key_release_event.connect(this.on_key_release);
+@@ -102,29 +102,32 @@
+     }
+ 
+     
+-    private void draw_widget() {
+-        // Do the drawing of the actual widget.
+-        var cr = Gdk.cairo_create(this.window);
++    private void draw_widget(Cairo.Context cr) {
+ 
+         // Draw the main background
+         this.draw_background(cr);
+         
+         // Draw the text
+-        this.draw_text();
++        this.draw_text(cr);
+ 
+         // Draw the slider
+         this.draw_slider(cr);
+     }
+ 
+     private void draw_background(Cairo.Context cr) {       
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
+ 
+-        var state = this.state;
++	Gtk.Allocation alloc;
++
++	this.get_allocation (out alloc);
++
++        int x = alloc.x;
++        int y = alloc.y;
++        int width = alloc.width;
++        int height = alloc.height;
++
++        var state = this.get_state ();
+         // Don't change colour of main background on hover or press
+-        if ((this.state == Gtk.StateType.PRELIGHT) | (this.state == Gtk.StateType.ACTIVE)) {
++        if ((state == Gtk.StateType.PRELIGHT) | (state == Gtk.StateType.ACTIVE)) {
+             state = Gtk.StateType.NORMAL;
+         }
+ 
+@@ -147,27 +150,34 @@
+     }
+         
+     private void draw_slider(Cairo.Context cr) {
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
++
++	Gtk.Allocation alloc;
++
++	this.get_allocation (out alloc);
++
++        int x = alloc.x;
++        int y = alloc.y;
++        int width = alloc.width;
++        int height = alloc.height;
+         int x_offset = 0;
+ 
+         if (this.active) {
+             x_offset = width/2;
+         }
+ 
+-        var stroke = this.style.dark[this.state];
++        var state = this.get_state ();
++
++        var stroke = this.style.dark[state];
+         Gdk.Color fill1_rectangle;
+         Gdk.Color fill2_rectangle;
+ 
+         // Don't draw a gradient if insensitive
+-        if (this.state == Gtk.StateType.INSENSITIVE) {
+-            fill1_rectangle = this.style.bg[this.state];
+-            fill2_rectangle = this.style.bg[this.state];
++        if (state == Gtk.StateType.INSENSITIVE) {
++            fill1_rectangle = this.style.bg[state];
++            fill2_rectangle = this.style.bg[state];
+         } else {
+-            fill1_rectangle = this.style.light[this.state];
+-            fill2_rectangle = this.style.mid[this.state];
++            fill1_rectangle = this.style.light[state];
++            fill2_rectangle = this.style.mid[state];
+         }
+ 
+         // Draw the slider
+@@ -179,8 +189,10 @@
+     }
+ 
+     private void draw_vertical_lines(Cairo.Context cr, int x, int y, int width, int height) {
+-        var fill_line_dark = this.style.dark[this.state];
+-        var fill_line_light = this.style.light[this.state];
++
++	var state = this.get_state ();
++        var fill_line_dark = this.style.dark[state];
++        var fill_line_light = this.style.light[state];
+         var line_height = (int) height*this.LINE_HEIGHT_RATIO;
+         var line_spacing = (int) (this.LINE_SPACING_RATIO * (width / 2));
+         
+@@ -203,20 +215,25 @@
+         }
+     }
+ 
+-    private void draw_text() {
+-        this.draw_centered_text(this.values[0], "left");
+-        this.draw_centered_text(this.values[1], "right");
++    private void draw_text(Cairo.Context cr) {
++        this.draw_centered_text(cr, this.values[0], "left");
++        this.draw_centered_text(cr, this.values[1], "right");
+     }
+ 
+-    private void draw_centered_text(string text, string gravity) {
++    private void draw_centered_text(Cairo.Context cr, string text, string gravity) {
++
++	Gtk.Allocation allocation;
++
++	this.get_allocation (out allocation);
++
+         if (this.layout == null) {
+             this.layout = this.create_pango_layout(null);
+         }
+ 
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
++        int x = allocation.x;
++        int y = allocation.y;
++        int width = allocation.width;
++        int height = allocation.height;
+ 
+         int x_offset;
+         int y_offset;
+@@ -235,8 +252,8 @@
+         
+         y_offset = (height - text_height) / 2;
+         
+-        this.style.draw_layout(this.window, this.get_state(), true,
+-                                {x, y, width, height},
++        this.style.draw_layout(cr, this.get_state(), true,
++                                //{x, y, width, height},
+                                 this, "", x+x_offset, y+y_offset,
+                                 this.layout);
+     }
+@@ -312,8 +329,8 @@
+         this.set_size_request(calc_width, calc_height);
+     }
+ 
+-    private bool on_expose_event(Gdk.EventExpose event) {
+-        this.draw_widget();
++    private bool on_draw(Cairo.Context cr) {
++        this.draw_widget(cr);
+         return true;
+     }
+ 
+Index: indicator-network-0.3.8/src/settings/Makefile.am
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/Makefile.am	2011-03-17 09:51:44.000000000 -0400
++++ indicator-network-0.3.8/src/settings/Makefile.am	2011-09-06 14:20:12.800858313 -0400
+@@ -16,7 +16,6 @@
+ 	frontend/widgets/stores.vala \
+ 	frontend/widgets/treeviews.vala \
+ 	frontend/widgets/infobox.vala \
+-	frontend/widgets/toggleswitch.vala \
+ 	frontend/widgets/device-boxes/base.vala \
+ 	frontend/widgets/device-boxes/mobile.vala \
+ 	frontend/widgets/device-boxes/bluetooth.vala \
+@@ -29,8 +28,8 @@
+ 	--vapidir=$(srcdir)/vapi \
+ 	--vapidir=$(srcdir)/../../src/libconnman \
+         --pkg=gmodule-2.0 \
+-        --pkg=gtk+-2.0 \
+-        --pkg=gdk-2.0 \
++        --pkg=gtk+-3.0 \
++        --pkg=gdk-3.0 \
+         --pkg=gio-2.0 \
+         --pkg=gee-1.0 \
+         --pkg=pango \
+Index: indicator-network-0.3.8/src/settings/app.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/app.vala	2011-02-16 08:29:20.000000000 -0500
++++ indicator-network-0.3.8/src/settings/app.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -76,16 +76,16 @@
+ 
+     private void connect_signals() {
+         this.window_main.delete_event.connect(this.on_window_main_delete_event);
+-        this.notebook_main.switch_page.connect(this.on_notebook_main_page_switched);
++        this.notebook_main.switch_page.connect((notebook, page_num) => { this.on_notebook_main_page_switched ((Gtk.Notebook) notebook, page_num); });
+     }
+     
+     /* Callbacks */
+-    public bool on_window_main_delete_event(Gdk.Event event) {
++    public bool on_window_main_delete_event(Gdk.EventAny event) {
+         Gtk.main_quit();
+         return true;
+     }
+     
+-    public void on_notebook_main_page_switched(Gtk.NotebookPage? notebook_page, uint page_num) {
++    public void on_notebook_main_page_switched(Gtk.Widget? notebook_page, uint page_num) {
+         var page_alignment = this.notebook_main.get_nth_page((int) page_num);
+ 
+         foreach (ConnectionsPage page in this.pages) {
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/bluetooth.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/device-boxes/bluetooth.vala	2011-03-08 12:45:56.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/bluetooth.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -26,7 +26,7 @@
+     private string datadir;
+     private Connman.Manager connman;
+     private InfoBox infobox;
+-    private ToggleSwitch toggleswitch;
++    private Gtk.Switch toggleswitch;
+     private Gtk.Label label_status;
+     private Gtk.Builder builder;
+     private Gtk.VBox vbox_connections;
+@@ -45,7 +45,7 @@
+         // Infobox and Togglswitch
+         /// Creation
+         this.infobox = new InfoBox(false, 12);
+-        this.toggleswitch = new ToggleSwitch();
++        this.toggleswitch = new Gtk.Switch();
+         this.label_status = new Gtk.Label(null);
+         /// Padding and alignment
+         this.label_status.set_alignment(0, 0.5f);
+@@ -55,7 +55,7 @@
+         this.infobox.pack_start(this.toggleswitch, false, true);
+         this.pack_start(this.infobox, false, false);
+         /// Connect signals;
+-        this.toggleswitch.toggled.connect(this.on_toggleswitch_toggled);
++        this.toggleswitch.state_changed.connect(this.on_toggleswitch_toggled);
+ 
+         // Network Settings
+         /// Creation
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/flightmode.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/device-boxes/flightmode.vala	2011-02-24 04:21:41.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/flightmode.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -28,7 +28,7 @@
+     private Device device;
+     private Connman.Manager connman;
+     private InfoBox infobox;
+-    private ToggleSwitch toggleswitch;
++    private Gtk.Switch toggleswitch;
+     private Gtk.Label label_status;
+     private Gtk.Builder builder;
+     
+@@ -47,7 +47,7 @@
+         // Infobox and Togglswitch
+         /// Creation
+         this.infobox = new InfoBox(false, 12);
+-        this.toggleswitch = new ToggleSwitch();
++        this.toggleswitch = new Gtk.Switch();
+         this.label_status = new Gtk.Label(null);
+         /// Padding and alignment
+         this.label_status.set_alignment(0, 0.5f);
+@@ -57,7 +57,7 @@
+         this.infobox.pack_start(this.toggleswitch, false, true);
+         this.pack_start(this.infobox, false, false);
+         /// Connect signals;
+-        this.toggleswitch.toggled.connect(this.on_toggleswitch_toggled);
++        this.toggleswitch.state_changed.connect(this.on_toggleswitch_toggled);
+ 
+         // Network Settings
+         /// Creation
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/mobile.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/device-boxes/mobile.vala	2011-03-08 12:45:56.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/mobile.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -28,7 +28,7 @@
+     private string datadir;
+     private Connman.Manager connman;
+     private InfoBox infobox;
+-    private ToggleSwitch toggleswitch;
++    private Gtk.Switch toggleswitch;
+     private Gtk.Label label_status;
+     private Gtk.Builder builder;
+     private Gtk.VBox vbox_connections;
+@@ -48,7 +48,7 @@
+         // Infobox and Togglswitch
+         /// Creation
+         this.infobox = new InfoBox(false, 12);
+-        this.toggleswitch = new ToggleSwitch();
++        this.toggleswitch = new Gtk.Switch();
+         this.label_status = new Gtk.Label(null);
+         /// Padding and alignment
+         this.label_status.set_alignment(0, 0.5f);
+@@ -58,7 +58,7 @@
+         this.infobox.pack_start(this.toggleswitch, false, true);
+         this.pack_start(this.infobox, false, false);
+         /// Connect signals;
+-        this.toggleswitch.toggled.connect(this.on_toggleswitch_toggled);
++        this.toggleswitch.state_changed.connect(this.on_toggleswitch_toggled);
+ 
+         // Network Settings
+         /// Creation
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/wired.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/device-boxes/wired.vala	2011-03-08 12:45:56.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/wired.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -26,7 +26,7 @@
+     private string datadir;
+     private Connman.Manager connman;
+     private InfoBox infobox;
+-    private ToggleSwitch toggleswitch;
++    private Gtk.Switch toggleswitch;
+     private Gtk.Label label_status;
+     private Gtk.Builder builder;
+     private Gtk.VBox vbox_connections;
+@@ -45,7 +45,7 @@
+         // Infobox and Togglswitch
+         /// Creation
+         this.infobox = new InfoBox(false, 12);
+-        this.toggleswitch = new ToggleSwitch();
++        this.toggleswitch = new Gtk.Switch();
+         this.label_status = new Gtk.Label(null);
+         /// Padding and alignment
+         this.label_status.set_alignment(0, 0.5f);
+@@ -55,7 +55,7 @@
+         this.infobox.pack_start(this.toggleswitch, false, true);
+         this.pack_start(this.infobox, false, false);
+         /// Connect signals;
+-        this.toggleswitch.toggled.connect(this.on_toggleswitch_toggled);
++        this.toggleswitch.state_changed.connect(this.on_toggleswitch_toggled);
+ 
+         // Network Settings
+         /// Creation
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/wireless.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/device-boxes/wireless.vala	2011-02-24 04:21:41.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/device-boxes/wireless.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -29,7 +29,7 @@
+     private string datadir;
+     private Connman.Manager connman;
+     private InfoBox infobox;
+-    private ToggleSwitch toggleswitch;
++    private Gtk.Switch toggleswitch;
+     private Gtk.Label label_status;
+     private Gtk.Builder builder;
+     private WirelessConnectionView treeview_connections;
+@@ -49,7 +49,7 @@
+         // Infobox and Togglswitch
+         /// Creation
+         this.infobox = new InfoBox(false, 12);
+-        this.toggleswitch = new ToggleSwitch();
++        this.toggleswitch = new Gtk.Switch();
+         this.label_status = new Gtk.Label(null);
+         /// Padding and alignment
+         this.label_status.set_alignment(0, 0.5f);
+@@ -59,7 +59,7 @@
+         this.infobox.pack_start(this.toggleswitch, false, true);
+         this.pack_start(this.infobox, false, false);
+         /// Connect signals;
+-        this.toggleswitch.toggled.connect(this.on_toggleswitch_toggled);
++        this.toggleswitch.state_changed.connect(this.on_toggleswitch_toggled);
+ 
+         // Network Settings
+         /// Creation
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/infobox.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/infobox.vala	2011-01-24 02:57:19.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/infobox.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -32,22 +32,23 @@
+     public InfoBox(bool homogeneous=false, int spacing=0) {
+         this.set_homogeneous(homogeneous);
+         this.set_spacing(spacing);
+-        this.expose_event.connect(this.on_expose_event);
++        this.draw.connect(this.on_draw);
+     }
+ 
+-    public bool on_expose_event(Gdk.EventExpose event) {
+-        var cr = Gdk.cairo_create(window);
+-
++    public bool on_draw(Cairo.Context cr) {
+         // Get geometry
+-        var x = (int) (this.allocation.x + this.XPAD);
+-        var y = (int) (this.allocation.y + this.YPAD);
+-        var width = (int) (this.allocation.width - (this.XPAD * 2));
+-        var height = (int) (this.allocation.height - (this.YPAD * 2));
++	Gtk.Allocation alloc;
++
++	this.get_allocation (out alloc);
++        var x = (int) (alloc.x + this.XPAD);
++        var y = (int) (alloc.y + this.YPAD);
++        var width = (int) (alloc.width - (this.XPAD * 2));
++        var height = (int) (alloc.height - (this.YPAD * 2));
+ 
+         // Fill with the mid color from the current gtk theme
+-        var fill = this.style.mid[this.state];
++        var fill = this.style.mid[this.get_state()];
+         // Fill with the dark color from the current gtk theme
+-        var stroke = this.style.dark[this.state];
++        var stroke = this.style.dark[this.get_state()];
+ 
+         // Layout the rectangle
+         cr.rectangle(x, y, width, height);
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/toggleswitch.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/toggleswitch.vala	2011-01-24 02:57:19.000000000 -0500
++++ /dev/null	1970-01-01 00:00:00.000000000 +0000
+@@ -1,359 +0,0 @@
+-/*
+- * indicator-network - user interface for connman
+- * Copyright 2010-2011 Canonical Ltd.
+- *
+- * Authors:
+- * Andrew Higginson
+- *
+- * This program is free software: you can redistribute it and/or modify it
+- * under the terms of the GNU General Public License version 3, as published
+- * by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful, but
+- * WITHOUT ANY WARRANTY; without even the implied warranties of
+- * MERCHANTABILITY, SATISFACTORY QUALITY, or FITNESS FOR A PARTICULAR
+- * PURPOSE.  See the GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License along
+- * with this program.  If not, see <http://www.gnu.org/licenses/>.
+- */
+-
+-public class ToggleSwitch : Gtk.EventBox {
+-
+-    /* A switch containing the values ON and OFF (or user-inputed) that
+-       hides the inactive value. It can be clicked or dragged to change
+-       state, or through an enter/return keypress.
+-       
+-       This is being used until the move to GTK+3, at which point we will
+-       switch (excuse the pun) to Gtk.Switch as it is better. */
+-    
+-    public signal void clicked();
+-    public signal void toggled();
+-
+-    // (In relation to the height of the slider)
+-    private double LINE_HEIGHT_RATIO = 9.0/25.0;
+-    private double LINE_SPACING_RATIO = 5.0/38.0;
+-    private double CORNER_RADIUS = 3.0;
+-
+-    // (In relation to the width/height of the text)
+-    private double TEXT_XPAD = 0.4;
+-    private double TEXT_YPAD = 0.35;
+-
+-    private string[] values={"ON", "OFF"};
+-    private Pango.Layout? layout = null;
+-    private Atk.Object? atk = null;
+-
+-    public bool active = false;
+-    
+-   public ToggleSwitch() {
+-        this.set_visible_window(false);
+-        this.app_paintable = true;
+-        this.double_buffered = false;
+-
+-        // Set events for the widget to receive
+-        this.set_can_focus(true);
+-        this.set_events(Gdk.EventMask.KEY_PRESS_MASK|
+-                        Gdk.EventMask.ENTER_NOTIFY_MASK|
+-                        Gdk.EventMask.LEAVE_NOTIFY_MASK|
+-                        Gdk.EventMask.BUTTON_PRESS_MASK|
+-                        Gdk.EventMask.BUTTON_RELEASE_MASK);
+-
+-        // Connect signls and callbacks
+-        this.style_set.connect(this.on_style_set);
+-        this.expose_event.connect(this.on_expose_event);
+-        this.button_press_event.connect(this.on_press);
+-        this.button_release_event.connect(this.on_release);
+-        this.key_release_event.connect(this.on_key_release);
+-        this.enter_notify_event.connect(this.on_enter);
+-        this.leave_notify_event.connect(this.on_leave);
+-        this.motion_notify_event.connect(this.on_motion_notify_event);
+-
+-        // Calculate the best size
+-        int calc_width;
+-        int calc_height;
+-        this.calculate_size(out calc_width, out calc_height);
+-        this.set_size_request(calc_width, calc_height);
+-
+-        this.update_atk();
+-    }
+-
+-    private void calculate_size(out int width, out int height) {
+-        // Calculate the best size for the toggleswitch based on the
+-        // dimensions of the user's default font.
+-        this.layout = this.create_pango_layout(null);
+-        
+-        this.layout.set_text(this.values[0], -1);
+-
+-        Pango.Rectangle extents;
+-        
+-        this.layout.get_pixel_extents(null, out extents);
+-        var text_width = extents.width;
+-        var text_height = extents.height;
+-
+-        width = (int) ((text_width+(text_width*this.TEXT_XPAD*2))*2);
+-        height = (int) (text_height+(text_height*this.TEXT_YPAD*2));
+-    }
+-
+-    
+-    private void draw_widget() {
+-        // Do the drawing of the actual widget.
+-        var cr = Gdk.cairo_create(this.window);
+-
+-        // Draw the main background
+-        this.draw_background(cr);
+-        
+-        // Draw the text
+-        this.draw_text();
+-
+-        // Draw the slider
+-        this.draw_slider(cr);
+-    }
+-
+-    private void draw_background(Cairo.Context cr) {       
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
+-
+-        var state = this.state;
+-        // Don't change colour of main background on hover or press
+-        if ((this.state == Gtk.StateType.PRELIGHT) | (this.state == Gtk.StateType.ACTIVE)) {
+-            state = Gtk.StateType.NORMAL;
+-        }
+-
+-        // Get colours from theme
+-        var bg_fill = this.style.base[state];
+-        var bg_stroke = this.style.dark[state];
+-        var left_fill = this.style.light[Gtk.StateType.SELECTED];
+-        var left_stroke = this.style.mid[Gtk.StateType.SELECTED];
+-        var right_fill = this.style.base[state];
+-        var right_stroke = this.style.dark[state];
+-
+-        // Draw the background of the whole widget
+-        this.draw_flat_rounded_rectangle(cr, x, y, width, height, bg_stroke, bg_fill);
+-        
+-        // Draw the left (highlighted) part
+-        this.draw_flat_rounded_rectangle(cr, x, y, width/2, height, left_stroke, left_fill);
+-        
+-        // Draw the right (normal) part
+-        this.draw_flat_rounded_rectangle(cr, x+width/2, y, width/2, height, right_stroke, right_fill);
+-    }
+-        
+-    private void draw_slider(Cairo.Context cr) {
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
+-        int x_offset = 0;
+-
+-        if (this.active) {
+-            x_offset = width/2;
+-        }
+-
+-        var stroke = this.style.dark[this.state];
+-        Gdk.Color fill1_rectangle;
+-        Gdk.Color fill2_rectangle;
+-
+-        // Don't draw a gradient if insensitive
+-        if (this.state == Gtk.StateType.INSENSITIVE) {
+-            fill1_rectangle = this.style.bg[this.state];
+-            fill2_rectangle = this.style.bg[this.state];
+-        } else {
+-            fill1_rectangle = this.style.light[this.state];
+-            fill2_rectangle = this.style.mid[this.state];
+-        }
+-
+-        // Draw the slider
+-        this.draw_rounded_rectangle(cr, x+x_offset, y, width/2, height, stroke, fill1_rectangle, fill2_rectangle);
+-
+-        // Draw the vertical lines
+-        this.draw_vertical_lines(cr, x+x_offset, y, width, height);
+-
+-    }
+-
+-    private void draw_vertical_lines(Cairo.Context cr, int x, int y, int width, int height) {
+-        var fill_line_dark = this.style.dark[this.state];
+-        var fill_line_light = this.style.light[this.state];
+-        var line_height = (int) height*this.LINE_HEIGHT_RATIO;
+-        var line_spacing = (int) (this.LINE_SPACING_RATIO * (width / 2));
+-        
+-        var x_offset = ((width / 2) - (6+(line_spacing*2)))/2 + 2;
+-        var y_offset = (height  - line_height)/2;
+-                         
+-        double c_spacing = 0;
+-        for (int i=0; i<3; i++) {
+-            cr.rectangle(x+x_offset+c_spacing+1, y+y_offset, 1, line_height);
+-            cr.set_source_rgb((double) fill_line_dark.red / 65535.0,
+-                                (double) fill_line_dark.green / 65535.0,
+-                                (double) fill_line_dark.blue / 65535.0);
+-            cr.fill();
+-            cr.rectangle(x+x_offset+c_spacing, y+y_offset, 1, line_height);
+-            cr.set_source_rgb((double) fill_line_light.red / 65535.0,
+-                                (double) fill_line_light.green / 65535.0,
+-                                (double) fill_line_light.blue / 65535.0);
+-            cr.fill();
+-            c_spacing += line_spacing;
+-        }
+-    }
+-
+-    private void draw_text() {
+-        this.draw_centered_text(this.values[0], "left");
+-        this.draw_centered_text(this.values[1], "right");
+-    }
+-
+-    private void draw_centered_text(string text, string gravity) {
+-        if (this.layout == null) {
+-            this.layout = this.create_pango_layout(null);
+-        }
+-
+-        int x = this.allocation.x;
+-        int y = this.allocation.y;
+-        int width = this.allocation.width;
+-        int height = this.allocation.height;
+-
+-        int x_offset;
+-        int y_offset;
+-        Pango.Rectangle extents;
+-
+-        this.layout.set_text(text, -1);
+-        this.layout.get_pixel_extents(null, out extents);
+-        var text_width = extents.width;
+-        var text_height = extents.height;
+-
+-        x_offset = (width/2 - text_width) / 2;
+-        
+-        if (gravity == "right") {
+-            x_offset += width/2;
+-        }
+-        
+-        y_offset = (height - text_height) / 2;
+-        
+-        this.style.draw_layout(this.window, this.get_state(), true,
+-                                {x, y, width, height},
+-                                this, "", x+x_offset, y+y_offset,
+-                                this.layout);
+-    }
+-        
+-
+-    private void draw_rounded_rectangle(Cairo.Context cr, double x,
+-            double y, double w, double h, Gdk.Color stroke, Gdk.Color fill1, Gdk.Color fill2) {
+-                
+-        var r = this.CORNER_RADIUS;
+-        cr.new_sub_path();
+-        cr.arc(r+x, r+y, r, PI, 270*PI_OVER_180);
+-        cr.arc(x+w-r, r+y, r, 270*PI_OVER_180, 0);
+-        cr.arc(x+w-r, y+h-r, r, 0, 90*PI_OVER_180);
+-        cr.arc(r+x, y+h-r, r, 90*PI_OVER_180, PI);
+-        cr.close_path();
+-        
+-        cr.set_source_rgb((double) stroke.red / 65535.0,
+-                        (double) stroke.green / 65535.0,
+-                        (double) stroke.blue / 65535.0);  
+-        cr.stroke_preserve();
+-
+-        var linear = new Cairo.Pattern.linear(x, y, x, y+h);
+-        linear.add_color_stop_rgba(0.00, (double) fill1.red / 65535.0,
+-                (double) fill1.green / 65535.0, (double) fill1.blue / 65535.0, 1);  
+-        linear.add_color_stop_rgba(0.8, (double) fill2.red / 65535.0,
+-                (double) fill2.green / 65535.0, (double) fill2.blue / 65535.0, 1);  
+-        cr.set_source(linear);
+-        cr.fill();
+-    }
+-    
+-    private void draw_flat_rounded_rectangle(Cairo.Context cr, double x,
+-            double y, double w, double h, Gdk.Color stroke, Gdk.Color fill) {
+-                
+-        var r = this.CORNER_RADIUS;
+-        cr.new_sub_path();
+-        cr.arc(r+x, r+y, r, PI, 270*PI_OVER_180);
+-        cr.arc(x+w-r, r+y, r, 270*PI_OVER_180, 0);
+-        cr.arc(x+w-r, y+h-r, r, 0, 90*PI_OVER_180);
+-        cr.arc(r+x, y+h-r, r, 90*PI_OVER_180, PI);
+-        cr.close_path();
+-        
+-        cr.set_source_rgb((double) stroke.red / 65535.0,
+-                        (double) stroke.green / 65535.0,
+-                        (double) stroke.blue / 65535.0);  
+-        cr.stroke_preserve();
+-
+-        cr.set_source_rgb((double) fill.red / 65535.0,
+-                        (double) fill.green / 65535.0,
+-                        (double) fill.blue / 65535.0);  
+-        cr.fill();
+-    }
+-
+-    private void update_atk() {
+-        // Accessibility info
+-        if (this.atk == null) {
+-            this.atk = this.get_accessible();
+-            this.atk.set_role(Atk.Role.CHECK_BOX);
+-        }
+-        
+-        // Update ATK description, based on state
+-        if (this.active) {
+-            this.atk.set_name(this.values[0]);
+-        } else {
+-            this.atk.set_name(this.values[1]);
+-        }
+-    }
+-
+-    private void on_style_set(Gtk.Style? style) {
+-        int calc_width;
+-        int calc_height;
+-        
+-        this.calculate_size(out calc_width, out calc_height);
+-        this.set_size_request(calc_width, calc_height);
+-    }
+-
+-    private bool on_expose_event(Gdk.EventExpose event) {
+-        this.draw_widget();
+-        return true;
+-    }
+-
+-    private bool on_press(Gdk.EventButton event) {
+-        this.set_state(Gtk.StateType.ACTIVE);
+-        this.grab_focus();
+-        return false;
+-    }
+-    
+-    private bool on_release(Gdk.EventButton event) {
+-        this.set_state(Gtk.StateType.PRELIGHT);
+-        this.active = !this.active;
+-        this.toggled();
+-        return false;
+-    }
+-            
+-    private bool on_motion_notify_event(Gdk.EventMotion event) {
+-        this.queue_draw();
+-        return false;
+-    }
+-        
+-    private bool on_key_release(Gdk.EventKey event) {
+-        if (this.has_focus) {
+-            if ((Gdk.keyval_name(event.keyval) == "Return") | (Gdk.keyval_name(event.keyval) == "Enter")) {
+-                this.toggled();
+-            }
+-        }
+-        return false;
+-    }
+-
+-    private bool on_enter(Gdk.EventCrossing event) {
+-        this.set_state(Gtk.StateType.PRELIGHT);
+-        return false;
+-    }
+-
+-    private bool on_leave(Gdk.EventCrossing event) {
+-        this.set_state(Gtk.StateType.NORMAL);
+-		return false;
+-    }
+-
+-    public bool get_active() {
+-        return this.active;
+-    }
+-        
+-    public void set_active(bool active) {
+-        this.active = active;
+-        this.queue_draw();
+-    }
+-
+-}
+Index: indicator-network-0.3.8/src/settings/frontend/widgets/cellrenderers.vala
+===================================================================
+--- indicator-network-0.3.8.orig/src/settings/frontend/widgets/cellrenderers.vala	2011-01-07 11:40:22.000000000 -0500
++++ indicator-network-0.3.8/src/settings/frontend/widgets/cellrenderers.vala	2011-09-06 14:20:12.800858313 -0400
+@@ -49,19 +49,20 @@
+                                    out int x_offset, out int y_offset,
+                                    out int width, out int height) {
+         if (&x_offset != null) x_offset = 0;
++        else x_offset = 0;
+         if (&y_offset != null) y_offset = 0;
++        else y_offset = 0;
+         if (&width != null) width = this.MIN_CELL_WIDTH;
++	else width = 0;
+         if (&height != null) height = this.MIN_CELL_HEIGHT;
++	else height = 0;
+     }
+ 
+-    public override void render(Gdk.Window window, Gtk.Widget widget,
++    public override void render(Cairo.Context cr, Gtk.Widget widget,
+                                     Gdk.Rectangle background_area,
+                                     Gdk.Rectangle cell_area,
+-                                    Gdk.Rectangle expose_area,
+                                     Gtk.CellRendererState flags) {
+                                         
+-        var cr = Gdk.cairo_create(window);
+-        
+         var x = cell_area.x;
+         var y = cell_area.y;
+         var width = cell_area.width;
+@@ -149,19 +150,20 @@
+                                    out int x_offset, out int y_offset,
+                                    out int width, out int height) {
+         if (&x_offset != null) x_offset = 0;
++        else x_offset = 0;
+         if (&y_offset != null) y_offset = 0;
++        else y_offset = 0;
+         if (&width != null) width = this.MIN_CELL_WIDTH;
++        else width = 0;
+         if (&height != null) height = this.MIN_CELL_HEIGHT;
++        else height = 0;
+     }
+ 
+-    public override void render(Gdk.Window window, Gtk.Widget widget,
++    public override void render(Cairo.Context cr, Gtk.Widget widget,
+                                     Gdk.Rectangle background_area,
+                                     Gdk.Rectangle cell_area,
+-                                    Gdk.Rectangle expose_area,
+                                     Gtk.CellRendererState flags) {
+ 
+-        var cr = Gdk.cairo_create(window);
+-        
+         var x = (int) cell_area.x;
+         var y = (int) cell_area.y;
+         var width = (int) cell_area.width;
+@@ -173,7 +175,7 @@
+         var x_offset = (int) ((width - bar_width) / 2);
+         var y_offset = (int) ((height - bar_height) / 2);
+ 
+-        var state = this.state_widget.state;
++        var state = this.state_widget.get_state();
+ 
+         var bg_fill = this.style_widget.style.bg[state];
+         var bg_stroke = this.style_widget.style.dark[state];
+Index: indicator-network-0.3.8/po/POTFILES.skip
+===================================================================
+--- /dev/null	1970-01-01 00:00:00.000000000 +0000
++++ indicator-network-0.3.8/po/POTFILES.skip	2011-09-06 14:20:12.800858313 -0400
+@@ -0,0 +1,4 @@
++.pc/gtk3-vala-port.patch/src/agent/connect-error-dialog.c
++.pc/gtk3-vala-port.patch/src/agent/passphrase-dialog.c
++.pc/gtk3-vala-port.patch/src/agent/pin-dialog.c
++.pc/gtk3-vala-port.patch/src/agent/wireless-connect-dialog.c
