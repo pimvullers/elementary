@@ -43,7 +43,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-zeitgeist-optional.patch"
 	epatch_user
 
 	# Translations
