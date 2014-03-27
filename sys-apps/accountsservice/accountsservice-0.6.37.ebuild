@@ -17,7 +17,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
 IUSE="doc +introspection systemd +ubuntu"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_${PV}-0ubuntu6.debian.tar.gz"
+	https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_0.6.35-0ubuntu7.debian.tar.gz"
 
 # Want glib-2.34 for g_clear_pointer, bug #462938
 RDEPEND="
@@ -46,18 +46,16 @@ src_prepare() {
 	# Daemon: rip out extension interface as it needs glib-2.37
 	epatch "${FILESDIR}/${PN}-0.6.35-older-glib.patch"
 
-	# Avoid deleting the root user (from 'master')
-	epatch "${FILESDIR}/${PN}-0.6.35-nondelete-root.patch"
-
-	# Change up user classification logic again (from 'master')
-	epatch "${FILESDIR}/${PN}-0.6.35-user-logic.patch"
-
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
+
+		epatch "${FILESDIR}/${PN}-0.6.37-0007-add-lightdm-support.patch"
+		epatch "${FILESDIR}/${PN}-0.6.37-0014-pam-pin.patch"
+		epatch "${WORKDIR}/debian/patches/0015-pam-pin-ubuntu.patch"
 
 		# Only apply this patch if the systemd USE-flag is not set
 		if ! use systemd; then

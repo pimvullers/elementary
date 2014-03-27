@@ -54,10 +54,10 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		$(cmake-utils_use_use zeitgeist)
-		$(cmake-utils_use_use granite)
 		-DUSE_GTK3=ON
 		-DVALA_EXECUTABLE=${VALAC}
 	)
+#		$(cmake-utils_use_use granite)
 
 	cmake-utils_src_configure
 }

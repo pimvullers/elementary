@@ -6,7 +6,7 @@ EAPI=5
 
 VALA_MIN_API_VERSION="0.16"
 
-inherit vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils bzr
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="http://launchpad.net/switchboard"
@@ -43,7 +43,20 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DUSE_UNITY=OFF
+		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
 }

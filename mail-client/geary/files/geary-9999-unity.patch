@@ -3,9 +3,9 @@ index cea4a79..ccb07ba 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -32,6 +32,7 @@ option(DEBUG "Build for debugging." OFF)
- option(ICON_UPDATE "Run gtk-update-icon-cache after the install." ON)
  option(DESKTOP_UPDATE "Run update-desktop-database after the install." ON)
  option(DESKTOP_VALIDATE "Check generated desktop file for errors during build." ON)
+ option(TRANSLATE_HELP "Generate and install translated help documentation." ON)
 +option(WITH_UNITY "Add unity support." OFF)
  
  if (DEBUG)

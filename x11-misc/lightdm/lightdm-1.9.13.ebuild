@@ -48,7 +48,7 @@ RESTRICT="test"
 src_prepare() {
 	sed -i -e '/minimum-uid/s:500:1000:' data/users.conf || die
 
-	epatch "${FILESDIR}"/${PN}-1.7.7-session-wrapper.patch
+	epatch "${FILESDIR}"/${PN}-1.9.13-session-wrapper.patch
 	epatch_user
 
 	# Remove bogus Makefile statement. This needs to go upstream
