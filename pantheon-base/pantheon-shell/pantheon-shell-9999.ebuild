@@ -63,12 +63,3 @@ src_install() {
 	dobin "${FILESDIR}/pantheon-session"
 }
 
-pkg_postinst() {
-	use lightdm && \
-	  /usr/libexec/lightdm/lightdm-set-defaults --keep-old --session=pantheon
-}
-
-pkg_postrm() {
-	use lightdm && \
-	  /usr/libexec/lightdm/lightdm-set-defaults --remove --session=pantheon
-}
