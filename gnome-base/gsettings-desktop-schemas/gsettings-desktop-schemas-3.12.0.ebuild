@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Collection of GSettings schemas for GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gsettings-desktop-schemas"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gsettings-desktop-schemas_3.11.4-0ubuntu1%7Etrusty0.debian.tar.gz"
+	https://launchpad.net/~ricotz/+archive/testing/+files/gsettings-desktop-schemas_3.11.90-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"
