@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.18
+VALA_MIN_API_VERSION=0.24
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
