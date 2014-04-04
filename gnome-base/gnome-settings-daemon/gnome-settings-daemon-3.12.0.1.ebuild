@@ -11,7 +11,7 @@ inherit autotools eutils gnome2 systemd virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.8.6.1-0ubuntu2.debian.tar.gz"
+	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.8.6.1-0ubuntu10.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"

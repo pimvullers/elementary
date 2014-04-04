@@ -10,7 +10,7 @@ inherit gnome2-utils vala multilib cmake-utils versionator
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="http://launchpad.net/granite"
-SRC_URI="https://code.launchpad.net/~elementary-os/+archive/daily/+files/granite_0.3.0%7Er686%2Bpkg59%7Eubuntu14.04.1.tar.gz"
+SRC_URI="https://launchpad.net/~elementary-os/+archive/daily/+files/granite_0.3.0%7Er703%2Bpkg64%7Eubuntu0.3.1.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -28,6 +28,12 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 DOCS=( "${S}/AUTHORS" "${S}/COPYING" "${S}/NEWS" "${S}/README" )
+
+src_unpack() {
+	default_src_unpack
+
+	mv "${WORKDIR}/recipe-{debupstream}~r{revno}+pkg{revno:packaging}" "${S}"
+}
 
 src_prepare() {
 	epatch_user
