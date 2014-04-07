@@ -4,9 +4,9 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala autotools-utils bzr
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
@@ -15,35 +15,36 @@ EBZR_REPO_URI="lp:gala"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE=""
+IUSE="debug"
 
 RDEPEND="
+	>=dev-libs/glib-2.32:2
 	dev-libs/libgee:0.8
-	media-libs/clutter
 	media-libs/clutter-gtk
-	pantheon-base/plank
+	>=pantheon-base/plank-0.3
 	>=x11-libs/granite-0.3
 	x11-libs/bamf
-	x11-libs/libXfixes
-	>=x11-wm/mutter-3.8
+	>=x11-libs/gtk+-3.4:3
+	>=x11-wm/mutter-3.8.4
 	gnome-base/gnome-desktop:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+AUTOTOOLS_AUTORECONF=1
+
 src_prepare() {
 	epatch_user
 
-	cmake-utils_src_prepare
+	autotools-utils_src_prepare
 	vala_src_prepare
 }
 
 src_configure() {
-	local mycmakeargs=(
-		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="${VALAC}"
+	local myeconfargs=(
+		VALAC="${VALAC}"
 	)
-	cmake-utils_src_configure
+	autotools-utils_src_configure
 }
 
 pkg_preinst() {
