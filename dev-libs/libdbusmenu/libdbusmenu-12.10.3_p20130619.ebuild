@@ -18,8 +18,8 @@ KEYWORDS="~amd64 ~arm ~hppa ~mips ~x86"
 IUSE="debug gtk gtk2 +introspection"
 
 RDEPEND=">=dev-libs/glib-2.35.4
-	gtk? ( x11-libs/gtk+:3[introspection?] )
-	gtk2? ( x11-libs/gtk+:2[introspection?] )
+	gtk? ( x11-libs/gtk+:3[introspection?] dev-util/gtk-doc )
+	gtk2? ( x11-libs/gtk+:2[introspection?] dev-util/gtk-doc )
 	introspection? ( >=dev-libs/gobject-introspection-1 )
 	!<${CATEGORY}/${PN}-0.5.1-r200"
 DEPEND="${RDEPEND}
