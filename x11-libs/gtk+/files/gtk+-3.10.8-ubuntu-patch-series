@@ -12,13 +12,4 @@ bzg_gtkcellrenderer_grabbing_modifier.patch
 ubuntu_gtk_custom_menu_items.patch
 print-dialog-show-options-of-remote-dnssd-printers.patch
 uimanager-guard-against-nested-node-updates.patch
-git_menu_separator_style.patch
-git_search_printer_location.patch
-git_new_gtkdoc_build.patch
-git_print_replace_button.patch
-git_print_tab_visiblity.patch
-git_touch_popover_underline.patch
-git_subtitle_typo.patch
-git_popup_menu_shift.patch
-git_grid_theming.patch
 x-canonical-accel.patch
