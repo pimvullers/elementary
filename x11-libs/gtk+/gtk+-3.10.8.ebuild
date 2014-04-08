@@ -110,11 +110,6 @@ src_prepare() {
 		done
 	fi
 
-	# Build fails with USE="wayland introspection"
-	# Fixed upstream with commit 8dd899dae (and will be in 3.10.7 tarball)
-	rm "${S}"/gdk/wayland/gtk-shell-client-protocol.h || die
-	rm "${S}"/gdk/wayland/gtk-shell-protocol.c || die
-
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
