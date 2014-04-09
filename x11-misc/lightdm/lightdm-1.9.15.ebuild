@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.9.5.ebuild,v 1.3 2013/12/22 13:35:38 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.9.15.ebuild,v 1.1 2014/04/08 21:59:57 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd
@@ -14,7 +14,7 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde pantheon qt4 razor"
+IUSE="+gtk +introspection kde pantheon qt4 qt5 razor"
 REQUIRED_USE="|| ( gtk kde pantheon razor )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
@@ -28,6 +28,11 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 		dev-qt/qtcore:4
 		dev-qt/qtdbus:4
 		dev-qt/qtgui:4
+		)
+	qt5? (
+		dev-qt/qtcore:5
+		dev-qt/qtdbus:5
+		dev-qt/qtgui:5
 		)"
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/pambase-20101024-r2"
@@ -46,9 +51,14 @@ DOCS=( NEWS )
 RESTRICT="test"
 
 src_prepare() {
+	sed -i -e 's:getgroups:lightdm_&:' tests/src/libsystem.c || die #412369
 	sed -i -e '/minimum-uid/s:500:1000:' data/users.conf || die
 
-	epatch "${FILESDIR}"/${PN}-1.9.13-session-wrapper.patch
+	einfo "Fixing the session-wrapper variable in lightdm.conf"
+	sed -i -e \
+		"/session-wrapper/s@^.*@session-wrapper=/etc/${PN}/Xsession@" \
+		data/lightdm.conf || die "Failed to fix lightdm.conf"
+
 	epatch_user
 
 	# Remove bogus Makefile statement. This needs to go upstream
@@ -77,12 +87,11 @@ src_configure() {
 		--disable-static \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
+		$(use_enable qt5 liblightdm-qt5) \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \
-		--disable-tests \
 		--with-html-dir="${EPREFIX}"/usr/share/doc/${PF}/html
-
 }
 
 src_install() {
