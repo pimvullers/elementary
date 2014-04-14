@@ -82,9 +82,12 @@ src_configure() {
 	einfo "Default session: ${_session}"
 	einfo "Greeter user: ${_user}"
 
+	# also disable tests because libsystem.c does not build. Tests are
+	# restricted so it does not matter anyway.
 	econf \
 		--localstatedir=/var \
 		--disable-static \
+		--disable-tests \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
 		$(use_enable qt5 liblightdm-qt5) \
