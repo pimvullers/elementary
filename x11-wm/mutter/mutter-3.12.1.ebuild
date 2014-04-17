@@ -52,7 +52,6 @@ DEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-doc-am-1.15
 	>=dev-util/intltool-0.35
 	>=dev-util/gdbus-codegen-2.38.2
-	<dev-util/gdbus-codegen-2.39.2
 
 	sys-devel/gettext
 	virtual/pkgconfig
