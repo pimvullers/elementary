@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.24
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -23,8 +23,9 @@ RDEPEND="
 	dev-libs/libical
 	gnome-base/gconf:2
 	>=gnome-extra/evolution-data-server-3.8
+	media-libs/libchamplain[gtk]
 	net-libs/libsoup:2.4
-	x11-libs/gtk+:3
+	>=x11-libs/gtk+-3.12:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -36,7 +37,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
 	epatch_user
 
 	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
