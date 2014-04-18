@@ -14,7 +14,7 @@ SRC_URI="http://www.freedesktop.org/software/${PN}/releases/${MY_PV}/${P}.tar.xz
 LICENSE="LGPL-2"
 SLOT="2.0"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~mips ~ppc ~ppc64 ~sparc ~x86 ~amd64-fbsd"
-IUSE="modemmanager nls server"
+IUSE="modemmanager networkmanager nls"
 
 RDEPEND="
 	>=dev-libs/glib-2.34:2
@@ -23,6 +23,7 @@ RDEPEND="
 	sys-apps/dbus
 	server? ( >=dev-libs/geoip-1.5.1 )
 	modemmanager? ( net-misc/modemmanager )
+	networkmanager? ( net-misc/networkmanager )
 	!<sci-geosciences/geocode-glib-3.10.0
 "
 DEPEND="${RDEPEND}
@@ -36,11 +37,10 @@ RESTRICT="test"
 src_configure() {
 	gnome2_src_configure \
 		--with-dbus-service-user=geoclue \
-		$(use_enable server geoip-server) \
 		$(use_enable nls) \
 		$(use_enable modemmanager 3g-source) \
 		$(use_enable modemmanager modem-gps-source) \
-		$(use_enable modemmanager wifi-source)
+		$(use_enable networkmanager network-manager)
 }
 
 pkg_preinst() {
