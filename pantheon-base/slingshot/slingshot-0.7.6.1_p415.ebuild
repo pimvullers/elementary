@@ -6,15 +6,20 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.16
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit versionator gnome2-utils vala cmake-utils
+
+MY_PV=$(get_version_component_range 5)
+REV=${MY_PV:1}
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="http://launchpad.net/slingshot"
-EBZR_REPO_URI="lp:slingshot"
+SRC_URI="http://bazaar.launchpad.net/~elementary-pantheon/${PN}/trunk/tarball/${REV} -> ${PF}.tar.gz"
+
+RESTRICT="mirror"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 IUSE="nls -zeitgeist"
 
 RDEPEND="
@@ -29,6 +34,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
+S="${WORKDIR}/~elementary-pantheon/${PN}/trunk/"
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
