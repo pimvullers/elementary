@@ -28,6 +28,7 @@ RDEPEND="
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3
 	>=x11-libs/granite-0.3
+	x11-libs/libwnck:3
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -44,7 +45,12 @@ S="${WORKDIR}/~elementary-pantheon/${PN}/trunk/"
 DOCS=( AUTHORS COPYING COPYRIGHT )
 
 src_prepare() {
+	epatch "${FILESDIR}/${PN}-0.3-indicator-files.patch"
+	epatch "${FILESDIR}/${PN}-0.3-opacity.patch"
+	epatch "${FILESDIR}/${PN}-0.3-maximized.patch"
 	epatch_user
+
+	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
