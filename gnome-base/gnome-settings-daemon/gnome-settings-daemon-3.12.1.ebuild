@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.8.6.1.ebuild,v 1.2 2013/11/13 19:30:31 pacho Exp $
+# $Header: $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -25,7 +25,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebs
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2
 	>=x11-libs/gtk+-3.7.8:3
-	>=gnome-base/gnome-desktop-3.11:3=
+	>=gnome-base/gnome-desktop-3.11.1:3=
 	>=gnome-base/gsettings-desktop-schemas-3.9.91.1
 	>=gnome-base/librsvg-2.36.2
 	media-fonts/cantarell
@@ -33,7 +33,7 @@ COMMON_DEPEND="
 	>=media-libs/lcms-2.2:2
 	media-libs/libcanberra[gtk3]
 	>=media-sound/pulseaudio-2
-	>=sys-power/upower-0.9.11
+	>=sys-power/upower-0.99
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf:2
 	>=x11-libs/libnotify-0.7.3:=
@@ -44,8 +44,9 @@ COMMON_DEPEND="
 	x11-libs/libXfixes
 	x11-libs/libXtst
 	x11-libs/libXxf86misc
+	x11-misc/xkeyboard-config
 
-	app-misc/geoclue:2.0
+	>=app-misc/geoclue-2.1.2:2.0
 	>=dev-libs/libgweather-3.9.5:2
 	>=sci-geosciences/geocode-glib-3.10
 	>=sys-auth/polkit-0.103
@@ -125,7 +126,7 @@ src_prepare() {
 		epatch "${FILESDIR}/${PN}-3.7.90-short-touchpad-timeout.patch"
 
 	# Make colord and wacom optional; requires eautoreconf
-	epatch "${FILESDIR}/${PN}-3.11.91-optional.patch"
+	epatch "${FILESDIR}/${PN}-3.12.0-optional.patch"
 
 	epatch_user
 	eautoreconf
