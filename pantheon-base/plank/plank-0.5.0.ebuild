@@ -19,7 +19,7 @@ KEYWORDS="amd64 x86"
 IUSE="debug nls static-libs"
 
 CDEPEND="
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libunique:1
 	x11-libs/libX11
 	x11-libs/libwnck:1
