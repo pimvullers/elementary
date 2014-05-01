@@ -14,13 +14,12 @@ SRC_URI="http://launchpad.net/dexter-contacts/$(get_version_component_range 1-1)
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="nls static-libs"
 
 RDEPEND="
 	>=dev-libs/folks-0.6.1.1
-	<dev-libs/folks-0.9
-	dev-libs/glib:2
+	>=dev-libs/glib-2.29.12
 	dev-libs/libgee:0
 	gnome-base/gnome-desktop:3
 	>=gnome-extra/evolution-data-server-3.2

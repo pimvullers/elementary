@@ -13,10 +13,10 @@ KEYWORDS=""
 IUSE=""
 
 DEPEND=""
+# removed app-office/dexter since it does not build against evolution-data server
 RDEPEND="
 	app-dicts/lingo
 	app-editors/scratch
-	app-office/dexter
 	app-office/maya
 	dev-libs/contractor
 	mail-client/geary

@@ -27,8 +27,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	x11-libs/gtk+:3
 	granite? ( x11-libs/granite )
 	>=net-libs/libsoup-gnome-2.34:2.4
-	webkit2? ( >=net-libs/webkit-gtk-2 )
-	!webkit2? ( <net-libs/webkit-gtk-2 )
+	webkit2? ( net-libs/webkit-gtk )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
 	${PYTHON_DEPS}
