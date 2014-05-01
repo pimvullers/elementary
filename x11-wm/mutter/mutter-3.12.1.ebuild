@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-wm/mutter/mutter-3.10.2.ebuild,v 1.1 2013/12/24 17:49:26 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-wm/mutter/mutter-3.12.1.ebuild,v 1.1 2014/04/27 22:02:48 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -10,7 +10,7 @@ inherit eutils gnome2
 DESCRIPTION="GNOME 3 compositing window manager based on Clutter"
 HOMEPAGE="http://git.gnome.org/browse/mutter/"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/mutter_3.10.4-0ubuntu1.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/${PN}_${PV}-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -30,7 +30,7 @@ COMMON_DEPEND="
 	>=x11-libs/libXcomposite-0.2
 	>=gnome-base/gsettings-desktop-schemas-3.7.3[introspection?]
 	gnome-base/gnome-desktop:3=
-	>=sys-power/upower-0.99.0
+	>sys-power/upower-0.99
 
 	x11-libs/libICE
 	x11-libs/libSM
@@ -51,8 +51,6 @@ COMMON_DEPEND="
 DEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-doc-am-1.15
 	>=dev-util/intltool-0.35
-	>=dev-util/gdbus-codegen-2.38.2
-
 	sys-devel/gettext
 	virtual/pkgconfig
 	x11-proto/xextproto

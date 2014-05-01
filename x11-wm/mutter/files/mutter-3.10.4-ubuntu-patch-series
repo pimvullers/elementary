@@ -1,2 +1,3 @@
 01_Wcast-align.patch
 04_ignore_shadow_and_padding.patch
+git_ignore_error_when_settings_primary.patch
