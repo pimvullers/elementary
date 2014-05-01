@@ -1,6 +1,6 @@
-From 079e6b87816d96d73adaa5eeb2f8a1b620a0ae70 Mon Sep 17 00:00:00 2001
+From a485992913ec84a4c558cad535dd8a2ab14b0c19 Mon Sep 17 00:00:00 2001
 From: Alexandre Rostovtsev <tetromino@gentoo.org>
-Date: Mon, 9 Dec 2013 23:23:13 +0100
+Date: Fri, 25 Apr 2014 22:17:24 +0200
 Subject: [PATCH 1/2] Make bluetooth/colord/goa/kerberos/wacom optional
 
 Upstream is not interested in any part of this patch:
@@ -14,18 +14,18 @@ complicated than ever to split it from the network panel.
 
 Signed-Off: Gilles Dartiguelongue <eva@gentoo.org>
 ---
- configure.ac                            | 140 ++++++++++++++++++++++++++------
+ configure.ac                            | 146 ++++++++++++++++++++++++++------
  panels/Makefile.am                      |  10 ++-
  panels/user-accounts/um-realm-manager.c |   9 ++
  shell/Makefile.am                       |  10 ++-
  shell/cc-panel-loader.c                 |   8 ++
- 5 files changed, 149 insertions(+), 28 deletions(-)
+ 5 files changed, 153 insertions(+), 30 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index 19bebaf..8b4177a 100644
+index 511f78d..f82108e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -136,14 +136,58 @@ PKG_CHECK_MODULES(MOUSE_PANEL, $COMMON_MODULES xi >= 1.2
+@@ -139,14 +139,58 @@ PKG_CHECK_MODULES(MOUSE_PANEL, $COMMON_MODULES xi >= 1.2
                    gnome-settings-daemon >= $GSD_REQUIRED_VERSION x11)
  PKG_CHECK_MODULES(NETWORK_PANEL, $COMMON_MODULES gmodule-2.0)
  PKG_CHECK_MODULES(NOTIFICATIONS_PANEL, $COMMON_MODULES libgnome-menu-3.0)
@@ -33,21 +33,21 @@ index 19bebaf..8b4177a 100644
 +
 +build_online_accounts=false
 +AC_ARG_ENABLE(goa,
-+	AC_HELP_STRING([--disable-goa],
-+		[disable online accounts management panel]),
-+	[case "${enableval}" in
-+		yes) WANT_ONLINE_ACCOUNTS=yes ;;
-+		no) WANT_ONLINE_ACCOUNTS=no ;;
-+		*) AC_MSG_ERROR(bad value ${enableval} for --disable-goa) ;;
-+	esac],
-+	[WANT_ONLINE_ACCOUNTS=yes]) dnl Default value
++       AC_HELP_STRING([--disable-goa],
++               [disable online accounts management panel]),
++       [case "${enableval}" in
++               yes) WANT_ONLINE_ACCOUNTS=yes ;;
++               no) WANT_ONLINE_ACCOUNTS=no ;;
++               *) AC_MSG_ERROR(bad value ${enableval} for --disable-goa) ;;
++       esac],
++       [WANT_ONLINE_ACCOUNTS=yes]) dnl Default value
 +
 +if test x$WANT_ONLINE_ACCOUNTS = xyes; then
-+	PKG_CHECK_MODULES(ONLINE_ACCOUNTS_PANEL, $COMMON_MODULES goa-1.0 goa-backend-1.0 >= $GOA_REQUIRED_VERSION)
-+	build_online_accounts=true
++       PKG_CHECK_MODULES(ONLINE_ACCOUNTS_PANEL, $COMMON_MODULES goa-1.0 goa-backend-1.0 >= $GOA_REQUIRED_VERSION)
++       build_online_accounts=true
 +fi
 +if test "x$build_online_accounts" = xtrue ; then
-+	AC_DEFINE(BUILD_ONLINE_ACCOUNTS, 1, [Define to 1 to build the Online Accounts panel])
++       AC_DEFINE(BUILD_ONLINE_ACCOUNTS, 1, [Define to 1 to build the Online Accounts panel])
 +fi
 +AM_CONDITIONAL(BUILD_ONLINE_ACCOUNTS, test "x$build_online_accounts" = "xtrue")
 +AC_SUBST(ONLINE_ACCOUNTS_PANEL_CFLAGS)
@@ -63,25 +63,25 @@ index 19bebaf..8b4177a 100644
 +
 +build_color=false
 +AC_ARG_ENABLE(color,
-+	AC_HELP_STRING([--disable-color],
-+		[disable color management panel]),
-+	[case "${enableval}" in
-+		yes) WANT_COLOR=yes ;;
-+		no) WANT_COLOR=no ;;
-+		*) AC_MSG_ERROR(bad value ${enableval} for --disable-color) ;;
-+	esac],
-+	[WANT_COLOR=yes]) dnl Default value
++       AC_HELP_STRING([--disable-color],
++               [disable color management panel]),
++       [case "${enableval}" in
++               yes) WANT_COLOR=yes ;;
++               no) WANT_COLOR=no ;;
++               *) AC_MSG_ERROR(bad value ${enableval} for --disable-color) ;;
++       esac],
++       [WANT_COLOR=yes]) dnl Default value
 +
 +if test x$WANT_COLOR = xyes; then
-+	PKG_CHECK_MODULES(COLOR_PANEL, $COMMON_MODULES
-+		colord >= $COLORD_REQUIRED_VERSION
-+		colord-gtk >= $COLORD_GTK_REQUIRED_VERSION
-+		libsoup-2.4
-+		gnome-desktop-3.0 >= $GNOME_DESKTOP_REQUIRED_VERSION)
-+	build_color=true
++       PKG_CHECK_MODULES(COLOR_PANEL, $COMMON_MODULES
++               colord >= $COLORD_REQUIRED_VERSION
++               colord-gtk >= $COLORD_GTK_REQUIRED_VERSION
++               libsoup-2.4
++               gnome-desktop-3.0 >= $GNOME_DESKTOP_REQUIRED_VERSION)
++       build_color=true
 +fi
 +if test "x$build_color" = xtrue ; then
-+	AC_DEFINE(BUILD_COLOR, 1, [Define to 1 to build the Color panel])
++       AC_DEFINE(BUILD_COLOR, 1, [Define to 1 to build the Color panel])
 +fi
 +AM_CONDITIONAL(BUILD_COLOR, test "x$build_color" = "xtrue")
 +AC_SUBST(COLOR_PANEL_CFLAGS)
@@ -90,34 +90,35 @@ index 19bebaf..8b4177a 100644
  PKG_CHECK_MODULES(PRINTERS_PANEL, $COMMON_MODULES
                    polkit-gobject-1 >= $POLKIT_REQUIRED_VERSION)
  PKG_CHECK_MODULES(PRIVACY_PANEL, $COMMON_MODULES)
-@@ -196,8 +240,24 @@ if test x${have_networkmanager} = xyes; then
- fi
+@@ -206,8 +250,25 @@ fi
+ AM_CONDITIONAL(HAVE_NM_UNSTABLE, [test x$nm_unstable = xyes])
  
  # Check for gnome-bluetooth
 -PKG_CHECK_MODULES(BLUETOOTH, $COMMON_MODULES gnome-bluetooth-1.0 >= 3.11.1,
 -		  [have_bluetooth=yes], have_bluetooth=no)
 +have_bluetooth=no
 +AC_ARG_ENABLE(bluetooth,
-+	AC_HELP_STRING([--disable-bluetooth],
-+		[disable bluetooth management panel]),
-+	[case "${enableval}" in
-+		yes) WANT_BLUETOOTH=yes ;;
-+		no) WANT_BLUETOOTH=no ;;
-+		*) AC_MSG_ERROR(bad value ${enableval} for --disable-bluetooth) ;;
-+	esac],
-+	[WANT_BLUETOOTH=yes]) dnl Default value
++       AC_HELP_STRING([--disable-bluetooth],
++               [disable bluetooth management panel]),
++       [case "${enableval}" in
++               yes) WANT_BLUETOOTH=yes ;;
++               no) WANT_BLUETOOTH=no ;;
++               *) AC_MSG_ERROR(bad value ${enableval} for --disable-bluetooth) ;;
++       esac],
++       [WANT_BLUETOOTH=yes]) dnl Default value
 +
 +if test x$WANT_BLUETOOTH = xyes; then
-+	# Check for gnome-bluetooth
-+	PKG_CHECK_MODULES(BLUETOOTH, $COMMON_MODULES gnome-bluetooth-1.0 >= 3.9.3,
-+		[have_bluetooth=yes], have_bluetooth=no)
-+	have_bluetooth=yes
++       # Check for gnome-bluetooth
++       PKG_CHECK_MODULES(BLUETOOTH, $COMMON_MODULES gnome-bluetooth-1.0 >= 3.11.1,
++               [have_bluetooth=yes], have_bluetooth=no)
++       have_bluetooth=yes
 +fi
++
 +
  if test "x$have_bluetooth" = xyes ; then
  	AC_DEFINE(BUILD_BLUETOOTH, 1, [Define to 1 to build the Bluetooth panel])
  fi
-@@ -282,15 +342,27 @@ case $host_os in
+@@ -292,15 +353,27 @@ case $host_os in
      if test "$host_cpu" = s390 -o "$host_cpu" = s390x; then
        have_wacom=no
      else
@@ -154,7 +155,7 @@ index 19bebaf..8b4177a 100644
      fi
      ;;
    *)
-@@ -301,16 +372,22 @@ esac
+@@ -310,16 +383,22 @@ esac
  AM_CONDITIONAL(BUILD_WACOM, [test x${have_wacom} = xyes])
  
  # Kerberos kerberos support
@@ -186,7 +187,7 @@ index 19bebaf..8b4177a 100644
  AC_SUBST(KRB5_CFLAGS)
  AC_SUBST(KRB5_LIBS)
  
-@@ -547,6 +624,11 @@ if test "x$have_bluetooth" = "xyes"; then
+@@ -538,6 +617,11 @@ if test "x$have_bluetooth" = "xyes"; then
  else
  	AC_MSG_NOTICE([   Bluetooth panel disabled])
  fi
@@ -198,19 +199,19 @@ index 19bebaf..8b4177a 100644
  if test "x$enable_cups" = "xyes"; then
  	AC_MSG_NOTICE([** CUPS (Printers panel)])
  else
-@@ -557,6 +639,16 @@ if test "x$have_cheese" = "xyes"; then
+@@ -548,6 +632,16 @@ if test "x$have_cheese" = "xyes"; then
  else
  	AC_MSG_NOTICE([   Users panel webcam support disabled])
  fi
 +if test "x$build_online_accounts" = "xtrue"; then
-+	AC_MSG_NOTICE([** gnome-online-accounts (Online Accounts panel)])
++       AC_MSG_NOTICE([** gnome-online-accounts (Online Accounts panel)])
 +else
-+	AC_MSG_NOTICE([   Online Accounts panel disabled])
++       AC_MSG_NOTICE([   Online Accounts panel disabled])
 +fi
 +if test "x$build_wacom" = "xtrue"; then
-+	AC_MSG_NOTICE([** libwacom (Wacom Graphics Tablet panel)])
++       AC_MSG_NOTICE([** libwacom (Wacom Graphics Tablet panel)])
 +else
-+	AC_MSG_NOTICE([   Wacom Graphics Tablet panel disabled])
++       AC_MSG_NOTICE([   Wacom Graphics Tablet panel disabled])
 +fi
  if test "x$have_wacom" = "xyes"; then
  	AC_MSG_NOTICE([** wacom (Wacom tablet panel)])
@@ -252,10 +253,10 @@ index 9961c25..0c54622 100644
 +
  -include $(top_srcdir)/git.mk
 diff --git a/panels/user-accounts/um-realm-manager.c b/panels/user-accounts/um-realm-manager.c
-index 1fd41ad..ce0988e 100644
+index 0849160..58d50a6 100644
 --- a/panels/user-accounts/um-realm-manager.c
 +++ b/panels/user-accounts/um-realm-manager.c
-@@ -23,7 +23,9 @@
+@@ -22,7 +22,9 @@
  
  #include "um-realm-manager.h"
  
@@ -265,7 +266,7 @@ index 1fd41ad..ce0988e 100644
  
  #include <glib.h>
  #include <glib/gi18n.h>
-@@ -697,6 +699,7 @@ login_closure_free (gpointer data)
+@@ -696,6 +698,7 @@ login_closure_free (gpointer data)
          g_slice_free (LoginClosure, login);
  }
  
@@ -273,7 +274,7 @@ index 1fd41ad..ce0988e 100644
  static krb5_error_code
  login_perform_kinit (krb5_context k5,
                       const gchar *realm,
-@@ -760,12 +763,14 @@ login_perform_kinit (krb5_context k5,
+@@ -759,12 +762,14 @@ login_perform_kinit (krb5_context k5,
  
          return code;
  }
@@ -288,7 +289,7 @@ index 1fd41ad..ce0988e 100644
          LoginClosure *login = g_simple_async_result_get_op_res_gpointer (async);
          krb5_context k5 = NULL;
          krb5_error_code code;
-@@ -843,6 +848,10 @@ kinit_thread_func (GSimpleAsyncResult *async,
+@@ -842,6 +847,10 @@ kinit_thread_func (GSimpleAsyncResult *async,
  
          if (k5)
                  krb5_free_context (k5);
@@ -378,5 +379,5 @@ index 26576dc..8a92f95 100644
  #ifdef BUILD_PRINTERS
    PANEL_TYPE("printers",         cc_printers_panel_get_type     ),
 -- 
-1.8.3.2
+1.9.0
 

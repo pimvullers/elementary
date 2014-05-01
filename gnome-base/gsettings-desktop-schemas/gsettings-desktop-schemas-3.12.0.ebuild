@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gsettings-desktop-schemas/gsettings-desktop-schemas-3.12.0.ebuild,v 1.1 2014/04/27 16:59:55 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Collection of GSettings schemas for GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gsettings-desktop-schemas"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~ricotz/+archive/testing/+files/gsettings-desktop-schemas_3.11.90-0ubuntu1%7Etrusty1.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/${PN}_${PV}-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"

@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.12.1.ebuild,v 1.1 2014/04/27 16:50:35 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -10,10 +10,10 @@ inherit gnome2
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gnome-desktop3_3.11.90-0ubuntu1%7Etrusty3.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/${PN}3_${PV}-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
-SLOT="3/8" # subslot = libgnome-desktop-3 soname version
+SLOT="3/10" # subslot = libgnome-desktop-3 soname version
 IUSE="+introspection +ubuntu"
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x86-solaris"
 
@@ -26,10 +26,9 @@ COMMON_DEPEND="
 	>=x11-libs/libXext-1.1
 	>=x11-libs/libXrandr-1.3
 	x11-libs/cairo:=[X]
-	x11-libs/libxkbfile
 	x11-libs/libX11
 	x11-misc/xkeyboard-config
-	>=gnome-base/gsettings-desktop-schemas-3.11.0
+	>=gnome-base/gsettings-desktop-schemas-3.5.91
 	introspection? ( >=dev-libs/gobject-introspection-0.9.7 )
 "
 RDEPEND="${COMMON_DEPEND}

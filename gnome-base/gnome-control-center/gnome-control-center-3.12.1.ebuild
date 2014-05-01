@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.10.2.ebuild,v 1.2 2014/02/01 08:59:02 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1.ebuild,v 1.3 2014/05/01 02:40:14 tetromino Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -13,7 +13,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager +socialweb v4l"
+IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager v4l"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # False positives caused by nested configure scripts
@@ -22,30 +22,26 @@ QA_CONFIGURE_OPTIONS=".*"
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
 # g-s-d[policykit] needed for bug #403527
 #
-# gnome-shell/gnome-control-center/mutter/gnome-settings-daemon better to be in sync for 3.8.3
-# https://mail.gnome.org/archives/gnome-announce-list/2013-June/msg00005.html
-#
 # kerberos unfortunately means mit-krb5; build fails with heimdal
 COMMON_DEPEND="
-	>=dev-libs/glib-2.37.2:2
+	>=dev-libs/glib-2.39.91:2
 	>=x11-libs/gdk-pixbuf-2.23.0:2
 	>=x11-libs/gtk+-3.11.1:3
 	>=gnome-base/gsettings-desktop-schemas-3.9.91
-	>=gnome-base/gnome-desktop-3.9.90:3=
+	>=gnome-base/gnome-desktop-3.11.3:3=
 	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
-	>=gnome-base/libgnomekbd-2.91.91
 
 	>=dev-libs/libpwquality-1.2.2
 	dev-libs/libxml2:2
 	gnome-base/gnome-menus:3
 	gnome-base/libgtop:2
 	media-libs/fontconfig
-	media-libs/grilo:0.2
+	>=media-libs/grilo-0.2.6:0.2
 
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
 	>=sys-auth/polkit-0.97
-	>=sys-power/upower-0.9.1
+	>=sys-power/upower-0.99
 	>=x11-libs/libnotify-0.7.3:0=
 
 	networkmanager? ( 
@@ -60,18 +56,17 @@ COMMON_DEPEND="
 	x11-libs/libXxf86misc
 	>=x11-libs/libXi-1.2
 
-	bluetooth? ( >=net-wireless/gnome-bluetooth-3.11.3:= )
+	bluetooth? ( >=net-wireless/gnome-bluetooth-3.11.1:= )
 	colord? (
 		net-libs/libsoup:2.4
-		>=x11-misc/colord-0.1.34 )
+		>=x11-misc/colord-0.1.34:0=
+		>=x11-libs/colord-gtk-0.1.24 )
 	cups? (
 		>=net-print/cups-1.4[dbus]
 		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
 	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.9.90 )
-	>=net-libs/gnome-online-accounts-3.9.90
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
-	socialweb? ( net-libs/libsocialweb )
 	v4l? (
 		media-libs/gstreamer:1.0
 		media-libs/clutter-gtk:1.0
@@ -83,18 +78,17 @@ COMMON_DEPEND="
 		>=x11-libs/libXi-1.2 )
 "
 # <gnome-color-manager-3.1.2 has file collisions with g-c-c-3.1.x
+# libgnomekbd needed only for gkbd-keyboard-display tool
 RDEPEND="${COMMON_DEPEND}
 	|| ( ( app-admin/openrc-settingsd sys-auth/consolekit ) >=sys-apps/systemd-31 )
 	>=sys-apps/accountsservice-0.6.30
 	x11-themes/gnome-icon-theme-symbolic
-	colord? (
-		>=gnome-extra/gnome-color-manager-3
-		>=x11-misc/colord-0.1.34
-		>=x11-libs/colord-gtk-0.1.24 )
+	colord? ( >=gnome-extra/gnome-color-manager-3 )
 	cups? (
 		>=app-admin/system-config-printer-gnome-1.3.5
 		net-print/cups-pk-helper )
 	input_devices_wacom? ( gnome-base/gnome-settings-daemon[input_devices_wacom] )
+	i18n? ( >=gnome-base/libgnomekbd-3 )
 
 	!<gnome-base/gdm-2.91.94
 	!<gnome-extra/gnome-color-manager-3.1.2
@@ -137,12 +131,7 @@ src_prepare() {
 
 	epatch_user
 
-	# top-level configure.ac does not use AC_CONFIG_SUBDIRS, so we need this to
-	# avoid libtoolize "We've already been run in this tree" warning, bug #484988
-	pushd "." > /dev/null
-	AT_NOELIBTOOLIZE=yes eautoreconf
-	popd > /dev/null
-	elibtoolize --force
+	eautoreconf
 
 	# panels/datetime/Makefile.am gets touched by "gentoo-paths" patch.
 	# We need to touch timedated{c,h} to prevent them from being
@@ -168,7 +157,6 @@ src_configure() {
 		$(use_enable kerberos) \
 		$(use_enable modemmanager) \
 		$(use_enable networkmanager) \
-		$(use_with socialweb libsocialweb) \
 		$(use_with v4l cheese) \
 		$(use_enable input_devices_wacom wacom)
 }

@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.1.ebuild,v 1.1 2014/04/27 16:58:01 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -11,7 +11,7 @@ inherit autotools eutils gnome2 systemd virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.8.6.1-0ubuntu10.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/${PN}_${PV}-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -96,26 +96,6 @@ src_prepare() {
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
-
-		local PATCHDIR="${WORKDIR}/debian/patches"
-
-		epatch "${FILESDIR}/${PN}-3.11.3-16_use_synchronous_notifications.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-43_disable_locale_settings.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-45_suppress-printer-may-not-be-connected-notification.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-revert_background_dropping.patch"
-		epatch "${PATCHDIR}/52_sync_background_to_accountsservice.patch"
-		epatch "${FILESDIR}/${PN}-3.11.90-53_sync_input_sources_to_accountsservice.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-64_restore_terminal_keyboard_shortcut_schema.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-nexus-orientation.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-fix_broken_user_sounds_permissions.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove-unused-keygrab-code.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_gsd-keygrab.patch"
-		epatch "${FILESDIR}/${PN}-3.11.3-fix_media_keys_on_unity.patch"
-		epatch "${PATCHDIR}/fix_input_switching_on_unity.patch"
-		epatch "${PATCHDIR}/fix_screenshots_on_unity.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-git_revert_remove_automount_helper.patch"
-		epatch "${FILESDIR}/${PN}-3.10.2-ubuntu-lid-close-suspend.patch"
-		epatch "${PATCHDIR}/unity-modifier-media-keys.patch"
 	fi
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=621836
