@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.20
 VALA_USE_DEPEND=vapigen
 
 inherit fdo-mime gnome2-utils vala autotools-utils
@@ -19,7 +19,7 @@ KEYWORDS="amd64 x86"
 IUSE="debug nls static-libs"
 
 CDEPEND="
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libunique:1
 	x11-libs/libX11
 	x11-libs/libwnck:1
@@ -41,8 +41,7 @@ AUTOTOOLS_IN_SOURCE_BUILD=yes
 DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-pantheon-support.patch"
-	epatch "${FILESDIR}/${P}-apport-optional.patch"
+	epatch "${FILESDIR}/${PN}-0.5.0-pantheon-support.patch"
 	epatch_user
 
 	autotools-utils_src_prepare
@@ -53,7 +52,7 @@ src_configure() {
 	local myeconfargs=(
 		$(use_enable debug)
 		$(use_enable nls)
-		--disable-gee-0.8
+		--enable-gee-0.8
 		--disable-apport
 	)
 	autotools-utils_src_configure
