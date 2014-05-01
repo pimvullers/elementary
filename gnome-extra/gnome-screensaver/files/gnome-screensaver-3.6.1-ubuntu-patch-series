@@ -9,7 +9,7 @@
 16_dont_crash_in_kvm.patch
 17_remove_top_panel.patch
 18_unity_dialog_layout.patch
-19_autostart_in_unity.patch
+19_not_autostart_in_unity.patch
 24_use_user_settings.patch
 25_fix_lock_command.patch
 27_lightdm_switch_user.patch
@@ -18,3 +18,5 @@
 30_ubuntu-lock-on-suspend_gsetting.patch
 31_lock_screen_on_suspend.patch
 32_input_sources_switcher.patch
+move-not-nuke.patch
+allow-replacement

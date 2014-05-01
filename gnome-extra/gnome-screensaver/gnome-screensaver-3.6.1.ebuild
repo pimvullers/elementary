@@ -10,7 +10,7 @@ inherit eutils gnome2 autotools
 DESCRIPTION="Replaces xscreensaver, integrating with the desktop."
 HOMEPAGE="http://live.gnome.org/GnomeScreensaver"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gnome-screensaver_3.6.1-0ubuntu7.debian.tar.gz"
+	https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_${PV}-0ubuntu13.debian.tar.gz"
 
 LICENSE="GPL-2+"
 SLOT="0"
