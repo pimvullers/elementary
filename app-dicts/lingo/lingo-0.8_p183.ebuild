@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,11 +6,14 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit versionator gnome2-utils vala cmake-utils
+
+MY_PV=$(get_version_component_range 3)
+REV=${MY_PV:1}
 
 DESCRIPTION="The sexiest dictionary on Earth and Jupiter"
 HOMEPAGE="https://launchpad.net/lingo-dictionary"
-EBZR_REPO_URI="lp:lingo-dictionary"
+SRC_URI="http://bazaar.launchpad.net/~elementary-apps/${PN}-dictionary/${PN}/tarball/${REV} -> ${PF}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -30,6 +33,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
+S="${WORKDIR}/~elementary-apps/${PN}-dictionary/${PN}/"
 DOCS=( AUTHORS COPYING )
 
 src_prepare() {
