@@ -48,8 +48,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		--disable-gee-1.0
-		-disable-gee-1.0
 	)
 	cmake-utils_src_configure
 }
