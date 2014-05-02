@@ -4,15 +4,18 @@
 
 EAPI=5
 
-inherit base bzr
+inherit versionator base
+
+MY_PV=$(get_version_component_range 3)
+REV=${MY_PV:1}
 
 DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
 HOMEPAGE="https://launchpad.net/egtk"
-EBZR_REPO_URI="lp:egtk"
+SRC_URI="http://bazaar.launchpad.net/~elementary-design/egtk/4.x/tarball/${REV} -> ${PF}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="+gtk +gtk3 +icons +wallpapers"
 
 DEPEND="
@@ -37,16 +40,20 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
+S="${WORKDIR}/~elementary-design/egtk/4.x/"
 DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_prepare() {
+	epatch "${FILESDIR}/${PN}-xfwm4.patch"
+	epatch_user
+
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
 }
 
 src_install() {
 	insinto /usr/share/themes/elementary
-	doins -r index.theme metacity-1 gtk-2.0 gtk-3.0
+	doins -r index.theme metacity-1 gtk-2.0 gtk-3.0 xfwm4
 
 	base_src_install_docs
 }

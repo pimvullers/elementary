@@ -15,12 +15,10 @@ SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE=""
 
-CDEPEND=""
-RDEPEND="${CDEPEND}"
-DEPEND="${CDEPEND}
-	x11-libs/gtk+:2"
+RDEPEND=""
+DEPEND="x11-libs/gtk+:2"
 
-RESTRICT="binchecks strip"
+RESTRICT="binchecks mirror strip"
 
 S="${WORKDIR}/elementaryicons${PV}"
 DOCS=( AUTHORS COPYING CONTRIBUTORS )

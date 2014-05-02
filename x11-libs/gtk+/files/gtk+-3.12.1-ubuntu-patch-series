@@ -12,3 +12,5 @@ bzg_gtkcellrenderer_grabbing_modifier.patch
 ubuntu_gtk_custom_menu_items.patch
 print-dialog-show-options-of-remote-dnssd-printers.patch
 uimanager-guard-against-nested-node-updates.patch
+x-canonical-accel.patch
+git-gtkapplication-Fix-incorrect-value-passed-to-gvari.patch

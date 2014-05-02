@@ -1,10 +1,12 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.10.6.ebuild,v 1.2 2014/01/20 21:23:54 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.1.ebuild,v 1.1 2014/04/27 16:23:11 eva Exp $
 
 EAPI="5"
+GCONF_DEBUG="no"
+GNOME2_LA_PUNT="yes"
 
-inherit eutils flag-o-matic gnome.org gnome2-utils multilib virtualx autotools
+inherit flag-o-matic autotools gnome2 multilib virtualx
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -16,19 +18,39 @@ SLOT="3"
 #  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
 # I tried this and got it all compiling, but the end result is unusable as it
 # horribly mixes up the backends -- grobian
-IUSE="aqua colord cups debug examples +introspection packagekit test +ubuntu vim-syntax wayland X xinerama"
+IUSE="aqua cloudprint colord cups debug examples +introspection test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )"
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gtk%2B3.0_${PV}-0ubuntu1%7Etrusty0.debian.tar.gz"
+	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/gtk%2B3.0_3.12.1-0ubuntu1%7Etrusty1.debian.tar.gz"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 # Use gtk+:2 for gtk-update-icon-cache
 COMMON_DEPEND="
+	>=dev-libs/atk-2.7.5[introspection?]
+	>=dev-libs/glib-2.39.5:2
+	media-libs/fontconfig
+	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?]
+	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
+	>=x11-libs/gtk+-2.24:2
+	>=x11-libs/pango-1.32.4[introspection?]
+	x11-misc/shared-mime-info
+
+	cloudprint? (
+		>=net-libs/rest-0.7
+		>=dev-libs/json-glib-1.0 )
+	colord? ( >=x11-misc/colord-0.1.9:0= )
+	cups? ( >=net-print/cups-1.2 )
+	introspection? ( >=dev-libs/gobject-introspection-1.39 )
+	wayland? (
+		>=dev-libs/wayland-1.3.90
+		media-libs/mesa[wayland]
+		>=x11-libs/libxkbcommon-0.2
+	)
 	X? (
 		>=app-accessibility/at-spi2-atk-2.5.3
 		x11-libs/libXrender
@@ -42,28 +64,14 @@ COMMON_DEPEND="
 		x11-libs/libXdamage
 		xinerama? ( x11-libs/libXinerama )
 	)
-	wayland? (
-		>=dev-libs/wayland-1.2
-		media-libs/mesa[wayland]
-		>=x11-libs/libxkbcommon-0.2
-	)
-	>=dev-libs/glib-2.39.5:2
-	>=x11-libs/pango-1.32.4[introspection?]
-	>=dev-libs/atk-2.7.5[introspection?]
-	>=x11-libs/cairo-1.12.0[aqua?,glib,svg,X?]
-	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
-	>=x11-libs/gtk+-2.24:2
-	media-libs/fontconfig
-	x11-misc/shared-mime-info
-	colord? ( >=x11-misc/colord-0.1.9 )
-	cups? ( >=net-print/cups-1.2 )
-	introspection? ( >=dev-libs/gobject-introspection-1.32 )
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xsl-stylesheets
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
 	dev-util/gdbus-codegen
+	>=dev-util/gtk-doc-am-1.20
+	sys-devel/gettext
 	virtual/pkgconfig
 	X? (
 		x11-proto/xextproto
@@ -72,7 +80,6 @@ DEPEND="${COMMON_DEPEND}
 		x11-proto/damageproto
 		xinerama? ( x11-proto/xineramaproto )
 	)
-	>=dev-util/gtk-doc-am-1.11
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )
@@ -84,7 +91,6 @@ DEPEND="${COMMON_DEPEND}
 RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
-	packagekit? ( app-admin/packagekit-base )
 	X? ( !<x11-base/xorg-server-1.11.4 )
 "
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
@@ -94,13 +100,11 @@ strip_builddir() {
 	shift
 	local directory=$1
 	shift
-	sed -e "s/^\(${rule} =.*\) ${directory} \(.*\)$/\1 \2/" -i $@ \
+	sed -e "s/^\(${rule} =.*\)${directory}\(.*\)$/\1\2/" -i $@ \
 		|| die "Could not strip director ${directory} from build."
 }
 
 src_prepare() {
-	gnome2_environment_reset
-
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
@@ -113,45 +117,38 @@ src_prepare() {
 	replace-flags -O3 -O2
 	strip-flags
 
-	# FIXME: https://bugzilla.gnome.org/show_bug.cgi?id=654108
-	# epatch "${FILESDIR}/${PN}-3.3.18-fallback-theme.patch"
-
-	if use test; then
-		# FIXME: multiple reftests fail when run from portage (but succeed when
-		# run from a manual compile in a temp directory)
-		sed -e 's:\(SUBDIRS.*\)reftests:\1:' \
-			-i tests/Makefile.* || die "sed 3 failed"
-	else
+	if ! use test ; then
 		# don't waste time building tests
-		strip_builddir SRC_SUBDIRS tests Makefile.am
-		strip_builddir SRC_SUBDIRS tests Makefile.in
-
 		strip_builddir SRC_SUBDIRS testsuite Makefile.am
 		strip_builddir SRC_SUBDIRS testsuite Makefile.in
+		strip_builddir SRC_SUBDIRS tests Makefile.am
+		strip_builddir SRC_SUBDIRS tests Makefile.in
 	fi
 
 	if ! use examples; then
 		# don't waste time building demos
 		strip_builddir SRC_SUBDIRS demos Makefile.am
 		strip_builddir SRC_SUBDIRS demos Makefile.in
+		strip_builddir SRC_SUBDIRS examples Makefile.am
+		strip_builddir SRC_SUBDIRS examples Makefile.in
 	fi
 
-	# automake 1.13 is hard-coded in bundled configure script. Running
-	# eautoreconf to regenerate.
 	eautoreconf
+
+	gnome2_src_prepare
 }
 
 src_configure() {
 	# Passing --disable-debug is not recommended for production use
 	# need libdir here to avoid a double slash in a path that libtool doesn't
 	# grok so well during install (// between $EPREFIX and usr ...)
-	econf \
+	gnome2_src_configure \
 		$(use_enable aqua quartz-backend) \
+		$(use_enable cloudprint) \
 		$(use_enable colord) \
 		$(use_enable cups cups auto) \
 		$(usex debug --enable-debug=yes "") \
 		$(use_enable introspection) \
-		$(use_enable packagekit) \
 		$(use_enable wayland wayland-backend) \
 		$(use_enable X x11-backend) \
 		$(use_enable X xcomposite) \
@@ -160,12 +157,11 @@ src_configure() {
 		$(use_enable X xkb) \
 		$(use_enable X xrandr) \
 		$(use_enable xinerama) \
-		--disable-gtk-doc \
 		--disable-papi \
 		--enable-man \
 		--enable-gtk2-dependency \
 		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
-		--libdir="${EPREFIX}/usr/$(get_libdir)"
+		--libdir="${EPREFIX}"/usr/$(get_libdir)
 }
 
 src_test() {
@@ -187,14 +183,12 @@ src_test() {
 }
 
 src_install() {
-	emake DESTDIR="${D}" install
+	gnome2_src_install
 
 	insinto /etc/gtk-3.0
 	doins "${FILESDIR}"/settings.ini
 
 	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
-
-	prune_libtool_files --modules
 
 	# add -framework Carbon to the .pc files
 	if use aqua ; then
@@ -206,7 +200,7 @@ src_install() {
 }
 
 pkg_preinst() {
-	gnome2_schemas_savelist
+	gnome2_pkg_preinst
 
 	# Make sure loaders.cache belongs to gdk-pixbuf alone
 	local cache="usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache"
@@ -219,7 +213,7 @@ pkg_preinst() {
 }
 
 pkg_postinst() {
-	gnome2_schemas_update
+	gnome2_pkg_postinst
 	gnome2_query_immodules_gtk3
 
 	if ! has_version "app-text/evince"; then
@@ -230,7 +224,7 @@ pkg_postinst() {
 }
 
 pkg_postrm() {
-	gnome2_schemas_update
+	gnome2_pkg_postrm
 
 	if [[ -z ${REPLACED_BY_VERSIONS} ]]; then
 		rm -f "${EROOT}"usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache

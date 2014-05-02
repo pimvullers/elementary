@@ -37,11 +37,8 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
-pkg_setup() {
-	S="${WORKDIR}/elementary"
-	DOCS=( AUTHORS CONTRIBUTORS COPYING )
-	THEMES="index.theme metacity-1 gtk-2.0 gtk-3.0"
-}
+S="${WORKDIR}/elementary"
+DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_prepare() {
 	# Add support for dark theming
@@ -53,7 +50,7 @@ src_prepare() {
 
 src_install() {
 	insinto /usr/share/themes/elementary
-	doins -r ${THEMES}
+	doins -r index.theme metacity-1 gtk-2.0 gtk-3.0
 
 	base_src_install_docs
 }

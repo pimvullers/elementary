@@ -4,15 +4,18 @@
 
 EAPI=5
 
-inherit gnome2-utils bzr
+inherit versionator gnome2-utils
+
+MY_PV=$(get_version_component_range 3)
+REV=${MY_PV:1}
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"
-EBZR_REPO_URI="lp:elementaryicons"
+SRC_URI="http://bazaar.launchpad.net/~danrabbit/elementaryicons/trunk/tarball/${REV} -> ${PF}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE=""
 
 RDEPEND=""
@@ -20,7 +23,8 @@ DEPEND="x11-libs/gtk+:2"
 
 RESTRICT="binchecks mirror strip"
 
-DOCS=( AUTHORS COPYING CONTRIBUTORS )
+S="${WORKDIR}/~danrabbit/elementaryicons/trunk/"
+DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_install() {
 	dodoc ${DOCS}
