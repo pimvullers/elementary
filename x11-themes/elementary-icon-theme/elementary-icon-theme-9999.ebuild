@@ -20,7 +20,7 @@ DEPEND="x11-libs/gtk+:2"
 
 RESTRICT="binchecks mirror strip"
 
-DOCS=( AUTHORS COPYING CONTRIBUTORS )
+DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_install() {
 	dodoc ${DOCS}

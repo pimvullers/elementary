@@ -4,14 +4,14 @@
 
 EAPI=5
 
-inherit versionator base
+inherit versionator base bzr
 
 MY_PV=$(get_version_component_range 3)
-REV=${MY_PV:1}
 
 DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
 HOMEPAGE="https://launchpad.net/egtk"
-SRC_URI="http://bazaar.launchpad.net/~elementary-design/egtk/4.x/tarball/${REV} -> ${PF}.tar.gz"
+EBZR_REPO_URI="lp:egtk"
+EBZR_REVISION=${MY_PV:1}
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -40,7 +40,6 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
-S="${WORKDIR}/~elementary-design/egtk/4.x/"
 DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_prepare() {
