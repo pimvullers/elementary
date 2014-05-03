@@ -18,7 +18,7 @@ KEYWORDS=""
 IUSE=""
 
 RDEPEND="
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	dev-libs/glib:2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
