@@ -4,18 +4,16 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.20
 
-inherit versionator fdo-mime gnome2-utils vala cmake-utils
+inherit versionator fdo-mime gnome2-utils vala cmake-utils bzr
 
 MY_PV=$(get_version_component_range 3)
-REV=${MY_PV:1}
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-SRC_URI="http://bazaar.launchpad.net/~elementary-pantheon/${PN}/trunk/tarball/${REV} -> ${PF}.tar.gz"
-
-RESTRICT="mirror"
+EBZR_REPO_URI="lp:wingpanel"
+EBZR_REVISION=${MY_PV:1}
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -41,7 +39,6 @@ PDEPEND="
 	power? ( >=sys-power/indicator-power-12.10.6_p20131129 )
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 
-S="${WORKDIR}/~elementary-pantheon/${PN}/trunk/"
 DOCS=( AUTHORS COPYING COPYRIGHT )
 
 src_prepare() {

@@ -1,11 +1,11 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.9.5.ebuild,v 1.3 2013/12/22 13:35:38 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.11.2.ebuild,v 1.1 2014/05/16 23:05:58 hwoarang Exp $
 
 EAPI=5
-inherit autotools eutils pam readme.gentoo systemd
+inherit autotools eutils pam readme.gentoo systemd versionator
 
-TRUNK_VERSION="1.9"
+TRUNK_VERSION="$(get_version_component_range 1-2)"
 DESCRIPTION="A lightweight display manager"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/LightDM"
 SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
@@ -49,7 +49,11 @@ src_prepare() {
 	sed -i -e 's:getgroups:lightdm_&:' tests/src/libsystem.c || die #412369
 	sed -i -e '/minimum-uid/s:500:1000:' data/users.conf || die
 
-	epatch "${FILESDIR}"/${PN}-1.7.7-session-wrapper.patch
+	einfo "Fixing the session-wrapper variable in lightdm.conf"
+	sed -i -e \
+		"/session-wrapper/s@^.*@session-wrapper=/etc/${PN}/Xsession@" \
+		data/lightdm.conf || die "Failed to fix lightdm.conf"
+
 	epatch_user
 
 	# Remove bogus Makefile statement. This needs to go upstream
@@ -73,11 +77,15 @@ src_configure() {
 	einfo "Default session: ${_session}"
 	einfo "Greeter user: ${_user}"
 
+	# also disable tests because libsystem.c does not build. Tests are
+	# restricted so it does not matter anyway.
 	econf \
 		--localstatedir=/var \
 		--disable-static \
+		--disable-tests \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
+		--disable-liblightdm-qt5 \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \

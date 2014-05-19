@@ -7,7 +7,6 @@ EAPI=5
 inherit versionator gnome2-utils bzr
 
 MY_PV=$(get_version_component_range 3)
-REV=${MY_PV:1}
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"

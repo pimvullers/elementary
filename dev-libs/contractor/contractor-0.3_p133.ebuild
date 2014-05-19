@@ -9,11 +9,11 @@ VALA_MIN_API_VERSION=0.20
 inherit versionator vala cmake-utils bzr
 
 MY_PV=$(get_version_component_range 3)
-REV=${MY_PV:1}
 
 DESCRIPTION="A sharing service that allows source apps to send their data to registered destination apps"
 HOMEPAGE="https://launchpad.net/contractor"
 EBZR_REPO_URI="lp:contractor"
+EBZR_REVISION=${MY_PV:1}
 
 LICENSE="GPL-3"
 SLOT="0"

@@ -6,16 +6,14 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit versionator gnome2-utils vala multilib cmake-utils versionator
+inherit versionator gnome2-utils vala multilib cmake-utils bzr
 
 MY_PV=$(get_version_component_range 3)
-REV=${MY_PV:1}
 
 DESCRIPTION="A development library for elementary development"
-HOMEPAGE="https://launchpad.net/granite"
-SRC_URI="http://bazaar.launchpad.net/~elementary-pantheon/${PN}/${PN}/tarball/${REV} -> ${PF}.tar.gz"
-
-RESTRICT="mirror"
+HOMEPAGE="http://launchpad.net/granite"
+EBZR_REPO_URI="lp:granite"
+EBZR_REVISION=${MY_PV:1}
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -32,7 +30,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/~elementary-pantheon/${PN}/${PN}/"
 DOCS=( AUTHORS COPYING NEWS README )
 
 src_prepare() {
