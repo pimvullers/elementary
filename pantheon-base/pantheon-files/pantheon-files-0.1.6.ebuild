@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.20
 
 inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
@@ -21,7 +21,7 @@ RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
 	dev-libs/glib:2
-	<x11-libs/granite-0.3
+	>=x11-libs/granite-0.3
 	dev-libs/libgee:0
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
@@ -35,7 +35,6 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING HACKING README )
 
 src_prepare() {
-#	epatch "${FILESDIR}/${P}-unowned-capabilities.patch"
 	epatch_user
 
 	# Disable generation of the translations (if needed)
