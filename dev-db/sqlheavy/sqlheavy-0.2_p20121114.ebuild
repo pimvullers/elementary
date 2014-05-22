@@ -6,15 +6,16 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit vala autotools-utils
+inherit vala autotools-utils git-2
 
 DESCRIPTION="GObject SQLite wrapper"
 HOMEPAGE="http://code.google.com/p/sqlheavy/"
-SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.xz"
+EGIT_REPO_URI="git://gitorious.org/sqlheavy/sqlheavy.git"
+EGIT_COMMIT="7ae6112960a0ac4d77d904dd8cc561dcac62b6e2"
 
 LICENSE="LGPL-2.1"
-SLOT="0.1"
-KEYWORDS="~amd64 ~x86"
+SLOT="0.2"
+KEYWORDS="~amd64"
 IUSE="static-libs"
 
 RDEPEND="
@@ -29,16 +30,18 @@ AUTOTOOLS_IN_SOURCE_BUILD=1
 AUTOTOOLS_AUTORECONF=1
 
 pkg_setup() {
-	DOCS=(AUTHORS COPYING ChangeLog NEWS README)
+	DOCS=(AUTHORS COPYING NEWS README)
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-drop-sqlheavy-gen-orm.patch"
-
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
 
-src_compile() {
-	autotools-utils_src_compile -j1
+src_install() {
+	autotools-utils_src_install
+
+	# Create a slotted version of the binary
+	mv "${ED}/usr/bin/sqlheavy-gen-orm" "${ED}/usr/bin/sqlheavy-gen-orm-${SLOT}"
+	mv "${ED}/usr/share/man/man1/sqlheavy-gen-orm.1" "${ED}/usr/share/man/man1/sqlheavy-gen-orm-${SLOT}.1"
 }
