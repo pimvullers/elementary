@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils
 
-DESCRIPTION="Configure what applications do what using Switchboard."
-HOMEPAGE="https://launchpad.net/switchboard-plug-default-applications"
-EBZR_REPO_URI="lp:switchboard-plug-default-applications"
+DESCRIPTION="Configure startup applications using Switchboard."
+HOMEPAGE="https://launchpad.net/switchboard-plug-startup-applications"
+SRC_URI="https://launchpad.net/${PN}/0.1.x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
@@ -26,8 +26,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
-
-DOCS=( AUTHORS README )
 
 src_prepare() {
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt

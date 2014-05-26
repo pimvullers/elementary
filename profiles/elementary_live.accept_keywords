@@ -13,7 +13,9 @@ pantheon-base/slingshot **
 pantheon-base/switchboard **
 pantheon-base/switchboard-plug-about **
 pantheon-base/switchboard-plug-default-applications **
+pantheon-base/switchboard-plug-startup-applications **
 pantheon-base/switchboard-plug-keyboard **
+pantheon-base/switchboard-plug-locale **
 pantheon-base/switchboard-plug-pantheon-shell **
 pantheon-base/switchboard-plug-power **
 pantheon-base/wingpanel **

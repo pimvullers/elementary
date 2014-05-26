@@ -10,7 +10,8 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://launchpad.net/pantheon-terminal"
-SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
+
 
 LICENSE="GPL-3"
 SLOT="0"

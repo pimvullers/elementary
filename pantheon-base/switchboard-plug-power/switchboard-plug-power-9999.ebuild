@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils bzr
 
@@ -18,6 +18,7 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/glib:2
 	>=pantheon-base/switchboard-2
 	x11-libs/granite
 	x11-libs/gtk+:3"

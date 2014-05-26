@@ -4,34 +4,30 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils
 
-DESCRIPTION="Control system power consumption using Switchboard."
-HOMEPAGE="https://launchpad.net/switchboard-plug-power"
-SRC_URI="https://code.launchpad.net/~elementary-os/+archive/stable/+files/${PN}_${PV}-0%7E82%2Br1%7Eprecise1.tar.gz"
+DESCRIPTION="Configure what applications do what using Switchboard."
+HOMEPAGE="https://launchpad.net/switchboard-plug-default-applications"
+SRC_URI="https://launchpad.net/${PN}/isis/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
 IUSE="nls"
 
-CDEPEND="
+RDEPEND="
+	dev-libs/glib:2
+	>=pantheon-base/switchboard-2
 	x11-libs/granite
 	x11-libs/gtk+:3"
-RDEPEND="${CDEPEND}
-	pantheon-base/switchboard"
-DEPEND="${CDEPEND}
+DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-src_unpack() {
-	default_src_unpack
-
-	mv "${WORKDIR}/recipe-{debupstream}-0~{revno}+r1" "${S}"
-}
+DOCS=( AUTHORS README )
 
 src_prepare() {
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt

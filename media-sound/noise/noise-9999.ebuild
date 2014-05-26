@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -8,38 +8,41 @@ VALA_MIN_API_VERSION=0.24
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
-DESCRIPTION="Noise is the official audio player of elementary OS"
+DESCRIPTION="Noise is the official music player of elementary OS"
 HOMEPAGE="https://launchpad.net/noise"
 EBZR_REPO_URI="lp:noise"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="ayatana menu nls plugins upnp zeitgeist"
+IUSE="mpris ipod lastfm nls plugins upnp"
 
 REQUIRED_USE="upnp? ( plugins )"
 
 RDEPEND="
 	dev-db/sqlheavy
 	dev-libs/glib:2
-	dev-libs/json-glib
-	menu? ( >=dev-libs/libdbusmenu-0.4.3 )
 	dev-libs/libgee:0.8
-	ayatana? ( >=dev-libs/libindicate-0.5.90 )
-	dev-libs/libpeas
-	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.10 )
-	dev-libs/libxml2:2
+	dev-libs/libpeas[gtk]
 	media-libs/gstreamer:0.10
 	media-libs/gst-plugins-base:0.10
-	media-libs/libgpod
 	media-libs/taglib
 	plugins? ( 
 	  upnp? ( || ( 
 		( >=net-libs/gupnp-0.20	>=net-libs/gupnp-av-0.12 ) 
 		net-libs/gupnp-vala 
 	  ) )
+	  ipod? ( media-libs/libgpod )
+	  lastfm? (
+		dev-libs/json-glib
+		dev-libs/libxml2:2
+		net-libs/libsoup:2.4
+	  )
+	  mpris? ( 
+		dev-libs/libdbusmenu
+		>=dev-libs/libindicate-0.5.90 
+	  )
 	)
-	net-libs/libsoup:2.4
 	x11-libs/gtk+:3
 	x11-libs/granite
 	x11-libs/libnotify"
@@ -47,14 +50,22 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+REQUIRED_USE="
+	ipod? ( plugins ) 
+	upnp? ( plugins )
+	lastfm? ( plugins )
+	mpris? ( plugins )"
+
+DOCS=( AUTHORS NEWS README )
+
 src_prepare() {
 	epatch_user
 
 	# Disable generation of the translations (if needed)
-	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	# Disable building of plugins (if needed)
-	use plugins || sed -i 's/add_subdirectory(plugins)//' CMakeLists.txt
+	use plugins || sed -i '/add_subdirectory (plugins)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare	
