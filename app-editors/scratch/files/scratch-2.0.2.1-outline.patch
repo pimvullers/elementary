@@ -1,0 +1,31 @@
+=== modified file 'plugins/outline/CMakeLists.txt'
+--- plugins/outline/CMakeLists.txt	2014-01-24 17:15:27 +0000
++++ plugins/outline/CMakeLists.txt	2014-02-06 05:31:00 +0000
+@@ -17,6 +17,7 @@
+     --vapidir=${CMAKE_BINARY_DIR}
+     --vapidir=${CMAKE_BINARY_DIR}/src/
+     --vapidir=${CMAKE_BINARY_DIR}/scratchcore/
++    --target-glib=2.32
+ )
+ 
+ pkg_check_modules(OUTLINE_DEPS libvala-${VALA_SHORTVER})
+
+=== modified file 'plugins/outline/ValaSymbolResolver.vala'
+--- plugins/outline/ValaSymbolResolver.vala	2013-07-09 09:15:52 +0000
++++ plugins/outline/ValaSymbolResolver.vala	2014-02-06 05:31:00 +0000
+@@ -115,11 +115,11 @@
+ 	{
+ 		cache.children.clear ();
+ 		init_context ();
+-
+-		unowned Thread<void*> thread = Thread.create<void*> (() => {
++		
++		Thread<void*> thread = new Thread<void*>("parse-symbols", () => {
+ 			parse_symbols_async ();
+ 			return null;
+-		}, true);
++		});
+ 
+ 		thread.join ();
+ 
+
