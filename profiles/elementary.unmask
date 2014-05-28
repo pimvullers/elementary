@@ -1,9 +1,5 @@
-## Mutter 3.8 (for Gala)
-=dev-libs/glib-2.36*
-=x11-wm/mutter-3.8*
-=media-libs/clutter-1.14*
-=gnome-base/gsettings-desktop-schemas-3.8*
-=media-libs/cogl-1.14*
-=dev-libs/gobject-introspection-1.36*
-=dev-libs/gobject-introspection-common-1.36*
-
+# Gtk+ 3.12 (required by Granite 0.3)
+=dev-libs/glib-2.40*
+=dev-libs/gobject-introspection-1.40*
+=dev-libs/gobject-introspection-common-1.40*
+=x11-libs/gtk+-3.12*

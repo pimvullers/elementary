@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.24
 
 inherit versionator gnome2-utils vala multilib cmake-utils bzr
 
@@ -22,7 +22,6 @@ IUSE="demo nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/gobject-introspection
 	dev-libs/libgee:0.8[introspection]
 	>=x11-libs/gtk+-3.4:3[introspection]"
 DEPEND="${RDEPEND}
@@ -38,6 +37,7 @@ src_prepare() {
 	# Disable building of the demo application (if needed)
 	use demo || sed -i '/add_subdirectory (demo)/d' CMakeLists.txt
 
+	# Disable generation of the translations (if needed)
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare

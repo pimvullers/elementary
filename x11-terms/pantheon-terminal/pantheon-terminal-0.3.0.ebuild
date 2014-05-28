@@ -12,7 +12,6 @@ DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://launchpad.net/pantheon-terminal"
 SRC_URI="https://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
 
-
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
@@ -20,7 +19,7 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	x11-libs/granite
+	>=x11-libs/granite-0.3
 	x11-libs/libnotify
 	x11-libs/gtk+:3
 	x11-libs/vte:2.90"
