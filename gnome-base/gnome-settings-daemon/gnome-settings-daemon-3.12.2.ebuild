@@ -1,17 +1,17 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.1.ebuild,v 1.1 2014/04/27 16:58:01 eva Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.2.ebuild,v 1.1 2014/05/31 07:44:48 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 
-inherit autotools eutils gnome2 systemd virtualx
+inherit autotools eutils gnome2 systemd udev virtualx
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~gnome3-team/+archive/gnome3-staging/+files/${PN}_${PV}-0ubuntu1%7Etrusty1.debian.tar.gz"
+	https://launchpad.net/~elementary-os/+archive/staging/+files/gnome-settings-daemon_3.12.2-0ubuntu1%7Eelementary0.3.4.debian.tar.xz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -93,6 +93,7 @@ src_prepare() {
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
+		epatch "${FILESDIR}/${P}-16_use_synchronous_notifications.patch"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
@@ -131,6 +132,10 @@ src_configure() {
 
 src_test() {
 	Xemake check
+}
+
+src_install() {
+	gnome2_src_install udevrulesdir="$(get_udevdir)"/rules.d #509484
 }
 
 pkg_postinst() {

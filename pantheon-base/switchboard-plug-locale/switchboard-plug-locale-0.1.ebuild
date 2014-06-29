@@ -18,7 +18,7 @@ KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
-	app-i18n/ibus
+	app-i18n/ibus[vala]
 	dev-libs/glib:2
 	gnome-base/gnome-desktop:3
 	>=pantheon-base/switchboard-2

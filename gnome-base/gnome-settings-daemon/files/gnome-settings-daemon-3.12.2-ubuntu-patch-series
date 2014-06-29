@@ -1,5 +1,4 @@
 05_disable_corner_tapping.patch
-16_use_synchronous_notifications.patch
 43_disable_locale_settings.patch
 45_suppress-printer-may-not-be-connected-notification.patch
 revert_background_dropping.patch
@@ -14,12 +13,10 @@ correct_logout_action.patch
 migrate_metacity_keys.patch
 nexus-orientation.patch
 fix_media_keys_on_unity.patch
-fix_input_switching_on_unity.patch
 fix_screenshots_on_unity.patch
 revert-xi2-key-matching.patch
 git_revert_gsd-keygrab.patch
-git_revert_remove_automount_helper.patch
 ubuntu-fix-desktop-file.patch
 ubuntu-lid-close-suspend.patch
 ubuntu-lid-open-reset-ideletime.patch
-git_power_fix_sleep_notifacations.patch
+ubuntu-force-lock-group.patch

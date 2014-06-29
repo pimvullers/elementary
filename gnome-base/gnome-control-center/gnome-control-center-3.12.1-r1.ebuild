@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1.ebuild,v 1.4 2014/05/31 10:21:05 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.1 2014/06/26 02:45:21 tetromino Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -36,7 +36,6 @@ COMMON_DEPEND="
 	gnome-base/gnome-menus:3
 	gnome-base/libgtop:2=
 	media-libs/fontconfig
-	>=media-libs/grilo-0.2.6:0.2
 
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
@@ -64,7 +63,9 @@ COMMON_DEPEND="
 	cups? (
 		>=net-print/cups-1.4[dbus]
 		|| ( >=net-fs/samba-3.6.14-r1[smbclient] >=net-fs/samba-4.0.0[client] ) )
-	gnome-online-accounts? ( >=net-libs/gnome-online-accounts-3.9.90 )
+	gnome-online-accounts? (
+		>=media-libs/grilo-0.2.6:0.2
+		>=net-libs/gnome-online-accounts-3.9.90 )
 	i18n? ( >=app-i18n/ibus-1.5.2 )
 	kerberos? ( app-crypt/mit-krb5 )
 	v4l? (
@@ -124,7 +125,7 @@ src_prepare() {
 
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}"/${PN}-3.12.1-optional.patch
+	epatch "${FILESDIR}"/${PN}-3.12.1-optional-r1.patch
 
 	# Fix some absolute paths to be appropriate for Gentoo
 	epatch "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch
