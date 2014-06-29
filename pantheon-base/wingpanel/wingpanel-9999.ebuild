@@ -39,9 +39,6 @@ PDEPEND="
 DOCS=( AUTHORS COPYING COPYRIGHT )
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.3-indicator-files.patch"
-	epatch "${FILESDIR}/${PN}-0.3-opacity.patch"
-	epatch "${FILESDIR}/${PN}-0.3-maximized.patch"
 	epatch_user
 
 	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
