@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.1 2014/06/26 02:45:21 tetromino Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.3 2014/07/23 15:16:47 ago Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -14,7 +14,7 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 LICENSE="GPL-2+"
 SLOT="2"
 IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager v4l"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # False positives caused by nested configure scripts
 QA_CONFIGURE_OPTIONS=".*"
@@ -23,6 +23,10 @@ QA_CONFIGURE_OPTIONS=".*"
 # g-s-d[policykit] needed for bug #403527
 #
 # kerberos unfortunately means mit-krb5; build fails with heimdal
+
+# FIXME: modemmanager is not optional
+#        networkmanager is not optional
+
 COMMON_DEPEND="
 	>=dev-libs/glib-2.39.91:2
 	>=x11-libs/gdk-pixbuf-2.23.0:2

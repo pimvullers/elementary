@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.12.1.ebuild,v 1.1 2014/04/27 16:53:14 eva Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.12.1.ebuild,v 1.4 2014/07/27 08:44:05 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -14,7 +14,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE="doc elibc_FreeBSD gconf ipv6 systemd +ubuntu"
 
 # x11-misc/xdg-user-dirs{,-gtk} are needed to create the various XDG_*_DIRs, and
@@ -22,7 +22,7 @@ IUSE="doc elibc_FreeBSD gconf ipv6 systemd +ubuntu"
 # xdg-user-dirs-update is run during login (see 10-user-dirs-update-gnome below).
 # gdk-pixbuf used in the inhibit dialog
 COMMON_DEPEND="
-	>=dev-libs/glib-2.35.0:2
+	>=dev-libs/glib-2.40.0:2
 	x11-libs/gdk-pixbuf:2
 	>=x11-libs/gtk+-2.90.7:3
 	>=dev-libs/json-glib-0.10
