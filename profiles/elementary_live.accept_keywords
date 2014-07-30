@@ -18,6 +18,7 @@ pantheon-base/switchboard-plug-keyboard **
 pantheon-base/switchboard-plug-locale **
 pantheon-base/switchboard-plug-pantheon-shell **
 pantheon-base/switchboard-plug-power **
+pantheon-base/switchboard-plug-security-privacy **
 pantheon-base/wingpanel **
 pantheon-extra/elementary-tweaks **
 www-client/midori **
