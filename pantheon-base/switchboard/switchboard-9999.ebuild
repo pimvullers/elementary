@@ -20,6 +20,7 @@ IUSE="nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
+	media-video/cheese
 	x11-libs/gtk+:3
 	>=x11-libs/granite-0.3
 	!pantheon-base/libpantheon"
