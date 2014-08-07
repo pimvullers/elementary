@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:slingshot"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls -zeitgeist"
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -23,7 +23,7 @@ RDEPEND="
 	gnome-base/gnome-menus:3
 	>=x11-libs/granite-0.3
 	>=x11-libs/gtk+-3.2:3
-	zeitgeist? ( gnome-extra/zeitgeist )"
+	gnome-extra/zeitgeist"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -46,7 +46,6 @@ src_configure() {
 		-DICONCACHE_UPDATE=OFF
 		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
 
 	cmake-utils_src_configure
