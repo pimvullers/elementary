@@ -18,6 +18,7 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/folks
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libical
