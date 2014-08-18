@@ -1,3 +1,4 @@
+git-menu-binding-emit-submenu-close-after-activate.patch
 016_no_offscreen_widgets_grabbing.patch
 017_no_offscreen_device_grabbing.patch
 018_gdkenumtypes.c_location.patch
@@ -13,3 +14,8 @@ ubuntu_gtk_custom_menu_items.patch
 print-dialog-show-options-of-remote-dnssd-printers.patch
 uimanager-guard-against-nested-node-updates.patch
 x-canonical-accel.patch
+gtkdialog-don-t-use-csd-when-use-header-bar-is-FALSE.patch
+gtkaboutdialog-support-showing-buttons-in-action-are.patch
+message-dialog-restore-traditional-look-on-unity.patch
+git-gtkpopover-set-background-and-popover-css.patch
+git_reftests-Improve-workaround-for-GtkGrid-bug.patch
