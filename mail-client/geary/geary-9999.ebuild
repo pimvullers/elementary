@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-0.5.0.ebuild,v 1.1 2014/01/08 21:05:24 hasufell Exp $
+# $Header: /var/cvsroot/gentoo-x86/mail-client/geary/geary-9999.ebuild,v 1.1 2014/01/08 21:05:24 hasufell Exp $
 
 EAPI=5
 
@@ -15,9 +15,10 @@ EGIT_REPO_URI="git://git.gnome.org/geary"
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS=""
-IUSE="ayatana nls"
+IUSE="nls"
 
-CDEPEND="
+DEPEND="
+	app-crypt/gcr[introspection,vala]
 	app-crypt/libsecret
 	dev-db/sqlite:3
 	dev-libs/glib:2
@@ -26,13 +27,14 @@ CDEPEND="
 	dev-libs/gmime:2.6
 	media-libs/libcanberra
 	>=net-libs/webkit-gtk-1.10.0:3[introspection]
-	>=x11-libs/gtk+-3.6.0:3[introspection]
-	x11-libs/libnotify
-	ayatana? ( dev-libs/libindicate:3 )"
-RDEPEND="${CDEPEND}
+	>=x11-libs/gtk+-3.10.0:3[introspection]
+	x11-libs/libnotify"
+RDEPEND="${DEPEND}
 	gnome-base/gsettings-desktop-schemas
 	nls? ( virtual/libintl )"
-DEPEND="${CDEPEND}
+DEPEND="${DEPEND}
+	app-text/gnome-doc-utils
+	dev-util/desktop-file-utils
 	nls? ( sys-devel/gettext )
 	$(vala_depend)
 	virtual/pkgconfig"
@@ -40,17 +42,16 @@ DEPEND="${CDEPEND}
 DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-unity.patch
-	epatch "${FILESDIR}"/${P}-cflags.patch
-	epatch "${FILESDIR}"/${P}-vapigen.patch
+	epatch "${FILESDIR}"/${PN}-0.7.2-cflags.patch \
+		"${FILESDIR}"/${PN}-0.5.3-vapigen.patch \
+		"${FILESDIR}"/${PN}-0.6.0-desktopfile.patch
 
 	local i
 	if use nls ; then
 		if [[ -n "${LINGUAS+x}" ]] ; then
 			for i in $(cd po ; echo *.po) ; do
 				if ! has ${i%.po} ${LINGUAS} ; then
-					sed -i -e "s/\s${i%.po}$//" po/CMakeLists.txt || die
-					rm po/${i} || die
+					sed -i -e "/^${i%.po}$/d" po/LINGUAS || die
 				fi
 			done
 		fi
@@ -68,8 +69,7 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DICON_UPDATE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		-DVAPIGEN="${VAPIGEN}"
-		$(cmake-utils_use_with ayatana UNITY)
+		-DWITH_UNITY=OFF
 		-DDESKTOP_VALIDATE=OFF
 	)
 
