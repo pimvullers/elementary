@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gsettings-desktop-schemas/gsettings-desktop-schemas-3.8.2.ebuild,v 1.1 2013/05/14 21:42:40 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gsettings-desktop-schemas/gsettings-desktop-schemas-3.12.0.ebuild,v 1.1 2014/04/27 16:59:55 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Collection of GSettings schemas for GNOME desktop"
 HOMEPAGE="https://git.gnome.org/browse/gsettings-desktop-schemas"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/ubuntu/+archive/primary/+files/gsettings-desktop-schemas_3.8.0-1ubuntu1.debian.tar.gz"
+	https://launchpad.net/~elementary-os/+archive/testing/+files/gsettings-desktop-schemas_3.12.0-1ubuntu2%7Eelementary0.3.1.debian.tar.xz"
 
 LICENSE="LGPL-2.1+"
 SLOT="0"
@@ -20,6 +20,7 @@ KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~sh ~sparc ~x86 ~amd6
 RDEPEND="
 	>=dev-libs/glib-2.31:2
 	introspection? ( >=dev-libs/gobject-introspection-1.31.0 )
+	!<gnome-base/gdm-3.8
 "
 DEPEND="${RDEPEND}
 	>=dev-util/intltool-0.40

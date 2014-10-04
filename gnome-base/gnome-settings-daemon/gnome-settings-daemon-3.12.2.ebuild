@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.2.ebuild,v 1.4 2014/07/24 17:48:47 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.2.ebuild,v 1.5 2014/09/26 20:36:22 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -33,7 +33,7 @@ COMMON_DEPEND="
 	>=media-libs/lcms-2.2:2
 	media-libs/libcanberra[gtk3]
 	>=media-sound/pulseaudio-2
-	>=sys-power/upower-0.99
+	>=sys-power/upower-0.99:=
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf:2
 	>=x11-libs/libnotify-0.7.3:=

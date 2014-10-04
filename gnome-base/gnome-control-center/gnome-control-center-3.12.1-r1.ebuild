@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.3 2014/07/23 15:16:47 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.4 2014/09/26 20:33:12 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -44,7 +44,7 @@ COMMON_DEPEND="
 	>=media-libs/libcanberra-0.13[gtk3]
 	>=media-sound/pulseaudio-2[glib]
 	>=sys-auth/polkit-0.97
-	>=sys-power/upower-0.99
+	>=sys-power/upower-0.99:=
 	>=x11-libs/libnotify-0.7.3:0=
 
 	networkmanager? ( 

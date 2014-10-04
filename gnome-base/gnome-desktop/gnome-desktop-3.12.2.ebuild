@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.12.2.ebuild,v 1.3 2014/07/23 15:16:53 ago Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.12.2.ebuild,v 1.4 2014/09/29 11:59:12 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -36,6 +36,7 @@ RDEPEND="${COMMON_DEPEND}
 "
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
+	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.4
 	>=dev-util/intltool-0.40.6
 	sys-devel/gettext
