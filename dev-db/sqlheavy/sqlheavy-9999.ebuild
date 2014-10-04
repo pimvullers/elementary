@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.26
 
 inherit vala autotools-utils git-2
 
@@ -14,7 +14,7 @@ EGIT_REPO_URI="git://gitorious.org/sqlheavy/sqlheavy.git"
 
 LICENSE="LGPL-2.1"
 SLOT="0.2"
-KEYWORDS="~amd64"
+KEYWORDS=""
 IUSE="static-libs"
 
 RDEPEND="
