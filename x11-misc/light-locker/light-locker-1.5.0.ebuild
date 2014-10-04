@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 	X? ( x11-proto/scrnsaverproto )
 	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING COPYING.LIB HACKING NEWS README TODO )
+DOCS=( AUTHORS COPYING COPYING.LIB HACKING NEWS README )
 
 src_configure() {
 	local myeconfargs=(
