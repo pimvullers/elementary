@@ -18,10 +18,9 @@ KEYWORDS="~amd64"
 IUSE=""
 
 RDEPEND="
-	media-libs/clutter-gst:1.0
 	media-libs/clutter-gtk:1.0
-	media-libs/gstreamer:0.10
-	media-libs/gst-plugins-base:0.10
+	media-libs/gstreamer:1.0
+	media-libs/gst-plugins-base:1.0
 	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
