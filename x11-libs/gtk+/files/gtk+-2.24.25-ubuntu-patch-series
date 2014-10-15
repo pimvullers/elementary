@@ -26,4 +26,4 @@
 print-dialog-show-options-of-remote-dnssd-printers.patch
 gtk-shell-shows-menubar.patch
 backport_search_printer_location.patch
-git_print_default_location.patch
+menubar_toolbar_dragging.patch
