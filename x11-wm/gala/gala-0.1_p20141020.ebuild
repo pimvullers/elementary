@@ -4,52 +4,53 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils
+inherit gnome2-utils vala autotools-utils
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
-SRC_URI="https://code.launchpad.net/~elementary-os/+archive/stable/+files/gala_0.1-0%7Er363%2Bpkg18%2Br1%7Eubuntu12.04.1.tar.gz"
+SRC_URI="https://launchpad.net/~elementary-os/+archive/ubuntu/daily/+files/gala_0.1.0%7Er420%2Bpkg29%7Eubuntu14.10.1.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE=""
+IUSE="debug"
 
 RDEPEND="
-	dev-libs/libgee:0
-	media-libs/clutter
+	>=dev-libs/glib-2.32:2
+	dev-libs/libgee:0.8
 	media-libs/clutter-gtk
-	pantheon-base/plank
-	<x11-libs/granite-0.3
+	>=pantheon-base/plank-0.3
+	>=x11-libs/granite-0.3
 	x11-libs/bamf
-	x11-libs/libXfixes
-	>=x11-wm/mutter-3.4.1-r2
-	<x11-wm/mutter-3.11"
+	>=x11-libs/gtk+-3.4:3
+	>=x11-wm/mutter-3.8.4
+	gnome-base/gnome-desktop:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
+AUTOTOOLS_AUTORECONF=1
+
 src_unpack() {
 	default_src_unpack
 
-	mv "${WORKDIR}/recipe-{debupstream}-0~r{revno}+pkg{revno:packaging}+r1" "${S}"
+	mv "${WORKDIR}/gala-0.1.0~r420+pkg29~ubuntu14.10.1" "${S}"
 }
 
 src_prepare() {
 	epatch_user
 
-	cmake-utils_src_prepare
+	autotools-utils_src_prepare
 	vala_src_prepare
 }
 
 src_configure() {
-	local mycmakeargs=(
-		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="${VALAC}"
+	local myeconfargs=(
+		VALAC="${VALAC}"
 	)
-	cmake-utils_src_configure
+	autotools-utils_src_configure
 }
 
 pkg_preinst() {
