@@ -24,6 +24,7 @@ RDEPEND="
 	gnome-base/gconf
 	>=gnome-extra/evolution-data-server-3.5.3
 	x11-libs/cairo
+	>=x11-libs/libnotify-0.7.6
 	>=x11-libs/gtk+-3.1.4:3
 	x11-libs/libido:3"
 DEPEND="${RDEPEND}"
