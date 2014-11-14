@@ -1,11 +1,11 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.10.0.ebuild,v 1.2 2014/04/10 17:10:56 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.12.1.ebuild,v 1.2 2014/11/08 20:01:18 hwoarang Exp $
 
 EAPI=5
-inherit autotools eutils pam readme.gentoo systemd
+inherit autotools eutils pam readme.gentoo systemd versionator
 
-TRUNK_VERSION="1.10"
+TRUNK_VERSION="$(get_version_component_range 1-2)"
 DESCRIPTION="A lightweight display manager"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/LightDM"
 SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
@@ -14,8 +14,8 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde pantheon qt4 qt5 razor"
-REQUIRED_USE="|| ( gtk kde pantheon razor )"
+IUSE="+gtk +introspection kde pantheon qt4"
+REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
@@ -28,11 +28,6 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 		dev-qt/qtcore:4
 		dev-qt/qtdbus:4
 		dev-qt/qtgui:4
-		)
-	qt5? (
-		dev-qt/qtcore:5
-		dev-qt/qtdbus:5
-		dev-qt/qtgui:5
 		)"
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/pambase-20101024-r2"
@@ -44,8 +39,7 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig"
 PDEPEND="gtk? ( x11-misc/lightdm-gtk-greeter )
 	kde? ( x11-misc/lightdm-kde )
-	pantheon? ( pantheon-base/pantheon-greeter )
-	razor? ( razorqt-base/razorqt-lightdm-greeter )"
+	pantheon? ( pantheon-base/pantheon-greeter )"
 
 DOCS=( NEWS )
 RESTRICT="test"
@@ -90,7 +84,7 @@ src_configure() {
 		--disable-tests \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
-		$(use_enable qt5 liblightdm-qt5) \
+		--disable-liblightdm-qt5 \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \
@@ -111,6 +105,8 @@ src_install() {
 	doins data/{${PN},keys}.conf
 	doins "${FILESDIR}"/Xsession
 	fperms +x /etc/${PN}/Xsession
+	# /var/lib/lightdm-data could be useful. Bug #522228
+	dodir /var/lib/lightdm-data
 
 	prune_libtool_files --all
 	rm -rf "${ED}"/etc/init

@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.11.9.ebuild,v 1.1 2014/09/14 10:10:46 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.11.9.ebuild,v 1.2 2014/11/08 20:01:18 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd versionator
@@ -14,8 +14,8 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde pantheon qt4 razor"
-REQUIRED_USE="|| ( gtk kde pantheon razor )"
+IUSE="+gtk +introspection kde pantheon qt4"
+REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
@@ -39,8 +39,7 @@ DEPEND="${COMMON_DEPEND}
 	virtual/pkgconfig"
 PDEPEND="gtk? ( x11-misc/lightdm-gtk-greeter )
 	kde? ( x11-misc/lightdm-kde )
-	pantheon? ( pantheon-base/pantheon-greeter )
-	razor? ( razorqt-base/razorqt-lightdm-greeter )"
+	pantheon? ( pantheon-base/pantheon-greeter )"
 
 DOCS=( NEWS )
 RESTRICT="test"
