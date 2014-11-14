@@ -21,7 +21,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0
 	dev-libs/libindicator:3
-	x11-libs/gtk+:3
+	x11-libs/gtk+:3[ubuntu]
 	<x11-libs/granite-0.3
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
