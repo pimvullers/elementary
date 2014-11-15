@@ -11,12 +11,14 @@ inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
-SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2"
+KEYWORDS="~amd64 ~arm ~mips ~x86 ~x86-fbsd"
+	SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2
+		http://dev.gentoo.org/~ssuominen/${PN}-0.5.8-save_as.patch.xz"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS="~amd64 ~mips ~x86 ~x86-fbsd"
-IUSE="doc +granite nls +jit +webkit2 zeitgeist"
+IUSE="doc +granite introspection +jit nls +webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
@@ -43,16 +45,14 @@ S=${WORKDIR}
 
 pkg_setup() {
 	python-any-r1_pkg_setup
-}
-
-pkg_setup() {
-	python-any-r1_pkg_setup
 
 	DOCS=( AUTHORS ChangeLog HACKING README TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
 }
 
 src_prepare() {
+	epatch "${WORKDIR}"/${PN}-0.5.8-save_as.patch #498898
+
 	vala_src_prepare
 	cmake-utils_src_prepare
 
@@ -66,6 +66,7 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_DOCDIR=/usr/share/doc/${PF}
 		$(cmake-utils_use_use doc APIDOCS)
+		$(cmake-utils_use_use introspection GIR)
 		$(cmake-utils_use_use granite)
 		$(cmake-utils_use_use zeitgeist)
 		-DVALA_EXECUTABLE="${VALAC}"
