@@ -29,6 +29,7 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING NEWS README )
 
 src_prepare() {
+	epatch "${FILESDIR}/0001-build_with_valac_greater_than_0.25.2.patch"
 	epatch_user
 
 	# Disable building of the demo application (if needed)
