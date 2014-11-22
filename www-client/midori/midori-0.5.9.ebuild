@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.8.ebuild,v 1.3 2014/04/07 15:23:37 ssuominen Exp $
+# $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.9.ebuild,v 1.3 2014/04/07 15:23:37 ssuominen Exp $
 
 EAPI=5
 VALA_MIN_API_VERSION=0.20
@@ -12,8 +12,7 @@ inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
 KEYWORDS="~amd64 ~arm ~mips ~x86 ~x86-fbsd"
-	SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2
-		http://dev.gentoo.org/~ssuominen/${PN}-0.5.8-save_as.patch.xz"
+SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
@@ -41,8 +40,6 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	doc? ( dev-util/gtk-doc )"
 
-S=${WORKDIR}
-
 pkg_setup() {
 	python-any-r1_pkg_setup
 
@@ -51,8 +48,6 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch "${WORKDIR}"/${PN}-0.5.8-save_as.patch #498898
-
 	vala_src_prepare
 	cmake-utils_src_prepare
 

@@ -11,6 +11,7 @@ inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala bz
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
+KEYWORDS=""
 EBZR_REPO_URI="lp:midori"
 
 LICENSE="LGPL-2.1 MIT"
@@ -39,7 +40,6 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	doc? ( dev-util/gtk-doc )"
 
-
 pkg_setup() {
 	python-any-r1_pkg_setup
 
@@ -61,6 +61,7 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_DOCDIR=/usr/share/doc/${PF}
 		$(cmake-utils_use_use doc APIDOCS)
+		$(cmake-utils_use_use introspection GIR)
 		$(cmake-utils_use_use granite)
 		$(cmake-utils_use_use zeitgeist)
 		-DVALA_EXECUTABLE="${VALAC}"
