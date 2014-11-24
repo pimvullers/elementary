@@ -11,7 +11,7 @@ inherit autotools eutils gnome2 systemd udev virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~elementary-os/+archive/staging/+files/gnome-settings-daemon_3.12.2-0ubuntu1%7Eelementary0.3.4.debian.tar.xz"
+	https://launchpad.net/~elementary-os/+archive/staging/+files/gnome-settings-daemon_3.12.2-1ubuntu1%7Eelementary0.3.2.debian.tar.xz"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -93,7 +93,7 @@ src_prepare() {
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
-		epatch "${FILESDIR}/${PN}-3.12.2-16_use_synchronous_notifications.patch"
+	#	epatch "${FILESDIR}/${PN}-3.12.2-16_use_synchronous_notifications.patch"
 		epatch "${FILESDIR}/${PN}-3.12.3-nexus-orientation.patch"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			epatch "${WORKDIR}/debian/patches/${patch}"
