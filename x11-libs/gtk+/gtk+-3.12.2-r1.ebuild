@@ -1,12 +1,12 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.2.ebuild,v 1.5 2014/08/07 18:41:11 jer Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.2-r1.ebuild,v 1.1 2014/11/22 23:02:47 mgorny Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
 GNOME2_LA_PUNT="yes"
 
-inherit autotools flag-o-matic gnome2 multilib virtualx
+inherit autotools eutils flag-o-matic gnome2 multilib virtualx multilib-minimal
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -24,7 +24,7 @@ REQUIRED_USE="
 	xinerama? ( X )
 "
 
-KEYWORDS="~alpha amd64 ~arm hppa ~ia64 ~mips ppc ~ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
 	https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_${PV}-0ubuntu6.debian.tar.gz"
 
@@ -32,38 +32,38 @@ SRC_URI="${SRC_URI}
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 # Use gtk+:2 for gtk-update-icon-cache
 COMMON_DEPEND="
-	>=dev-libs/atk-2.7.5[introspection?]
-	>=dev-libs/glib-2.39.5:2
-	media-libs/fontconfig
-	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?]
-	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?]
-	>=x11-libs/gtk+-2.24:2
-	>=x11-libs/pango-1.32.4[introspection?]
+	>=dev-libs/atk-2.7.5[introspection?,${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.39.5:2[${MULTILIB_USEDEP}]
+	media-libs/fontconfig[${MULTILIB_USEDEP}]
+	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?,${MULTILIB_USEDEP}]
+	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?,${MULTILIB_USEDEP}]
+	>=x11-libs/gtk+-2.24:2[${MULTILIB_USEDEP}]
+	>=x11-libs/pango-1.32.4[introspection?,${MULTILIB_USEDEP}]
 	x11-misc/shared-mime-info
 
 	cloudprint? (
-		>=net-libs/rest-0.7
-		>=dev-libs/json-glib-1.0 )
-	colord? ( >=x11-misc/colord-0.1.9:0= )
-	cups? ( >=net-print/cups-1.2 )
+		>=net-libs/rest-0.7[${MULTILIB_USEDEP}]
+		>=dev-libs/json-glib-1.0[${MULTILIB_USEDEP}] )
+	colord? ( >=x11-misc/colord-0.1.9:0=[${MULTILIB_USEDEP}] )
+	cups? ( >=net-print/cups-1.2[${MULTILIB_USEDEP}] )
 	introspection? ( >=dev-libs/gobject-introspection-1.39 )
 	wayland? (
-		>=dev-libs/wayland-1.3.90
-		media-libs/mesa[wayland]
-		>=x11-libs/libxkbcommon-0.2
+		>=dev-libs/wayland-1.3.90[${MULTILIB_USEDEP}]
+		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
+		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
 	)
 	X? (
-		>=app-accessibility/at-spi2-atk-2.5.3
-		x11-libs/libXrender
-		x11-libs/libX11
-		>=x11-libs/libXi-1.3
-		x11-libs/libXext
-		>=x11-libs/libXrandr-1.3
-		x11-libs/libXcursor
-		x11-libs/libXfixes
-		x11-libs/libXcomposite
-		x11-libs/libXdamage
-		xinerama? ( x11-libs/libXinerama )
+		>=app-accessibility/at-spi2-atk-2.5.3[${MULTILIB_USEDEP}]
+		x11-libs/libXrender[${MULTILIB_USEDEP}]
+		x11-libs/libX11[${MULTILIB_USEDEP}]
+		>=x11-libs/libXi-1.3[${MULTILIB_USEDEP}]
+		x11-libs/libXext[${MULTILIB_USEDEP}]
+		>=x11-libs/libXrandr-1.3[${MULTILIB_USEDEP}]
+		x11-libs/libXcursor[${MULTILIB_USEDEP}]
+		x11-libs/libXfixes[${MULTILIB_USEDEP}]
+		x11-libs/libXcomposite[${MULTILIB_USEDEP}]
+		x11-libs/libXdamage[${MULTILIB_USEDEP}]
+		xinerama? ( x11-libs/libXinerama[${MULTILIB_USEDEP}] )
 	)
 "
 DEPEND="${COMMON_DEPEND}
@@ -73,13 +73,13 @@ DEPEND="${COMMON_DEPEND}
 	dev-util/gdbus-codegen
 	>=dev-util/gtk-doc-am-1.20
 	sys-devel/gettext
-	virtual/pkgconfig
+	virtual/pkgconfig[${MULTILIB_USEDEP}]
 	X? (
-		x11-proto/xextproto
-		x11-proto/xproto
-		x11-proto/inputproto
-		x11-proto/damageproto
-		xinerama? ( x11-proto/xineramaproto )
+		x11-proto/xextproto[${MULTILIB_USEDEP}]
+		x11-proto/xproto[${MULTILIB_USEDEP}]
+		x11-proto/inputproto[${MULTILIB_USEDEP}]
+		x11-proto/damageproto[${MULTILIB_USEDEP}]
+		xinerama? ( x11-proto/xineramaproto[${MULTILIB_USEDEP}] )
 	)
 	test? (
 		media-fonts/font-misc-misc
@@ -95,6 +95,10 @@ RDEPEND="${COMMON_DEPEND}
 	X? ( !<x11-base/xorg-server-1.11.4 )
 "
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
+
+MULTILIB_CHOST_TOOLS=(
+	/usr/bin/gtk-query-immodules-3.0
+)
 
 strip_builddir() {
 	local rule=$1
@@ -118,6 +122,9 @@ src_prepare() {
 	replace-flags -O3 -O2
 	strip-flags
 
+	# Build fix on Darwin 10.6; bug #519058
+	epatch "${FILESDIR}/${P}-darwin10.6.patch"
+
 	if ! use test ; then
 		# don't waste time building tests
 		strip_builddir SRC_SUBDIRS testsuite Makefile.am
@@ -139,17 +146,18 @@ src_prepare() {
 	gnome2_src_prepare
 }
 
-src_configure() {
+multilib_src_configure() {
 	# Passing --disable-debug is not recommended for production use
 	# need libdir here to avoid a double slash in a path that libtool doesn't
 	# grok so well during install (// between $EPREFIX and usr ...)
+	ECONF_SOURCE=${S} \
 	gnome2_src_configure \
 		$(use_enable aqua quartz-backend) \
 		$(use_enable cloudprint) \
 		$(use_enable colord) \
 		$(use_enable cups cups auto) \
 		$(usex debug --enable-debug=yes "") \
-		$(use_enable introspection) \
+		$(multilib_native_use_enable introspection) \
 		$(use_enable wayland wayland-backend) \
 		$(use_enable X x11-backend) \
 		$(use_enable X xcomposite) \
@@ -163,9 +171,17 @@ src_configure() {
 		--enable-gtk2-dependency \
 		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
 		--libdir="${EPREFIX}"/usr/$(get_libdir)
+
+	# work-around gtk-doc out-of-source brokedness
+	if multilib_is_native_abi; then
+		local d
+		for d in gdk gtk libgail-util; do
+			ln -s "${S}"/docs/reference/${d}/html docs/reference/${d}/html || die
+		done
+	fi
 }
 
-src_test() {
+multilib_src_test() {
 	# Tests require a new gnome-themes-standard, but adding it to DEPEND
 	# would result in circular dependencies.
 	# https://bugzilla.gnome.org/show_bug.cgi?id=669562
@@ -183,13 +199,8 @@ src_test() {
 	GSETTINGS_SCHEMA_DIR="${S}/gtk" Xemake check
 }
 
-src_install() {
+multilib_src_install() {
 	gnome2_src_install
-
-	insinto /etc/gtk-3.0
-	doins "${FILESDIR}"/settings.ini
-
-	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
 
 	# add -framework Carbon to the .pc files
 	if use aqua ; then
@@ -200,17 +211,27 @@ src_install() {
 	fi
 }
 
+multilib_src_install_all() {
+	insinto /etc/gtk-3.0
+	doins "${FILESDIR}"/settings.ini
+
+	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
+}
+
 pkg_preinst() {
 	gnome2_pkg_preinst
 
-	# Make sure loaders.cache belongs to gdk-pixbuf alone
-	local cache="usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache"
+	multilib_pkg_preinst() {
+		# Make sure loaders.cache belongs to gdk-pixbuf alone
+		local cache="usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache"
 
-	if [[ -e ${EROOT}${cache} ]]; then
-		cp "${EROOT}"${cache} "${ED}"/${cache} || die
-	else
-		touch "${ED}"/${cache} || die
-	fi
+		if [[ -e ${EROOT}${cache} ]]; then
+			cp "${EROOT}"${cache} "${ED}"/${cache} || die
+		else
+			touch "${ED}"/${cache} || die
+		fi
+	}
+	multilib_parallel_foreach_abi multilib_pkg_preinst
 }
 
 pkg_postinst() {
@@ -228,6 +249,9 @@ pkg_postrm() {
 	gnome2_pkg_postrm
 
 	if [[ -z ${REPLACED_BY_VERSIONS} ]]; then
-		rm -f "${EROOT}"usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache
+		multilib_pkg_postrm() {
+			rm -f "${EROOT}"usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache
+		}
+		multilib_foreach_abi multilib_pkg_postrm
 	fi
 }
