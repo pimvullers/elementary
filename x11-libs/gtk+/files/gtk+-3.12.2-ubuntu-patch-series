@@ -18,4 +18,3 @@ gtkdialog-don-t-use-csd-when-use-header-bar-is-FALSE.patch
 gtkaboutdialog-support-showing-buttons-in-action-are.patch
 message-dialog-restore-traditional-look-on-unity.patch
 git-gtkpopover-set-background-and-popover-css.patch
-git_reftests-Improve-workaround-for-GtkGrid-bug.patch
