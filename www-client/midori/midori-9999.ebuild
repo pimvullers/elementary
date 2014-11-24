@@ -17,7 +17,7 @@ EBZR_REPO_URI="lp:midori"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="doc +granite nls +jit +webkit2 zeitgeist"
+IUSE="doc +granite nls introspection +jit +webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
