@@ -41,7 +41,7 @@ AUTOTOOLS_IN_SOURCE_BUILD=yes
 DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.5.0-pantheon-support.patch"
+	epatch "${FILESDIR}/${PN}-0.7.1-pantheon-support.patch"
 	epatch_user
 
 	autotools-utils_src_prepare
