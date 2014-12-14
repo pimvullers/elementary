@@ -17,7 +17,7 @@ EBZR_REPO_URI="lp:midori"
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="doc +granite nls introspection +jit +webkit2 zeitgeist"
+IUSE="doc +granite +jit nls +webkit2 zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
@@ -61,7 +61,6 @@ src_configure() {
 	local mycmakeargs=(
 		-DCMAKE_INSTALL_DOCDIR=/usr/share/doc/${PF}
 		$(cmake-utils_use_use doc APIDOCS)
-		$(cmake-utils_use_use introspection GIR)
 		$(cmake-utils_use_use granite)
 		$(cmake-utils_use_use zeitgeist)
 		-DVALA_EXECUTABLE="${VALAC}"
