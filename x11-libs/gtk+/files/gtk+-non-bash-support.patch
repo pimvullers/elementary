@@ -1,0 +1,29 @@
+From c8ef010024db794e25ca58ef3c02663de685f1bb Mon Sep 17 00:00:00 2001
+From: Alexander Tsoy <alexander@tsoy.me>
+Date: Sun, 26 Oct 2014 01:59:33 +0400
+Subject: [PATCH] gtk/Makefile.am: improve portability of ECHO
+
+---
+ gtk/Makefile.am | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/gtk/Makefile.am b/gtk/Makefile.am
+index f60bec8..e923940 100644
+--- a/gtk/Makefile.am
++++ b/gtk/Makefile.am
+@@ -19,11 +19,7 @@ GTK_PRINT_PREVIEW_COMMAND="evince --unlink-tempfile --preview --print-settings %
+ endif
+ 
+ SUBDIRS = inspector native .
+-if OS_DARWIN
+-  ECHO="echo"
+-else
+-  ECHO=echo -e
+-endif
++ECHO=printf '%b\n'
+ 
+ if HAVE_CLOUDPRINT
+ if HAVE_PAPI_CUPS
+-- 
+2.0.4
+
