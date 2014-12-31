@@ -7,4 +7,4 @@ app-editors/scratch contractor files pastebin spell terminal
 x11-wm/gala mutter38
 gnome-base/gnome-settings-daemon -smartcard
 
-dev-libs/xslt python
+dev-libs/libxslt python
