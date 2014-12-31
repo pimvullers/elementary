@@ -26,6 +26,8 @@ RDEPEND="
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3[ubuntu]
 	>=x11-libs/granite-0.3
+	x11-libs/gtk+:3
+	x11-libs/libido:3
 	x11-libs/libwnck:3
 	x11-libs/libX11"
 DEPEND="${RDEPEND}
@@ -38,6 +40,7 @@ PDEPEND="
 	bluetooth? ( >=net-misc/indicator-bluetooth-0.0.6_p20131029 )
 	power? ( >=sys-power/indicator-power-12.10.6_p20131129 )
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
+# indicator-me, indicator-application, indicator-messages, indicator-keyboard
 
 DOCS=( AUTHORS COPYING COPYRIGHT )
 
