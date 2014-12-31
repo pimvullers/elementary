@@ -1,0 +1,60 @@
+diff -Naur indicator-datetime-13.10.0+14.10.20141009/CMakeLists.txt indicator-datetime-13.10.0+14.10.20141009.patch/CMakeLists.txt
+--- indicator-datetime-13.10.0+14.10.20141009/CMakeLists.txt	2014-10-09 15:35:26.000000000 +0200
++++ indicator-datetime-13.10.0+14.10.20141009.patch/CMakeLists.txt	2014-12-31 16:32:44.364610014 +0100
+@@ -40,7 +40,6 @@
+                    libedataserver-1.2>=3.5
+                    gstreamer-1.0>=1.2
+                    libnotify>=0.7.6
+-                   url-dispatcher-1>=1
+                    properties-cpp>=0.0.1)
+ include_directories (SYSTEM ${SERVICE_DEPS_INCLUDE_DIRS})
+ 
+diff -Naur indicator-datetime-13.10.0+14.10.20141009/src/actions-live.cpp indicator-datetime-13.10.0+14.10.20141009.patch/src/actions-live.cpp
+--- indicator-datetime-13.10.0+14.10.20141009/src/actions-live.cpp	2014-10-09 15:35:26.000000000 +0200
++++ indicator-datetime-13.10.0+14.10.20141009.patch/src/actions-live.cpp	2014-12-31 16:33:37.724606306 +0100
+@@ -18,9 +18,6 @@
+  */
+ 
+ #include <datetime/actions-live.h>
+-
+-#include <url-dispatcher.h>
+-
+ #include <glib.h>
+ 
+ namespace unity {
+@@ -52,7 +49,6 @@
+ void LiveActions::dispatch_url(const std::string& url)
+ {
+     g_debug("Dispatching url '%s'", url.c_str());
+-    url_dispatch_send(url.c_str(), nullptr, nullptr);
+ }
+ 
+ /***
+@@ -131,13 +127,11 @@
+ 
+ void LiveActions::phone_open_alarm_app()
+ {
+-    dispatch_url("appid://com.ubuntu.clock/clock/current-user-version");
+ }
+ 
+ void LiveActions::phone_open_appointment(const Appointment& appt)
+ {
+-    if (!appt.url.empty())
+-        dispatch_url(appt.url);
++    if (!appt.url.empty()) {}
+     else if (appt.has_alarms)
+         phone_open_alarm_app();
+     else
+@@ -147,12 +141,10 @@
+ void LiveActions::phone_open_calendar_app(const DateTime&)
+ {
+     // does calendar app have a mechanism for specifying dates?
+-    dispatch_url("appid://com.ubuntu.calendar/calendar/current-user-version");
+ }
+ 
+ void LiveActions::phone_open_settings_app()
+ {
+-    dispatch_url("settings:///system/time-date");
+ }
+ 
+ /***
