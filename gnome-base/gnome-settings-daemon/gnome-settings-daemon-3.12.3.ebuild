@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.3.ebuild,v 1.1 2014/10/01 12:21:46 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.12.3.ebuild,v 1.4 2014/12/27 01:51:40 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -11,16 +11,17 @@ inherit autotools eutils gnome2 systemd udev virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	https://launchpad.net/~elementary-os/+archive/staging/+files/gnome-settings-daemon_3.12.2-1ubuntu1%7Eelementary0.3.2.debian.tar.xz"
+	ubuntu? ( https://launchpad.net/~elementary-os/+archive/ubuntu/staging/+files/gnome-settings-daemon_3.12.2-1ubuntu1%7Eelementary0.3.2.debian.tar.xz )"
 
 LICENSE="GPL-2+"
 SLOT="0"
 IUSE="+colord +cups debug +i18n input_devices_wacom -openrc-force packagekit policykit +short-touchpad-timeout smartcard +ubuntu +udev"
 REQUIRED_USE="
+	input_devices_wacom? ( udev )
 	packagekit? ( udev )
 	smartcard? ( udev )
 "
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2
@@ -93,7 +94,6 @@ src_prepare() {
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
-	#	epatch "${FILESDIR}/${PN}-3.12.2-16_use_synchronous_notifications.patch"
 		epatch "${FILESDIR}/${PN}-3.12.3-nexus-orientation.patch"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			epatch "${WORKDIR}/debian/patches/${patch}"
