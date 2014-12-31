@@ -62,6 +62,7 @@ COMMON_DEPEND="
 		virtual/libgudev:= )
 	packagekit? ( >=app-admin/packagekit-base-0.8.1 )
 	smartcard? ( >=dev-libs/nss-3.11.2 )
+	ubuntu? ( sys-apps/accountsservice[ubuntu] )
 	udev? ( virtual/libgudev:= )
 "
 # Themes needed by g-s-d, gnome-shell, gtk+:3 apps to work properly
