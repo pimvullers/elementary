@@ -38,6 +38,7 @@ src_prepare() {
 
 	if has_version '>=x11-wm/mutter-3.14' ; then
 		epatch "${FILESDIR}/${P}-mutter-3.14.patch"
+		epatch "${FILESDIR}/${P}-mutter-3.14-2.patch"
 	fi
 
 	autotools-utils_src_prepare
