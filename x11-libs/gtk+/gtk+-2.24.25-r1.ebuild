@@ -1,25 +1,41 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.24.ebuild,v 1.10 2014/10/11 11:39:51 maekke Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.25-r1.ebuild,v 1.1 2014/12/27 01:16:09 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
 
-inherit eutils flag-o-matic gnome2 multilib virtualx autotools readme.gentoo multilib-minimal
+inherit autotools eutils flag-o-matic gnome2 multilib virtualx readme.gentoo multilib-minimal
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="2"
-KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
-IUSE="aqua cups debug examples +introspection +ubuntu test vim-syntax xinerama"
+IUSE="aqua cups debug examples +introspection test +ubuntu vim-syntax xinerama"
+REQUIRED_USE="
+	xinerama? ( !aqua )
+"
+
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_2.24.24-0ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_2.24.25-0ubuntu1.debian.tar.xz )"
 
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 COMMON_DEPEND="
+	>=dev-libs/atk-2.10.0[introspection?,${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}]
+	>=media-libs/fontconfig-2.10.92[${MULTILIB_USEDEP}]
+	>=x11-libs/cairo-1.12.14-r4:=[aqua?,svg,${MULTILIB_USEDEP}]
+	>=x11-libs/gdk-pixbuf-2.30.7:2[introspection?,${MULTILIB_USEDEP}]
+	>=x11-libs/pango-1.36.3[introspection?,${MULTILIB_USEDEP}]
+	x11-misc/shared-mime-info
+
+	cups? ( >=net-print/cups-1.7.1-r2:=[${MULTILIB_USEDEP}] )
+	introspection? ( >=dev-libs/gobject-introspection-0.9.3 )
 	!aqua? (
+		>=x11-libs/cairo-1.12.14-r4:=[X]
+		>=x11-libs/gdk-pixbuf-2.30.7:2[X]
 		>=x11-libs/libXrender-0.9.8[${MULTILIB_USEDEP}]
 		>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXi-1.7.2[${MULTILIB_USEDEP}]
@@ -29,24 +45,12 @@ COMMON_DEPEND="
 		>=x11-libs/libXfixes-5.0.1[${MULTILIB_USEDEP}]
 		>=x11-libs/libXcomposite-0.4.4-r1[${MULTILIB_USEDEP}]
 		>=x11-libs/libXdamage-1.1.4-r1[${MULTILIB_USEDEP}]
-		>=x11-libs/cairo-1.12.14-r4:=[X,svg,${MULTILIB_USEDEP}]
-		>=x11-libs/gdk-pixbuf-2.30.7:2[X,introspection?,${MULTILIB_USEDEP}]
+		xinerama? ( >=x11-libs/libXinerama-1.1.3[${MULTILIB_USEDEP}] )
 	)
-	aqua? (
-		>=x11-libs/cairo-1.6:=[aqua,svg]
-		x11-libs/gdk-pixbuf:2[introspection?]
-	)
-	xinerama? ( >=x11-libs/libXinerama-1.1.3[${MULTILIB_USEDEP}] )
-	>=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}]
-	>=x11-libs/pango-1.36.3[introspection?,${MULTILIB_USEDEP}]
-	>=dev-libs/atk-2.10.0[introspection?,${MULTILIB_USEDEP}]
-	>=media-libs/fontconfig-2.10.92[${MULTILIB_USEDEP}]
-	x11-misc/shared-mime-info
-	cups? ( >=net-print/cups-1.7.1-r2:=[${MULTILIB_USEDEP}] )
-	introspection? ( >=dev-libs/gobject-introspection-0.9.3 )
-	!<gnome-base/gail-1000
 "
 DEPEND="${COMMON_DEPEND}
+	dev-libs/gobject-introspection-common
+	>=dev-util/gtk-doc-am-1.20
 	sys-devel/gettext
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
 	!aqua? (
@@ -54,9 +58,8 @@ DEPEND="${COMMON_DEPEND}
 		>=x11-proto/xproto-7.0.24[${MULTILIB_USEDEP}]
 		>=x11-proto/inputproto-2.3[${MULTILIB_USEDEP}]
 		>=x11-proto/damageproto-1.2.1-r1[${MULTILIB_USEDEP}]
+		xinerama? ( >=x11-proto/xineramaproto-1.2.1-r1[${MULTILIB_USEDEP}] )
 	)
-	xinerama? ( >=x11-proto/xineramaproto-1.2.1-r1[${MULTILIB_USEDEP}] )
-	>=dev-util/gtk-doc-am-1.20
 	test? (
 		x11-themes/hicolor-icon-theme
 		media-fonts/font-misc-misc
@@ -67,6 +70,7 @@ DEPEND="${COMMON_DEPEND}
 # Add blocker against old gtk-builder-convert to be sure we maintain both
 # in sync.
 RDEPEND="${COMMON_DEPEND}
+	!<gnome-base/gail-1000
 	!<dev-util/gtk-builder-convert-${PV}
 	!<x11-libs/vte-0.28.2-r201:0
 	abi_x86_32? (
@@ -120,14 +124,14 @@ src_prepare() {
 		perf/marshalers.c || die
 
 	# Stop trying to build unmaintained docs, bug #349754
-	strip_builddir SUBDIRS tutorial docs/Makefile.am docs/Makefile.in
-	strip_builddir SUBDIRS faq docs/Makefile.am docs/Makefile.in
+	strip_builddir SUBDIRS tutorial docs/Makefile.{am,in}
+	strip_builddir SUBDIRS faq docs/Makefile.{am,in}
 
 	# -O3 and company cause random crashes in applications. Bug #133469
 	replace-flags -O3 -O2
 	strip-flags
 
-	if ! use test; then
+	if ! use test ; then
 		# don't waste time building tests
 		strip_builddir SRC_SUBDIRS tests Makefile.{am,in}
 		strip_builddir SUBDIRS tests gdk/Makefile.{am,in} gtk/Makefile.{am,in}
@@ -167,13 +171,12 @@ src_prepare() {
 
 	if ! use examples; then
 		# don't waste time building demos
-		strip_builddir SRC_SUBDIRS demos Makefile.am Makefile.in
+		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
 	fi
 
 	epatch_user
 
 	eautoreconf
-
 	gnome2_src_prepare
 }
 
@@ -210,9 +213,12 @@ multilib_src_install() {
 	gnome2_src_install
 
 	# add -framework Carbon to the .pc files
-	use aqua && for i in gtk+-2.0.pc gtk+-quartz-2.0.pc gtk+-unix-print-2.0.pc; do
-		sed -i -e "s:Libs\: :Libs\: -framework Carbon :" "${ED%/}"/usr/lib/pkgconfig/$i || die "sed failed"
-	done
+	if use aqua ; then
+		for i in gtk+-2.0.pc gtk+-quartz-2.0.pc gtk+-unix-print-2.0.pc; do
+			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
+				-i "${ED%/}"/usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
+		done
+	fi
 }
 
 multilib_src_install_all() {
@@ -229,14 +235,32 @@ multilib_src_install_all() {
 	readme.gentoo_create_doc
 }
 
+pkg_preinst() {
+	gnome2_pkg_preinst
+
+	multilib_pkg_preinst() {
+		# Make immodules.cache belongs to gtk+ alone
+		local cache="usr/$(get_libdir)/gtk-2.0/2.10.0/immodules.cache"
+
+		if [[ -e ${EROOT}${cache} ]]; then
+			cp "${EROOT}"${cache} "${ED}"/${cache} || die
+		else
+			touch "${ED}"/${cache} || die
+		fi
+	}
+	multilib_parallel_foreach_abi multilib_pkg_preinst
+}
+
 pkg_postinst() {
-	set_gtk2_confdir
+	gnome2_pkg_postinst
 
 	multilib_pkg_postinst() {
-		"${CHOST}"-gtk-query-immodules-2.0 --update-cache \
+		gnome2_query_immodules_gtk2 \
 			|| die "Update immodules cache failed (for ${ABI})"
 	}
 	multilib_parallel_foreach_abi multilib_pkg_postinst
+
+	set_gtk2_confdir
 
 	if [ -e "${EROOT%/}/etc/gtk-2.0/gtk.immodules" ]; then
 		elog "File /etc/gtk-2.0/gtk.immodules has been moved to \$CHOST"
@@ -278,4 +302,15 @@ pkg_postinst() {
 	fi
 
 	readme.gentoo_print_elog
+}
+
+pkg_postrm() {
+	gnome2_pkg_postrm
+
+	if [[ -z ${REPLACED_BY_VERSIONS} ]]; then
+		multilib_pkg_postrm() {
+			rm -f "${EROOT}"usr/$(get_libdir)/gtk-2.0/2.10.0/immodules.cache
+		}
+		multilib_foreach_abi multilib_pkg_postrm
+	fi
 }

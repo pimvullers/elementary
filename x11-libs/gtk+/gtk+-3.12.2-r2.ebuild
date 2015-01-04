@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.2-r1.ebuild,v 1.1 2014/11/22 23:02:47 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.2-r2.ebuild,v 1.1 2015/01/02 11:53:03 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -70,7 +70,7 @@ DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xsl-stylesheets
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
-	dev-util/gdbus-codegen
+	>=dev-util/gdbus-codegen-2.38.2
 	>=dev-util/gtk-doc-am-1.20
 	sys-devel/gettext
 	virtual/pkgconfig[${MULTILIB_USEDEP}]
@@ -93,6 +93,10 @@ RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
 	X? ( !<x11-base/xorg-server-1.11.4 )
+	abi_x86_32? (
+		!<=app-emulation/emul-linux-x86-gtklibs-20140508-r3
+		!app-emulation/emul-linux-x86-gtklibs[-abi_x86_32(-)]
+	)
 "
 PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
 
@@ -125,6 +129,10 @@ src_prepare() {
 	# Build fix on Darwin 10.6; bug #519058
 	epatch "${FILESDIR}/${P}-darwin10.6.patch"
 
+	# Include image data in the builtin icon cache, needs --enable-gtk2-dependency
+	# and, then, upstream reverted this patch lately. Fixed in 3.14.x, bug #518352
+	epatch "${FILESDIR}/${PN}-3.12.2-builtin-icon.patch"
+
 	if ! use test ; then
 		# don't waste time building tests
 		strip_builddir SRC_SUBDIRS testsuite Makefile.am
@@ -142,7 +150,6 @@ src_prepare() {
 	fi
 
 	eautoreconf
-
 	gnome2_src_prepare
 }
 
@@ -170,7 +177,8 @@ multilib_src_configure() {
 		--enable-man \
 		--enable-gtk2-dependency \
 		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
-		--libdir="${EPREFIX}"/usr/$(get_libdir)
+		--libdir="${EPREFIX}"/usr/$(get_libdir) \
+		CUPS_CONFIG="${EPREFIX}/usr/bin/${CHOST}-cups-config"
 
 	# work-around gtk-doc out-of-source brokedness
 	if multilib_is_native_abi; then
@@ -196,6 +204,7 @@ multilib_src_test() {
 	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/gtk" || die
 
 	unset DBUS_SESSION_BUS_ADDRESS
+	unset DISPLAY #527682
 	GSETTINGS_SCHEMA_DIR="${S}/gtk" Xemake check
 }
 
