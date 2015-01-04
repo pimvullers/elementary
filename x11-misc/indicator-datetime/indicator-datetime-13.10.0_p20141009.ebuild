@@ -8,7 +8,7 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="The Date and Time Indicator - A very, very simple clock"
 HOMEPAGE="https://launchpad.net/indicator-datetime"
-SRC_URI="http://launchpad.net/ubuntu/+archive/primary/+files/${PN}_13.10.0%2B13.10.20131023.2.orig.tar.gz"
+SRC_URI="http://launchpad.net/ubuntu/+archive/primary/+files/${PN}_13.10.0%2B14.10.20141009.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -16,36 +16,32 @@ KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
-	app-misc/geoclue:0
-	>=dev-libs/glib-2.38:2
+	>=dev-libs/glib-2.36:2
 	>=dev-libs/libdbusmenu-0.5.90:3[gtk]
 	dev-libs/libical
-	dev-libs/libindicator:3
-	gnome-base/gconf
+	dev-libs/properties-cpp
 	>=gnome-extra/evolution-data-server-3.5.3
-	x11-libs/cairo
-	>=x11-libs/libnotify-0.7
-	>=x11-libs/gtk+-3.1.4:3
-	x11-libs/libido:3"
+	media-libs/gstreamer:1.0
+	media-libs/libcanberra
+	>=x11-libs/libnotify-0.7.6"
 DEPEND="${RDEPEND}"
 
-S="${WORKDIR}/indicator-datetime-13.10.0+13.10.20131023.2"
+S="${WORKDIR}/indicator-datetime-13.10.0+14.10.20141009"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-dont-add-empty-location-names.patch"
-	epatch "${FILESDIR}/${P}-use-cmake.patch"
-	epatch "${FILESDIR}/${P}-show-year.patch"
-	epatch "${FILESDIR}/${P}-autostart.patch"
-	epatch "${FILESDIR}/${P}-fix-empty-timezone.patch"
-	epatch "${FILESDIR}/${P}-r1-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+
+	cp ${FILESDIR}/GSettings.cmake cmake/
+	sed -i 's/UseGSettings/GSettings/' data/CMakeLists.txt
 
 	cmake-utils_src_prepare
 }
 
 src_configure() {
 	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
 		-Denable_tests=OFF
 	)
 
