@@ -10,4 +10,3 @@
 0002-On-startup-clean-out-the-data-of-removed-users.patch
 0020-support-login.defs.patch
 0021-support-extrausers.patch
-0022-fix-desktop-centric-polkit-policy.patch
