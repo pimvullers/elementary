@@ -5,7 +5,7 @@
 EAPI="5"
 GCONF_DEBUG="no"
 
-inherit eutils gnome2 systemd
+inherit autotools eutils gnome2 systemd
 
 DESCRIPTION="D-Bus interfaces for querying and manipulating user account information"
 HOMEPAGE="http://www.freedesktop.org/wiki/Software/AccountsService/"
