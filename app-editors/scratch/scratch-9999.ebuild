@@ -45,6 +45,8 @@ pkg_setup() {
 src_prepare() {
 	epatch_user
 
+	epatch "${FILESDIR}/${P}-word-completion-iter.patch"
+
 	# Translations
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
