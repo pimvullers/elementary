@@ -16,6 +16,3 @@ x-canonical-accel.patch
 message-dialog-restore-traditional-look-on-unity.patch
 mir-backend.patch
 mir-backend-unmerged.patch
-0001-gtk-reftest-Force-icon-theme-to-Adwaita.patch
-0001-css-Add-gtk-dpi-CSS-property-hack.patch
-0002-css-use-pre-3.16-gtk_css_style_property_register.patch

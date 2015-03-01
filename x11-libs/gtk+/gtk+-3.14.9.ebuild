@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.14.8.ebuild,v 1.1 2015/02/03 14:17:46 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.14.9.ebuild,v 1.1 2015/02/26 20:15:19 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -13,12 +13,7 @@ HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
-# NOTE: This gtk+ has multi-gdk-backend support, see:
-#  * http://blogs.gnome.org/kris/2010/12/29/gdk-3-0-on-mac-os-x/
-#  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
-# I tried this and got it all compiling, but the end result is unusable as it
-# horribly mixes up the backends -- grobian
-IUSE="aqua cloudprint colord cups examples +introspection test +ubuntu vim-syntax wayland X xinerama"
+IUSE="aqua broadway cloudprint colord cups examples +introspection test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )
@@ -155,6 +150,7 @@ multilib_src_configure() {
 	ECONF_SOURCE=${S} \
 	gnome2_src_configure \
 		$(use_enable aqua quartz-backend) \
+		$(use_enable broadway broadway-backend) \
 		$(use_enable cloudprint) \
 		$(use_enable colord) \
 		$(use_enable cups cups auto) \
@@ -184,16 +180,6 @@ multilib_src_configure() {
 }
 
 multilib_src_test() {
-	# Tests require a new gnome-themes-standard, but adding it to DEPEND
-	# would result in circular dependencies.
-	# https://bugzilla.gnome.org/show_bug.cgi?id=669562
-	if ! has_version '>=x11-themes/gnome-themes-standard-3.6[gtk]'; then
-		ewarn "Tests will be skipped because >=gnome-themes-standard-3.6[gtk]"
-		ewarn "is not installed. Please re-run tests after installing the"
-		ewarn "required version of gnome-themes-standard."
-		return 0
-	fi
-
 	# FIXME: this should be handled at eclass level
 	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/gtk" || die
 
@@ -205,7 +191,7 @@ multilib_src_test() {
 multilib_src_install() {
 	gnome2_src_install
 
-	# add -framework Carbon to the .pc files
+	# add -framework Carbon to the .pc files, bug #????
 	if use aqua ; then
 		for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
 			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
