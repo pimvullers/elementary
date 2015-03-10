@@ -10,7 +10,7 @@ inherit vala autotools-utils git-2
 
 DESCRIPTION="GObject SQLite wrapper"
 HOMEPAGE="http://code.google.com/p/sqlheavy/"
-EGIT_REPO_URI="git://gitorious.org/sqlheavy/sqlheavy.git"
+EGIT_REPO_URI="https://gitorious.org/sqlheavy/sqlheavy.git"
 
 LICENSE="LGPL-2.1"
 SLOT="0.2"
