@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.11.9.ebuild,v 1.2 2014/11/08 20:01:18 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.12.3.ebuild,v 1.1 2015/03/17 20:37:44 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd versionator
@@ -13,7 +13,7 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~ppc ~x86"
+KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~x86"
 IUSE="+gtk +introspection kde pantheon qt4"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
@@ -105,6 +105,8 @@ src_install() {
 	doins data/{${PN},keys}.conf
 	doins "${FILESDIR}"/Xsession
 	fperms +x /etc/${PN}/Xsession
+	# /var/lib/lightdm-data could be useful. Bug #522228
+	dodir /var/lib/lightdm-data
 
 	prune_libtool_files --all
 	rm -rf "${ED}"/etc/init

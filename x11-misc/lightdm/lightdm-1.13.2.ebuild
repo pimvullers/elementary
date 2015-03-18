@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.13.0.ebuild,v 1.4 2015/01/19 19:54:56 hwoarang Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-misc/lightdm/lightdm-1.13.2.ebuild,v 1.1 2015/03/17 20:37:44 hwoarang Exp $
 
 EAPI=5
 inherit autotools eutils pam readme.gentoo systemd versionator
@@ -14,7 +14,7 @@ SRC_URI="http://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde pantheon qt4 + gnome"
+IUSE="+gtk +introspection kde qt4 pantheon +gnome"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
