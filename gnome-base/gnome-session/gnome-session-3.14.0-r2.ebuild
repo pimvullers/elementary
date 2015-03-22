@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.14.0-r1.ebuild,v 1.1 2015/01/18 13:41:37 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.14.0-r2.ebuild,v 1.1 2015/03/22 17:50:31 tetromino Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -119,6 +119,11 @@ src_install() {
 
 	# This should be done here as discussed in bug #270852
 	newexe "${FILESDIR}/10-user-dirs-update-gnome-r1" 10-user-dirs-update-gnome
+
+	# Set XCURSOR_THEME from current dconf setting instead of installing
+	# default cursor symlink globally and affecting other DEs (bug #543488)
+	# https://bugzilla.gnome.org/show_bug.cgi?id=711703
+	newexe "${FILESDIR}/90-xcursor-theme-gnome" 90-xcursor-theme-gnome
 }
 
 pkg_postinst() {

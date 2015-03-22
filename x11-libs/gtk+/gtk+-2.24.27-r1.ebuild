@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.27.ebuild,v 1.1 2015/03/07 12:11:42 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.27-r1.ebuild,v 1.1 2015/03/20 19:58:30 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -214,7 +214,12 @@ multilib_src_install() {
 
 multilib_src_install_all() {
 	# see bug #133241
+	# Also set more default variables in sync with gtk3 and other distributions
 	echo 'gtk-fallback-icon-theme = "gnome"' > "${T}/gtkrc"
+	echo 'gtk-theme-name = "elementary"' >> "${T}/gtkrc"
+	echo 'gtk-icon-theme-name = "elementary"' >> "${T}/gtkrc"
+	echo 'gtk-cursor-theme-name = "Vanilla-DMZ-AA"' >> "${T}/gtkrc"
+
 	insinto /usr/share/gtk-2.0
 	doins "${T}"/gtkrc
 
