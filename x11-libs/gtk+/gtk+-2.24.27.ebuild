@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.26.ebuild,v 1.1 2015/02/18 12:05:45 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-2.24.27.ebuild,v 1.5 2015/03/15 13:33:43 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -18,9 +18,9 @@ REQUIRED_USE="
 	xinerama? ( !aqua )
 "
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ppc ppc64 ~s390 ~sh ~sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_2.24.25-0ubuntu2.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_2.24.27-0ubuntu1.debian.tar.xz )"
 
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 COMMON_DEPEND="
@@ -106,10 +106,6 @@ set_gtk2_confdir() {
 }
 
 src_prepare() {
-	# Fix building due to moved definition, upstream bug #704766
-	# Upstream says it was fixed with a different commit
-#	epatch "${FILESDIR}"/${PN}-2.24.20-darwin-quartz-pasteboard.patch
-
 	# Fix tests running when building out of sources, bug #510596, upstream bug #730319
 	epatch "${FILESDIR}"/${PN}-2.24.24-out-of-source.patch
 
@@ -151,11 +147,6 @@ src_prepare() {
 			|| die "failed to disable recentmanager test (2)"
 		sed 's:\({ "GtkFileChooserButton".*},\):/*\1*/:g' -i gtk/tests/object.c \
 			|| die "failed to disable recentmanager test (3)"
-
-		# Skip tests known to fail
-		# https://bugzilla.gnome.org/show_bug.cgi?id=646609
-#		sed -e '/g_test_add_func.*test_text_access/s:^://:' \
-#			-i "${S}/gtk/tests/testing.c" || die
 
 		# https://bugzilla.gnome.org/show_bug.cgi?id=617473
 		sed -i -e 's:pltcheck.sh:$(NULL):g' \
