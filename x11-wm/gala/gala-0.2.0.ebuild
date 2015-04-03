@@ -10,7 +10,7 @@ inherit gnome2-utils vala autotools-utils
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
-SRC_URI="https://launchpad.net/~elementary-os/+archive/ubuntu/daily/+files/gala_0.1.0%7Er431%2Bpkg29%7Eubuntu14.10.1.tar.xz"
+SRC_URI="https://launchpad.net/~elementary-os/+archive/ubuntu/stable/+files/gala_0.2.0%7Er460%2Bpkg32%7Eubuntu0.3.1.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -36,7 +36,7 @@ AUTOTOOLS_AUTORECONF=1
 src_unpack() {
 	default_src_unpack
 
-	mv "${WORKDIR}/gala-0.1.0~r431+pkg29~ubuntu14.10.1" "${S}"
+	mv "${WORKDIR}/gala-0.2.0~r460+pkg32~ubuntu0.3.1" "${S}"
 }
 
 src_prepare() {
