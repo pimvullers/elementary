@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.24
+VALA_MIN_API_VERSION=0.26
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
@@ -14,47 +14,34 @@ SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
-IUSE="mpris ipod lastfm nls plugins upnp"
-
-REQUIRED_USE="upnp? ( plugins )"
+KEYWORDS="amd64 arm x86"
+IUSE="mpris ipod lastfm libnotify nls zeitgeist"
 
 RDEPEND="
 	dev-db/sqlheavy
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libpeas[gtk]
-	media-libs/gstreamer:0.10
-	media-libs/gst-plugins-base:0.10
+	media-libs/gstreamer:1.0
+	media-libs/gst-plugins-base:1.0
 	media-libs/taglib
-	plugins? ( 
-	  upnp? ( || ( 
-		( >=net-libs/gupnp-0.20	>=net-libs/gupnp-av-0.12 ) 
-		net-libs/gupnp-vala 
-	  ) )
-	  ipod? ( media-libs/libgpod )
-	  lastfm? (
-		dev-libs/json-glib
-		dev-libs/libxml2:2
-		net-libs/libsoup:2.4
-	  )
-	  mpris? ( 
-		dev-libs/libdbusmenu
-		>=dev-libs/libindicate-0.5.90 
-	  )
+	libnotify? ( x11-libs/libnotify )
+	ipod? ( media-libs/libgpod )
+	lastfm? (
+	  dev-libs/json-glib
+	  dev-libs/libxml2:2
+	  net-libs/libsoup:2.4
 	)
+	mpris? ( 
+	  dev-libs/libdbusmenu
+	  dev-libs/libindicate
+	)
+	zeitgeist? ( gnome-extra/zeitgeist )
 	x11-libs/gtk+:3
-	x11-libs/granite
-	x11-libs/libnotify"
+	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
-
-REQUIRED_USE="
-	ipod? ( plugins ) 
-	upnp? ( plugins )
-	lastfm? ( plugins )
-	mpris? ( plugins )"
 
 DOCS=( AUTHORS NEWS README )
 
@@ -65,7 +52,10 @@ src_prepare() {
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	# Disable building of plugins (if needed)
-	use plugins || sed -i '/add_subdirectory (plugins)/d' CMakeLists.txt
+	use lastfm || sed -i '/add_subdirectory (LastFM)/d' plugins/CMakeLists.txt
+	use mpris || sed -i '/add_subdirectory (MPRIS)/d' plugins/CMakeLists.txt
+	use zeitgeist || sed -i '/add_subdirectory (Zeitgeist)/d' plugins/CMakeLists.txt
+	use ipod || sed -i '/add_subdirectory (iPod)/d' plugins/Devices/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare	
@@ -82,7 +72,7 @@ src_configure() {
 }
 
 src_compile() {
-	cmake-utils_src_compile -j1
+	cmake-utils_src_compile
 }
 
 pkg_preinst() {
