@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit gnome2-utils vala cmake-utils
 
@@ -14,7 +14,7 @@ SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
