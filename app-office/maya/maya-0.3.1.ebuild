@@ -4,27 +4,30 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.24
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Slim, lightweight, GCal-syncing GTK+ Calendar application"
 HOMEPAGE="http://launchpad.net/maya"
-SRC_URI="http://launchpad.net/${PN}/luna/${PV}/+download/${PN}-calendar-${PV}.tgz"
+SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${PN}-calendar-${PV}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/folks
 	dev-libs/glib:2
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
-	>=gnome-extra/evolution-data-server-3.2
-	<gnome-extra/evolution-data-server-3.5
+	gnome-extra/evolution-data-server
+	media-libs/clutter
+	media-libs/libchamplain
 	net-libs/libsoup:2.4
+	sci-geosciences/geocode-glib
 	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
@@ -38,7 +41,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare

@@ -6,15 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A fast photo booth application designed for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/snap-elementary"
-EBZR_REPO_URI="lp:snap-elementary"
+SRC_URI="https://launchpad.net/${PN}-elementary/freya/${PV}/+download/${PN}-photobooth-${PV}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
@@ -34,6 +34,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {
+	S="${WORKDIR}/${PN}-photobooth-${PV}"
 	DOCS=(README)
 }
 

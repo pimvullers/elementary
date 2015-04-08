@@ -23,10 +23,12 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
-	>=gnome-extra/evolution-data-server-3.8
-	media-libs/libchamplain[gtk]
+	gnome-extra/evolution-data-server
+	media-libs/clutter
+	media-libs/libchamplain
 	net-libs/libsoup:2.4
-	>=x11-libs/gtk+-3.12:3
+	sci-geosciences/geocode-glib
+	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -40,7 +42,7 @@ pkg_setup() {
 src_prepare() {
 	epatch_user
 
-	use nls || sed -i 's/add_subdirectory(po)//' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
