@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015	 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit gnome2-utils vala cmake-utils bzr
 
@@ -19,10 +19,12 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
+	dev-libs/json-glib
 	dev-libs/libgee:0.8
 	gnome-base/gnome-menus:3
+	net-libs/libsoup:2.4
 	>=x11-libs/granite-0.3
-	>=x11-libs/gtk+-3.2:3
+	x11-libs/gtk+:3
 	gnome-extra/zeitgeist"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -47,7 +49,6 @@ src_configure() {
 		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
-
 	cmake-utils_src_configure
 }
 
