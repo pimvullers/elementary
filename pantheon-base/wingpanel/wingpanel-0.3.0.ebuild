@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -6,18 +6,15 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit versionator fdo-mime gnome2-utils vala cmake-utils bzr
-
-MY_PV=$(get_version_component_range 3)
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-EBZR_REPO_URI="lp:wingpanel"
-EBZR_REVISION=${MY_PV:1}
+SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 arm x86"
 IUSE="bluetooth power sound nls"
 
 RDEPEND="
@@ -25,7 +22,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3[ubuntu]
-	>=x11-libs/granite-0.3
+	x11-libs/granite
 	x11-libs/gtk+:3
 	x11-libs/libido:3
 	x11-libs/libwnck:3
@@ -77,3 +74,4 @@ pkg_postrm() {
 	fdo-mime_desktop_database_update
 	gnome2_schemas_update
 }
+
