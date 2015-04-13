@@ -1,0 +1,82 @@
+diff -Naur indicator-power-12.10.6+14.10.20141015/CMakeLists.txt indicator-power-12.10.6+14.10.20141015-patched/CMakeLists.txt
+--- indicator-power-12.10.6+14.10.20141015/CMakeLists.txt	2014-10-15 04:45:34.000000000 +0200
++++ indicator-power-12.10.6+14.10.20141015-patched/CMakeLists.txt	2015-04-13 21:58:00.258943607 +0200
+@@ -37,8 +37,7 @@
+                   gio-2.0>=2.36
+                   gio-unix-2.0>=2.36
+                   gudev-1.0>=204
+-                  libnotify>=0.7.6
+-                  url-dispatcher-1>=1)
++                  libnotify>=0.7.6)
+ 
+ include_directories (SYSTEM ${SERVICE_DEPS_INCLUDE_DIRS})
+ 
+diff -Naur indicator-power-12.10.6+14.10.20141015/src/notifier.c indicator-power-12.10.6+14.10.20141015-patched/src/notifier.c
+--- indicator-power-12.10.6+14.10.20141015/src/notifier.c	2014-10-15 04:45:49.000000000 +0200
++++ indicator-power-12.10.6+14.10.20141015-patched/src/notifier.c	2015-04-13 21:51:10.042032918 +0200
+@@ -21,8 +21,6 @@
+ #include "dbus-shared.h"
+ #include "notifier.h"
+ 
+-#include <url-dispatcher.h>
+-
+ #include <libnotify/notify.h>
+ 
+ #include <glib/gi18n.h>
+@@ -168,14 +166,6 @@
+ }
+ 
+ static void
+-on_battery_settings_clicked(NotifyNotification * nn        G_GNUC_UNUSED,
+-                            char               * action    G_GNUC_UNUSED,
+-                            gpointer             user_data G_GNUC_UNUSED)
+-{
+-  url_dispatch_send("settings:///system/battery", NULL, NULL);
+-}
+-
+-static void
+ on_dismiss_clicked(NotifyNotification * nn        G_GNUC_UNUSED,
+                    char               * action    G_GNUC_UNUSED,
+                    gpointer             user_data G_GNUC_UNUSED)
+@@ -250,7 +240,6 @@
+       notify_notification_set_hint(nn, "x-canonical-snap-decisions-timeout", g_variant_new_int32(INT32_MAX));
+       notify_notification_set_timeout(nn, NOTIFY_EXPIRES_NEVER);
+       notify_notification_add_action(nn, "dismiss", _("OK"), on_dismiss_clicked, NULL, NULL);
+-      notify_notification_add_action(nn, "settings", _("Battery settings"), on_battery_settings_clicked, NULL, NULL);
+     }
+ 
+   /* if we can show it, keep it */
+diff -Naur indicator-power-12.10.6+14.10.20141015/src/service.c indicator-power-12.10.6+14.10.20141015-patched/src/service.c
+--- indicator-power-12.10.6+14.10.20141015/src/service.c	2014-10-15 04:45:49.000000000 +0200
++++ indicator-power-12.10.6+14.10.20141015-patched/src/service.c	2015-04-13 21:51:10.042032918 +0200
+@@ -20,7 +20,6 @@
+ 
+ #include <glib/gi18n.h>
+ #include <gio/gio.h>
+-#include <url-dispatcher.h>
+ 
+ #include "brightness.h"
+ #include "dbus-shared.h"
+@@ -725,14 +724,6 @@
+   g_free (cmd);
+ }
+ 
+-static void
+-on_phone_settings_activated (GSimpleAction * a      G_GNUC_UNUSED,
+-                             GVariant      * param  G_GNUC_UNUSED,
+-                             gpointer        gself  G_GNUC_UNUSED)
+-{
+-  url_dispatch_send("settings:///system/battery", NULL, NULL);
+-}
+-
+ /***
+ ****
+ ***/
+@@ -769,7 +760,6 @@
+ 
+   GActionEntry entries[] = {
+     { "activate-settings", on_settings_activated },
+-    { "activate-phone-settings", on_phone_settings_activated },
+     { "activate-statistics", on_statistics_activated, "s" }
+   };
+ 

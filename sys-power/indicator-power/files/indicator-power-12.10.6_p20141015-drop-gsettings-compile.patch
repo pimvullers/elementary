@@ -1,0 +1,12 @@
+diff -Naur indicator-power-12.10.6+14.10.20141015-orig/cmake/UseGSettings.cmake indicator-power-12.10.6+14.10.20141015/cmake/UseGSettings.cmake
+--- indicator-power-12.10.6+14.10.20141015-orig/cmake/UseGSettings.cmake	2015-04-13 22:00:51.636232405 +0200
++++ indicator-power-12.10.6+14.10.20141015/cmake/UseGSettings.cmake	2015-04-13 22:02:02.077760550 +0200
+@@ -16,8 +16,5 @@
+     # Actually install and recomple schemas
+     message (STATUS "${GSETTINGS_DIR} is the GSettings install dir")
+     install (FILES ${SCHEMA_NAME} DESTINATION ${GSETTINGS_DIR} OPTIONAL)
+-
+-    install (CODE "message (STATUS \"Compiling GSettings schemas\")")
+-    install (CODE "execute_process (COMMAND ${_glib_compile_schemas} ${GSETTINGS_DIR})")
+ endmacro()
+ 

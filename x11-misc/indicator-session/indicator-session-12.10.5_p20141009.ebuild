@@ -8,26 +8,29 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="Session indicator"
 HOMEPAGE="https://launchpad.net/indicator-session"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-session_12.10.5%2B14.04.20131125.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-session_12.10.5%2B14.10.20141009.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64 arm x86"
 IUSE="nls static-libs"
 
 RDEPEND="
-	>=dev-libs/glib-2.38:2"
+	>=dev-libs/glib-2.36:2"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/indicator-session-12.10.5+14.04.20131125"
+S="${WORKDIR}/indicator-session-12.10.5+14.10.20141009"
+DOCS=( COPYING NEWS README )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-no-icon-cache-update.patch"
-	epatch "${FILESDIR}/${P}-gsettings-path.patch"
-	epatch "${FILESDIR}/${P}-gsettings-compile.patch"
-	epatch "${FILESDIR}/${P}-drop-upstart.patch"
+	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-no-icon-cache-update.patch"
+	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-gsettings-path.patch"
+	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-gsettings-compile.patch"
+	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-drop-upstart.patch"
+
+	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 }

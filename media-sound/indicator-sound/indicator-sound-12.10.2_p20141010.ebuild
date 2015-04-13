@@ -4,22 +4,22 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.14
+VALA_MIN_API_VERSION=0.20
 
 inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A unified sound menu"
 HOMEPAGE="https://launchpad.net/indicator-sound"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-sound_12.10.2%2B14.04.20131125.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_12.10.2%2B14.10.20141010.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64 arm x86"
 IUSE="nls static-libs"
 
 RDEPEND="
 	>=dev-libs/glib-2.38:2
-	dev-libs/libgee:0
+	dev-libs/libgee:0.8
 	dev-libs/libxml2
 	media-sound/pulseaudio[glib]
 	x11-libs/libnotify"
@@ -28,16 +28,15 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/indicator-sound-12.10.2+14.04.20131125"
-AUTOTOOLS_AUTORECONF=1
+S="${WORKDIR}/indicator-sound-12.10.2+14.10.20141010"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
-	epatch "${FILESDIR}/${P}-drop-upstart.patch"
-	epatch "${FILESDIR}/${P}-unowned.patch"
-	epatch "${FILESDIR}/${P}-symbolic-icons.patch"
+	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-upstart.patch"
 
-	sed -i 's/add_subdirectory(tests)//' CMakeLists.txt
+	sed -i '/add_subdirectory(tests)/d' CMakeLists.txt
+	sed -i '/dbustest/d' CMakeLists.txt
+	sed -i 's/gee-1.0/gee-0.8/' CMakeLists.txt src/CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -46,19 +45,12 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_COMPILER="${VALAC}"
+		-DVAPI_GEN="${VAPIGEN}"
+		-DGSETTINGS_COMPILE=OFF
 	)
 
 	cmake-utils_src_configure 
 }
-
-#src_compile() {
-#	autotools-utils_src_compile -j1
-#}
-
-#src_install() {
-#	autotools-utils_src_install
-#	prune_libtool_files --all
-#}
 
 pkg_preinst() {
 	gnome2_schemas_savelist

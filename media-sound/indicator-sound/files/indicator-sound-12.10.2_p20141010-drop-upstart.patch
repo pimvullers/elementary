@@ -1,0 +1,58 @@
+diff -Naur indicator-sound-12.10.2+14.10.20141010-orig/data/CMakeLists.txt indicator-sound-12.10.2+14.10.20141010-patched/data/CMakeLists.txt
+--- indicator-sound-12.10.2+14.10.20141010-orig/data/CMakeLists.txt	2015-04-13 22:10:22.465437294 +0200
++++ indicator-sound-12.10.2+14.10.20141010-patched/data/CMakeLists.txt	2015-04-13 22:15:13.986493437 +0200
+@@ -17,26 +17,6 @@
+ )
+ 
+ ###########################
+-# Upstart Job
+-###########################
+-
+-set(
+-  INDICATOR_SOUND_CONF
+-  "${CMAKE_CURRENT_BINARY_DIR}/indicator-sound.conf"
+-)
+-
+-configure_file(
+-  "indicator-sound.conf.in"
+-  ${INDICATOR_SOUND_CONF}
+-  @ONLY
+-)
+-
+-install(
+-  FILES "${INDICATOR_SOUND_CONF}"
+-  DESTINATION "${CMAKE_INSTALL_DATADIR}/upstart/sessions/"
+-)
+-
+-###########################
+ # XDG Autostart
+ ###########################
+ 
+@@ -57,27 +37,6 @@
+ )
+ 
+ ###########################
+-# Upstart XDG Autostart Override
+-###########################
+-
+-set(
+-  INDICATOR_SOUND_UPSTART_XDG_AUTOSTART
+-  "${CMAKE_CURRENT_BINARY_DIR}/indicator-sound.upstart.desktop"
+-)
+-
+-configure_file(
+-  "indicator-sound.upstart.desktop.in"
+-  ${INDICATOR_SOUND_UPSTART_XDG_AUTOSTART}
+-  @ONLY
+-)
+-
+-install(
+-  FILES "${INDICATOR_SOUND_UPSTART_XDG_AUTOSTART}"
+-  DESTINATION "${CMAKE_INSTALL_DATADIR}/upstart/xdg/autostart"
+-  RENAME "indicator-sound.desktop"
+-)
+-
+-###########################
+ # GSettings
+ ###########################
+ 
