@@ -5,6 +5,7 @@
 EAPI=5
 
 VALA_MIN_API_VERSION=0.24
+VALA_MAX_API_VERSION=0.26
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
