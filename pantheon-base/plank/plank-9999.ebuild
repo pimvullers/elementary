@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 VALA_USE_DEPEND=vapigen
 
 inherit fdo-mime gnome2-utils vala autotools-utils bzr
@@ -19,13 +19,14 @@ KEYWORDS=""
 IUSE="debug nls static-libs"
 
 CDEPEND="
+	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	dev-libs/libunique:1
+	dev-libs/libdbusmenu[gtk3]
 	x11-libs/libX11
-	x11-libs/libwnck:1
-	>=x11-libs/bamf-0.2.58
-	>=dev-libs/glib-2.26.0:2
-	>=x11-libs/gtk+-2.22.0:2"
+	x11-libs/libwnck:3
+	x11-libs/bamf
+	x11-libs/cairo
+	x11-libs/gtk+:3"
 RDEPEND="${CDEPEND}
 	x11-themes/plank-theme-pantheon"
 DEPEND="${CDEPEND}
@@ -41,7 +42,6 @@ AUTOTOOLS_IN_SOURCE_BUILD=yes
 DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-pantheon-support.patch"
 	epatch_user
 
 	autotools-utils_src_prepare
