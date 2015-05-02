@@ -1,11 +1,13 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-9999.ebuild,v 1.49 2013/06/01 14:27:45 ssuominen Exp $
 
 EAPI=5
+
 VALA_MIN_API_VERSION=0.20
 
 PYTHON_COMPAT=( python2_7 )
+PYTHON_REQ_USE='threads(+)'
 
 inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala bzr
 
@@ -14,10 +16,11 @@ HOMEPAGE="http://www.midori-browser.org/"
 KEYWORDS=""
 EBZR_REPO_URI="lp:midori"
 
+
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
 KEYWORDS=""
-IUSE="doc +granite +jit nls +webkit2 zeitgeist"
+IUSE="doc +granite +jit nls zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
@@ -28,8 +31,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
 	x11-libs/gtk+:3
-	webkit2? ( >=net-libs/webkit-gtk-1.11.91:3[jit=] )
-	!webkit2? ( >=net-libs/webkit-gtk-1.8.1:3[jit=] )
+	net-libs/webkit-gtk:4[jit=]
 	granite? ( >=x11-libs/granite-0.2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}

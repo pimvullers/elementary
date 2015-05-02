@@ -1,23 +1,24 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: /var/cvsroot/gentoo-x86/www-client/midori/midori-0.5.9.ebuild,v 1.3 2014/04/07 15:23:37 ssuominen Exp $
 
 EAPI=5
+
 VALA_MIN_API_VERSION=0.20
 
 PYTHON_COMPAT=( python2_7 )
+PYTHON_REQ_USE='threads(+)'
 
 inherit eutils fdo-mime gnome2-utils pax-utils python-any-r1 cmake-utils vala
 
 DESCRIPTION="A lightweight web browser based on WebKitGTK+"
 HOMEPAGE="http://www.midori-browser.org/"
-KEYWORDS="~amd64 ~arm ~mips ~x86 ~x86-fbsd"
 SRC_URI="http://www.${PN}-browser.org/downloads/${PN}_${PV}_all_.tar.bz2"
 
 LICENSE="LGPL-2.1 MIT"
 SLOT="0"
-KEYWORDS="~amd64 ~mips ~x86 ~x86-fbsd"
-IUSE="doc +granite +jit nls +webkit2 zeitgeist"
+KEYWORDS="~amd64 ~arm ~mips ~x86 ~x86-fbsd"
+IUSE="doc +granite +jit nls zeitgeist"
 
 RDEPEND=">=dev-db/sqlite-3.6.19:3
 	>=dev-libs/glib-2.32.3
@@ -28,8 +29,7 @@ RDEPEND=">=dev-db/sqlite-3.6.19:3
 	x11-libs/libXScrnSaver
 	>=app-crypt/gcr-3
 	x11-libs/gtk+:3
-	webkit2? ( >=net-libs/webkit-gtk-1.11.91:3[jit=] )
-	!webkit2? ( >=net-libs/webkit-gtk-1.8.1:3[jit=] )
+	net-libs/webkit-gtk:3[jit=]
 	granite? ( >=x11-libs/granite-0.2 )
 	zeitgeist? ( >=dev-libs/libzeitgeist-0.3.14 )"
 DEPEND="${RDEPEND}
@@ -45,9 +45,13 @@ pkg_setup() {
 
 	DOCS=( AUTHORS ChangeLog HACKING README TODO TRANSLATE )
 	HTML_DOCS=( data/faq.html data/faq.css )
+	S=${WORKDIR}
 }
 
 src_prepare() {
+	epatch "${FILESDIR}/${P}-fix-webkit2-build-breakage.patch"
+	epatch_user
+
 	vala_src_prepare
 	cmake-utils_src_prepare
 
