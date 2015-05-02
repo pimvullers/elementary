@@ -69,7 +69,7 @@ src_configure() {
 		$(cmake-utils_use_use zeitgeist)
 		-DVALA_EXECUTABLE="${VALAC}"
 		-DUSE_GTK3=ON
-		$(cmake-utils_use webkit2 HALF_BRO_INCOM_WEBKIT2)
+		-DHALF_BRO_INCOM_WEBKIT2=YES
 	)
 
 	cmake-utils_src_configure
