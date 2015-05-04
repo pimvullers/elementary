@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -15,7 +15,7 @@ EBZR_REPO_URI="lp:scratch"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls contractor files pastebin spell terminal webkit -zeitgeist"
+IUSE="nls contractor files pastebin spell terminal webkit zeitgeist"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -23,18 +23,17 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libpeas
 	gnome-base/gconf:2
-	>=x11-libs/gtk+-3.4:3
+	x11-libs/gtk+:3
 	x11-libs/gtksourceview:3.0
 	>=x11-libs/granite-0.3
+	$(vala_depend)
 	contractor? ( dev-libs/contractor )
-	files? ( pantheon-base/pantheon-files )
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( x11-libs/vte:2.90 )
 	zeitgeist? ( gnome-extra/zeitgeist )"
 DEPEND="${RDEPEND}
-	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
@@ -57,6 +56,8 @@ src_prepare() {
 	  sed -i -e 's/add_subdirectory (spell)//' plugins/CMakeLists.txt
 	use terminal || \
 	  sed -i -e 's/add_subdirectory (terminal)//' plugins/CMakeLists.txt
+	use terminal || \
+	  sed -i -e 's/add_subdirectory (vim-emulation)//' plugins/CMakeLists.txt
 	use webkit || \
 	  sed -i -e 's/add_subdirectory (browser-preview)//' plugins/CMakeLists.txt
 
