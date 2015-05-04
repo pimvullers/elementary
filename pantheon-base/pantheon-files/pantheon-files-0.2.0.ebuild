@@ -1,23 +1,20 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.26
 
-inherit versionator fdo-mime gnome2-utils vala cmake-utils bzr
-
-MY_PV=$(get_version_component_range 3)
+inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="http://launchpad.net/pantheon-files"
-EBZR_REPO_URI="lp:pantheon-files"
-EBZR_REVISION="${MY_PV:1}"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/$(get_version_component_range 1-2)/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~x86 ~amd64"
+KEYWORDS="amd64 arm x86"
 IUSE="+gvfs nls"
 
 RDEPEND="
