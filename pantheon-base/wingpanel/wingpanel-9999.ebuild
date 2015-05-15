@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -22,7 +22,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3[ubuntu]
-	>=x11-libs/granite-0.3
+	x11-libs/granite
 	x11-libs/gtk+:3
 	x11-libs/libido:3
 	x11-libs/libwnck:3

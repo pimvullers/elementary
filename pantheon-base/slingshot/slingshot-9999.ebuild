@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015	 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -20,13 +20,13 @@ IUSE="nls unity zeitgeist"
 RDEPEND="
 	dev-libs/json-glib
 	dev-libs/glib:2
+	dev-libs/json-glib
 	dev-libs/libgee:0.8
 	gnome-base/gnome-menus:3
-	net-libs/libsoup
+	net-libs/libsoup:2.4
 	>=x11-libs/granite-0.3
-	>=x11-libs/gtk+-3.10:3
-	unity? ( x11-libs/unity )
-	zeitgeist? ( gnome-extra/zeitgeist )"
+	x11-libs/gtk+:3
+	gnome-extra/zeitgeist"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -52,7 +52,6 @@ src_configure() {
 		$(cmake-utils_use_use unity UNITY)
 		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
-
 	cmake-utils_src_configure
 }
 

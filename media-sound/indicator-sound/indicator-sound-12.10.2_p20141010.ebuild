@@ -1,0 +1,65 @@
+# Copyright 1999-2013 Gentoo Foundation
+# Distributed under the terms of the GNU General Public License v2
+# $Header: $
+
+EAPI=5
+
+VALA_MIN_API_VERSION=0.20
+
+inherit gnome2-utils vala cmake-utils
+
+DESCRIPTION="A unified sound menu"
+HOMEPAGE="https://launchpad.net/indicator-sound"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_12.10.2%2B14.10.20141010.orig.tar.gz"
+
+LICENSE="GPL-3"
+SLOT="0"
+KEYWORDS="amd64 arm x86"
+IUSE="nls static-libs"
+
+RDEPEND="
+	>=dev-libs/glib-2.38:2
+	dev-libs/libgee:0.8
+	dev-libs/libxml2
+	media-sound/pulseaudio[glib]
+	x11-libs/libnotify"
+DEPEND="${RDEPEND}
+	$(vala_depend)
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
+
+S="${WORKDIR}/indicator-sound-12.10.2+14.10.20141010"
+
+src_prepare() {
+	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-upstart.patch"
+
+	sed -i '/add_subdirectory(tests)/d' CMakeLists.txt
+	sed -i '/dbustest/d' CMakeLists.txt
+	sed -i 's/gee-1.0/gee-0.8/' CMakeLists.txt src/CMakeLists.txt
+
+	cmake-utils_src_prepare
+	vala_src_prepare
+}
+
+src_configure() {
+	local mycmakeargs=(
+		-DVALA_COMPILER="${VALAC}"
+		-DVAPI_GEN="${VAPIGEN}"
+		-DGSETTINGS_COMPILE=OFF
+	)
+
+	cmake-utils_src_configure 
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
+}

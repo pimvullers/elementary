@@ -36,10 +36,6 @@ AUTOTOOLS_AUTORECONF=1
 src_prepare() {
 	epatch_user
 
-	if has_version '>=x11-wm/mutter-3.14' ; then
-		epatch "${FILESDIR}/${P}-mutter-3.14.patch"
-	fi
-
 	autotools-utils_src_prepare
 	vala_src_prepare
 }
