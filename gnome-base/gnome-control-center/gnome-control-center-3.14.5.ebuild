@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.12.1-r1.ebuild,v 1.4 2014/09/26 20:33:12 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-control-center/gnome-control-center-3.14.5.ebuild,v 1.2 2015/05/12 18:44:10 pacho Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
-GNOME2_LA_PUNT="yes" # gmodule is used, which uses dlopen
+GNOME2_LA_PUNT="yes"
 
 inherit autotools bash-completion-r1 eutils gnome2
 
@@ -13,31 +13,24 @@ HOMEPAGE="https://git.gnome.org/browse/gnome-control-center/"
 
 LICENSE="GPL-2+"
 SLOT="2"
-IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos networkmanager modemmanager v4l"
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+IUSE="+bluetooth +colord +cups +gnome-online-accounts +i18n input_devices_wacom kerberos v4l"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 # False positives caused by nested configure scripts
 QA_CONFIGURE_OPTIONS=".*"
 
 # gnome-session-2.91.6-r1 is needed so that 10-user-dirs-update is run at login
 # g-s-d[policykit] needed for bug #403527
-#
-# kerberos unfortunately means mit-krb5; build fails with heimdal
-
-# FIXME: modemmanager is not optional
-#        networkmanager is not optional
-
 COMMON_DEPEND="
-	>=dev-libs/glib-2.39.91:2
+	>=dev-libs/glib-2.39.91:2[dbus]
 	>=x11-libs/gdk-pixbuf-2.23.0:2
-	>=x11-libs/gtk+-3.11.1:3
-	>=gnome-base/gsettings-desktop-schemas-3.9.91
+	>=x11-libs/gtk+-3.13:3
+	>=gnome-base/gsettings-desktop-schemas-3.13.91
 	>=gnome-base/gnome-desktop-3.11.3:3=
 	>=gnome-base/gnome-settings-daemon-3.8.3[colord?,policykit]
 
 	>=dev-libs/libpwquality-1.2.2
 	dev-libs/libxml2:2
-	gnome-base/gnome-menus:3
 	gnome-base/libgtop:2=
 	media-libs/fontconfig
 
@@ -55,6 +48,7 @@ COMMON_DEPEND="
 
 	virtual/opengl
 	x11-apps/xmodmap
+	x11-libs/cairo
 	x11-libs/libX11
 	x11-libs/libXxf86misc
 	>=x11-libs/libXi-1.2
@@ -86,11 +80,12 @@ COMMON_DEPEND="
 # libgnomekbd needed only for gkbd-keyboard-display tool
 RDEPEND="${COMMON_DEPEND}
 	|| ( ( app-admin/openrc-settingsd sys-auth/consolekit ) >=sys-apps/systemd-31 )
-	>=sys-apps/accountsservice-0.6.30
+	>=sys-apps/accountsservice-0.6.33
 	x11-themes/gnome-icon-theme-symbolic
 	colord? ( >=gnome-extra/gnome-color-manager-3 )
 	cups? (
-		>=app-admin/system-config-printer-gnome-1.3.5
+		|| ( >=app-admin/system-config-printer-gnome-1.3.5
+			app-admin/system-config-printer )
 		net-print/cups-pk-helper )
 	input_devices_wacom? ( gnome-base/gnome-settings-daemon[input_devices_wacom] )
 	i18n? ( >=gnome-base/libgnomekbd-3 )
@@ -115,21 +110,15 @@ DEPEND="${COMMON_DEPEND}
 	>=sys-devel/gettext-0.17
 	virtual/pkgconfig
 
-	cups? ( sys-apps/sed )
-
 	gnome-base/gnome-common
 "
 # Needed for autoreconf
 #	gnome-base/gnome-common
 
 src_prepare() {
-	# Gentoo handles completions in a different directory, bugs #465094 and #477390
-	sed -i "s|^completiondir =.*|completiondir = $(get_bashcompdir)|" \
-		shell/Makefile.am || die "sed completiondir failed"
-
 	# Make some panels and dependencies optional; requires eautoreconf
 	# https://bugzilla.gnome.org/686840, 697478, 700145
-	epatch "${FILESDIR}"/${PN}-3.12.1-optional-r1.patch
+	epatch "${FILESDIR}"/${PN}-3.14.0-optional.patch
 
 	# Fix some absolute paths to be appropriate for Gentoo
 	epatch "${FILESDIR}"/${PN}-3.10.2-gentoo-paths.patch
@@ -137,15 +126,6 @@ src_prepare() {
 	epatch_user
 
 	eautoreconf
-
-	# panels/datetime/Makefile.am gets touched by "gentoo-paths" patch.
-	# We need to touch timedated{c,h} to prevent them from being
-	# regenerated (bug #415901)
-	# Upstream think they should be removed, preventing compilation errors too
-	# (https://bugzilla.gnome.org/704822)
-	[[ -f panels/datetime/timedated.h ]] && rm -f panels/datetime/timedated.h
-	[[ -f panels/datetime/timedated.c ]] && rm -f panels/datetime/timedated.c
-
 	gnome2_src_prepare
 }
 
@@ -164,4 +144,8 @@ src_configure() {
 		$(use_enable networkmanager) \
 		$(use_with v4l cheese) \
 		$(use_enable input_devices_wacom wacom)
+}
+
+src_install() {
+	gnome2_src_install completiondir="$(get_bashcompdir)"
 }
