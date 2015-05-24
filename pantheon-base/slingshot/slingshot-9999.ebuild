@@ -15,10 +15,9 @@ EBZR_REPO_URI="lp:slingshot"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="nls unity zeitgeist"
+IUSE="nls"
 
 RDEPEND="
-	dev-libs/json-glib
 	dev-libs/glib:2
 	dev-libs/json-glib
 	dev-libs/libgee:0.8
@@ -49,8 +48,6 @@ src_configure() {
 		-DICONCACHE_UPDATE=OFF
 		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		$(cmake-utils_use_use unity UNITY)
-		$(cmake-utils_use_use zeitgeist ZEITGEIST)
 	)
 	cmake-utils_src_configure
 }
