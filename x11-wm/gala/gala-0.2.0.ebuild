@@ -36,7 +36,7 @@ AUTOTOOLS_AUTORECONF=1
 src_unpack() {
 	default_src_unpack
 
-	mv "${WORKDIR}/gala-0.2.0~r460+pkg32~ubuntu0.3.1" "${S}"
+	mv "${WORKDIR}/gala-0.2.0~r464+pkg32~ubuntu0.3.1" "${S}"
 }
 
 src_prepare() {
