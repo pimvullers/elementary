@@ -6,6 +6,8 @@ EAPI=5
 
 inherit git-r3 cmake-utils vala gnome2-utils
 
+VALA_MIN_API_VERSION=0.26
+
 EGIT_REPO_URI="https://github.com/voldyman/MarkMyWords.git"
 
 DESCRIPTION="A minimal markdown editor"
@@ -17,9 +19,10 @@ KEYWORDS="~x86 ~amd64"
 IUSE="nls"
 
 RDEPEND="
-	net-libs/webkit-gtk:3
-	x11-libs/gtksourceview:3
-	"
+	dev-libs/glib:2
+	|| ( net-libs/webkit-gtk:3 net-libs/webkit-gtk:4 )
+	x11-libs/gtk+:3
+	x11-libs/gtksourceview:3.0"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
