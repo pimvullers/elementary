@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.14.3.ebuild,v 1.1 2015/03/28 16:07:02 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.16.2-r1.ebuild,v 1.1 2015/06/09 14:21:45 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -26,9 +26,9 @@ KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebs
 
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2[dbus]
-	>=x11-libs/gtk+-3.7.8:3
+	>=x11-libs/gtk+-3.15.3:3
 	>=gnome-base/gnome-desktop-3.11.1:3=
-	>=gnome-base/gsettings-desktop-schemas-3.9.91.1
+	>=gnome-base/gsettings-desktop-schemas-3.15.4
 	>=gnome-base/librsvg-2.36.2
 	media-fonts/cantarell
 	media-libs/fontconfig
@@ -112,7 +112,10 @@ src_prepare() {
 		epatch "${FILESDIR}"/${PN}-3.7.90-short-touchpad-timeout.patch
 
 	# Make colord and wacom optional; requires eautoreconf
-	epatch "${FILESDIR}"/${PN}-3.14.0-optional.patch
+	epatch "${FILESDIR}"/${PN}-3.16.0-optional.patch
+
+	# Fix segfault, https://bugzilla.gnome.org/show_bug.cgi?id=749844
+	epatch "${FILESDIR}"/${PN}-3.16.2-settings_set_display.patch
 
 	epatch_user
 	eautoreconf

@@ -10,7 +10,7 @@ inherit gnome2 virtualx
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-desktop3_3.14.1-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-desktop3_3.14.1-1ubuntu2.debian.tar.xz )"
 
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
 SLOT="3/10" # subslot = libgnome-desktop-3 soname version

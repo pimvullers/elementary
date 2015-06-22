@@ -1,9 +1,9 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.12.2-r2.ebuild,v 1.1 2015/01/02 11:53:03 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.16.3.ebuild,v 1.1 2015/06/08 22:12:44 eva Exp $
 
 EAPI="5"
-GCONF_DEBUG="no"
+GCONF_DEBUG="yes"
 GNOME2_LA_PUNT="yes"
 
 inherit autotools eutils flag-o-matic gnome2 multilib virtualx multilib-minimal
@@ -13,12 +13,7 @@ HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
-# NOTE: This gtk+ has multi-gdk-backend support, see:
-#  * http://blogs.gnome.org/kris/2010/12/29/gdk-3-0-on-mac-os-x/
-#  * http://mail.gnome.org/archives/gtk-devel-list/2010-November/msg00099.html
-# I tried this and got it all compiling, but the end result is unusable as it
-# horribly mixes up the backends -- grobian
-IUSE="aqua cloudprint colord cups debug examples +introspection test +ubuntu vim-syntax wayland X xinerama"
+IUSE="aqua broadway cloudprint colord cups examples +introspection test +ubuntu vim-syntax wayland X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )
@@ -26,19 +21,18 @@ REQUIRED_USE="
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/~elementary-os/+archive/ubuntu/daily/+files/gtk%2B3.0_3.12.2-0ubuntu4%7Etrusty1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.16.3-2ubuntu2.debian.tar.xz )"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
-# Use gtk+:2 for gtk-update-icon-cache
 COMMON_DEPEND="
-	>=dev-libs/atk-2.7.5[introspection?,${MULTILIB_USEDEP}]
-	>=dev-libs/glib-2.39.5:2[${MULTILIB_USEDEP}]
+	>=dev-libs/atk-2.15[introspection?,${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.43.4:2[${MULTILIB_USEDEP}]
 	media-libs/fontconfig[${MULTILIB_USEDEP}]
-	>=x11-libs/cairo-1.12[aqua?,glib,svg,X?,${MULTILIB_USEDEP}]
-	>=x11-libs/gdk-pixbuf-2.27.1:2[introspection?,X?,${MULTILIB_USEDEP}]
-	>=x11-libs/gtk+-2.24:2[${MULTILIB_USEDEP}]
-	>=x11-libs/pango-1.32.4[introspection?,${MULTILIB_USEDEP}]
+	>=media-libs/libepoxy-1.0[${MULTILIB_USEDEP}]
+	>=x11-libs/cairo-1.14[aqua?,glib,svg,X?,${MULTILIB_USEDEP}]
+	>=x11-libs/gdk-pixbuf-2.30:2[introspection?,X?,${MULTILIB_USEDEP}]
+	>=x11-libs/pango-1.36.7[introspection?,${MULTILIB_USEDEP}]
 	x11-misc/shared-mime-info
 
 	cloudprint? (
@@ -48,7 +42,7 @@ COMMON_DEPEND="
 	cups? ( >=net-print/cups-1.2[${MULTILIB_USEDEP}] )
 	introspection? ( >=dev-libs/gobject-introspection-1.39 )
 	wayland? (
-		>=dev-libs/wayland-1.3.90[${MULTILIB_USEDEP}]
+		>=dev-libs/wayland-1.5.91[${MULTILIB_USEDEP}]
 		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
 		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
 	)
@@ -70,9 +64,10 @@ DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xsl-stylesheets
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
+	dev-libs/gobject-introspection-common
 	>=dev-util/gdbus-codegen-2.38.2
 	>=dev-util/gtk-doc-am-1.20
-	sys-devel/gettext
+	>=sys-devel/gettext-0.18.3[${MULTILIB_USEDEP}]
 	virtual/pkgconfig[${MULTILIB_USEDEP}]
 	X? (
 		x11-proto/xextproto[${MULTILIB_USEDEP}]
@@ -84,21 +79,28 @@ DEPEND="${COMMON_DEPEND}
 	test? (
 		media-fonts/font-misc-misc
 		media-fonts/font-cursor-misc )
+	examples? ( media-libs/libcanberra[gtk3] )
 "
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
 # gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
 # >=xorg-server-1.11.4 needed for
 #  http://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
 RDEPEND="${COMMON_DEPEND}
+	>=dev-util/gtk-update-icon-cache-3
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
+	>=x11-themes/adwaita-icon-theme-3.14
 	X? ( !<x11-base/xorg-server-1.11.4 )
 	abi_x86_32? (
 		!<=app-emulation/emul-linux-x86-gtklibs-20140508-r3
 		!app-emulation/emul-linux-x86-gtklibs[-abi_x86_32(-)]
 	)
 "
-PDEPEND="vim-syntax? ( app-vim/gtk-syntax )"
+# librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
+PDEPEND="
+	gnome-base/librsvg[${MULTILIB_USEDEP}]
+	vim-syntax? ( app-vim/gtk-syntax )
+"
 
 MULTILIB_CHOST_TOOLS=(
 	/usr/bin/gtk-query-immodules-3.0
@@ -126,44 +128,40 @@ src_prepare() {
 	replace-flags -O3 -O2
 	strip-flags
 
-	# Build fix on Darwin 10.6; bug #519058
-	epatch "${FILESDIR}/${P}-darwin10.6.patch"
-
-	# Include image data in the builtin icon cache, needs --enable-gtk2-dependency
-	# and, then, upstream reverted this patch lately. Fixed in 3.14.x, bug #518352
-	epatch "${FILESDIR}/${PN}-3.12.2-builtin-icon.patch"
-
 	if ! use test ; then
 		# don't waste time building tests
-		strip_builddir SRC_SUBDIRS testsuite Makefile.am
-		strip_builddir SRC_SUBDIRS testsuite Makefile.in
-		strip_builddir SRC_SUBDIRS tests Makefile.am
-		strip_builddir SRC_SUBDIRS tests Makefile.in
+		strip_builddir SRC_SUBDIRS testsuite Makefile.{am,in}
+
+		# the tests dir needs to be build now because since commit
+		# 7ff3c6df80185e165e3bf6aa31bd014d1f8bf224 tests/gtkgears.o needs to be there
+		# strip_builddir SRC_SUBDIRS tests Makefile.{am,in}
 	fi
 
 	if ! use examples; then
 		# don't waste time building demos
-		strip_builddir SRC_SUBDIRS demos Makefile.am
-		strip_builddir SRC_SUBDIRS demos Makefile.in
-		strip_builddir SRC_SUBDIRS examples Makefile.am
-		strip_builddir SRC_SUBDIRS examples Makefile.in
+		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
+		strip_builddir SRC_SUBDIRS examples Makefile.{am,in}
 	fi
+
+	# Do no build and install gtk-update-icon-cache which is done by gtk+:2
+	epatch "${FILESDIR}"/${PN}-3.16.2-remove_update-icon-cache.patch
+
+	epatch_user
 
 	eautoreconf
 	gnome2_src_prepare
 }
 
 multilib_src_configure() {
-	# Passing --disable-debug is not recommended for production use
 	# need libdir here to avoid a double slash in a path that libtool doesn't
 	# grok so well during install (// between $EPREFIX and usr ...)
 	ECONF_SOURCE=${S} \
 	gnome2_src_configure \
 		$(use_enable aqua quartz-backend) \
+		$(use_enable broadway broadway-backend) \
 		$(use_enable cloudprint) \
 		$(use_enable colord) \
 		$(use_enable cups cups auto) \
-		$(usex debug --enable-debug=yes "") \
 		$(multilib_native_use_enable introspection) \
 		$(use_enable wayland wayland-backend) \
 		$(use_enable X x11-backend) \
@@ -174,8 +172,8 @@ multilib_src_configure() {
 		$(use_enable X xrandr) \
 		$(use_enable xinerama) \
 		--disable-papi \
+		--disable-mir-backend \
 		--enable-man \
-		--enable-gtk2-dependency \
 		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
 		--libdir="${EPREFIX}"/usr/$(get_libdir) \
 		CUPS_CONFIG="${EPREFIX}/usr/bin/${CHOST}-cups-config"
@@ -190,16 +188,6 @@ multilib_src_configure() {
 }
 
 multilib_src_test() {
-	# Tests require a new gnome-themes-standard, but adding it to DEPEND
-	# would result in circular dependencies.
-	# https://bugzilla.gnome.org/show_bug.cgi?id=669562
-	if ! has_version '>=x11-themes/gnome-themes-standard-3.6[gtk]'; then
-		ewarn "Tests will be skipped because >=gnome-themes-standard-3.6[gtk]"
-		ewarn "is not installed. Please re-run tests after installing the"
-		ewarn "required version of gnome-themes-standard."
-		return 0
-	fi
-
 	# FIXME: this should be handled at eclass level
 	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/gtk" || die
 
@@ -211,11 +199,11 @@ multilib_src_test() {
 multilib_src_install() {
 	gnome2_src_install
 
-	# add -framework Carbon to the .pc files
+	# add -framework Carbon to the .pc files, bug #???
 	if use aqua ; then
 		for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
 			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
-				-i "${ED}"usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
+				-i "${ED%/}"/usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
 		done
 	fi
 }
@@ -231,7 +219,7 @@ pkg_preinst() {
 	gnome2_pkg_preinst
 
 	multilib_pkg_preinst() {
-		# Make sure loaders.cache belongs to gdk-pixbuf alone
+		# Make immodules.cache belongs to gtk+ alone
 		local cache="usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache"
 
 		if [[ -e ${EROOT}${cache} ]]; then
@@ -245,7 +233,12 @@ pkg_preinst() {
 
 pkg_postinst() {
 	gnome2_pkg_postinst
-	gnome2_query_immodules_gtk3
+
+	multilib_pkg_postinst() {
+		gnome2_query_immodules_gtk3 \
+			|| die "Update immodules cache failed (for ${ABI})"
+	}
+	multilib_parallel_foreach_abi multilib_pkg_postinst
 
 	if ! has_version "app-text/evince"; then
 		elog "Please install app-text/evince for print preview functionality."

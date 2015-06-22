@@ -1,26 +1,26 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.12.2.ebuild,v 1.4 2014/09/29 11:59:12 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.16.2.ebuild,v 1.1 2015/06/09 15:41:38 eva Exp $
 
 EAPI="5"
 GCONF_DEBUG="yes"
 
-inherit gnome2
+inherit gnome2 virtualx
 
 DESCRIPTION="Libraries for the gnome desktop that are not part of the UI"
 HOMEPAGE="https://git.gnome.org/browse/gnome-desktop"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/~elementary-os/+archive/staging/+files/gnome-desktop3_3.12.2-2ubuntu1%7Eelementary0.3.1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-desktop3_3.14.1-1ubuntu2.debian.tar.xz )"
 
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
 SLOT="3/10" # subslot = libgnome-desktop-3 soname version
-IUSE="+introspection +ubuntu"
-KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x86-solaris"
+IUSE="+introspection"
+KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x86-solaris"
 
 # cairo[X] needed for gnome-bg
 COMMON_DEPEND="
 	app-text/iso-codes
-	>=dev-libs/glib-2.35:2
+	>=dev-libs/glib-2.38:2
 	>=x11-libs/gdk-pixbuf-2.21.3:2[introspection?]
 	>=x11-libs/gtk+-3.3.6:3[introspection?]
 	>=x11-libs/libXext-1.1
@@ -37,7 +37,7 @@ RDEPEND="${COMMON_DEPEND}
 DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
 	dev-util/gdbus-codegen
-	>=dev-util/gtk-doc-am-1.4
+	>=dev-util/gtk-doc-am-1.14
 	>=dev-util/intltool-0.40.6
 	sys-devel/gettext
 	x11-proto/xproto
@@ -72,4 +72,8 @@ src_configure() {
 		--enable-desktop-docs \
 		$(use_enable introspection) \
 		ITSTOOL=$(type -P true)
+}
+
+src_test() {
+	Xemake check
 }

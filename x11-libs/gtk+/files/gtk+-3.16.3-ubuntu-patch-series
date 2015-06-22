@@ -3,7 +3,6 @@
 017_no_offscreen_device_grabbing.patch
 018_gdkenumtypes.c_location.patch
 032_mips_treeview_row_separator_height.patch
-044_tracker_fts.patch
 060_ignore-random-icons.patch
 071_fix-installation-of-HTML-images.patch
 073_treeview_almost_fixed.patch
@@ -15,8 +14,6 @@ print-dialog-show-options-of-remote-dnssd-printers.patch
 uimanager-guard-against-nested-node-updates.patch
 x-canonical-accel.patch
 message-dialog-restore-traditional-look-on-unity.patch
-mir-backend.patch
-mir-backend-unmerged.patch
-0001-Menu-items-force-loading-16x16-icons.patch
-0002-gtkimagemenuitem-create-widget-for-action-icons-lazi.patch
 0001-gtk-reftest-Force-icon-theme-to-Adwaita.patch
+0001-Stable-mir-patches-from-git-master.patch
+0002-Unstable-mir-patches-from-git-wip-mir-unstable.patch
