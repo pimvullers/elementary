@@ -21,11 +21,10 @@ IUSE="debug nls static-libs"
 CDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	dev-libs/libdbusmenu[gtk3]
+	dev-libs/libunique:1
 	x11-libs/libX11
 	x11-libs/libwnck:3
 	x11-libs/bamf
-	x11-libs/cairo
 	x11-libs/gtk+:3"
 RDEPEND="${CDEPEND}
 	x11-themes/plank-theme-pantheon"
