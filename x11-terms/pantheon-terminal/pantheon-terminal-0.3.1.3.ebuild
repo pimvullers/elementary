@@ -1,4 +1,4 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,8 +19,8 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	>=x11-libs/granite-0.3
 	x11-libs/libnotify
+	>=x11-libs/granite-0.3
 	x11-libs/gtk+:3
 	x11-libs/vte:2.90"
 DEPEND="${RDEPEND}
