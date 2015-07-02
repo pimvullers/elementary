@@ -4,7 +4,7 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.26
 
 inherit gnome2-utils vala cmake-utils versionator
 
