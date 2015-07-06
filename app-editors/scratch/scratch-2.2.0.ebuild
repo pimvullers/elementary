@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Scratch is a text editor written for the Pantheon desktop"
 HOMEPAGE="https://launchpad.net/scratch"
-SRC_URI="https://launchpad.net/${PN}/2.x/2.1/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/2.x/2.2/+download/${PN}-text-editor-${PV}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -39,6 +39,7 @@ DEPEND="${RDEPEND}
 
 pkg_setup() {
 	DOCS=( COPYING README )
+	S="${WORKDIR}/${PN}-text-editor-${PV}"
 }
 
 src_prepare() {
