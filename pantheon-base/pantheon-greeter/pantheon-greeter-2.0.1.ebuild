@@ -4,13 +4,13 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.26
 
-inherit gnome2-utils vala cmake-utils
+inherit gnome2-utils vala cmake-utils versionator
 
-DESCRIPTION="The terminal of the 21st century"
-HOMEPAGE="https://launchpad.net/pantheon-terminal"
-SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tgz"
+DESCRIPTION="Pantheon Login Screen for LightDM"
+HOMEPAGE="http://launchpad.net/pantheon-greeter"
+SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,19 +18,20 @@ KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
-	dev-libs/glib:2
-	>=x11-libs/granite-0.3
-	x11-libs/libnotify
+	dev-libs/libindicator:3
+	media-fonts/raleway
+	media-libs/clutter-gtk:1.0
+	virtual/opengl
+	x11-libs/granite
 	x11-libs/gtk+:3
-	x11-libs/vte:2.90"
-DEPEND="${RDEPEND}
+	>=x11-misc/lightdm-1.2.1"
+DEPEND="${DEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
-	virtual/pkgconfig"
-
-DOCS=( AUTHORS README )
+	virtual/pkgconfig
+	nls? ( sys-devel/gettext )"
 
 src_prepare() {
+	# Disable generation of the translations (if needed)
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare

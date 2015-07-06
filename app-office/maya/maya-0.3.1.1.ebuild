@@ -19,6 +19,7 @@ KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/contractor
 	dev-libs/folks
 	dev-libs/glib:2
 	dev-libs/libgee:0.8

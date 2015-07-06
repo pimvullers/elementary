@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="http://launchpad.net/pantheon-files"
-SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/$(get_version_component_range 1-2)/+download/${P}.tgz"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,12 +20,13 @@ IUSE="+gvfs nls"
 RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
-	dev-libs/glib:2
-	>=x11-libs/granite-0.3
+	>=dev-libs/glib-2.32:2
 	dev-libs/libgee:0.8
-	>=x11-libs/gtk+-3.4:3
-	x11-libs/libnotify
-	x11-libs/pango
+	gnome-extra/zeitgeist
+	>=x11-libs/granite-0.3
+	>=x11-libs/gtk+-3.0.3:3
+	>=x11-libs/libnotify-0.7.2
+	>=x11-libs/pango-1.1.2
 	gvfs? ( gnome-base/gvfs )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
