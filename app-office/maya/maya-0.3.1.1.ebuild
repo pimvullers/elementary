@@ -24,7 +24,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
-	gnome-extra/evolution-data-server
+	<gnome-extra/evolution-data-server-3.16
 	media-libs/clutter
 	media-libs/libchamplain
 	net-libs/libsoup:2.4
