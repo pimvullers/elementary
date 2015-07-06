@@ -20,7 +20,7 @@ RDEPEND="
 	>=dev-libs/libdbusmenu-0.5.90[gtk3]
 	dev-libs/libical
 	dev-libs/properties-cpp
-	>=gnome-extra/evolution-data-server-3.5.3
+	<gnome-extra/evolution-data-server-3.16
 	media-libs/gstreamer:1.0
 	media-libs/libcanberra
 	>=x11-libs/libnotify-0.7.6"
