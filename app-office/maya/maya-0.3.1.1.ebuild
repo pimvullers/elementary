@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,6 +19,7 @@ KEYWORDS="amd64 arm x86"
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/contractor
 	dev-libs/folks
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
@@ -42,6 +43,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch_user
+
 	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare

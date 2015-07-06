@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -19,12 +19,13 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/contractor
 	dev-libs/folks
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
-	gnome-extra/evolution-data-server
+	<gnome-extra/evolution-data-server-3.16
 	media-libs/clutter
 	media-libs/libchamplain
 	net-libs/libsoup:2.4
