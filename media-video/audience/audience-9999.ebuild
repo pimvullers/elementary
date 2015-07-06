@@ -1,4 +1,4 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
@@ -14,8 +14,8 @@ EBZR_REPO_URI="lp:audience"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE=""
+KEYWORDS=""
+IUSE="nls"
 
 RDEPEND="
 	media-libs/clutter-gtk:1.0
@@ -25,9 +25,13 @@ RDEPEND="
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	nls? ( sys-devel/gettext )
 	virtual/pkgconfig"
 
 src_prepare() {
+	use nls || \
+		sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+
 	cmake-utils_src_prepare
 	vala_src_prepare
 }
