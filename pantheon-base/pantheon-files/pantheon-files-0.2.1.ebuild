@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="http://launchpad.net/pantheon-files"
-SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/$(get_version_component_range 1-2)/+download/${P}.tgz"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
