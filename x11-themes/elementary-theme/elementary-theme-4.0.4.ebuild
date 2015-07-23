@@ -8,7 +8,7 @@ inherit base
 
 DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
 HOMEPAGE="https://launchpad.net/egtk"
-SRC_URI="https://launchpad.net/egtk/4.x/${PV}/+download/elementary.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://launchpad.net/egtk/4.x/${PV}/+download/elementary.tar.xz -> ${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"

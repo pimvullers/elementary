@@ -10,7 +10,7 @@ inherit gnome2-utils vala cmake-utils versionator
 
 DESCRIPTION="Pantheon Login Screen for LightDM"
 HOMEPAGE="http://launchpad.net/pantheon-greeter"
-SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
