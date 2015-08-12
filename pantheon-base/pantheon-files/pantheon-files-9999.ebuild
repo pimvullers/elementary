@@ -23,6 +23,7 @@ RDEPEND="
 	dev-libs/glib:2
 	>=x11-libs/granite-0.3
 	dev-libs/libgee:0.8
+	gnome-extra/zeitgeist
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
 	x11-libs/pango
