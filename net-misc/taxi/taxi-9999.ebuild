@@ -18,7 +18,6 @@ KEYWORDS="~x86 ~amd64"
 IUSE="adwaita nls"
 
 RDEPEND="
-	dev-libs/libgee
 	net-libs/libsoup
 	x11-libs/granite
 	x11-libs/gtk+:3"
@@ -63,4 +62,3 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_schemas_update
 }
-

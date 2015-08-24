@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer>
-		<email>nado@troglodyte.be</email>
-		<name>Corentin (Nado) Pazdera</name>
-	</maintainer>
-	<use>
-		<flag name'nls'>Add Native Language Support</flag>
-		<flag name='adwaita'>Fixes for Adwaita theme users</flag>
-	</use>
+<maintainer>
+	<email>elementary@vullersmail.nl</email>
+</maintainer>
+<use>
+	<flag name="adwaita">Fixes for Adwaita theme users</flag>
+</use>
 </pkgmetadata>

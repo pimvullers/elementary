@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<maintainer>
-		<email>nado@troglodyte.be</email>
-		<name>Corentin (Nado) Pazdera</name>
-	</maintainer>
-	<use>
-		<flag name'nls'>Add Native Language Support</flag>
-	</use>
+<maintainer>
+	<email>elementary@vullersmail.nl</email>
+</maintainer>
 </pkgmetadata>
