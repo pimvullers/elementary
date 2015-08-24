@@ -8,7 +8,7 @@ inherit gnome2-utils
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"
-SRC_URI="http://launchpad.net/elementaryicons/3.x/${PV}/+download/${P}.tgz"
+SRC_URI="http://launchpad.net/elementaryicons/3.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"

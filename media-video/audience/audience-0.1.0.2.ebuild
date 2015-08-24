@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="A simple, modern media player"
 HOMEPAGE="https://launchpad.net/audience"
-SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"

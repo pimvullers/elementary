@@ -3,18 +3,18 @@
 # $Id$
 
 EAPI=5
-
+GCONF_DEBUG="no"
 VALA_MIN_API_VERSION=0.22
 
-inherit eutils fdo-mime gnome2-utils vala cmake-utils git-2
+# Keep cmake-utils at the end
+inherit eutils fdo-mime gnome2 vala cmake-utils
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="https://wiki.gnome.org/Apps/Geary"
-EGIT_REPO_URI="git://git.gnome.org/geary"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 DEPEND="
@@ -28,16 +28,19 @@ DEPEND="
 	media-libs/libcanberra
 	>=net-libs/webkit-gtk-1.10.0:3[introspection]
 	>=x11-libs/gtk+-3.10.0:3[introspection]
-	x11-libs/libnotify"
+	x11-libs/libnotify
+"
 RDEPEND="${DEPEND}
 	gnome-base/gsettings-desktop-schemas
-	nls? ( virtual/libintl )"
+	nls? ( virtual/libintl )
+"
 DEPEND="${DEPEND}
 	app-text/gnome-doc-utils
 	dev-util/desktop-file-utils
 	nls? ( sys-devel/gettext )
 	$(vala_depend)
-	virtual/pkgconfig"
+	virtual/pkgconfig
+"
 
 DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
 
@@ -68,6 +71,7 @@ src_prepare() {
 	fi
 
 	cmake-utils_src_prepare
+	gnome2_src_prepare
 	vala_src_prepare
 }
 
@@ -82,21 +86,4 @@ src_configure() {
 	)
 
 	cmake-utils_src_configure
-}
-
-pkg_preinst() {
-	gnome2_icon_savelist
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
-	gnome2_schemas_update
 }
