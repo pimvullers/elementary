@@ -4,6 +4,7 @@ dev-db/sqlheavy **
 dev-libs/contractor **
 mail-client/geary **
 media-sound/noise **
+media-video/audience **
 pantheon-base/cerbere **
 pantheon-base/pantheon-files **
 pantheon-base/pantheon-greeter **
