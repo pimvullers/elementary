@@ -52,7 +52,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${PN}-0.6.0-desktopfile.patch
 
 	# Elementary changes
-	epatch "${FILESDIR}"/${PN}-0.10.0-elementary.patch
+	epatch "${FILESDIR}"/${PN}-9999-elementary.patch
 
 	local i
 	if use nls ; then
