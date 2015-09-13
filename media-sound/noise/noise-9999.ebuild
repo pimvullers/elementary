@@ -22,6 +22,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libpeas[gtk]
+	gnome-extra/libgda
 	media-libs/gstreamer:1.0
 	media-libs/gst-plugins-base:1.0
 	media-libs/taglib

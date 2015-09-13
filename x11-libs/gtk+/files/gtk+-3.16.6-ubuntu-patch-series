@@ -15,5 +15,5 @@ uimanager-guard-against-nested-node-updates.patch
 x-canonical-accel.patch
 message-dialog-restore-traditional-look-on-unity.patch
 0001-gtk-reftest-Force-icon-theme-to-Adwaita.patch
-0001-Stable-mir-patches-from-git-master.patch
-0002-Unstable-mir-patches-from-git-wip-mir-unstable.patch
+restore_filechooser_typeaheadfind
+0001-backport-mir-patches-from-upstream-master.patch
