@@ -49,7 +49,7 @@ src_install() {
 	doins xsessions/*
 
 	insinto /usr/share/wayland-sessions
-	doins wasyland-sessions/*
+	doins wayland-sessions/*
 
 	insinto /etc/xdg/autostart
 	doins autostart/*
