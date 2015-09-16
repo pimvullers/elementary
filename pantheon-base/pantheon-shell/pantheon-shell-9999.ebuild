@@ -43,10 +43,13 @@ src_prepare() {
 
 src_install() {
 	insinto /usr/share/gnome-session/sessions
-	doins debian/pantheon.session
+	doins gnome-session/*
 
 	insinto /usr/share/xsessions
-	doins debian/pantheon.desktop
+	doins xsessions/*
+
+	insinto /usr/share/wayland-sessions
+	doins wasyland-sessions/*
 
 	insinto /etc/xdg/autostart
 	doins autostart/*

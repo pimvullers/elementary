@@ -37,6 +37,7 @@ rh6sysmodmap=/etc/X11/xinit/Xmodmap
 if [ -x "$HOME/.pantheonrc" ]; then
 	command="$HOME/.pantheonrc"
 else
+	# as fallback in case the config is screwed
 	command=`which pantheon-session`
 fi
 
