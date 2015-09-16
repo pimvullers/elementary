@@ -54,9 +54,6 @@ src_install() {
 	insinto /etc/xdg/autostart
 	doins autostart/*
 
-	insinto /usr/share/gconf
-	doins gconf/*
-
 	insinto /usr/share/pantheon
 	doins -r applications
 
