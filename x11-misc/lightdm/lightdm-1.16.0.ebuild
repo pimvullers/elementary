@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=5
-inherit autotools eutils pam readme.gentoo systemd versionator
+inherit autotools eutils pam readme.gentoo systemd vala versionator
 
 TRUNK_VERSION="$(get_version_component_range 1-2)"
 DESCRIPTION="A lightweight display manager"
@@ -14,7 +14,7 @@ SRC_URI="https://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.x
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde qt4 pantheon +gnome"
+IUSE="+gtk +introspection kde qt4 qt5 pantheon +gnome"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
@@ -29,10 +29,16 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 		dev-qt/qtcore:4
 		dev-qt/qtdbus:4
 		dev-qt/qtgui:4
+		)
+	qt5? (
+		dev-qt/qtcore:5
+		dev-qt/qtdbus:5
+		dev-qt/qtgui:5
 		)"
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/pambase-20101024-r2"
 DEPEND="${COMMON_DEPEND}
+	$(vala_depend)
 	dev-util/gtk-doc-am
 	dev-util/intltool
 	gnome? ( gnome-base/gnome-common )
@@ -56,6 +62,8 @@ src_prepare() {
 
 	epatch_user
 
+	vala_src_prepare
+
 	# Remove bogus Makefile statement. This needs to go upstream
 	sed -i /"@YELP_HELP_RULES@"/d help/Makefile.am || die
 	if has_version dev-libs/gobject-introspection; then
@@ -68,8 +76,8 @@ src_prepare() {
 src_configure() {
 	# Set default values if global vars unset
 	local _greeter _session _user
-	_greeter=${LIGHTDM_GREETER:=lightdm-gtk-greeter}
-	_session=${LIGHTDM_SESSION:=gnome}
+	_greeter=${LIGHTDM_GREETER:=pantheon-greeter}
+	_session=${LIGHTDM_SESSION:=pantheon}
 	_user=${LIGHTDM_USER:=root}
 	# Let user know how lightdm is configured
 	einfo "Gentoo configuration"
@@ -83,9 +91,10 @@ src_configure() {
 		--localstatedir=/var \
 		--disable-static \
 		--disable-tests \
+		--enable-vala \
 		$(use_enable introspection) \
-		$(use_enable qt4 liblightdm-qt) \
-		--disable-liblightdm-qt5 \
+		$(use_enable qt4 liblightdm-qt4) \
+		$(use_enable qt5 liblightdm-qt5) \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \
