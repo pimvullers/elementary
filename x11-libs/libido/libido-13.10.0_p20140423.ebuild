@@ -28,8 +28,6 @@ S="${WORKDIR}/ido-13.10.0+14.04.20140423"
 AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
-	sed -i "s/-Werror//" configure.ac src/Makefile.am
-
 	vala_src_prepare
 	autotools-utils_src_prepare
 }
