@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -8,11 +8,11 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="The Date and Time Indicator - A very, very simple clock"
 HOMEPAGE="https://launchpad.net/indicator-datetime"
-SRC_URI="http://launchpad.net/ubuntu/+archive/primary/+files/${PN}_13.10.0%2B14.10.20141009.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-datetime_13.10.0%2B14.04.20140415.3.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
 RDEPEND="
@@ -26,7 +26,7 @@ RDEPEND="
 	>=x11-libs/libnotify-0.7.6"
 DEPEND="${RDEPEND}"
 
-S="${WORKDIR}/indicator-datetime-13.10.0+14.10.20141009"
+S="${WORKDIR}/indicator-datetime-13.10.0+14.04.20140415.3"
 
 src_prepare() {
 	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"

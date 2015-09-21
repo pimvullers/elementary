@@ -12,7 +12,7 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/ido_13.10.0%2B14.0
 
 LICENSE="LGPL-3"
 SLOT="3"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="doc static-libs"
 
 RDEPEND="

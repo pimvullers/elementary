@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -14,7 +14,7 @@ SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="bluetooth power sound nls"
 
 RDEPEND="
@@ -55,7 +55,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DVALA_EXECUTABLE="${VALAC}"
+		-DVALA_EXECUTABLE=${VALAC}
 	)
 
 	cmake-utils_src_configure
@@ -74,4 +74,3 @@ pkg_postrm() {
 	fdo-mime_desktop_database_update
 	gnome2_schemas_update
 }
-

@@ -1,20 +1,20 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
 VALA_MIN_API_VERSION=0.24
 
-inherit versionator gnome2-utils vala multilib cmake-utils
+inherit gnome2-utils vala multilib cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
-SRC_URI="https://launchpad.net/granite/0.3/0.3.1/+download/granite-0.3.1.tar.xz"
+SRC_URI="https://launchpad.net/${PN}/0.3/${PV}/+download/${P}.tar.xz"
 
 LICENSE="LGPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="demo nls"
 
 RDEPEND="
