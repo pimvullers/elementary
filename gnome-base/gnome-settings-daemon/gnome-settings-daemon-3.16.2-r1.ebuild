@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-settings-daemon/gnome-settings-daemon-3.16.2-r1.ebuild,v 1.1 2015/06/09 14:21:45 eva Exp $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -12,7 +12,7 @@ inherit autotools eutils gnome2 python-r1 systemd udev virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.14.2-3ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.16.2-3ubuntu1.debian.tar.xz )"
 
 LICENSE="GPL-2+"
 SLOT="0"

@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-desktop/gnome-desktop-3.16.2.ebuild,v 1.1 2015/06/09 15:41:38 eva Exp $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -15,7 +15,7 @@ SRC_URI="${SRC_URI}
 LICENSE="GPL-2+ FDL-1.1+ LGPL-2+"
 SLOT="3/10" # subslot = libgnome-desktop-3 soname version
 IUSE="+introspection ubuntu"
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc ~x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~ppc ~ppc64 ~sh ~sparc x86 ~x86-fbsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~x86-solaris"
 
 # cairo[X] needed for gnome-bg
 COMMON_DEPEND="
