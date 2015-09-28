@@ -21,6 +21,7 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
 	gnome? ( sys-apps/accountsservice )
 	pantheon? ( sys-apps/accountsservice )
+	sys-process/audit
 	virtual/pam
 	x11-libs/libX11
 	>=x11-libs/libxklavier-5

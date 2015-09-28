@@ -25,7 +25,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/libical
 	gnome-base/gconf:2
-	<gnome-extra/evolution-data-server-3.16
+	gnome-extra/evolution-data-server
 	media-libs/clutter
 	media-libs/libchamplain
 	net-libs/libsoup:2.4
@@ -44,6 +44,8 @@ pkg_setup() {
 
 src_prepare() {
 	epatch_user
+
+	epatch "${FILESDIR}/maya-0.3.1.1-eds-3.16.patch"
 
 	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
 

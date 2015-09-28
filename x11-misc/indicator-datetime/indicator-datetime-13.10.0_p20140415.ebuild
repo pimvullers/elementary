@@ -17,11 +17,9 @@ IUSE="nls"
 
 RDEPEND="
 	>=dev-libs/glib-2.36:2
-	>=dev-libs/libdbusmenu-0.5.90[gtk3]
 	dev-libs/libical
 	dev-libs/properties-cpp
-	<gnome-extra/evolution-data-server-3.16
-	media-libs/gstreamer:1.0
+	gnome-extra/evolution-data-server
 	media-libs/libcanberra
 	>=x11-libs/libnotify-0.7.6"
 DEPEND="${RDEPEND}"
@@ -29,7 +27,10 @@ DEPEND="${RDEPEND}"
 S="${WORKDIR}/indicator-datetime-13.10.0+14.04.20140415.3"
 
 src_prepare() {
+	epatch_user
+
 	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${P}-eds-3.16.patch"
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 

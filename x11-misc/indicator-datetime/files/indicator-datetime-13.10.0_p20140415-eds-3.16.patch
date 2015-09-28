@@ -1,0 +1,11 @@
+diff -Naur indicator-datetime-13.10.0+14.04.20140415.3.orig/src/engine-eds.cpp indicator-datetime-13.10.0+14.04.20140415.3/src/engine-eds.cpp
+--- indicator-datetime-13.10.0+14.04.20140415.3.orig/src/engine-eds.cpp	2015-09-28 20:24:10.952034702 +0200
++++ indicator-datetime-13.10.0+14.04.20140415.3/src/engine-eds.cpp	2015-09-28 20:28:47.786741092 +0200
+@@ -238,6 +238,7 @@
+             g_debug("%s connecting a client to source %s", G_STRFUNC, source_uid);
+             e_cal_client_connect(source,
+                                  source_type,
++				 30,
+                                  self->m_cancellable,
+                                  on_client_connected,
+                                  gself);

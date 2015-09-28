@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -17,19 +17,20 @@ IUSE="nls"
 
 RDEPEND="
 	>=dev-libs/glib-2.36:2
-	>=dev-libs/libdbusmenu-0.5.90[gtk3]
 	dev-libs/libical
 	dev-libs/properties-cpp
-	<gnome-extra/evolution-data-server-3.16
+	gnome-extra/evolution-data-server
 	media-libs/gstreamer:1.0
-	media-libs/libcanberra
 	>=x11-libs/libnotify-0.7.6"
 DEPEND="${RDEPEND}"
 
 S="${WORKDIR}/indicator-datetime-13.10.0+14.10.20141009"
 
 src_prepare() {
+	epatch_user
+
 	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${PN}-13.10.0_p20140415-eds-3.16.patch"
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
