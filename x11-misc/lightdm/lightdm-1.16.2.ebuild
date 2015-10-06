@@ -21,6 +21,7 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
 	gnome? ( sys-apps/accountsservice )
 	pantheon? ( sys-apps/accountsservice )
+	sys-process/audit
 	virtual/pam
 	x11-libs/libX11
 	>=x11-libs/libxklavier-5
@@ -62,8 +63,6 @@ src_prepare() {
 
 	epatch_user
 
-	vala_src_prepare
-
 	# Remove bogus Makefile statement. This needs to go upstream
 	sed -i /"@YELP_HELP_RULES@"/d help/Makefile.am || die
 	if has_version dev-libs/gobject-introspection; then
@@ -71,6 +70,8 @@ src_prepare() {
 	else
 		AT_M4DIR=${WORKDIR} eautoreconf
 	fi
+
+	vala_src_prepare
 }
 
 src_configure() {
@@ -93,7 +94,7 @@ src_configure() {
 		--disable-tests \
 		--enable-vala \
 		$(use_enable introspection) \
-		$(use_enable qt4 liblightdm-qt4) \
+		$(use_enable qt4 liblightdm-qt) \
 		$(use_enable qt5 liblightdm-qt5) \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \

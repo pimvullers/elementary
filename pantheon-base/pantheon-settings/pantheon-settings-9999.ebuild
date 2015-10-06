@@ -4,7 +4,7 @@
 
 EAPI=5
 
-inherit gnome2-utils bzr
+inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Default settings for the Pantheon Desktop Environment"
 HOMEPAGE="https://code.launchpad.net/~elementary-os/elementaryos/default-settings-trusty"
@@ -18,7 +18,7 @@ IUSE=""
 DEPEND=""
 RDEPEND="${DEPEND}"
 
-src_compile() {
+src_prepare() {
 	mv debian/elementary-default-settings.gsettings-override \
 		${P}.gschema.override
 
@@ -27,14 +27,41 @@ src_compile() {
 
 	# Rename DMZ-Black to Vanilla-DMZ-AA as that's the name in Gentoo
 	sed -i -e 's/DMZ-Black/Vanilla-DMZ-AA/' ${P}.gschema.override
+
+	cmake-utils_src_prepare
+}
+
+src_configure() {
+	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
+	)
+
+	cmake-utils_src_configure
 }
 
 src_install() {
+	cmake-utils_src_install
+
+	exeinto /usr/bin/
+	doexe dpms/elementary-dpms-helper
+
+	insinto /usr/share/applications/
+	doins policykit.desktop
+
 	insinto /usr/share/glib-2.0/schemas/
 	doins ${P}.gschema.override
 
+	insinto /etc/xdg/autostart/
+	doins dpms/elementary-dpms-helper.desktop 
+	
+	insinto /etc/xdg/xdg-elementary/autostart/
+	doins light-locker.desktop
+
 	insinto /etc/xdg/midori/
-	doins -r midori/config
+	doins midori/config
+
+	insinto /etc/profile.d/
+	doins profile.d/*.sh
 
 	insinto /etc/skel/.config/plank/
 	doins -r plank/dock1
