@@ -24,6 +24,7 @@ RDEPEND="
 	>=x11-libs/granite-0.3
 	dev-libs/libgee:0.8
 	gnome-extra/zeitgeist
+	pantheon-base/plank
 	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
 	x11-libs/pango
