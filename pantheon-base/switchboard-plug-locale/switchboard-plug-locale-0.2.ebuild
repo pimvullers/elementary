@@ -6,11 +6,11 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils
+inherit vala gnome2-utils cmake-utils
 
-DESCRIPTION="Control system power consumption using Switchboard."
-HOMEPAGE="https://launchpad.net/switchboard-plug-power"
-SRC_URI="https://launchpad.net/${PN}/isis/${PV}/+download/${P}.tgz"
+DESCRIPTION="Adjust Locale settings using Switchboard."
+HOMEPAGE="https://launchpad.net/switchboard-plug-locale"
+SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,8 +18,12 @@ KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
+	app-i18n/ibus[vala]
 	dev-libs/glib:2
+	gnome-base/gnome-desktop:3
 	>=pantheon-base/switchboard-2
+	sys-auth/polkit
+	sys-apps/accountsservice
 	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
@@ -36,7 +40,20 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
+		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
 }
