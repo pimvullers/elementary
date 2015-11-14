@@ -12,7 +12,7 @@ inherit autotools eutils gnome2 python-r1 systemd udev virtualx
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.16.2-3ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.16.3-0ubuntu1.debian.tar.xz )"
 
 LICENSE="GPL-2+"
 SLOT="0"
