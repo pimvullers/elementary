@@ -2,8 +2,4 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<herd>gnome</herd>
-	<use>
-		<flag name="license-docs">Install help files documenting GNOME's
-			licenses</flag>
-	</use>
 </pkgmetadata>
