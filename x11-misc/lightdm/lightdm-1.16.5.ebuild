@@ -14,14 +14,14 @@ SRC_URI="https://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.x
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde qt4 qt5 pantheon +gnome"
+IUSE="audit +gtk +introspection kde qt4 qt5 pantheon +gnome"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
-COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
+COMMON_DEPEND="audit? ( sys-process/audit )
+	>=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
 	gnome? ( sys-apps/accountsservice )
-	pantheon? ( sys-apps/accountsservice )
-	sys-process/audit
+	pantheon? ( sys-apps/accountsservice )	
 	virtual/pam
 	x11-libs/libX11
 	>=x11-libs/libxklavier-5
@@ -39,7 +39,6 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/pambase-20101024-r2"
 DEPEND="${COMMON_DEPEND}
-	$(vala_depend)
 	dev-util/gtk-doc-am
 	dev-util/intltool
 	gnome? ( gnome-base/gnome-common )
@@ -93,6 +92,7 @@ src_configure() {
 		--disable-static \
 		--disable-tests \
 		--enable-vala \
+		$(use_enable audit libaudit) \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
 		$(use_enable qt5 liblightdm-qt5) \
