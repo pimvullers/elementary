@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/gnome-base/gnome-session/gnome-session-3.14.0-r1.ebuild,v 1.3 2015/03/15 13:23:03 pacho Exp $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.14.0-2ubuntu4.debian.tar.gz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.14.0-2ubuntu5.debian.tar.xz )"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"

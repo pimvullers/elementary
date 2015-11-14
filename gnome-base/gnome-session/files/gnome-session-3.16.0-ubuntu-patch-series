@@ -1,6 +1,7 @@
 revert_remove_gnome_session_properties.patch
 13_display_session_properties.patch
 22_support_autostart_delay.patch
+50_ubuntu_sessions.patch
 51_remove_session_saving_from_gui.patch
 53_add_sessionmigration.patch
 95_dbus_request_shutdown.patch

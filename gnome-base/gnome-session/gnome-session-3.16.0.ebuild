@@ -10,7 +10,7 @@ inherit gnome2
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.16.0-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.16.0-1ubuntu2.debian.tar.xz )"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
