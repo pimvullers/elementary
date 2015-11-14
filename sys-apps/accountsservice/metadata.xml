@@ -3,10 +3,7 @@
 <pkgmetadata>
 	<herd>gnome</herd>
 	<use>
-		<flag name="introspection">Use <pkg>dev-libs/gobject-introspection</pkg>
-			for introspection</flag>
 		<flag name="systemd">Use <pkg>sys-apps/systemd</pkg> instead of
 			<pkg>sys-auth/consolekit</pkg> for session tracking</flag>
-		<flag name="vala">Enable bindings for <pkg>dev-lang/vala</pkg></flag>
 	</use>
 </pkgmetadata>

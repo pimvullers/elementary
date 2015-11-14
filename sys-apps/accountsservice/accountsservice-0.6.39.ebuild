@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/accountsservice/accountsservice-0.6.39.ebuild,v 1.6 2015/01/01 21:12:58 maekke Exp $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="no"
@@ -13,11 +13,11 @@ SRC_URI="http://www.freedesktop.org/software/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-3+"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm ~ia64 ppc ppc64 ~sparc x86"
+KEYWORDS="~alpha amd64 arm ~arm64 ~ia64 ppc ppc64 ~sparc x86"
 
 IUSE="doc +introspection selinux systemd +ubuntu"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.37-1ubuntu10.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.37-1ubuntu11.debian.tar.xz )"
 
 CDEPEND="
 	>=dev-libs/glib-2.37.3:2
@@ -52,9 +52,7 @@ src_prepare() {
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
 
-		epatch "${FILESDIR}/${PN}-0.6.39-0007-add-lightdm-support.patch"
-		epatch "${FILESDIR}/${PN}-0.6.37-0014-pam-pin.patch"
-		epatch "${WORKDIR}/debian/patches/0015-pam-pin-ubuntu.patch"
+		epatch "${FILESDIR}/${P}-0007-add-lightdm-support.patch"
 	fi
 
 	eautoreconf
