@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -21,7 +21,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
 	dev-libs/libgee:0.8
-	dev-libs/libpeas
+	dev-libs/libpeas[gtk]
 	gnome-base/gconf:2
 	x11-libs/gtk+:3
 	x11-libs/gtksourceview:3.0
@@ -31,7 +31,7 @@ RDEPEND="
 	pastebin? ( net-libs/libsoup )
 	spell? ( app-text/gtkspell:3 )
 	webkit? ( net-libs/webkit-gtk:3 )
-	terminal? ( x11-libs/vte:2.90 )
+	terminal? ( || ( x11-libs/vte:2.91 x11-libs/vte:2.90 ) )
 	zeitgeist? ( gnome-extra/zeitgeist )"
 DEPEND="${RDEPEND}
 	virtual/pkgconfig
@@ -49,7 +49,7 @@ src_prepare() {
 
 	# Plugins
 	use files || \
-      sed -i -e 's/add_subdirectory (filemanager)//' plugins/CMakeLists.txt
+	  sed -i -e 's/add_subdirectory (filemanager)//' plugins/CMakeLists.txt
 	use pastebin || \
 	  sed -i -e 's/add_subdirectory (pastebin)//' plugins/CMakeLists.txt
 	use spell || \
