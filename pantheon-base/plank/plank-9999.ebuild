@@ -1,10 +1,10 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.24
 VALA_USE_DEPEND=vapigen
 
 inherit fdo-mime gnome2-utils vala autotools-utils bzr
@@ -16,12 +16,13 @@ EBZR_REPO_URI="lp:plank"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="debug nls static-libs"
+IUSE="+dbus debug nls static-libs"
 
 CDEPEND="
 	dev-libs/glib:2
+	dbus? ( dev-libs/libdbusmenu:3 )
 	dev-libs/libgee:0.8
-	dev-libs/libunique:1
+	x11-libs/cairo
 	x11-libs/libX11
 	x11-libs/libwnck:3
 	x11-libs/bamf
@@ -51,8 +52,7 @@ src_configure() {
 	local myeconfargs=(
 		$(use_enable debug)
 		$(use_enable nls)
-		--enable-gee-0.8
-		--disable-apport
+		$(use_enable dbus dbusmenu)
 	)
 	autotools-utils_src_configure
 }

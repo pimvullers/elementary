@@ -1,6 +1,6 @@
 # Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/x11-libs/gtk+/gtk+-3.14.13.ebuild,v 1.4 2015/06/21 13:59:31 zlogene Exp $
+# $Id$
 
 EAPI="5"
 GCONF_DEBUG="yes"
@@ -19,7 +19,7 @@ REQUIRED_USE="
 	xinerama? ( X )
 "
 
-KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="alpha amd64 arm hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
 	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.14.13-0ubuntu1.debian.tar.xz )"
 
@@ -82,7 +82,7 @@ DEPEND="${COMMON_DEPEND}
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
 # gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
 # >=xorg-server-1.11.4 needed for
-#  http://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
+#  https://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
 RDEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-update-icon-cache-3
 	!<gnome-base/gail-1000

@@ -20,7 +20,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee
+	dev-libs/libgee:0.8
 	dev-db/sqlheavy:0.1
 	x11-libs/granite
 	x11-libs/gtk+:3"

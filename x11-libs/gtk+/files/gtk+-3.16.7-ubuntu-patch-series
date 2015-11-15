@@ -17,3 +17,7 @@ message-dialog-restore-traditional-look-on-unity.patch
 0001-gtk-reftest-Force-icon-theme-to-Adwaita.patch
 restore_filechooser_typeaheadfind
 0001-backport-mir-patches-from-upstream-master.patch
+0001-GtkButtonBox-remove-spacing-when-buttons-are-linked.patch
+0001-calendar-always-emit-day-selected-once.patch
+git_icon_fallback.patch
+git_nameless_devices.patch
