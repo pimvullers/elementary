@@ -23,6 +23,8 @@ pantheon-base/switchboard-plug-power **
 pantheon-base/switchboard-plug-security-privacy **
 pantheon-base/wingpanel **
 pantheon-extra/elementary-tweaks **
+pantheon-extra/pantheon-calculator **
+pantheon-extra/pantheon-print **
 www-client/midori **
 x11-libs/granite **
 x11-misc/light-locker **

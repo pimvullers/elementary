@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -9,7 +9,7 @@ VALA_MIN_API_VERSION=0.20
 inherit vala cmake-utils bzr
 
 DESCRIPTION="This plug can be used to change several keyboard settings"
-HOMEPAGE="https://launchpad.net/switchboard-plug-default-applications"
+HOMEPAGE="https://launchpad.net/switchboard-plug-keyboard"
 EBZR_REPO_URI="lp:switchboard-plug-keyboard"
 
 LICENSE="GPL-3"

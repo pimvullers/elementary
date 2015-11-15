@@ -1,29 +1,30 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils
 
-DESCRIPTION="Switchboard plug to show system information."
-HOMEPAGE="http://launchpad.net/switchboard-plug-about"
-SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
+DESCRIPTION="Configure various aspects of the security of the system."
+HOMEPAGE="https://launchpad.net/switchboard-plug-security-privacy"
+SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS=""
 IUSE="nls"
 
-CDEPEND="
-	pantheon-base/libpantheon
+RDEPEND="
+	dev-libs/glib:2
+	gnome-extra/zeitgeist
+	>=pantheon-base/switchboard-2
+	sys-auth/polkit
 	x11-libs/granite
 	x11-libs/gtk+:3"
-RDEPEND="${CDEPEND}
-	pantheon-base/switchboard"
-DEPEND="${CDEPEND}
+DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"

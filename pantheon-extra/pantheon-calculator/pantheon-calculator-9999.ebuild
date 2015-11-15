@@ -4,13 +4,11 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.22
+inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
-inherit vala gnome2-utils cmake-utils bzr
-
-DESCRIPTION="Adjust Locale settings using Switchboard."
-HOMEPAGE="https://launchpad.net/switchboard-plug-locale"
-EBZR_REPO_URI="lp:switchboard-plug-locale"
+DESCRIPTION="A tiny, simple calculator written in GTK+ and Vala"
+HOMEPAGE="https://launchpad.net/pantheon-calculator"
+EBZR_REPO_URI="lp:${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,21 +16,16 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
-	app-i18n/ibus[vala]
-	dev-libs/glib:2
-	gnome-base/gnome-desktop:3
-	>=pantheon-base/switchboard-2
-	sys-auth/polkit
-	sys-apps/accountsservice
 	x11-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
-	$(vala_depend)
-	virtual/pkgconfig
-	nls? ( sys-devel/gettext )"
+	$(vala_depend)"
 
 src_prepare() {
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+	epatch_user
+
+	# Translations
+	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -43,17 +36,25 @@ src_configure() {
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
+
 	cmake-utils_src_configure
 }
 
 pkg_preinst() {
+	gnome2_icon_savelist
 	gnome2_schemas_savelist
 }
 
 pkg_postinst() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
 
 pkg_postrm() {
+	fdo-mime_desktop_database_update
+	fdo-mime_mime_database_update
+	gnome2_icon_cache_update
 	gnome2_schemas_update
 }
