@@ -54,7 +54,7 @@ src_prepare() {
 	vala_src_prepare
 	cmake-utils_src_prepare
 
-	sed -i -e '/install/s:COPYING:HACKING TODO TRANSLATE:' CMakeLists.txt || die
+	sed -i -e '/^install/s:COPYING:HACKING TODO TRANSLATE:' CMakeLists.txt || die
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
 }
 
