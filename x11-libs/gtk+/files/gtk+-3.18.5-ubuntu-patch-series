@@ -2,7 +2,7 @@
 016_no_offscreen_widgets_grabbing.patch
 017_no_offscreen_device_grabbing.patch
 018_gdkenumtypes.c_location.patch
-32_mips_treeview_row_separator_height.patch
+032_mips_treeview_row_separator_height.patch
 060_ignore-random-icons.patch
 071_fix-installation-of-HTML-images.patch
 073_treeview_almost_fixed.patch
