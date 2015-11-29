@@ -10,7 +10,8 @@ inherit vala cmake-utils
 
 DESCRIPTION="Configure various aspects of the security of the system."
 HOMEPAGE="https://launchpad.net/switchboard-plug-security-privacy"
-SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+#SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/freya/0.2.0.2/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
