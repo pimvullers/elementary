@@ -23,6 +23,12 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/libindicator-12.10.2+14.04.20141007"
 AUTOTOOLS_AUTORECONF=1
 
+src_prepare() {
+	# https://bugs.launchpad.net/libindicator/+bug/1502925
+	epatch "${FILESDIR}"/${PN}-ldflags-spacing.patch
+	eautoreconf
+}
+
 multilib_src_configure() {
 	local myeconfargs=(
 		--disable-silent-rules
