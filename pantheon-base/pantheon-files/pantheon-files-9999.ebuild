@@ -6,7 +6,7 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.26
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="http://launchpad.net/pantheon-files"
@@ -41,6 +41,14 @@ src_prepare() {
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
+
+	# Replace hard-coded "/usr/lib" in CMakeLists (.so files destination)
+	if [[ $(get_libdir) != lib ]]; then
+		sed -e "s|\\(\\\${CMAKE_INSTALL_PREFIX}\\)/lib|\\1/$(get_libdir)|g" \
+			-i {,lib{core,widgets}/}CMakeLists.txt || die
+		sed -e "s|DESTINATION lib/|DESTINATION $(get_libdir)/|g" \
+			-i plugins/{contractor,network-places,pantheon-files-{trash,ctags}}/CMakeLists.txt || die
+	fi
 
 	cmake-utils_src_prepare
 	vala_src_prepare
