@@ -42,6 +42,7 @@ PDEPEND="
 DOCS=( COPYING )
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-CMP0037.patch
 	epatch "${FILESDIR}"/${P}-gala-plugin-dir.patch
 	epatch_user
 
