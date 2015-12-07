@@ -39,12 +39,10 @@ PDEPEND="
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 # indicator-me, indicator-application, indicator-messages, indicator-keyboard
 
-DOCS=( AUTHORS COPYING COPYRIGHT )
+DOCS=( COPYING )
 
 src_prepare() {
 	epatch_user
-
-	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
