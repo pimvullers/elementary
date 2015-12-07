@@ -46,7 +46,7 @@ src_prepare() {
 
 	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
 
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt || die
 
 	cmake-utils_src_prepare
 	vala_src_prepare

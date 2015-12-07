@@ -45,7 +45,7 @@ src_prepare() {
 	epatch "${FILESDIR}"/${P}-gala-plugin-dir.patch
 	epatch_user
 
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt || die
 
 	# respect appropriate libdir for gala plugins
 	[[ $(get_libdir) == lib ]] || \
