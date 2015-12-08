@@ -1,0 +1,13 @@
+diff -urpN wingpanel-9999.orig/src/CMakeLists.txt wingpanel-9999/src/CMakeLists.txt
+--- wingpanel-9999.orig/src/CMakeLists.txt	2015-12-07 05:25:46.417987000 -0800
++++ wingpanel-9999/src/CMakeLists.txt	2015-12-07 05:26:47.848054642 -0800
+@@ -21,7 +21,8 @@ vala_precompile (CLIENT_VALA_C ${CMAKE_P
+   ${GLOBAL_VALAC_OPTIONS}
+ )
+ 
+-set (EXEC_NAME ../${CMAKE_PROJECT_NAME})
++set (RUNTIME_OUTPUT_DIRECTORY "../")
++set (EXEC_NAME ${CMAKE_PROJECT_NAME})
+ 
+ add_definitions (${DEPS_CFLAGS})
+ link_directories (${DEPS_LIBRARY_DIRS})

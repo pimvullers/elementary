@@ -6,7 +6,7 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.28
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
@@ -39,14 +39,19 @@ PDEPEND="
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 # indicator-me, indicator-application, indicator-messages, indicator-keyboard
 
-DOCS=( AUTHORS COPYING COPYRIGHT )
+DOCS=( COPYING )
 
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-CMP0037.patch
+	epatch "${FILESDIR}"/${P}-gala-plugin-dir.patch
 	epatch_user
 
-	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt || die
 
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
+	# respect appropriate libdir for gala plugins
+	[[ $(get_libdir) == lib ]] || \
+		sed -e "s|/lib|/$(get_libdir)|g" \
+			-i wingpanel-interface/CMakeLists.txt || die
 
 	cmake-utils_src_prepare
 	vala_src_prepare
