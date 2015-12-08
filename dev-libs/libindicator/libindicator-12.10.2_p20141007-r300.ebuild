@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=5
-inherit autotools-utils autotools-multilib
+inherit autotools-utils multilib autotools-multilib
 
 DESCRIPTION="A set of symbols and convience functions that all indicators would like to use"
 HOMEPAGE="https://launchpad.net/libindicator"
@@ -25,7 +25,9 @@ AUTOTOOLS_AUTORECONF=1
 
 src_prepare() {
 	# https://bugs.launchpad.net/libindicator/+bug/1502925
-	epatch "${FILESDIR}"/${PN}-ldflags-spacing.patch
+	epatch "${FILESDIR}"/${PN}-12.10.2-ldflags-spacing.patch
+	# respect gentoo libdir conventions for dependents' .so placement
+	epatch "${FILESDIR}"/${PN}-12.10.2-indicatordir-in-libdir.patch
 	eautoreconf
 }
 
