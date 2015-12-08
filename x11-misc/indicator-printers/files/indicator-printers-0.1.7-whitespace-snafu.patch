@@ -1,0 +1,11 @@
+diff -urpN indicator-printers-0.1.7daily13.03.01.orig/configure.ac indicator-printers-0.1.7daily13.03.01/configure.ac
+--- indicator-printers-0.1.7daily13.03.01.orig/configure.ac	2013-02-28 18:01:13.000000000 -0800
++++ indicator-printers-0.1.7daily13.03.01/configure.ac	2015-12-06 07:51:12.030039798 -0800
+@@ -38,7 +38,9 @@ if test "x$CUPS_CONFIG" = "xno"; then
+     AC_MSG_ERROR([could not find cups-config])
+ fi
+ AC_CHECK_HEADER(cups/cups.h,,AC_MSG_ERROR([could not find cups.h]))
++SERVICE_CFLAGS+=" "
+ SERVICE_CFLAGS+=`$CUPS_CONFIG --cflags`
++SERVICE_LIBS+=" "
+ SERVICE_LIBS+=`$CUPS_CONFIG --libs`

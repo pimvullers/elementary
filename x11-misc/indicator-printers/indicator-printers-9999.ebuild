@@ -28,6 +28,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-0.1.7-whitespace-snafu.patch
 	autotools-utils_src_prepare
 }
 
