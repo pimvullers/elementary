@@ -1,6 +1,6 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -10,11 +10,11 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://launchpad.net/pantheon-terminal"
-SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
 RDEPEND="
@@ -22,7 +22,7 @@ RDEPEND="
 	>=x11-libs/granite-0.3
 	x11-libs/libnotify
 	x11-libs/gtk+:3
-	x11-libs/vte:2.90"
+	x11-libs/vte:2.91"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	nls? ( sys-devel/gettext )
