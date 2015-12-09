@@ -1,14 +1,14 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
-inherit gnome2-utils bzr
+inherit gnome2-utils git-2
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"
-EBZR_REPO_URI="lp:elementaryicons"
+EGIT_REPO_URI="https://github.com/elementary/icons.git"
 
 LICENSE="GPL-3"
 SLOT="0"
