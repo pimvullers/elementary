@@ -3,7 +3,7 @@
 # $Id$
 
 EAPI=5
-inherit autotools-utils multilib autotools-multilib
+inherit autotools-utils autotools-multilib
 
 DESCRIPTION="A set of symbols and convience functions that all indicators would like to use"
 HOMEPAGE="https://launchpad.net/libindicator"
