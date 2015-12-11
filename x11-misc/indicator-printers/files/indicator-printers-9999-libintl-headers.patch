@@ -1,0 +1,10 @@
+diff -urpN indicator-printers-9999.orig/src/indicator-printers-service.c indicator-printers-9999/src/indicator-printers-service.c
+--- indicator-printers-9999.orig/src/indicator-printers-service.c	2015-12-08 05:40:55.167378000 -0800
++++ indicator-printers-9999/src/indicator-printers-service.c	2015-12-08 05:42:19.294243210 -0800
+@@ -20,6 +20,7 @@
+ #include <libdbusmenu-glib/dbusmenu-glib.h>
+ #include <gtk/gtk.h>
+ #include <cups/cups.h>
++#include <libintl.h>
+ #include "dbus-names.h"
+ #include "config.h"

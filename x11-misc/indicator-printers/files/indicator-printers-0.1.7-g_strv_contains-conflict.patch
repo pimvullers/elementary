@@ -1,0 +1,40 @@
+http://bazaar.launchpad.net/~indicator-applet-developers/indicator-printers/trunk.15.10/revision/73
+
+avoid definition mismatch error
+
+diff -urpN indicator-printers-0.1.7daily13.03.01.orig/src/indicator-printer-state-notifier.c indicator-printers-0.1.7daily13.03.01/src/indicator-printer-state-notifier.c
+--- indicator-printers-0.1.7daily13.03.01.orig/src/indicator-printer-state-notifier.c	2013-02-28 18:01:13.000000000 -0800
++++ indicator-printers-0.1.7daily13.03.01/src/indicator-printer-state-notifier.c	2015-12-06 07:43:52.455237626 -0800
+@@ -72,24 +72,6 @@ g_hash_table_insert_many (GHashTable *ha
+ }
+
+
+-static gboolean
+-g_strv_contains (gchar **str_array,
+-                 gchar *needle)
+-{
+-    gchar **str;
+-
+-    if (!str_array)
+-        return FALSE;
+-
+-    for (str = str_array; *str; str++) {
+-        if (!strcmp (*str, needle))
+-            return TRUE;
+-    }
+-
+-    return FALSE;
+-}
+-
+-
+ /* returns a list of strings that are in a but not in b; does not copy the
+  * strings */
+ static GList *
+@@ -103,7 +85,7 @@ g_strv_diff (gchar **a,
+         return NULL;
+
+     for (p = a; *p; p++) {
+-        if (!g_strv_contains (b, *p))
++        if (!g_strv_contains ((const gchar * const *) b, *p))
+             result = g_list_prepend (result, *p);
+     }

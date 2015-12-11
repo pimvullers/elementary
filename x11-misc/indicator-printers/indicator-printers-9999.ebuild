@@ -28,6 +28,8 @@ pkg_setup() {
 }
 
 src_prepare() {
+	epatch "${FILESDIR}"/${PN}-0.1.7-whitespace-snafu.patch
+	epatch "${FILESDIR}"/${PN}-9999-libintl-headers.patch
 	autotools-utils_src_prepare
 }
 
