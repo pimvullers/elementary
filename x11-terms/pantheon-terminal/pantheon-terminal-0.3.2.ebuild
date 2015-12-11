@@ -22,7 +22,7 @@ RDEPEND="
 	>=x11-libs/granite-0.3
 	x11-libs/libnotify
 	x11-libs/gtk+:3
-	x11-libs/vte:2.91"
+	x11-libs/vte:2.91[vala]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	nls? ( sys-devel/gettext )
