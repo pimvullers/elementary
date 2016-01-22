@@ -5,7 +5,6 @@
 EAPI=5
 
 VALA_MIN_API_VERSION=0.24
-VALA_MAX_API_VERSION=0.26
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -44,9 +43,7 @@ pkg_setup() {
 src_prepare() {
 	epatch_user
 
-	#epatch "${FILESDIR}/maya-0.3.1.1-eds-3.16.patch"
-
-	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
