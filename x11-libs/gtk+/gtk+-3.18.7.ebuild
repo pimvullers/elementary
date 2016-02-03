@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -21,7 +21,7 @@ REQUIRED_USE="
 
 KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.18.5-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.18.7-1ubuntu1.debian.tar.xz )"
 
 # FIXME: introspection data is built against system installation of gtk+:3
 # NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
@@ -52,7 +52,7 @@ COMMON_DEPEND="
 		x11-libs/libX11[${MULTILIB_USEDEP}]
 		>=x11-libs/libXi-1.3[${MULTILIB_USEDEP}]
 		x11-libs/libXext[${MULTILIB_USEDEP}]
-		>=x11-libs/libXrandr-1.3[${MULTILIB_USEDEP}]
+		>=x11-libs/libXrandr-1.5[${MULTILIB_USEDEP}]
 		x11-libs/libXcursor[${MULTILIB_USEDEP}]
 		x11-libs/libXfixes[${MULTILIB_USEDEP}]
 		x11-libs/libXcomposite[${MULTILIB_USEDEP}]
@@ -183,24 +183,14 @@ multilib_src_configure() {
 }
 
 multilib_src_test() {
-	# FIXME: this should be handled at eclass level
 	"${EROOT}${GLIB_COMPILE_SCHEMAS}" --allow-any-name "${S}/gtk" || die
 
-	unset DBUS_SESSION_BUS_ADDRESS
 	unset DISPLAY #527682
 	GSETTINGS_SCHEMA_DIR="${S}/gtk" Xemake check
 }
 
 multilib_src_install() {
 	gnome2_src_install
-
-	# add -framework Carbon to the .pc files, bug #???
-	if use aqua ; then
-		for i in gtk+-3.0.pc gtk+-quartz-3.0.pc gtk+-unix-print-3.0.pc; do
-			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
-				-i "${ED%/}"/usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
-		done
-	fi
 }
 
 multilib_src_install_all() {
@@ -245,7 +235,7 @@ pkg_postinst() {
 pkg_postrm() {
 	gnome2_pkg_postrm
 
-	if [[ -z ${REPLACED_BY_VERSIONS} ]]; then
+	if [[ -z ${REPLACED_BY_VERSION} ]]; then
 		multilib_pkg_postrm() {
 			rm -f "${EROOT}"usr/$(get_libdir)/gtk-3.0/3.0.0/immodules.cache
 		}

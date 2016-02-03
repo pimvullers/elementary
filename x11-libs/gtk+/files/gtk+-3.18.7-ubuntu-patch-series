@@ -20,4 +20,5 @@ restore_filechooser_typeaheadfind
 git_icon_fallback.patch
 unity_rbga_tooltips.patch
 git-refresh-mir-backend.patch
-0001-gtkwindow-continue-calling-gtk_style_context_set_bac.patch
+0001-gtkwindow-set-transparent-background-color.patch
+ubuntu_fileselector_behaviour.patch

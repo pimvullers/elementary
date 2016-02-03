@@ -27,7 +27,7 @@ for file in "/etc/X11/Xkbmap" "$HOME/.Xkbmap"; do
         setxkbmap `cat "$file"`
         XKB_IN_USE=yes
     fi
-done    
+done
 
 # Load xmodmap if not using XKB
 if [ -z "$XKB_IN_USE" ]; then
@@ -40,6 +40,11 @@ if [ -z "$XKB_IN_USE" ]; then
 fi
 
 unset XKB_IN_USE
+
+# /etc/X11/xinit/xinitrc.d/80-dbus expects $command to be
+# set to the Xsession arguments. So make it happy. See
+# https://bugs.gentoo.org/show_bug.cgi?id=533456
+command="$@"
 
 # Run all system xinitrc shell scripts.
 xinitdir="/etc/X11/xinit/xinitrc.d"
@@ -66,4 +71,4 @@ fi
 
 echo "X session wrapper complete, running session $@"
 
-exec $@
+exec $command
