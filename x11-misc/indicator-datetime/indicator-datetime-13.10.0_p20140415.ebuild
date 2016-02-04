@@ -31,6 +31,7 @@ src_prepare() {
 
 	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
 	epatch "${FILESDIR}/${P}-eds-3.16.patch"
+	epatch "${FILESDIR}/${PN}-13.10.0-elementary.patch"
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 

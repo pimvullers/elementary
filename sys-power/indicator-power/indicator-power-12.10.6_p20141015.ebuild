@@ -8,11 +8,11 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="The Power Indicator"
 HOMEPAGE="http://launchpad.net/indicator-power"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_12.10.6%2B14.10.20141015.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-power_12.10.6+14.10.20141015.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="~amd64 ~arm ~x86"
 IUSE="nls static-libs"
 
 RDEPEND="

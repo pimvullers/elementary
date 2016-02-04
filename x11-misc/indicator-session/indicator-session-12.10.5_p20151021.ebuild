@@ -8,7 +8,7 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="Session indicator"
 HOMEPAGE="https://launchpad.net/indicator-session"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-session_12.10.5%2B14.10.20141009.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-session_12.10.5+14.04.20151021.1.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -21,7 +21,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/indicator-session-12.10.5+14.10.20141009"
+S="${WORKDIR}/indicator-session-12.10.5+14.04.20151021.1"
 DOCS=( COPYING NEWS README )
 
 src_prepare() {
@@ -29,6 +29,7 @@ src_prepare() {
 	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-gsettings-path.patch"
 	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-gsettings-compile.patch"
 	epatch "${FILESDIR}/${PN}-12.10.5_p20131125-drop-upstart.patch"
+	epatch "${FILESDIR}/${PN}-12.10.5-elementary.patch"
 
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt
 

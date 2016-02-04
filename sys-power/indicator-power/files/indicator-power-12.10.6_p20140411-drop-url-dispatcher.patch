@@ -1,0 +1,47 @@
+diff -Naur indicator-power-12.10.6+14.04.20140411/configure.ac indicator-power-patched/configure.ac
+--- indicator-power-12.10.6+14.04.20140411/configure.ac	2014-04-11 16:01:15.000000000 +0200
++++ indicator-power-patched/configure.ac	2016-02-04 15:43:37.990993667 +0100
+@@ -40,8 +40,7 @@
+ PKG_CHECK_MODULES([SERVICE_DEPS],[glib-2.0 >= $GLIB_REQUIRED_VERSION
+                                   gio-2.0 >= $GIO_REQUIRED_VERSION
+                                   gio-unix-2.0 >= $GIO_UNIX_REQUIRED_VERSION
+-                                  gudev-1.0 >= $GUDEV_REQUIRED_VERSION
+-                                  url-dispatcher-1])
++                                  gudev-1.0 >= $GUDEV_REQUIRED_VERSION])
+ 
+ ###########################
+ # GSETTINGS
+diff -Naur indicator-power-12.10.6+14.04.20140411/src/service.c indicator-power-patched/src/service.c
+--- indicator-power-12.10.6+14.04.20140411/src/service.c	2014-04-11 16:01:15.000000000 +0200
++++ indicator-power-patched/src/service.c	2016-02-04 15:45:38.935844805 +0100
+@@ -22,7 +22,6 @@
+ 
+ #include <glib/gi18n.h>
+ #include <gio/gio.h>
+-#include <url-dispatcher.h>
+ 
+ #include "device.h"
+ #include "device-provider.h"
+@@ -775,14 +774,6 @@
+   g_free (cmd);
+ }
+ 
+-static void
+-on_phone_settings_activated (GSimpleAction * a      G_GNUC_UNUSED,
+-                             GVariant      * param  G_GNUC_UNUSED,
+-                             gpointer        gself  G_GNUC_UNUSED)
+-{
+-  url_dispatch_send("settings:///system/battery", NULL, NULL);
+-}
+-
+ /***
+ ****
+ ***/
+@@ -797,7 +788,6 @@
+ 
+   GActionEntry entries[] = {
+     { "activate-settings", on_settings_activated },
+-    { "activate-phone-settings", on_phone_settings_activated },
+     { "activate-statistics", on_statistics_activated, "s" }
+   };
+ 
