@@ -8,7 +8,7 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="The Date and Time Indicator - A very, very simple clock"
 HOMEPAGE="https://launchpad.net/indicator-datetime"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-datetime_13.10.0%2B14.04.20140415.3.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-datetime_13.10.0+15.10.20150909.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -24,14 +24,13 @@ RDEPEND="
 	>=x11-libs/libnotify-0.7.6"
 DEPEND="${RDEPEND}"
 
-S="${WORKDIR}/indicator-datetime-13.10.0+14.04.20140415.3"
+S="${WORKDIR}/indicator-datetime-13.10.0+15.10.20150909"
 
 src_prepare() {
 	epatch_user
 
-	epatch "${FILESDIR}/${P}-drop-url-dispatcher.patch"
-	epatch "${FILESDIR}/${P}-eds-3.16.patch"
-	epatch "${FILESDIR}/${P}-elementary.patch"
+	epatch "${FILESDIR}/${PN}-13.10.0_p20150909-drop-url-dispatcher.patch"
+	#epatch "${FILESDIR}/${PN}-13.10.0-elementary.patch"
 
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 

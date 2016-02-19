@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -10,7 +10,7 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A unified sound menu"
 HOMEPAGE="https://launchpad.net/indicator-sound"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_12.10.2%2B14.10.20141010.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/${PN}_12.10.2%2B14.04.20140401.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -28,13 +28,13 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/indicator-sound-12.10.2+14.10.20141010"
+S="${WORKDIR}/indicator-sound-12.10.2+14.04.20140401"
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-url-dispatcher.patch"
 	epatch "${FILESDIR}/${PN}-12.10.2_p20141010-drop-upstart.patch"
+	epatch "${FILESDIR}/${PN}-12.10.2-elementary.patch"
 
-	sed -i '/add_subdirectory(tests)/d' CMakeLists.txt
 	sed -i '/dbustest/d' CMakeLists.txt
 	sed -i 's/gee-1.0/gee-0.8/' CMakeLists.txt src/CMakeLists.txt
 
@@ -50,6 +50,13 @@ src_configure() {
 	)
 
 	cmake-utils_src_configure 
+}
+
+src_install() {
+	insinto /usr/share/glib-2.0/schemas/
+	doins "${FILESDIR}/com.ubuntu.sound.gschema.xml"
+
+	cmake-utils_src_install
 }
 
 pkg_preinst() {

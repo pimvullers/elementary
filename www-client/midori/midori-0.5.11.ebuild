@@ -41,14 +41,12 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	doc? ( dev-util/gtk-doc )"
 
-S=${WORKDIR}
-
 pkg_setup() {
 	python-any-r1_pkg_setup
 }
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-fix-webkit2-build-breakage.patch"
+#	epatch "${FILESDIR}/${P}-fix-webkit2-build-breakage.patch"
 	epatch_user
 
 	vala_src_prepare

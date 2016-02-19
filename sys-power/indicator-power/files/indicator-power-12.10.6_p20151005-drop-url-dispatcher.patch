@@ -1,6 +1,6 @@
-diff -Naur indicator-power-12.10.6+14.10.20141015/CMakeLists.txt indicator-power-12.10.6+14.10.20141015-patched/CMakeLists.txt
---- indicator-power-12.10.6+14.10.20141015/CMakeLists.txt	2014-10-15 04:45:34.000000000 +0200
-+++ indicator-power-12.10.6+14.10.20141015-patched/CMakeLists.txt	2015-04-13 21:58:00.258943607 +0200
+diff -Naur indicator-power-12.10.6+15.10.20151005.1/CMakeLists.txt indicator-power-patched/CMakeLists.txt
+--- indicator-power-12.10.6+15.10.20151005.1/CMakeLists.txt	2015-10-05 20:44:12.000000000 +0200
++++ indicator-power-patched/CMakeLists.txt	2016-02-05 20:25:58.987520684 +0100
 @@ -37,8 +37,7 @@
                    gio-2.0>=2.36
                    gio-unix-2.0>=2.36
@@ -11,9 +11,9 @@ diff -Naur indicator-power-12.10.6+14.10.20141015/CMakeLists.txt indicator-power
  
  include_directories (SYSTEM ${SERVICE_DEPS_INCLUDE_DIRS})
  
-diff -Naur indicator-power-12.10.6+14.10.20141015/src/notifier.c indicator-power-12.10.6+14.10.20141015-patched/src/notifier.c
---- indicator-power-12.10.6+14.10.20141015/src/notifier.c	2014-10-15 04:45:49.000000000 +0200
-+++ indicator-power-12.10.6+14.10.20141015-patched/src/notifier.c	2015-04-13 21:51:10.042032918 +0200
+diff -Naur indicator-power-12.10.6+15.10.20151005.1/src/notifier.c indicator-power-patched/src/notifier.c
+--- indicator-power-12.10.6+15.10.20151005.1/src/notifier.c	2015-10-05 20:44:12.000000000 +0200
++++ indicator-power-patched/src/notifier.c	2016-02-05 20:25:58.987520684 +0100
 @@ -21,8 +21,6 @@
  #include "dbus-shared.h"
  #include "notifier.h"
@@ -46,9 +46,9 @@ diff -Naur indicator-power-12.10.6+14.10.20141015/src/notifier.c indicator-power
      }
  
    /* if we can show it, keep it */
-diff -Naur indicator-power-12.10.6+14.10.20141015/src/service.c indicator-power-12.10.6+14.10.20141015-patched/src/service.c
---- indicator-power-12.10.6+14.10.20141015/src/service.c	2014-10-15 04:45:49.000000000 +0200
-+++ indicator-power-12.10.6+14.10.20141015-patched/src/service.c	2015-04-13 21:51:10.042032918 +0200
+diff -Naur indicator-power-12.10.6+15.10.20151005.1/src/service.c indicator-power-patched/src/service.c
+--- indicator-power-12.10.6+15.10.20151005.1/src/service.c	2015-10-05 20:44:19.000000000 +0200
++++ indicator-power-patched/src/service.c	2016-02-05 20:27:02.614158694 +0100
 @@ -20,7 +20,6 @@
  
  #include <glib/gi18n.h>
@@ -57,7 +57,21 @@ diff -Naur indicator-power-12.10.6+14.10.20141015/src/service.c indicator-power-
  
  #include "brightness.h"
  #include "dbus-shared.h"
-@@ -725,14 +724,6 @@
+@@ -783,12 +782,7 @@
+ 
+   if (control_center_cmd == NULL)
+     {
+-      if (g_getenv ("MIR_SOCKET") != NULL)
+-        {
+-          url_dispatch_send("settings:///system/battery", NULL, NULL);
+-          return;
+-        }
+-      else if (!g_strcmp0 (g_getenv ("DESKTOP_SESSION"), "xubuntu"))
++      if (!g_strcmp0 (g_getenv ("DESKTOP_SESSION"), "xubuntu"))
+         {
+           control_center_cmd = "xfce4-power-manager-settings";
+         }
+@@ -828,14 +822,6 @@
    g_free (cmd);
  }
  
@@ -72,7 +86,7 @@ diff -Naur indicator-power-12.10.6+14.10.20141015/src/service.c indicator-power-
  /***
  ****
  ***/
-@@ -769,7 +760,6 @@
+@@ -872,7 +858,6 @@
  
    GActionEntry entries[] = {
      { "activate-settings", on_settings_activated },

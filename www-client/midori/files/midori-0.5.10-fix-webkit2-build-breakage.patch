@@ -1,3 +1,5 @@
+https://launchpadlibrarian.net/204464340/0002-fix-webkit2-build-breakage.patch
+
 webkit_web_view_get_main_frame() is a webkit1 API function.
 Using it without a check breaks webkit2 builds.
 

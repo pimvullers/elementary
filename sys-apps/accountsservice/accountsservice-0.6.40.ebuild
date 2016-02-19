@@ -17,7 +17,7 @@ KEYWORDS="~alpha amd64 arm ~ia64 ppc ppc64 ~sparc x86"
 
 IUSE="doc +introspection selinux systemd +ubuntu"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.40-2ubuntu5.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.40-2ubuntu7.debian.tar.xz )"
 
 CDEPEND="
 	>=dev-libs/glib-2.37.3:2

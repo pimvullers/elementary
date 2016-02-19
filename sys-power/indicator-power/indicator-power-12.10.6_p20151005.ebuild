@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
 EAPI=5
 
@@ -8,7 +8,7 @@ inherit gnome2-utils cmake-utils
 
 DESCRIPTION="The Power Indicator"
 HOMEPAGE="http://launchpad.net/indicator-power"
-SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-power_12.10.6+14.10.20141015.orig.tar.gz"
+SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/indicator-power_12.10.6+15.10.20151005.1.orig.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -23,12 +23,12 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-S="${WORKDIR}/indicator-power-12.10.6+14.10.20141015"
+S="${WORKDIR}/indicator-power-12.10.6+15.10.20151005.1"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-12.10.6_p20141015-drop-url-dispatcher.patch"
-	epatch "${FILESDIR}/${PN}-12.10.6_p20141015-drop-upstart.patch"
-	epatch "${FILESDIR}/${PN}-12.10.6_p20141015-drop-gsettings-compile.patch"
+	epatch "${FILESDIR}/${PN}-12.10.6_p20151005-drop-url-dispatcher.patch"
+	epatch "${FILESDIR}/${PN}-12.10.6_p20151005-drop-upstart.patch"
+	epatch "${FILESDIR}/${PN}-12.10.6_p20151005-drop-gsettings-compile.patch"
 
 	use nls || sed -i -e '/add_subdirectory(po)/d' CMakeLists.txt
 

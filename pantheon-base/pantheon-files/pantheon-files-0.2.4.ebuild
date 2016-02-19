@@ -18,16 +18,16 @@ KEYWORDS="amd64 arm x86"
 IUSE="+gvfs nls"
 
 RDEPEND="
+	dev-libs/glib:2
+	x11-libs/granite
+	dev-libs/libgee:0.8
+	x11-libs/gtk+:3
+	x11-libs/pango
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
-	dev-libs/glib:2
-	>=x11-libs/granite-0.3
-	dev-libs/libgee:0.8
 	gnome-extra/zeitgeist
 	pantheon-base/plank
-	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
-	x11-libs/pango
 	gvfs? ( gnome-base/gvfs )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
