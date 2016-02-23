@@ -19,7 +19,7 @@ REQUIRED_USE="
 	xinerama? ( X )
 "
 
-KEYWORDS="~alpha ~amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
 	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B3.0_3.18.7-1ubuntu1.debian.tar.xz )"
 
@@ -138,7 +138,7 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS examples Makefile.{am,in}
 	fi
 
-	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache 
+	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
 	epatch "${FILESDIR}"/${PN}-3.16.2-remove_update-icon-cache.patch
 
 	epatch_user
