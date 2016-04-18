@@ -2,8 +2,8 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
-inherit autotools eutils pam readme.gentoo systemd versionator
+EAPI=6
+inherit autotools eutils pam readme.gentoo-r1 systemd vala versionator
 
 TRUNK_VERSION="$(get_version_component_range 1-2)"
 DESCRIPTION="A lightweight display manager"
@@ -14,13 +14,14 @@ SRC_URI="https://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.x
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~ppc ~x86"
-IUSE="+gtk +introspection kde qt4 pantheon +gnome"
+IUSE="audit +gtk +introspection kde qt4 qt5 pantheon +gnome"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
-COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
+COMMON_DEPEND="audit? ( sys-process/audit )
+	>=dev-libs/glib-2.32.3:2
 	dev-libs/libxml2
 	gnome? ( sys-apps/accountsservice )
-	pantheon? ( sys-apps/accountsservice )
+	pantheon? ( sys-apps/accountsservice )	
 	virtual/pam
 	x11-libs/libX11
 	>=x11-libs/libxklavier-5
@@ -29,6 +30,11 @@ COMMON_DEPEND=">=dev-libs/glib-2.32.3:2
 		dev-qt/qtcore:4
 		dev-qt/qtdbus:4
 		dev-qt/qtgui:4
+		)
+	qt5? (
+		dev-qt/qtcore:5
+		dev-qt/qtdbus:5
+		dev-qt/qtgui:5
 		)"
 RDEPEND="${COMMON_DEPEND}
 	>=sys-auth/pambase-20101024-r2"
@@ -54,7 +60,7 @@ src_prepare() {
 		"/session-wrapper/s@^.*@session-wrapper=/etc/${PN}/Xsession@" \
 		data/lightdm.conf || die "Failed to fix lightdm.conf"
 
-	epatch_user
+	default
 
 	# Remove bogus Makefile statement. This needs to go upstream
 	sed -i /"@YELP_HELP_RULES@"/d help/Makefile.am || die
@@ -63,13 +69,15 @@ src_prepare() {
 	else
 		AT_M4DIR=${WORKDIR} eautoreconf
 	fi
+
+	vala_src_prepare
 }
 
 src_configure() {
 	# Set default values if global vars unset
 	local _greeter _session _user
-	_greeter=${LIGHTDM_GREETER:=lightdm-gtk-greeter}
-	_session=${LIGHTDM_SESSION:=gnome}
+	_greeter=${LIGHTDM_GREETER:=pantheon-greeter}
+	_session=${LIGHTDM_SESSION:=pantheon}
 	_user=${LIGHTDM_USER:=root}
 	# Let user know how lightdm is configured
 	einfo "Gentoo configuration"
@@ -83,9 +91,11 @@ src_configure() {
 		--localstatedir=/var \
 		--disable-static \
 		--disable-tests \
+		--enable-vala \
+		$(use_enable audit libaudit) \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \
-		--disable-liblightdm-qt5 \
+		$(use_enable qt5 liblightdm-qt5) \
 		--with-user-session=${_session} \
 		--with-greeter-session=${_greeter} \
 		--with-greeter-user=${_user} \

@@ -16,7 +16,7 @@ KEYWORDS="~amd64"
 IUSE="nls static-libs"
 
 RDEPEND="
-	dev-libs/libdbusmenu:3[gtk]
+	dev-libs/libdbusmenu[gtk]
 	dev-libs/libindicator:3
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}

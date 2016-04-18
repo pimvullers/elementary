@@ -13,7 +13,7 @@ HOMEPAGE="http://launchpad.net/dbusmenu"
 SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_12.10.3%2B14.04.20131125.orig.tar.gz"
 
 LICENSE="LGPL-2.1 LGPL-3"
-SLOT="3"
+SLOT="0"
 KEYWORDS="~amd64 ~arm ~hppa ~mips ~x86"
 IUSE="debug gtk gtk2 +introspection"
 

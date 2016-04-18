@@ -20,7 +20,7 @@ IUSE="+dbus debug nls static-libs"
 
 CDEPEND="
 	dev-libs/glib:2
-	dbus? ( dev-libs/libdbusmenu:3 )
+	dbus? ( dev-libs/libdbusmenu )
 	dev-libs/libgee:0.8
 	x11-libs/cairo
 	x11-libs/libX11

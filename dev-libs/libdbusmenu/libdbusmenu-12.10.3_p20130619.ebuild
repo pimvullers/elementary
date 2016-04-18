@@ -1,6 +1,6 @@
-# Copyright 1999-2013 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/dev-libs/libdbusmenu/libdbusmenu-0.6.2.ebuild,v 1.10 2013/07/06 22:30:23 xmw Exp $
+# $Id$
 
 EAPI=5
 VALA_MIN_API_VERSION=0.20
@@ -9,17 +9,17 @@ VALA_USE_DEPEND=vapigen
 inherit flag-o-matic vala autotools-utils
 
 DESCRIPTION="Library to pass menu structure across DBus"
-HOMEPAGE="http://launchpad.net/dbusmenu"
+HOMEPAGE="https://launchpad.net/dbusmenu"
 SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_12.10.3daily13.06.19%7E13.04.orig.tar.gz"
 
 LICENSE="LGPL-2.1 LGPL-3"
-SLOT="3"
+SLOT="0"
 KEYWORDS="~amd64 ~arm ~hppa ~mips ~x86"
 IUSE="debug gtk gtk2 +introspection"
 
 RDEPEND=">=dev-libs/glib-2.35.4
-	gtk? ( x11-libs/gtk+:3[introspection?] dev-util/gtk-doc )
-	gtk2? ( x11-libs/gtk+:2[introspection?] dev-util/gtk-doc )
+	gtk? ( x11-libs/gtk+:3[introspection?,${MULTILIB_USEDEP}] dev-util/gtk-doc )
+	gtk2? ( x11-libs/gtk+:2[introspection?,${MULTILIB_USEDEP}] dev-util/gtk-doc )
 	introspection? ( >=dev-libs/gobject-introspection-1 )
 	!<${CATEGORY}/${PN}-0.5.1-r200"
 DEPEND="${RDEPEND}

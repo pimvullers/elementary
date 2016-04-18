@@ -19,8 +19,8 @@ message-dialog-restore-traditional-look-on-unity.patch
 restore_filechooser_typeaheadfind
 0001-calendar-always-emit-day-selected-once.patch
 git_icon_fallback.patch
-unity_rbga_tooltips.patch
 git-refresh-mir-backend.patch
 0001-gtkwindow-set-transparent-background-color.patch
 ubuntu_fileselector_behaviour.patch
-git-x11-don-t-apply-scaling-factor-twice.patch
+unity-border-radius.patch
+unity-headerbar-maximized-mode.patch
