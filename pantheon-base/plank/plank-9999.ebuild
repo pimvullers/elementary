@@ -1,4 +1,4 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -20,7 +20,7 @@ IUSE="+dbus debug nls static-libs"
 
 CDEPEND="
 	dev-libs/glib:2
-	dbus? ( dev-libs/libdbusmenu )
+	dbus? ( dev-libs/libdbusmenu[gtk3] )
 	dev-libs/libgee:0.8
 	x11-libs/cairo
 	x11-libs/libX11
