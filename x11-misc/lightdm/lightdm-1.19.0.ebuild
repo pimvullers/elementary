@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
-inherit autotools eutils pam readme.gentoo systemd vala versionator
+EAPI=6
+inherit autotools eutils pam readme.gentoo-r1 systemd vala versionator
 
 TRUNK_VERSION="$(get_version_component_range 1-2)"
 DESCRIPTION="A lightweight display manager"
-HOMEPAGE="http://www.freedesktop.org/wiki/Software/LightDM"
+HOMEPAGE="https://www.freedesktop.org/wiki/Software/LightDM"
 SRC_URI="https://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.xz
 	mirror://gentoo/introspection-20110205.m4.tar.bz2"
 
@@ -60,7 +60,7 @@ src_prepare() {
 		"/session-wrapper/s@^.*@session-wrapper=/etc/${PN}/Xsession@" \
 		data/lightdm.conf || die "Failed to fix lightdm.conf"
 
-	epatch_user
+	default
 
 	# Remove bogus Makefile statement. This needs to go upstream
 	sed -i /"@YELP_HELP_RULES@"/d help/Makefile.am || die

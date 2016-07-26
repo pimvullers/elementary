@@ -2,8 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
-GCONF_DEBUG="no"
+EAPI=6
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python{2_7,3_3,3_4,3_5} )
 
@@ -16,21 +15,22 @@ SRC_URI="${SRC_URI}
 
 LICENSE="GPL-2+"
 SLOT="0"
-IUSE="+colord +cups debug input_devices_wacom -openrc-force networkmanager policykit +short-touchpad-timeout smartcard test +ubuntu +udev wayland"
+IUSE="+colord +cups debug input_devices_wacom -openrc-force networkmanager policykit smartcard test +ubuntu +udev wayland"
 REQUIRED_USE="
 	input_devices_wacom? ( udev )
 	smartcard? ( udev )
 	test? ( ${PYTHON_REQUIRED_USE} )
 "
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2[dbus]
 	>=x11-libs/gtk+-3.15.3:3
 	>=gnome-base/gnome-desktop-3.11.1:3=
-	>=gnome-base/gsettings-desktop-schemas-3.15.4
-	>=gnome-base/librsvg-2.36.2
+	>=gnome-base/gsettings-desktop-schemas-3.19.3
+	>=gnome-base/librsvg-2.36.2:2
 	media-fonts/cantarell
+	media-libs/alsa-lib
 	media-libs/fontconfig
 	>=media-libs/lcms-2.2:2
 	media-libs/libcanberra[gtk3]
@@ -48,8 +48,8 @@ COMMON_DEPEND="
 	x11-libs/libXxf86misc
 	x11-misc/xkeyboard-config
 
-	>=app-misc/geoclue-2.1.2:2.0
-	>=dev-libs/libgweather-3.9.5:2
+	>=app-misc/geoclue-2.3.1:2.0
+	>=dev-libs/libgweather-3.9.5:2=
 	>=sci-geosciences/geocode-glib-3.10
 	>=sys-auth/polkit-0.103
 
@@ -60,7 +60,7 @@ COMMON_DEPEND="
 		>=x11-libs/pango-1.20
 		x11-drivers/xf86-input-wacom
 		virtual/libgudev:= )
-	networkmanager? ( >=net-misc/networkmanager-0.9.9.1 )
+	networkmanager? ( >=net-misc/networkmanager-1.0 )
 	smartcard? ( >=dev-libs/nss-3.11.2 )
 	ubuntu? ( sys-apps/accountsservice[ubuntu] )
 	udev? ( virtual/libgudev:= )
@@ -73,9 +73,6 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/dconf
 	!openrc-force? ( sys-apps/systemd )
-	>=x11-themes/gnome-themes-standard-2.91
-	>=x11-themes/gnome-icon-theme-2.91
-	>=x11-themes/gnome-icon-theme-symbolic-2.91
 	!<gnome-base/gnome-control-center-2.22
 	!<gnome-extra/gnome-color-manager-3.1.1
 	!<gnome-extra/gnome-power-manager-3.1.3
@@ -104,19 +101,10 @@ src_prepare() {
 		done
 	fi
 
-	# https://bugzilla.gnome.org/show_bug.cgi?id=621836
-	# Apparently this change severely affects touchpad usability for some
-	# people, so revert it if USE=short-touchpad-timeout.
-	# Revisit if/when upstream adds a setting for customizing the timeout.
-	use short-touchpad-timeout &&
-		epatch "${FILESDIR}"/${PN}-3.7.90-short-touchpad-timeout.patch
-
 	# Make colord and wacom optional; requires eautoreconf
-	epatch "${FILESDIR}"/${PN}-3.16.0-optional.patch
+	eapply "${FILESDIR}"/${PN}-3.16.0-optional.patch
 
-	epatch_user
 	eautoreconf
-
 	gnome2_src_prepare
 }
 
@@ -137,7 +125,7 @@ src_configure() {
 
 src_test() {
 	python_export_best
-	Xemake check
+	virtx emake check
 }
 
 src_install() {

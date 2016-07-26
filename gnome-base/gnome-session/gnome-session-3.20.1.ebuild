@@ -2,31 +2,29 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
-GCONF_DEBUG="yes"
-
+EAPI=6
 inherit gnome2
 
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.16.0-1ubuntu2.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.18.1.2-1ubuntu1.debian.tar.xz )"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
-IUSE="doc elibc_FreeBSD gconf ipv6 systemd +ubuntu"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+IUSE="doc elibc_FreeBSD ipv6 systemd +ubuntu"
 
 # x11-misc/xdg-user-dirs{,-gtk} are needed to create the various XDG_*_DIRs, and
 # create .config/user-dirs.dirs which is read by glib to get G_USER_DIRECTORY_*
 # xdg-user-dirs-update is run during login (see 10-user-dirs-update-gnome below).
 # gdk-pixbuf used in the inhibit dialog
 COMMON_DEPEND="
-	>=dev-libs/glib-2.40.0:2
+	>=dev-libs/glib-2.46.0:2[dbus]
 	x11-libs/gdk-pixbuf:2
-	>=x11-libs/gtk+-2.90.7:3
+	>=x11-libs/gtk+-3.18.0:3
 	>=dev-libs/json-glib-0.10
-	>=gnome-base/gnome-desktop-3.9.91:3=
+	>=gnome-base/gnome-desktop-3.18:3=
 	elibc_FreeBSD? ( dev-libs/libexecinfo )
 
 	virtual/opengl
@@ -42,7 +40,6 @@ COMMON_DEPEND="
 	x11-misc/xdg-user-dirs-gtk
 	x11-apps/xdpyinfo
 
-	gconf? ( >=gnome-base/gconf-2:2 )
 	systemd? ( >=sys-apps/systemd-183:0= )
 "
 # Pure-runtime deps from the session files should *NOT* be added here
@@ -52,7 +49,7 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-settings-daemon
 	>=gnome-base/gsettings-desktop-schemas-0.1.7
-	>=x11-themes/gnome-themes-standard-2.91.92
+	x11-themes/adwaita-icon-theme
 	sys-apps/dbus[X]
 	!systemd? (
 		sys-auth/consolekit
@@ -89,11 +86,13 @@ src_configure() {
 	# 1. Avoid automagic on old upower releases
 	# 2. xsltproc is always checked due to man configure
 	#    switch, even if USE=-doc
+	# 3. Disable old gconf support as other distributions did long time
+	#    ago
 	gnome2_src_configure \
 		--disable-deprecation-flags \
+		--disable-gconf \
 		--enable-session-selector \
 		$(use_enable doc docbook-docs) \
-		$(use_enable gconf) \
 		$(use_enable ipv6) \
 		$(use_enable systemd) \
 		$(use_enable !systemd consolekit) \
