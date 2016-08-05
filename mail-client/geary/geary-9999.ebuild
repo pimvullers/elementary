@@ -1,16 +1,17 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
-
-VALA_MIN_API_VERSION=0.22
-
-inherit eutils fdo-mime gnome2-utils vala cmake-utils git-2
+EAPI=6
+# Keep cmake-utils at the end
+inherit eutils gnome2 vala cmake-utils
 
 DESCRIPTION="A lightweight, easy-to-use, feature-rich email client"
 HOMEPAGE="https://wiki.gnome.org/Apps/Geary"
+SRC_URI=""
+
 EGIT_REPO_URI="git://git.gnome.org/geary"
+inherit git-r3
 
 LICENSE="LGPL-2.1"
 SLOT="0"
@@ -21,38 +22,36 @@ DEPEND="
 	>=app-crypt/gcr-3.10.1[gtk,introspection,vala]
 	app-crypt/libsecret
 	dev-db/sqlite:3
-	dev-libs/glib:2
+	dev-libs/glib:2[dbus]
 	>=dev-libs/libgee-0.8.5:0.8
 	dev-libs/libxml2:2
 	dev-libs/gmime:2.6
 	media-libs/libcanberra
 	>=net-libs/webkit-gtk-1.10.0:3[introspection]
 	>=x11-libs/gtk+-3.10.0:3[introspection]
-	x11-libs/libnotify"
+	x11-libs/libnotify
+"
 RDEPEND="${DEPEND}
 	gnome-base/gsettings-desktop-schemas
-	nls? ( virtual/libintl )"
+	nls? ( virtual/libintl )
+"
 DEPEND="${DEPEND}
 	app-text/gnome-doc-utils
 	dev-util/desktop-file-utils
 	nls? ( sys-devel/gettext )
 	$(vala_depend)
-	virtual/pkgconfig"
-
-DOCS=( AUTHORS MAINTAINERS README NEWS THANKS )
+	virtual/pkgconfig
+"
 
 src_prepare() {
 	# https://bugzilla.gnome.org/show_bug.cgi?id=751556
-	epatch "${FILESDIR}"/${PN}-0.7.2-cflags.patch
+	eapply "${FILESDIR}"/${PN}-0.7.2-cflags.patch
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=751557
-	epatch "${FILESDIR}"/${PN}-0.5.3-vapigen.patch
+	eapply "${FILESDIR}"/${PN}-9999-vapigen.patch
 
 	# https://bugzilla.gnome.org/show_bug.cgi?id=751558
-	epatch "${FILESDIR}"/${PN}-0.6.0-desktopfile.patch
-
-	# Elementary changes
-	epatch "${FILESDIR}"/${PN}-9999-elementary.patch
+	eapply "${FILESDIR}"/${PN}-0.6.0-desktopfile.patch
 
 	local i
 	if use nls ; then
@@ -68,6 +67,7 @@ src_prepare() {
 	fi
 
 	cmake-utils_src_prepare
+	gnome2_src_prepare
 	vala_src_prepare
 }
 
@@ -82,21 +82,4 @@ src_configure() {
 	)
 
 	cmake-utils_src_configure
-}
-
-pkg_preinst() {
-	gnome2_icon_savelist
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	fdo-mime_desktop_database_update
-	gnome2_icon_cache_update
-	gnome2_schemas_update
 }

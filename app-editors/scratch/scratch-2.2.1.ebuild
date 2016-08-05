@@ -1,8 +1,8 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
@@ -42,7 +42,7 @@ pkg_setup() {
 }
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
 	# Translations
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt
@@ -69,8 +69,8 @@ src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
-		$(cmake-utils_use_with contractor CONTRACTOR)
-		$(cmake-utils_use_use zeitgeist ZEITGEIST)
+		-DWITH_CONTRACTOR="$(usex contractor)"
+		-DUSE_ZEITGEIST="$(usex zeitgeist)"
 	)
 
 	cmake-utils_src_configure
