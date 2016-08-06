@@ -1,12 +1,13 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.22
+VALA_USE_DEPEND=vapigen
 
-inherit gnome2-utils vala autotools-utils
+inherit gnome2-utils vala autotools
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
@@ -15,7 +16,7 @@ SRC_URI="https://launchpad.net/~elementary-os/+archive/ubuntu/stable/+files/gala
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="debug"
+IUSE=""
 
 RDEPEND="
 	>=dev-libs/glib-2.32:2
@@ -31,8 +32,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-AUTOTOOLS_AUTORECONF=1
-
 src_unpack() {
 	default_src_unpack
 
@@ -40,17 +39,15 @@ src_unpack() {
 }
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
-	autotools-utils_src_prepare
+	eautoreconf
+
 	vala_src_prepare
 }
 
 src_configure() {
-	local myeconfargs=(
-		VALAC="${VALAC}"
-	)
-	autotools-utils_src_configure
+	econf VALAC="${VALAC}" VAPIGEN="${VAPIGEN}"
 }
 
 pkg_preinst() {

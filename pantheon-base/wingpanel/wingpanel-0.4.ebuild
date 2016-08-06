@@ -4,29 +4,26 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.24
 
-inherit fdo-mime gnome2-utils vala cmake-utils
+inherit fdo-mime gnome2-utils vala cmake-utils multilib
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-SRC_URI="https://launchpad.net/${PN}/0.3.x/${PV}/+download/${P}.tar.xz"
+SRC_URI="https://launchpad.net/${PN}/0.4.x/loki-alpha1/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 ~arm x86"
+KEYWORDS="~amd64 ~arm ~x86"
 IUSE="bluetooth power sound nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	dev-libs/libindicator:3
-	x11-libs/gtk+:3[ubuntu]
 	x11-libs/granite
-	x11-libs/gtk+:3
-	x11-libs/libido:3
-	x11-libs/libwnck:3
-	x11-libs/libX11"
+	x11-libs/gtk+:3[ubuntu]
+	x11-libs/libnotify
+	x11-wm/gala"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -39,14 +36,16 @@ PDEPEND="
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 # indicator-me, indicator-application, indicator-messages, indicator-keyboard
 
-DOCS=( AUTHORS COPYING COPYRIGHT )
-
 src_prepare() {
+	epatch "${FILESDIR}"/${P}-CMP0037.patch
 	epatch_user
 
-	mv vapi/indicator-0.4.vapi vapi/indicator3-0.4.vapi
+	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt || die
 
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt || die
+	# respect appropriate libdir for gala plugins
+	[[ $(get_libdir) == lib ]] || \
+		sed -e "s|/lib|/$(get_libdir)|g" \
+			-i wingpanel-interface/CMakeLists.txt || die
 
 	cmake-utils_src_prepare
 	vala_src_prepare

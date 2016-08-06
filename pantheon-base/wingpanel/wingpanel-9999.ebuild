@@ -2,9 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-VALA_MIN_API_VERSION=0.28
+VALA_MIN_API_VERSION=0.24
 
 inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
 
@@ -20,13 +20,10 @@ IUSE="bluetooth power sound nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	dev-libs/libindicator:3
-	x11-libs/gtk+:3[ubuntu]
 	x11-libs/granite
-	x11-libs/gtk+:3
-	x11-libs/libido:3
-	x11-libs/libwnck:3
-	x11-libs/libX11"
+	x11-libs/gtk+:3[ubuntu]
+	x11-libs/libnotify
+	x11-wm/gala"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -39,14 +36,12 @@ PDEPEND="
 	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
 # indicator-me, indicator-application, indicator-messages, indicator-keyboard
 
-DOCS=( COPYING )
-
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-CMP0037.patch
-	epatch "${FILESDIR}"/${P}-gala-plugin-dir.patch
-	epatch_user
+	eapply "${FILESDIR}"/${PN}-0.4-CMP0037.patch
+	#epatch "${FILESDIR}"/${P}-gala-plugin-dir.patch
+	eapply_user
 
-	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt || die
+	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt || die
 
 	# respect appropriate libdir for gala plugins
 	[[ $(get_libdir) == lib ]] || \

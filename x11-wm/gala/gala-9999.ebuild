@@ -1,12 +1,13 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: $
+# $Id$
 
-EAPI=5
+EAPI=6
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.28
+VALA_USE_DEPEND=vapigen
 
-inherit gnome2-utils vala autotools-utils bzr
+inherit gnome2-utils vala autotools bzr
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://launchpad.net/gala"
@@ -15,36 +16,33 @@ EBZR_REPO_URI="lp:gala"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="debug"
+IUSE=""
 
 RDEPEND="
 	>=dev-libs/glib-2.32:2
 	dev-libs/libgee:0.8
+	>=media-libs/clutter-1.12
 	media-libs/clutter-gtk
 	>=pantheon-base/plank-0.3
-	>=x11-libs/granite-0.3
 	x11-libs/bamf
+	>=x11-libs/granite-0.3
 	>=x11-libs/gtk+-3.4:3
-	>=x11-wm/mutter-3.8.4
+	>=x11-wm/mutter-3.14.4
 	gnome-base/gnome-desktop:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-AUTOTOOLS_AUTORECONF=1
-
 src_prepare() {
-	epatch_user
+	eapply_user
 
-	autotools-utils_src_prepare
+	eautoreconf
+
 	vala_src_prepare
 }
 
 src_configure() {
-	local myeconfargs=(
-		VALAC="${VALAC}"
-	)
-	autotools-utils_src_configure
+	econf VALAC="${VALAC}" VAPIGEN="${VAPIGEN}"
 }
 
 pkg_preinst() {

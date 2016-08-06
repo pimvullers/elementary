@@ -2,12 +2,12 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.24
 VALA_USE_DEPEND=vapigen
 
-inherit fdo-mime gnome2-utils vala autotools-utils
+inherit fdo-mime gnome2-utils autotools vala
 
 DESCRIPTION="The dock for elementary Pantheon, stupidly simple"
 HOMEPAGE="https://launchpad.net/plank https://launchpad.net/pantheon-dock"
@@ -36,25 +36,21 @@ DEPEND="${CDEPEND}
 	gnome-base/gnome-common
 	nls? ( sys-devel/gettext )"
 
-AUTOTOOLS_AUTORECONF=yes
-AUTOTOOLS_IN_SOURCE_BUILD=yes
-
 DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
-	autotools-utils_src_prepare
+	eautoreconf
+
 	vala_src_prepare
 }
 
 src_configure() {
-	local myeconfargs=(
-		$(use_enable debug)
-		$(use_enable nls)
+	econf \
+		$(use_enable debug) \
+		$(use_enable nls) \
 		$(use_enable dbus dbusmenu)
-	)
-	autotools-utils_src_configure
 }
 
 pkg_preinst() {
