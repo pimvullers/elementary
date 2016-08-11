@@ -1,14 +1,16 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
+
+VALA_MIN_VERSION=0.26
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="A tiny, simple calculator written in GTK+ and Vala"
 HOMEPAGE="https://launchpad.net/pantheon-calculator"
-SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+SRC_URI="https://launchpad.net/${PN}/0.4-loki/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -22,7 +24,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)"
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
 	# Translations
 	use nls || sed -i -e 's/add_subdirectory (po)//' CMakeLists.txt

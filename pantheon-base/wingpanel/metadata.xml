@@ -5,6 +5,11 @@
 	<email>elementary@vullersmail.nl</email>
 </maintainer>
 <use>
+	<flag name="accessibility">Include the accessibility indicator</flag>
+	<flag name="bluetooth">Include the bluetooth indicator</flag>
+	<flag name="keyboard">Include the keyboard indicator</flag>
+	<flag name="network">Include the network indicator</flag>
 	<flag name="power">Include the power indicator</flag>
+	<flag name="sound">Include the sound indicator</flag>
 </use>
 </pkgmetadata>

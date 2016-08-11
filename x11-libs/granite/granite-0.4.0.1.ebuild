@@ -1,16 +1,16 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.24
 
-inherit gnome2-utils vala multilib cmake-utils
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
-SRC_URI="https://launchpad.net/${PN}/0.4/loki-alpha1/+download/${P}.tar.xz"
+SRC_URI="https://launchpad.net/${PN}/0.4/${PV}/+download/${P}.tar.xz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING NEWS README )
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
 	# Disable building of the demo application (if needed)
 	use demo || sed -i '/add_subdirectory (demo)/d' CMakeLists.txt

@@ -6,15 +6,15 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="http://launchpad.net/switchboard"
-EBZR_REPO_URI="lp:switchboard"
+SRC_URI="http://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
 RDEPEND="

@@ -2,11 +2,11 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.24
 
-inherit fdo-mime gnome2-utils vala cmake-utils multilib
+inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
@@ -14,14 +14,14 @@ SRC_URI="https://launchpad.net/${PN}/0.4.x/loki-alpha1/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~arm ~x86"
-IUSE="bluetooth power sound nls"
+KEYWORDS="amd64 ~arm x86"
+IUSE="accessibility bluetooth keyboard network power sound nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	x11-libs/granite
-	x11-libs/gtk+:3[ubuntu]
+	x11-libs/gtk+:3
 	x11-libs/libnotify
 	x11-wm/gala"
 DEPEND="${RDEPEND}
@@ -29,16 +29,19 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 PDEPEND="
-	>=x11-misc/indicator-datetime-13.10.0_p20131023
-	>=x11-misc/indicator-session-12.10.5_p20131125
-	bluetooth? ( >=net-misc/indicator-bluetooth-0.0.6_p20131029 )
-	power? ( >=sys-power/indicator-power-12.10.6_p20131129 )
-	sound? ( >=media-sound/indicator-sound-12.10.2_p20131125 )"
-# indicator-me, indicator-application, indicator-messages, indicator-keyboard
+	pantheon-base/wingpanel-indicator-datetime
+	pantheon-base/wingpanel-indicator-notifications
+	pantheon-base/wingpanel-indicator-session
+	accessibility? ( pantheon-base/wingpanel-indicator-accessibility )
+	bluetooth? ( pantheon-base/wingpanel-indicator-bluetooth )
+	keyboard? ( pantheon-base/wingpanel-indicator-keyboard )
+	network? ( pantheon-base/wingpanel-indicator-network )
+	power? ( pantheon-base/wingpanel-indicator-power )
+	sound? ( pantheon-base/wingpanel-indicator-sound )"
 
 src_prepare() {
-	epatch "${FILESDIR}"/${P}-CMP0037.patch
-	epatch_user
+	eapply "${FILESDIR}"/${P}-CMP0037.patch
+	eapply_user
 
 	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt || die
 

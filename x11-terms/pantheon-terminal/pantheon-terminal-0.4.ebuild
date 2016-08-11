@@ -6,33 +6,30 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils
 
-DESCRIPTION="Modular desktop settings hub"
-HOMEPAGE="http://launchpad.net/switchboard"
-EBZR_REPO_URI="lp:switchboard"
+DESCRIPTION="The terminal of the 21st century"
+HOMEPAGE="https://launchpad.net/pantheon-terminal"
+SRC_URI="https://launchpad.net/${PN}/0.4.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/libgee:0.8
-	media-libs/clutter-gtk
+	>=x11-libs/granite-0.3
+	x11-libs/libnotify
 	x11-libs/gtk+:3
-	>=x11-libs/granite-0.3"
+	x11-libs/vte:2.91[vala]"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig
-	nls? ( sys-devel/gettext )"
+	nls? ( sys-devel/gettext )
+	virtual/pkgconfig"
 
 src_prepare() {
-	eapply_user
-
-	# Disable generation of the translations (if needed)
-	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt
+	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt
 
 	cmake-utils_src_prepare
 	vala_src_prepare
@@ -40,7 +37,6 @@ src_prepare() {
 
 src_configure() {
 	local mycmakeargs=(
-		-DUSE_UNITY=OFF
 		-DGSETTINGS_COMPILE=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)
