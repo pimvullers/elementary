@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE catmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
-<catmetadata>
+<pkgmetadata>
+	<maintainer type="person">
+		<name>Pim Vullers</name>
+		<email>elementary@vullersmail.nl</email>
+	</maintainer>
+	<maintainer type="person">
+		<name>Matthew Marchese</name>
+		<email>maffblaster@gentoo.org</email>
+	</maintainer>
 	<longdescription lang="en">
 		The www-client category contains world wide web clients.
 	</longdescription>
@@ -31,5 +39,5 @@
 	<longdescription lang="pl">
 		Kategoria www-client zawiera przeglądarki internetowe.
 	</longdescription>
-</catmetadata>
+</pkgmetadata>
 

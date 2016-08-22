@@ -10,7 +10,7 @@ inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-SRC_URI="https://launchpad.net/${PN}/2.x/0.4/+download/${P}.tar.xz"
+SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
