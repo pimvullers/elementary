@@ -19,7 +19,7 @@ IUSE="+introspection static-libs"
 
 RDEPEND=">=dev-libs/dbus-glib-0.98
 	>=dev-libs/glib-2.26
-	>=dev-libs/libdbusmenu-0.6.2:3[gtk]
+	>=dev-libs/libdbusmenu-0.6.2[gtk3]
 	>=dev-libs/libindicator-12.10.0:3
 	>=x11-libs/gtk+-3.2:3
 	introspection? ( >=dev-libs/gobject-introspection-1 )"

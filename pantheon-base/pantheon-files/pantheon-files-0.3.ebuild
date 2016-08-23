@@ -6,15 +6,15 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.26
 
-inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
+inherit fdo-mime gnome2-utils vala cmake-utils versionator multilib
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="http://launchpad.net/pantheon-files"
-EBZR_REPO_URI="lp:pantheon-files"
+SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 arm x86"
 IUSE="+gvfs nls"
 
 RDEPEND="
