@@ -4,7 +4,7 @@
 
 EAPI=6
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.16
 
 inherit fdo-mime gnome2-utils vala cmake-utils bzr
 
@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
 	cmake-utils_src_prepare
 	vala_src_prepare

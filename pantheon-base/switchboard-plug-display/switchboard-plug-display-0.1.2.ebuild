@@ -1,29 +1,28 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils
 
-DESCRIPTION="This plug can be used to change several keyboard settings"
-HOMEPAGE="https://launchpad.net/switchboard-plug-keyboard"
-SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
+DESCRIPTION="Switchboard plug to show displays information"
+HOMEPAGE="http://launchpad.net/switchboard-plug-display"
+SRC_URI="http://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
-CDEPEND="
-	dev-libs/glib
-	x11-libs/granite"
-RDEPEND="${CDEPEND}
-	gnome-base/libgnomekbd
+RDEPEND="
+	x11-libs/granite
+	x11-libs/gtk+:3
+	gnome-base/gnome-desktop:3
 	>=pantheon-base/switchboard-2"
-DEPEND="${CDEPEND}
+DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"

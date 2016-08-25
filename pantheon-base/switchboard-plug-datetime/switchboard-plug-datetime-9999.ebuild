@@ -8,9 +8,9 @@ VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils bzr
 
-DESCRIPTION="Adjust keyboard settings from Switchboard"
-HOMEPAGE="https://launchpad.net/switchboard-plug-keyboard"
-EBZR_REPO_URI="lp:switchboard-plug-keyboard"
+DESCRIPTION="Configure the date & time of the user"
+HOMEPAGE="http://launchpad.net/switchboard-plug-datetime"
+EBZR_REPO_URI="lp:switchboard-plug-datetime"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -18,7 +18,6 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
-	dev-libs/glib
 	x11-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"

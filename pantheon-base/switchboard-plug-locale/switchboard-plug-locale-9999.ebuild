@@ -1,10 +1,10 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.24
 
 inherit vala gnome2-utils cmake-utils bzr
 

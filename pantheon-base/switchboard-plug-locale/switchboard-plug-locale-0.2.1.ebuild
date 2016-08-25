@@ -10,7 +10,7 @@ inherit vala gnome2-utils cmake-utils
 
 DESCRIPTION="Adjust Locale settings using Switchboard."
 HOMEPAGE="https://launchpad.net/switchboard-plug-locale"
-SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tar.xz"
+SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"

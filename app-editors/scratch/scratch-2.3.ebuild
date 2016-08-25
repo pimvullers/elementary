@@ -42,6 +42,7 @@ pkg_setup() {
 }
 
 src_prepare() {
+	eapply "${FILESDIR}/${P}-translations.patch"
 	eapply_user
 
 	# Translations

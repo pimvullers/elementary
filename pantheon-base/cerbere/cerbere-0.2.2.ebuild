@@ -1,20 +1,20 @@
-# Copyright 1999-2014 Gentoo Foundation
+# Copyright 1999-2016 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-EAPI=5
+EAPI=6
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.16
 
 inherit fdo-mime gnome2-utils vala cmake-utils
 
 DESCRIPTION="A simple service to relaunch pantheon applications"
 HOMEPAGE="https://launchpad.net/cerbere"
-SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.gz"
+SRC_URI="https://launchpad.net/${PN}/0.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-2"
 SLOT="0"
-KEYWORDS="amd64 x86"
+KEYWORDS="amd64 ~arm x86"
 IUSE=""
 
 RDEPEND="
@@ -25,10 +25,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	epatch "${FILESDIR}/${P}-fix-desktop-file.patch"
-	epatch "${FILESDIR}/${P}-gee-0.8.patch"
-	epatch "${FILESDIR}/${P}-watchdog-refactor.patch"
-	epatch_user
+	eapply_user
 
 	cmake-utils_src_prepare
 	vala_src_prepare
