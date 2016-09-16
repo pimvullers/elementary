@@ -8,9 +8,9 @@ VALA_MIN_API_VERSION=0.20
 
 inherit vala cmake-utils
 
-DESCRIPTION="Configure various aspects of the Pantheon desktop environment using Switchboard."
-HOMEPAGE="http://launchpad.net/switchboard-plug-pantheon-shell"
-SRC_URI="http://launchpad.net/${PN}/trunk/${PV}/+download/${P}.tgz"
+DESCRIPTION="Configure the Pantheon desktop environment using Switchboard"
+HOMEPAGE="https://launchpad.net/switchboard-plug-pantheon-shell"
+SRC_URI="https://launchpad.net/${PN}/luna/${PV}/+download/${P}.tgz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,6 +26,8 @@ DEPEND="${CDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
+
+RESTRICT="mirror"
 
 src_prepare() {
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt

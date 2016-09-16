@@ -6,15 +6,22 @@ EAPI=5
 
 VALA_MIN_API_VERSION=0.20
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils
+
+if [[ "${PV}" == "9999" ]]; then
+	inherit bzr
+	EBZR_REPO_URI="lp:${PN}"
+	KEYWORDS=""
+else
+	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+	KEYWORDS="~amd64"
+fi
 
 DESCRIPTION="Pantheon Login Screen for LightDM"
-HOMEPAGE="https://launchpad.net/pantheon-greeter"
-EBZR_REPO_URI="lp:pantheon-greeter"
+HOMEPAGE="https://launchpad.net/${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="

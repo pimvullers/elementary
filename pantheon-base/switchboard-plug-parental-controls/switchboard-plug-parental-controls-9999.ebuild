@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=6
+EAPI=5
 
 VALA_MIN_API_VERSION=0.22
 
@@ -17,17 +17,18 @@ else
 	KEYWORDS="~amd64"
 fi
 
-DESCRIPTION="Mouse and touchpad settings"
-HOMEPAGE="http://launchpad.net/${PN}"
+DESCRIPTION="An easy parental controls plug for Switchboard"
+HOMEPAGE="https://launchpad.net/switchboard-plug-parental-controls"
 
 LICENSE="GPL-3"
 SLOT="0"
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/glib:2
+	>=pantheon-base/switchboard-2
 	x11-libs/granite
-	x11-libs/gtk+:3
-	>=pantheon-base/switchboard-2"
+	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

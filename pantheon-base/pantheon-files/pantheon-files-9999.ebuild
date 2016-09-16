@@ -6,15 +6,22 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.26
 
-inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
+inherit fdo-mime gnome2-utils vala cmake-utils multilib
+
+if [[ "${PV}" == "9999" ]]; then
+	inherit bzr
+	EBZR_REPO_URI="lp:${PN}"
+	KEYWORDS=""
+else
+	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+	KEYWORDS="~amd64"
+fi
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
-HOMEPAGE="http://launchpad.net/pantheon-files"
-EBZR_REPO_URI="lp:pantheon-files"
+HOMEPAGE="http://launchpad.net/${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="+gvfs nls"
 
 RDEPEND="
