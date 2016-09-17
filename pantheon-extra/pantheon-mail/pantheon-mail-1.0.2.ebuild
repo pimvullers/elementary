@@ -4,6 +4,8 @@
 
 EAPI=6
 
+VALA_MIN_VERSION=0.26
+
 inherit cmake-utils vala
 
 if [[ "${PV}" == "9999" ]]; then
@@ -11,7 +13,7 @@ if [[ "${PV}" == "9999" ]]; then
 	EBZR_REPO_URI="lp:${PN}"
 	KEYWORDS=""
 else
-	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+	SRC_URI="https://launchpad.net/${PN}-loki/${PV}/+download/${P}.tar.xz"
 	KEYWORDS="~amd64"
 fi
 
@@ -26,6 +28,8 @@ RDEPEND="
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
+
+RESTRICT="mirror"
 
 src_prepare() {
 	eapply_user

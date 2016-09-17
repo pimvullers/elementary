@@ -15,7 +15,7 @@ else
 	KEYWORDS="~amd64"
 fi
 
-DESCRIPTION="Small utility to print documents"
+DESCRIPTION="The email client for Elementary OS"
 HOMEPAGE="https://launchpad.net/${PN}"
 
 LICENSE="GPL-3"

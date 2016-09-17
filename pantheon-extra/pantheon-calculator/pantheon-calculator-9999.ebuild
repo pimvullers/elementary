@@ -4,15 +4,22 @@
 
 EAPI=6
 
-inherit fdo-mime gnome2-utils vala cmake-utils bzr
+inherit fdo-mime gnome2-utils vala cmake-utils
+
+if [[ "${PV}" == "9999" ]]; then
+	inherit bzr
+	EBZR_REPO_URI="lp:${PN}"
+	KEYWORDS=""
+else
+	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+	KEYWORDS="~amd64"
+fi
 
 DESCRIPTION="A tiny, simple calculator written in GTK+ and Vala"
 HOMEPAGE="https://launchpad.net/pantheon-calculator"
-EBZR_REPO_URI="lp:${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
