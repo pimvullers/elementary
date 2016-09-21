@@ -14,7 +14,7 @@ SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${PN}-launcher-${PV}.t
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
@@ -23,7 +23,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	gnome-base/gnome-menus:3
 	net-libs/libsoup:2.4
-	>=x11-libs/granite-0.3
+	>=x11-libs/granite-0.3.0
 	x11-libs/gtk+:3
 	gnome-extra/zeitgeist"
 DEPEND="${RDEPEND}
