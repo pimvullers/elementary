@@ -4,27 +4,22 @@
 
 EAPI=5
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.20
 
 inherit vala cmake-utils
 
-DESCRIPTION="Configure various aspects of the security of the system."
-HOMEPAGE="https://launchpad.net/switchboard-plug-security-privacy"
-#SRC_URI="https://launchpad.net/${PN}/freya/${PV}/+download/${P}.tgz"
-SRC_URI="https://launchpad.net/${PN}/freya/0.2.0.2/+download/${P}.tar.xz"
+DESCRIPTION="Configure various aspects of the Pantheon desktop environment using Switchboard."
+HOMEPAGE="http://launchpad.net/switchboard-plug-pantheon-shell"
+SRC_URI="http://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="amd64 x86"
 IUSE="nls"
 
 RDEPEND="
-	dev-libs/glib:2
-	gnome-extra/zeitgeist
-	>=pantheon-base/switchboard-2
-	sys-auth/polkit
 	x11-libs/granite
-	x11-libs/gtk+:3"
+	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

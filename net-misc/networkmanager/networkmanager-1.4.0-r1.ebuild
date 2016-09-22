@@ -19,7 +19,7 @@ SLOT="0" # add subslot if libnm-util.so.2 or libnm-glib.so.4 bumps soname versio
 
 IUSE="audit bluetooth connection-sharing consolekit +dhclient gnutls +introspection \
 json kernel_linux +nss +modemmanager ncurses ofono +ppp resolvconf selinux \
-systemd teamd test vala +wext +wifi"
+systemd teamd test vala +vapi-fix +wext +wifi"
 
 REQUIRED_USE="
 	modemmanager? ( ppp )
