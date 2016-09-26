@@ -26,7 +26,7 @@ RDEPEND="
 	>=x11-libs/granite-0.3
 	x11-libs/gtk+:3
 	gnome-extra/zeitgeist
-	>=pantheon-base/switchboard-2"
+	>=pantheon-base/wingpanel-2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
