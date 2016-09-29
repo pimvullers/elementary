@@ -14,7 +14,7 @@ SRC_URI="https://storage.googleapis.com/google-code-archive-downloads/v2/code.go
 
 LICENSE="LGPL-2.1"
 SLOT="0.1"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="static-libs"
 
 RDEPEND="
