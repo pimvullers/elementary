@@ -9,8 +9,8 @@ VALA_MIN_API_VERSION=0.20
 inherit vala autotools-utils
 
 DESCRIPTION="GObject SQLite wrapper"
-HOMEPAGE="http://code.google.com/p/sqlheavy/"
-SRC_URI="http://${PN}.googlecode.com/files/${P}.tar.xz"
+HOMEPAGE="https://code.google.com/archive/p/sqlheavy/"
+SRC_URI="https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/${PN}/${P}.tar.xz"
 
 LICENSE="LGPL-2.1"
 SLOT="0.1"

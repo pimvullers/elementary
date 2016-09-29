@@ -15,33 +15,37 @@ EBZR_REPO_URI="lp:noise"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
-IUSE="mpris ipod lastfm nls"
+IUSE="mpris ipod lastfm libnotify nls zeitgeist"
 
 RDEPEND="
-	dev-db/sqlheavy
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libpeas[gtk]
 	gnome-extra/libgda
-	gnome-extra/zeitgeist
 	media-libs/gstreamer:1.0
 	media-libs/gst-plugins-base:1.0
 	media-libs/taglib
+	libnotify? ( x11-libs/libnotify )
 	ipod? ( media-libs/libgpod )
 	lastfm? (
 	  dev-libs/json-glib
 	  dev-libs/libxml2:2
+	  net-libs/libaccounts-glib
+	  net-libs/libgsignon-glib
 	  net-libs/libsoup:2.4
 	)
 	mpris? ( 
 	  dev-libs/libdbusmenu
 	  dev-libs/libindicate
 	)
+	gnome-extra/zeitgeist
 	x11-libs/gtk+:3
 	x11-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
+
+DOCS=( AUTHORS NEWS README )
 
 src_prepare() {
 	epatch_user
@@ -52,6 +56,7 @@ src_prepare() {
 	# Disable building of plugins (if needed)
 	use lastfm || sed -i '/add_subdirectory (LastFM)/d' plugins/CMakeLists.txt
 	use mpris || sed -i '/add_subdirectory (MPRIS)/d' plugins/CMakeLists.txt
+	use zeitgeist || sed -i '/add_subdirectory (Zeitgeist)/d' plugins/CMakeLists.txt
 	use ipod || sed -i '/add_subdirectory (iPod)/d' plugins/Devices/CMakeLists.txt
 
 	cmake-utils_src_prepare
