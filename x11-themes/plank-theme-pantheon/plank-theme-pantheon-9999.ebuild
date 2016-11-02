@@ -6,7 +6,7 @@ EAPI=5
 
 inherit base bzr
 
-DESCRIPTION="Plank theme for elementary OS, created to compliment the Pantheon desktop environment"
+DESCRIPTION="Plank theme for elementary OS"
 HOMEPAGE="https://launchpad.net/plank-theme-pantheon"
 EBZR_REPO_URI="lp:plank-theme-pantheon"
 

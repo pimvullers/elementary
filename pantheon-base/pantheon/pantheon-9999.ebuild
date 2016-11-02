@@ -22,7 +22,7 @@ EBZR_REPO_URI="lp:~elementary-os/elementaryos/pantheon-xsession-settings"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="+lightdm +screensaver"
+IUSE="+lightdm +screensaver web"
 
 CDEPEND="
 	lightdm? ( >=pantheon-base/pantheon-greeter-1.0 )"
@@ -37,7 +37,7 @@ RDEPEND="${CDEPEND}
 	>=x11-themes/elementary-theme-3.4
 	x11-wm/gala
 	screensaver? ( || ( x11-misc/light-locker gnome-extra/gnome-screensaver x11-misc/xscreensaver ) )
-	web? ( www-client/epiphany"
+	web? ( www-client/epiphany )"
 DEPEND="${CDEPEND}"
 
 src_prepare() {

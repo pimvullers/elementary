@@ -11,7 +11,6 @@ inherit vala cmake-utils
 if [[ "${PV}" == "9999" ]]; then
 	inherit bzr
 	EBZR_REPO_URI="lp:${PN}"
-	KEYWORDS=""
 else
 	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 	KEYWORDS="~amd64"

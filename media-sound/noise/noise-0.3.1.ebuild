@@ -18,7 +18,7 @@ KEYWORDS="amd64 arm x86"
 IUSE="mpris ipod lastfm libnotify nls zeitgeist"
 
 RDEPEND="
-	dev-db/sqlheavy
+	dev-db/sqlheavy:0.1
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-libs/libpeas[gtk]

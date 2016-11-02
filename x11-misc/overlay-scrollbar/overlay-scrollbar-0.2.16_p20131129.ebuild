@@ -6,7 +6,7 @@ EAPI=5
 
 inherit autotools-utils
 
-DESCRIPTION="Overlay Scrollbars use an overlay to ensure that scrollbars take up no active screen real-estate."
+DESCRIPTION="Use an overlay to ensure that scrollbars take up no active screen real-estate"
 HOMEPAGE="https://launchpad.net/overlay-scrollbar"
 SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/overlay-scrollbar_0.2.16%2Br359%2B14.04.20131129.orig.tar.gz"
 

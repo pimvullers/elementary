@@ -8,7 +8,7 @@ VALA_MIN_API_VERSION=0.20
 
 inherit vala cmake-utils bzr
 
-DESCRIPTION="A sharing service that allows source apps to send their data to registered destination apps"
+DESCRIPTION="A desktop-wide extension service"
 HOMEPAGE="https://launchpad.net/contractor"
 EBZR_REPO_URI="lp:contractor"
 

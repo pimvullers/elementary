@@ -9,4 +9,5 @@
 	<name>Matthew Marchese</name>
 	<email>maffblaster@gentoo.org</email>
 </maintainer>
+<longdescription>gSSO is a glib-based reimplementation of the single sign-on daemon and authentication plugins with advanced access control and other improvements.</longdescription>
 </pkgmetadata>

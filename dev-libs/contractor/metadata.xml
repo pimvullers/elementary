@@ -9,4 +9,5 @@
 		<name>Matthew Marchese</name>
 		<email>maffblaster@gentoo.org</email>
 	</maintainer>
+	<longdescription>An extension service that allows apps to use the exposed functionality of registered apps. This way, apps don't have to have the functions hard coded into them.</longdescription>
 </pkgmetadata>

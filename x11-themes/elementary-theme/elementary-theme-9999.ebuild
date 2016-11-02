@@ -6,7 +6,7 @@ EAPI=5
 
 inherit base bzr
 
-DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
+DESCRIPTION="The official elementary GTK theme"
 HOMEPAGE="https://launchpad.net/egtk"
 EBZR_REPO_URI="lp:egtk"
 

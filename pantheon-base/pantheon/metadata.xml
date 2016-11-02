@@ -12,5 +12,6 @@
 	<use>
 		<flag name="lightdm">Install and use the Pantheon greeter for LightDM.</flag>
 		<flag name="screensaver">Install a screensaver</flag>
+		<flag name="web">Install the <pkg>www-client/epiphany</pkg> package</flag>
 	</use>
 </pkgmetadata>

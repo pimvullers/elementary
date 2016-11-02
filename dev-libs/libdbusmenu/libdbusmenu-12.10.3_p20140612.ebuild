@@ -15,7 +15,7 @@ SRC_URI="https://launchpad.net/ubuntu/+archive/primary/+files/libdbusmenu_12.10.
 LICENSE="LGPL-2.1 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~hppa ~mips ~x86"
-IUSE="debug gtk gtk2 gtk3 +introspection"
+IUSE="debug gtk gtk2 +introspection"
 
 RDEPEND=">=dev-libs/glib-2.35.4
 	gtk? ( x11-libs/gtk+:3[introspection?] dev-util/gtk-doc )

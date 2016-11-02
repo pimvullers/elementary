@@ -6,7 +6,7 @@ EAPI=5
 
 inherit base
 
-DESCRIPTION="The official elementary GTK theme designed to be smooth, attractive, fast, and usable"
+DESCRIPTION="The official elementary GTK theme"
 HOMEPAGE="https://launchpad.net/egtk"
 SRC_URI="https://launchpad.net/egtk/4.x/${PV}/+download/elementary.tar.xz -> ${P}.tar.xz"
 

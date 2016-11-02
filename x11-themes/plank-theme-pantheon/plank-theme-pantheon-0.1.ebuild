@@ -6,7 +6,7 @@ EAPI=5
 
 inherit base
 
-DESCRIPTION="Plank theme for elementary OS, created to compliment the Pantheon desktop environment"
+DESCRIPTION="Plank theme for elementary OS"
 HOMEPAGE="https://launchpad.net/plank-theme-pantheon"
 SRC_URI="https://code.launchpad.net/~elementary-os/+archive/stable/+files/${PN}_${PV}%7Er6-0%2Bpkg3%2Br1%7Eprecise1.tar.gz"
 
