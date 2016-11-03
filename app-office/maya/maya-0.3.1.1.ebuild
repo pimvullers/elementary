@@ -14,7 +14,7 @@ SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${PN}-calendar-${PV}.t
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
