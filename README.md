@@ -1,10 +1,20 @@
 ## Getting Pantheon
 
+### Via Layman
+
 To install this overlay using Layman ([app-portage/layman](https://packages.gentoo.org/packages/app-portage/layman)) run the following command: `layman -a elementary`
 
 To keep your checkout of the elementary overlay up-to-date run: `layman -s elementary`
 
 Alternatively, to update all overlays managed by layman run: `layman -S`
+
+### Via Portage's repos.conf
+
+To install this overlay using Portage's built in repos.conf, be sure the repos.conf directory exists: `mkdir -p /etc/portage/repos.conf`
+
+Then wget the elementary.conf file in the base of the repository: `wget https://raw.githubusercontent.com/pimvullers/elementary/master/elementary.conf -O /etc/portage/repos.conf/elementary.conf`
+
+Then use `emaint` to sync the repo: `emaint sync -r elementary`
 
 ## Want to chat?
 
