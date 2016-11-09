@@ -24,7 +24,5 @@ restore_filechooser_typeaheadfind
 ubuntu_fileselector_behaviour.patch
 unity-border-radius.patch
 unity-headerbar-maximized-mode.patch
-0001-Improve-external-drives-detection.patch
 0001-Update-the-GDK-Mir-backend-to-fix-a-few-problems.patch
-0002-fix-other-locations-with-glib-249.patch
 0003-use-null-for-generic-marshallers.patch
