@@ -10,4 +10,5 @@
 0001-Move-cache-cleanup-out-into-a-common-function-and-cl.patch
 0002-On-startup-clean-out-the-data-of-removed-users.patch
 0020-support-login.defs.patch
-0021-support-extrausers.patch
+1002-dont-override-standardoutput.patch
+0018-wtmp-fix-logout-times.patch

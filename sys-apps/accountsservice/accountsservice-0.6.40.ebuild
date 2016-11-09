@@ -8,16 +8,16 @@ GCONF_DEBUG="no"
 inherit autotools eutils gnome2 systemd
 
 DESCRIPTION="D-Bus interfaces for querying and manipulating user account information"
-HOMEPAGE="http://www.freedesktop.org/wiki/Software/AccountsService/"
-SRC_URI="http://www.freedesktop.org/software/${PN}/${P}.tar.xz"
+HOMEPAGE="https://www.freedesktop.org/wiki/Software/AccountsService/"
+SRC_URI="https://www.freedesktop.org/software/${PN}/${P}.tar.xz"
 
 LICENSE="GPL-3+"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm ~ia64 ppc ppc64 ~sparc x86"
+KEYWORDS="~alpha amd64 arm ~arm64 ~ia64 ppc ppc64 ~sparc x86"
 
 IUSE="doc +introspection selinux systemd +ubuntu"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.40-2ubuntu7.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/accountsservice_0.6.40-2ubuntu11.3.debian.tar.xz )"
 
 CDEPEND="
 	>=dev-libs/glib-2.37.3:2
@@ -44,6 +44,8 @@ RDEPEND="${CDEPEND}
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-0.6.35-gentoo-system-users.patch"
+	
+	sed -i s/gdm3/gdm/ ${WORKDIR}/debian/patches/0007-add-lightdm-support.patch
 
 	# Ubuntu patches
 	if use ubuntu; then
