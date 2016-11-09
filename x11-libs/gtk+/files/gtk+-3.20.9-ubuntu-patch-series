@@ -11,7 +11,6 @@ no-accessibility-dump.patch
 reftest-known-fail.patch
 wayland-add-extended-state-for-tiled.patch
 Don-t-apply-GDK_HINT_RESIZE_INC-to-GDK_WINDOW_STATE_.patch
-
 bzg_gtkcellrenderer_grabbing_modifier.patch
 ubuntu_gtk_custom_menu_items.patch
 print-dialog-show-options-of-remote-dnssd-printers.patch
@@ -21,7 +20,6 @@ message-dialog-restore-traditional-look-on-unity.patch
 0001-gtk-reftest-Force-icon-theme-to-Adwaita.patch
 restore_filechooser_typeaheadfind
 0001-calendar-always-emit-day-selected-once.patch
-#git-refresh-mir-backend.patch
 0001-gtkwindow-set-transparent-background-color.patch
 ubuntu_fileselector_behaviour.patch
 unity-border-radius.patch
