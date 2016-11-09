@@ -28,4 +28,4 @@ backport_search_printer_location.patch
 menubar_toolbar_dragging.patch
 use-secrets-service-for-cups-auth_info.patch
 printing-initialize-auth_info.patch
-gdkcairo-Avoid-integer-overflow.patch
+099_CVE-2013-7447.patch

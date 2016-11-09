@@ -12,12 +12,10 @@
 061_use_pdf_as_default_printing_standard.patch
 062_dnd_menubar.patch
 063_treeview_almost_fixed.patch
-065_gir_set_packages.patch
 071_no_offscreen_widgets_grabbing.patch
 090_logging_file_saves.patch
 092_default_to_xdg_document_dir.patch
 093_gtk3_gtkimage_fallbacks_use.patch
-095_git_menus_scrolling.patch
 096_git_gtkprintsettings.patch
 097_statusicon_image_fallback.patch
 098_multiarch_module_path.patch
@@ -27,5 +25,4 @@ print-dialog-show-options-of-remote-dnssd-printers.patch
 gtk-shell-shows-menubar.patch
 backport_search_printer_location.patch
 menubar_toolbar_dragging.patch
-use-secrets-service-for-cups-auth_info.patch
-printing-initialize-auth_info.patch
+

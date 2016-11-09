@@ -2,11 +2,10 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
-GCONF_DEBUG="yes"
+EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit autotools eutils flag-o-matic gnome2 multilib virtualx readme.gentoo multilib-minimal
+inherit autotools eutils flag-o-matic gnome2 multilib multilib-minimal readme.gentoo-r1 virtualx
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
@@ -18,11 +17,14 @@ REQUIRED_USE="
 	xinerama? ( !aqua )
 "
 
-KEYWORDS="alpha amd64 arm ~arm64 hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk%2B2.0_2.24.28-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk+2.0_2.24.30-4ubuntu2.debian.tar.xz )"
 
-# NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
+# Upstream wants us to do their job:
+# https://bugzilla.gnome.org/show_bug.cgi?id=768663#c1
+RESTRICT="test"
+
 COMMON_DEPEND="
 	>=dev-libs/atk-2.10.0[introspection?,${MULTILIB_USEDEP}]
 	>=dev-libs/glib-2.34.3:2[${MULTILIB_USEDEP}]
@@ -35,13 +37,13 @@ COMMON_DEPEND="
 	cups? ( >=net-print/cups-1.7.1-r2:=[${MULTILIB_USEDEP}] )
 	introspection? ( >=dev-libs/gobject-introspection-0.9.3:= )
 	!aqua? (
-		>=x11-libs/cairo-1.12.14-r4:=[X]
-		>=x11-libs/gdk-pixbuf-2.30.7:2[X]
+		>=x11-libs/cairo-1.12.14-r4:=[aqua?,svg,X,${MULTILIB_USEDEP}]
+		>=x11-libs/gdk-pixbuf-2.30.7:2[introspection?,X,${MULTILIB_USEDEP}]
 		>=x11-libs/libXrender-0.9.8[${MULTILIB_USEDEP}]
 		>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXi-1.7.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXext-1.3.2[${MULTILIB_USEDEP}]
-		>=x11-libs/libXrandr-1.4.2[${MULTILIB_USEDEP}]
+		>=x11-libs/libXrandr-1.5[${MULTILIB_USEDEP}]
 		>=x11-libs/libXcursor-1.1.14[${MULTILIB_USEDEP}]
 		>=x11-libs/libXfixes-5.0.1[${MULTILIB_USEDEP}]
 		>=x11-libs/libXcomposite-0.4.4-r1[${MULTILIB_USEDEP}]
@@ -49,10 +51,16 @@ COMMON_DEPEND="
 		xinerama? ( >=x11-libs/libXinerama-1.1.3[${MULTILIB_USEDEP}] )
 	)
 "
+# docbook-4.1.2 and xsl required for man pages
+# docbook-4.3 required for gtk-doc
 DEPEND="${COMMON_DEPEND}
+	app-text/docbook-xsl-stylesheets
+	app-text/docbook-xml-dtd:4.1.2
+	app-text/docbook-xml-dtd:4.3
+	dev-libs/libxslt
 	dev-libs/gobject-introspection-common
 	>=dev-util/gtk-doc-am-1.20
-	sys-devel/gettext
+	>=sys-devel/gettext-0.18.3[${MULTILIB_USEDEP}]
 	>=virtual/pkgconfig-0-r1[${MULTILIB_USEDEP}]
 	!aqua? (
 		>=x11-proto/xextproto-7.2.1-r1[${MULTILIB_USEDEP}]
@@ -75,13 +83,12 @@ RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gail-1000
 	!<dev-util/gtk-builder-convert-${PV}
 	!<x11-libs/vte-0.28.2-r201:0
-	abi_x86_32? (
-		!<=app-emulation/emul-linux-x86-gtklibs-20140508
-		!app-emulation/emul-linux-x86-gtklibs[-abi_x86_32(-)]
-	)
+	>=x11-themes/adwaita-icon-theme-3.14
+	x11-themes/gnome-themes-standard
 "
 # librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
 PDEPEND="
+	x11-themes/gtk-engines-adwaita
 	gnome-base/librsvg[${MULTILIB_USEDEP}]
 	vim-syntax? ( app-vim/gtk-syntax )
 "
@@ -93,7 +100,7 @@ edit ~/.config/gtk-2.0/gtkfilechooser.ini to contain the following:
 StartupMode=cwd"
 
 MULTILIB_CHOST_TOOLS=(
-	/usr/bin/gtk-query-immodules-2.0
+	/usr/bin/gtk-query-immodules-2.0$(get_exeext)
 )
 
 strip_builddir() {
@@ -111,9 +118,6 @@ set_gtk2_confdir() {
 }
 
 src_prepare() {
-	# Fix tests running when building out of sources, bug #510596, upstream bug #730319
-	epatch "${FILESDIR}"/${PN}-2.24.24-out-of-source.patch
-
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
@@ -121,9 +125,6 @@ src_prepare() {
 			epatch "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
-
-	# Rely on split gtk-update-icon-cache package, bug #528810
-	epatch "${FILESDIR}"/${PN}-2.24.27-update-icon-cache.patch
 
 	# marshalers code was pre-generated with glib-2.31, upstream bug #662109
 	rm -v gdk/gdkmarshalers.c gtk/gtkmarshal.c gtk/gtkmarshalers.c \
@@ -175,7 +176,14 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
 	fi
 
-	epatch_user
+	# Fix tests running when building out of sources, bug #510596, upstream bug #730319
+	eapply "${FILESDIR}"/${PN}-2.24.24-out-of-source.patch
+
+	# Rely on split gtk-update-icon-cache package, bug #528810
+	eapply "${FILESDIR}"/${PN}-2.24.31-update-icon-cache.patch
+
+	# Fix beep when overwriting at the end of a gtkentry, from gtk-2-24 branch
+	eapply "${FILESDIR}"/${PN}-2.24.31-fix-gtkentry-beep.patch
 
 	eautoreconf
 	gnome2_src_prepare
@@ -192,6 +200,8 @@ multilib_src_configure() {
 		$(multilib_native_use_enable introspection) \
 		$(use_enable xinerama) \
 		--disable-papi \
+		--enable-man \
+		--with-xml-catalog="${EPREFIX}"/etc/xml/catalog \
 		CUPS_CONFIG="${EPREFIX}/usr/bin/${CHOST}-cups-config"
 
 	# work-around gtk-doc out-of-source brokedness
@@ -204,38 +214,29 @@ multilib_src_configure() {
 }
 
 multilib_src_test() {
-	unset DBUS_SESSION_BUS_ADDRESS
-	Xemake check
+	virtx emake check
 }
 
 multilib_src_install() {
 	gnome2_src_install
-
-	# add -framework Carbon to the .pc files, bug #????
-	# FIXME: Is this still needed? Any reference to try to upstream it?
-#	if use aqua ; then
-#		for i in gtk+-2.0.pc gtk+-quartz-2.0.pc gtk+-unix-print-2.0.pc; do
-#			sed -e "s:Libs\: :Libs\: -framework Carbon :" \
-#				-i "${ED%/}"/usr/$(get_libdir)/pkgconfig/$i || die "sed failed"
-#		done
-#	fi
 }
 
 multilib_src_install_all() {
 	# see bug #133241
 	# Also set more default variables in sync with gtk3 and other distributions
 	echo 'gtk-fallback-icon-theme = "gnome"' > "${T}/gtkrc"
-	echo 'gtk-theme-name = "elementary"' >> "${T}/gtkrc"
-	echo 'gtk-icon-theme-name = "elementary"' >> "${T}/gtkrc"
-	echo 'gtk-cursor-theme-name = "Vanilla-DMZ-AA"' >> "${T}/gtkrc"
+	echo 'gtk-theme-name = "Adwaita"' >> "${T}/gtkrc"
+	echo 'gtk-icon-theme-name = "gnome"' >> "${T}/gtkrc"
+	echo 'gtk-cursor-theme-name = "Adwaita"' >> "${T}/gtkrc"
 
 	insinto /usr/share/gtk-2.0
 	doins "${T}"/gtkrc
 
-	dodoc AUTHORS ChangeLog* HACKING NEWS* README*
+	einstalldocs
 
 	# dev-util/gtk-builder-convert split off into a separate package, #402905
 	rm "${ED}"usr/bin/gtk-builder-convert || die
+	rm "${ED}"usr/share/man/man1/gtk-builder-convert.* || die
 
 	readme.gentoo_create_doc
 }
