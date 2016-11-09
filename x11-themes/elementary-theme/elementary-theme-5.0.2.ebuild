@@ -43,6 +43,20 @@ src_prepare() {
 
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
+
+	sed -i \
+		-e 's/icon-shadow/-gtk-icon-shadow/' \
+		-e 's/-gtk-image-effect/-gtk-icon-effect/' \
+		-e 's/:prelight/:hover/' \
+		-e 's/:insensitive/:disabled/' \
+		-e '/-GtkWidget-separator-height:/d' \
+		-e '/-GtkWidget-separator-width:/d' \
+		-e '/-GtkWidget-wide-separators:/d' \
+		-e '/-GtkWidget-focus-line-width:/d' \
+		-e '/-GtkWidget-focus-padding:/d' \
+		-e '/-GtkWidget-link-color:/d' \
+		-e '/-GtkWidget-visited-link-color:/d' \
+		gtk-3.0/*.css
 }
 
 src_install() {
