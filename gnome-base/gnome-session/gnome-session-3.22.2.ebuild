@@ -8,7 +8,7 @@ inherit gnome2
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.18.1.2-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.22.1-1ubuntu1.debian.tar.xz )"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
@@ -27,7 +27,9 @@ COMMON_DEPEND="
 	>=gnome-base/gnome-desktop-3.18:3=
 	elibc_FreeBSD? ( dev-libs/libexecinfo )
 
-	virtual/opengl
+	media-libs/mesa[egl,gles2]
+
+	media-libs/libepoxy
 	x11-libs/libSM
 	x11-libs/libICE
 	x11-libs/libXau
@@ -57,10 +59,9 @@ RDEPEND="${COMMON_DEPEND}
 	)
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-lang/perl-5
-	>=sys-devel/gettext-0.10.40
 	dev-libs/libxslt
 	>=dev-util/intltool-0.40.6
+	>=sys-devel/gettext-0.10.40
 	virtual/pkgconfig
 	!<gnome-base/gdm-2.20.4
 	doc? (

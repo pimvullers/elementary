@@ -2,19 +2,17 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI="5"
-GCONF_DEBUG="yes"
-
+EAPI=6
 inherit gnome2
 
 DESCRIPTION="Gnome session manager"
 HOMEPAGE="https://git.gnome.org/browse/gnome-session"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.18.1.2-1ubuntu1.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-session_3.22.1-1ubuntu1.debian.tar.xz )"
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~x86-freebsd ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE="doc elibc_FreeBSD ipv6 systemd +ubuntu"
 
 # x11-misc/xdg-user-dirs{,-gtk} are needed to create the various XDG_*_DIRs, and
@@ -29,7 +27,8 @@ COMMON_DEPEND="
 	>=gnome-base/gnome-desktop-3.18:3=
 	elibc_FreeBSD? ( dev-libs/libexecinfo )
 
-	virtual/opengl
+	media-libs/mesa[egl,gles2]
+
 	x11-libs/libSM
 	x11-libs/libICE
 	x11-libs/libXau
@@ -51,7 +50,7 @@ COMMON_DEPEND="
 RDEPEND="${COMMON_DEPEND}
 	gnome-base/gnome-settings-daemon
 	>=gnome-base/gsettings-desktop-schemas-0.1.7
-	>=x11-themes/gnome-themes-standard-2.91.92
+	x11-themes/adwaita-icon-theme
 	sys-apps/dbus[X]
 	!systemd? (
 		sys-auth/consolekit
@@ -59,10 +58,9 @@ RDEPEND="${COMMON_DEPEND}
 	)
 "
 DEPEND="${COMMON_DEPEND}
-	>=dev-lang/perl-5
-	>=sys-devel/gettext-0.10.40
 	dev-libs/libxslt
 	>=dev-util/intltool-0.40.6
+	>=sys-devel/gettext-0.10.40
 	virtual/pkgconfig
 	!<gnome-base/gdm-2.20.4
 	doc? (

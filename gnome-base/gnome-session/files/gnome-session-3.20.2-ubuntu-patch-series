@@ -4,3 +4,6 @@ revert_remove_gnome_session_properties.patch
 51_remove_session_saving_from_gui.patch
 53_add_sessionmigration.patch
 95_dbus_request_shutdown.patch
+103_kill_the_fail_whale.patch
+dont_override_IM_variables.patch
+allow_overriding_qt_platformtheme.patch
