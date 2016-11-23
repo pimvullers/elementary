@@ -15,7 +15,7 @@ SLOT="0"
 KEYWORDS=""
 IUSE=""
 
-DEPEND=""
+DEPEND="dev-util/gtk-doc"
 RDEPEND="${DEPEND}"
 
 src_prepare() {
