@@ -17,7 +17,7 @@ SRC_URI="https://launchpad.net/${PN}/${PV%.*}/${PV}/+download/${P}.tar.gz"
 LICENSE="LGPL-2.1 LGPL-3"
 SLOT="0"
 KEYWORDS="alpha amd64 ~arm hppa ~mips ppc ppc64 sparc x86"
-IUSE="debug gtk2 gtk +introspection"
+IUSE="debug gtk2 gtk3 +introspection"
 
 RDEPEND="
 	>=dev-libs/dbus-glib-0.100[${MULTILIB_USEDEP}]
@@ -25,7 +25,7 @@ RDEPEND="
 	>=dev-libs/glib-2.32[${MULTILIB_USEDEP}]
 	dev-libs/libxml2[${MULTILIB_USEDEP}]
 	gtk2? ( x11-libs/gtk+:2[introspection?,${MULTILIB_USEDEP}] )
-	gtk? ( >=x11-libs/gtk+-3.2:3[introspection?,${MULTILIB_USEDEP}] )
+	gtk3? ( >=x11-libs/gtk+-3.2:3[introspection?,${MULTILIB_USEDEP}] )
 	introspection? ( >=dev-libs/gobject-introspection-1 )
 	!<${CATEGORY}/${PN}-0.5.1-r200"
 DEPEND="${RDEPEND}
@@ -62,7 +62,7 @@ multilib_src_configure() {
 	local ECONF_SOURCE=${S}
 	econf "${myconf[@]}"
 
-	GTK_VARIANTS=( $(usex gtk2 2 '') $(usex gtk 3 '') )
+	GTK_VARIANTS=( $(usex gtk2 2 '') $(usex gtk3 3 '') )
 	local MULTIBUILD_VARIANTS=( "${GTK_VARIANTS[@]}" )
 	local top_builddir=${BUILD_DIR}
 
