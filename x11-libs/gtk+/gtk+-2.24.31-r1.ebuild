@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -17,7 +17,7 @@ REQUIRED_USE="
 	xinerama? ( !aqua )
 "
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x64-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
 	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk+2.0_2.24.30-4ubuntu2.debian.tar.xz )"
 
@@ -38,7 +38,6 @@ COMMON_DEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-0.9.3:= )
 	!aqua? (
 		>=x11-libs/cairo-1.12.14-r4:=[aqua?,svg,X,${MULTILIB_USEDEP}]
-		>=x11-libs/gdk-pixbuf-2.30.7:2[introspection?,X,${MULTILIB_USEDEP}]
 		>=x11-libs/libXrender-0.9.8[${MULTILIB_USEDEP}]
 		>=x11-libs/libX11-1.6.2[${MULTILIB_USEDEP}]
 		>=x11-libs/libXi-1.7.2[${MULTILIB_USEDEP}]
@@ -226,7 +225,7 @@ multilib_src_install_all() {
 	# Also set more default variables in sync with gtk3 and other distributions
 	echo 'gtk-fallback-icon-theme = "gnome"' > "${T}/gtkrc"
 	echo 'gtk-theme-name = "Adwaita"' >> "${T}/gtkrc"
-	echo 'gtk-icon-theme-name = "gnome"' >> "${T}/gtkrc"
+	echo 'gtk-icon-theme-name = "Adwaita"' >> "${T}/gtkrc"
 	echo 'gtk-cursor-theme-name = "Adwaita"' >> "${T}/gtkrc"
 
 	insinto /usr/share/gtk-2.0
