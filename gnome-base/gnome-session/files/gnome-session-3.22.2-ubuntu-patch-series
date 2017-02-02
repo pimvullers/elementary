@@ -6,3 +6,4 @@ revert_remove_gnome_session_properties.patch
 53_add_sessionmigration.patch
 95_dbus_request_shutdown.patch
 103_kill_the_fail_whale.patch
+git_wayland_login_shell.patch
