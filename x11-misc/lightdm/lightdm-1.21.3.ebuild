@@ -14,7 +14,7 @@ SRC_URI="https://launchpad.net/${PN}/${TRUNK_VERSION}/${PV}/+download/${P}.tar.x
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
-IUSE="audit +gtk +introspection kde qt4 qt5 pantheon +gnome"
+IUSE="audit +gtk +introspection kde qt4 qt5 pantheon +gnome +vala"
 REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND="audit? ( sys-process/audit )
@@ -76,7 +76,7 @@ src_prepare() {
 		AT_M4DIR=${WORKDIR} eautoreconf
 	fi
 
-	vala_src_prepare
+	use vala && vala_src_prepare
 }
 
 src_configure() {
@@ -99,7 +99,7 @@ src_configure() {
 		--localstatedir=/var \
 		--disable-static \
 		--disable-tests \
-		--enable-vala \
+		$(use_enable vala) \
 		$(use_enable audit libaudit) \
 		$(use_enable introspection) \
 		$(use_enable qt4 liblightdm-qt) \

@@ -13,7 +13,7 @@ if [[ "${PV}" == "9999" ]]; then
 	EBZR_REPO_URI="lp:${PN}"
 	KEYWORDS=""
 else
-	SRC_URI="https://launchpad.net/${PN}/${PV}-loki/${PV}/+download/${P}.tar.xz"
+	SRC_URI="https://launchpad.net/${PN}/0.4-loki/${PV}/+download/${P}.tar.xz"
 	KEYWORDS="~amd64"
 fi
 
@@ -31,6 +31,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)"
 
 src_prepare() {
+	eapply "${FILESDIR}/${P}-translations.patch"
 	eapply_user
 
 	# Translations

@@ -4,6 +4,8 @@
 
 EAPI=6
 
+VALA_MIN_VERSION=0.26
+
 inherit fdo-mime gnome2-utils vala cmake-utils
 
 if [[ "${PV}" == "9999" ]]; then
@@ -29,7 +31,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)"
 
 src_prepare() {
-	eapply "${FILESDIR}/${P}-translations.patch"
+	eapply "${FILESDIR}/${PN}-0.1.2-translations.patch"
 	eapply_user
 
 	# Translations

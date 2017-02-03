@@ -6,7 +6,7 @@ EAPI=6
 
 DESCRIPTION="The official elementary GTK theme"
 HOMEPAGE="https://launchpad.net/egtk"
-SRC_URI="https://launchpad.net/egtk/5.x/${PV}/+download/elementary.tar.xz -> ${P}.tar.xz"
+SRC_URI="https://launchpad.net/egtk/5.x/${PV}/+download/${P}.tar.xz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -35,7 +35,6 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
-S="${WORKDIR}/elementary"
 DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
 src_prepare() {

@@ -25,7 +25,7 @@ RDEPEND="
 	x11-libs/gdk-pixbuf:2
 	x11-libs/granite
 	x11-libs/gtk+:3
-	>=x11-misc/lightdm-1.2.1::elementary"
+	>=x11-misc/lightdm-1.2.1[vala]"
 DEPEND="${DEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
