@@ -19,7 +19,7 @@ IUSE="nls"
 
 RDEPEND="
 	gnome-extra/nm-applet
-	net-misc/networkmanager
+	net-misc/networkmanager[vapi-fix]
 	sys-auth/polkit
 	x11-libs/granite
 	x11-libs/gtk+:3

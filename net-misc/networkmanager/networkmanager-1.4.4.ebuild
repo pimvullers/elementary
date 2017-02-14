@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -28,7 +28,7 @@ REQUIRED_USE="
 	^^ ( nss gnutls )
 "
 
-KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86"
 
 # gobject-introspection-0.10.3 is needed due to gnome bug 642300
 # wpa_supplicant-0.7.3-r3 is needed due to bug 359271
@@ -57,7 +57,7 @@ COMMON_DEPEND="
 		>=net-libs/gnutls-2.12:=[${MULTILIB_USEDEP}] )
 	introspection? ( >=dev-libs/gobject-introspection-0.10.3:= )
 	json? ( dev-libs/jansson )
-	modemmanager? ( >=net-misc/modemmanager-0.7.991 )
+	modemmanager? ( >=net-misc/modemmanager-0.7.991:0= )
 	ncurses? ( >=dev-libs/newt-0.52.15 )
 	nss? ( >=dev-libs/nss-3.11:=[${MULTILIB_USEDEP}] )
 	ofono? ( net-misc/ofono )
@@ -65,9 +65,6 @@ COMMON_DEPEND="
 	resolvconf? ( net-dns/openresolv )
 	selinux? ( sys-libs/libselinux )
 	systemd? ( >=sys-apps/systemd-209:0= )
-	!systemd? (
-		!consolekit? ( || ( sys-power/upower sys-power/upower-pm-utils ) )
-	)
 	teamd? ( >=net-misc/libteam-1.9 )
 "
 RDEPEND="${COMMON_DEPEND}
@@ -124,8 +121,11 @@ pkg_pretend() {
 }
 
 pkg_setup() {
+	if use connection-sharing; then
+		CONFIG_CHECK="~NF_NAT_IPV4 ~NF_NAT_MASQUERADE_IPV4"
+		linux-info_pkg_setup
+	fi
 	enewgroup plugdev
-
 	use test && python-any-r1_pkg_setup
 }
 
@@ -171,45 +171,45 @@ multilib_src_configure() {
 	ECONF_SOURCE=${S} \
 	runstatedir="/run" \
 		gnome2_src_configure \
-		--disable-more-warnings \
-		--disable-static \
-		--localstatedir=/var \
-		--disable-lto \
-		--disable-config-plugin-ibft \
-		--disable-ifnet \
-		--disable-qt \
-		--without-netconfig \
-		--with-dbus-sys-dir=/etc/dbus-1/system.d \
-		--with-libnm-glib \
-		--with-nmcli=yes \
-		--with-udev-dir="$(get_udevdir)" \
-		--with-config-plugins-default=keyfile \
-		--with-iptables=/sbin/iptables \
-		$(multilib_native_with libsoup) \
-		$(multilib_native_enable concheck) \
-		--with-crypto=$(usex nss nss gnutls) \
-		--with-session-tracking=$(multilib_native_usex systemd systemd $(multilib_native_usex consolekit consolekit no)) \
-		--with-suspend-resume=$(multilib_native_usex systemd systemd $(multilib_native_usex consolekit consolekit upower)) \
-		$(multilib_native_use_with audit libaudit) \
-		$(multilib_native_use_enable bluetooth bluez5-dun) \
-		$(multilib_native_use_enable introspection) \
-		$(multilib_native_use_enable json json-validation) \
-		$(multilib_native_use_enable ppp) \
-		$(use_with dhclient) \
-		--without-dhcpcd \
-		$(multilib_native_use_with modemmanager modem-manager-1) \
-		$(multilib_native_use_with ncurses nmtui) \
-		$(multilib_native_use_with ofono) \
-		$(multilib_native_use_with resolvconf) \
-		$(multilib_native_use_with selinux) \
-		$(multilib_native_use_with systemd systemd-journal) \
-		$(multilib_native_use_enable teamd teamdctl) \
-		$(multilib_native_use_enable test tests) \
-		$(multilib_native_use_enable vala) \
-		--without-valgrind \
-		$(multilib_native_use_with wext) \
-		$(multilib_native_use_enable wifi) \
-		"${myconf[@]}"
+			--disable-more-warnings \
+			--disable-static \
+			--localstatedir=/var \
+			--disable-lto \
+			--disable-config-plugin-ibft \
+			--disable-ifnet \
+			--disable-qt \
+			--without-netconfig \
+			--with-dbus-sys-dir=/etc/dbus-1/system.d \
+			--with-libnm-glib \
+			--with-nmcli=yes \
+			--with-udev-dir="$(get_udevdir)" \
+			--with-config-plugins-default=keyfile \
+			--with-iptables=/sbin/iptables \
+			$(multilib_native_with libsoup) \
+			$(multilib_native_enable concheck) \
+			--with-crypto=$(usex nss nss gnutls) \
+			--with-session-tracking=$(multilib_native_usex systemd systemd $(multilib_native_usex consolekit consolekit no)) \
+			--with-suspend-resume=$(multilib_native_usex systemd systemd consolekit) \
+			$(multilib_native_use_with audit libaudit) \
+			$(multilib_native_use_enable bluetooth bluez5-dun) \
+			$(multilib_native_use_enable introspection) \
+			$(multilib_native_use_enable json json-validation) \
+			$(multilib_native_use_enable ppp) \
+			$(use_with dhclient) \
+			--without-dhcpcd \
+			$(multilib_native_use_with modemmanager modem-manager-1) \
+			$(multilib_native_use_with ncurses nmtui) \
+			$(multilib_native_use_with ofono) \
+			$(multilib_native_use_with resolvconf) \
+			$(multilib_native_use_with selinux) \
+			$(multilib_native_use_with systemd systemd-journal) \
+			$(multilib_native_use_enable teamd teamdctl) \
+			$(multilib_native_use_enable test tests) \
+			$(multilib_native_use_enable vala) \
+			--without-valgrind \
+			$(multilib_native_use_with wext) \
+			$(multilib_native_use_enable wifi) \
+			"${myconf[@]}"
 
 	# work-around gtk-doc out-of-source brokedness
 	if multilib_is_native_abi; then
