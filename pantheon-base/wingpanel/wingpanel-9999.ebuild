@@ -40,7 +40,8 @@ PDEPEND="
 	sound? ( pantheon-base/wingpanel-indicator-sound )"
 
 src_prepare() {
-	eapply "${FILESDIR}"/${PN}-2.0.1-CMP0037.patch
+	#TODO: update the patch
+	#eapply "${FILESDIR}"/${PN}-2.0.1-CMP0037.patch
 	eapply_user
 
 	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt || die
