@@ -26,6 +26,7 @@ RDEPEND="
 	>=x11-libs/granite-0.3
 	x11-libs/gtk+:3
 	gnome-extra/zeitgeist
+	pantheon-base/switchboard
 	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
