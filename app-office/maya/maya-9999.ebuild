@@ -1,4 +1,4 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
@@ -26,7 +26,7 @@ RDEPEND="
 	gnome-base/gconf:2
 	gnome-extra/evolution-data-server
 	media-libs/clutter
-	media-libs/libchamplain
+	media-libs/libchamplain[gtk]
 	net-libs/libsoup:2.4
 	sci-geosciences/geocode-glib
 	x11-libs/gtk+:3
