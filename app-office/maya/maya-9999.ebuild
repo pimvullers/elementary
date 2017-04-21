@@ -25,7 +25,7 @@ RDEPEND="
 	gnome-base/gconf:2
 	gnome-extra/evolution-data-server
 	media-libs/clutter
-	media-libs/libchamplain
+	media-libs/libchamplain[gtk]
 	net-libs/libsoup:2.4
 	sci-geosciences/geocode-glib
 	x11-libs/gtk+:3
