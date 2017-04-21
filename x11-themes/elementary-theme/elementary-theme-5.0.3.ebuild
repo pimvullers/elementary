@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
@@ -35,8 +34,6 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
-DOCS=( AUTHORS CONTRIBUTORS COPYING )
-
 src_prepare() {
 	eapply_user
 
@@ -61,6 +58,4 @@ src_prepare() {
 src_install() {
 	insinto /usr/share/themes/elementary
 	doins -r index.theme gtk-2.0 gtk-3.0
-
-	base_src_install_docs
 }

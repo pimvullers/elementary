@@ -1,14 +1,13 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
 PYTHON_COMPAT=( python{2_6,2_7} )
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 
-inherit vala autotools-utils python-r1 bzr
+inherit vala autotools python-r1 bzr
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
@@ -36,25 +35,24 @@ DEPEND="${RDEPEND}
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig"
 
-AUTOTOOLS_AUTORECONF=yes
-DOCS=(AUTHORS COPYING COPYING.LGPL COPYING.LGPL-2.1 ChangeLog NEWS README TODO)
-
 src_prepare() {
 	sed -i 's/-Werror//' configure.ac
 	sed -i 's/tests//' Makefile.am
 
-	autotools-utils_src_prepare
+	eautoreconf
+
 	vala_src_prepare
+
+	default
 }
 
 src_configure() {
-	local myeconfargs=(
-		--disable-gtktest
-		--disable-webapps
-		$(use_enable doc gtk-doc)
-		$(use_enable introspection)
-		VALA_API_GEN="${VAPIGEN}"
-	)
 	python_setup
-	autotools-utils_src_configure
+	
+	econf \
+		--disable-gtktest \
+		--disable-webapps \
+		$(use_enable doc gtk-doc) \ 
+		$(use_enable introspection) \
+		VALA_API_GEN="${VAPIGEN}"
 }

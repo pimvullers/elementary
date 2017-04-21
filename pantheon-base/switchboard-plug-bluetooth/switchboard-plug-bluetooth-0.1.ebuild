@@ -1,23 +1,23 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils
+inherit vala cmake-utils bzr
 
-DESCRIPTION="Switchboard plug to show system information"
-HOMEPAGE="http://launchpad.net/switchboard-plug-about"
-SRC_URI="http://launchpad.net/${PN}/freya/${PV}/+download/${P}.tar.xz"
+DESCRIPTION="Switchboard plug to setup bluetooth devices"
+HOMEPAGE="http://launchpad.net/switchboard-plug-bluetooth"
+SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 
-LICENSE="GPL-3"
+LICENSE="LGPL-2.1"
 SLOT="0"
-KEYWORDS="amd64 ~arm x86"
+KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/glib:2
 	x11-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"

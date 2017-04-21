@@ -1,12 +1,11 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.20
 
-inherit vala autotools-utils
+inherit vala autotools
 
 DESCRIPTION="GObject SQLite wrapper"
 HOMEPAGE="https://code.google.com/archive/p/sqlheavy/"
@@ -15,7 +14,6 @@ SRC_URI="https://storage.googleapis.com/google-code-archive-downloads/v2/code.go
 LICENSE="LGPL-2.1"
 SLOT="0.1"
 KEYWORDS="amd64 x86"
-IUSE="static-libs"
 
 RDEPEND="
 	>=dev-db/sqlite-3.6.20:3
@@ -25,20 +23,11 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-AUTOTOOLS_IN_SOURCE_BUILD=1
-AUTOTOOLS_AUTORECONF=1
-
-pkg_setup() {
-	DOCS=(AUTHORS COPYING ChangeLog NEWS README)
-}
-
 src_prepare() {
-	epatch "${FILESDIR}/${P}-drop-sqlheavy-gen-orm.patch"
+	eapply "${FILESDIR}/${P}-drop-sqlheavy-gen-orm.patch"
+	eapply_user
 
-	autotools-utils_src_prepare
+	eautoreconf
 	vala_src_prepare
 }
 
-src_compile() {
-	autotools-utils_src_compile -j1
-}

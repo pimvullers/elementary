@@ -1,16 +1,15 @@
-# Copyright 1999-2015 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.20
 
 inherit vala cmake-utils bzr
 
 DESCRIPTION="Switchboard plug to show system information."
-HOMEPAGE="http://launchpad.net/switchboard-plug-about"
-EBZR_REPO_URI="lp:switchboard-plug-about"
+HOMEPAGE="https://launchpad.net/switchboard-plug-sharing"
+EBZR_REPO_URI="lp:${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"

@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
@@ -8,20 +7,26 @@ VALA_MIN_API_VERSION=0.22
 
 inherit vala cmake-utils
 
-DESCRIPTION="Application configuration management"
-HOMEPAGE="https://launchpad.net/switchboard-plug-default-applications"
-SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+if [[ "${PV}" == "9999" ]]; then
+	inherit bzr
+	EBZR_REPO_URI="lp:${PN}"
+	KEYWORDS=""
+else
+	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+	KEYWORDS="amd64 x86"
+fi
+
+DESCRIPTION="Mouse and touchpad settings"
+HOMEPAGE="http://launchpad.net/${PN}"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 ~arm x86"
 IUSE="nls"
 
 RDEPEND="
-	dev-libs/glib:2
-	>=pantheon-base/switchboard-2
 	x11-libs/granite
-	x11-libs/gtk+:3"
+	x11-libs/gtk+:3
+	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

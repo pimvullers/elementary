@@ -1,0 +1,11 @@
+diff -Naur scratch-text-editor-2.4.1.orig/CMakeLists.txt scratch-text-editor-2.4.1/CMakeLists.txt
+--- scratch-text-editor-2.4.1.orig/CMakeLists.txt	2017-03-01 18:06:30.377859302 +0100
++++ scratch-text-editor-2.4.1/CMakeLists.txt	2017-03-01 18:07:17.647129152 +0100
+@@ -106,6 +106,7 @@
+ add_subdirectory (po)
+ 
+ # Data
++include(Translations)
+ configure_file_translation(${CMAKE_SOURCE_DIR}/data/org.pantheon.scratch.desktop.in ${CMAKE_BINARY_DIR}/data/org.pantheon.scratch.desktop ${CMAKE_SOURCE_DIR}/po/)
+ configure_file_translation(${CMAKE_SOURCE_DIR}/data/org.pantheon.scratch.appdata.xml.in ${CMAKE_BINARY_DIR}/data/org.pantheon.scratch.appdata.xml ${CMAKE_SOURCE_DIR}/po/)
+ 

@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 inherit autotools eutils flag-o-matic pam qmake-utils readme.gentoo-r1 systemd vala versionator xdg-utils
@@ -15,7 +14,6 @@ LICENSE="GPL-3 LGPL-3"
 SLOT="0"
 KEYWORDS="~amd64 ~arm ~arm64 ~ppc ~ppc64 ~x86"
 IUSE="audit +gtk +introspection kde qt4 qt5 pantheon +gnome +vala"
-REQUIRED_USE="|| ( gtk kde pantheon )"
 
 COMMON_DEPEND="audit? ( sys-process/audit )
 	>=dev-libs/glib-2.32.3:2

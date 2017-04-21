@@ -1,10 +1,7 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
-
-inherit base
+EAPI=6
 
 DESCRIPTION="Plank theme for elementary OS"
 HOMEPAGE="https://launchpad.net/plank-theme-pantheon"
@@ -22,7 +19,7 @@ RDEPEND="${DEPEND}
 DOCS=( COPYING )
 
 src_unpack() {
-	default_src_unpack
+	default
 
 	mv "${WORKDIR}/recipe-{debupstream}~r{revno}-0+pkg{revno:packaging}+r1" "${S}"
 }

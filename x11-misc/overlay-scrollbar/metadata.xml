@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
-<pkgmetadata>
-  <use>
-    <flag name="gtk2">Build the overlay-scrollbar for GTK+ 2</flag>
-    <flag name="gtk3">Build the overlay scrollbar for GTK+ 3</flag>
-  </use>
-</pkgmetadata>

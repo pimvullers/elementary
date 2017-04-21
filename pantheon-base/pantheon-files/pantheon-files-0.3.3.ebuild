@@ -2,7 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Id$
 
-EAPI=5
+EAPI=6
 
 VALA_MIN_API_VERSION=0.26
 
@@ -14,20 +14,20 @@ SRC_URI="http://launchpad.net/${PN}/$(get_version_component_range 1-2).x/${PV}/+
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64 arm x86"
+KEYWORDS="amd64 x86"
 IUSE="+gvfs nls"
 
 RDEPEND="
-	dev-libs/glib:2
-	x11-libs/granite
-	dev-libs/libgee:0.8
-	x11-libs/gtk+:3
-	x11-libs/pango
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
+	dev-libs/glib:2
+	>=x11-libs/granite-0.3
+	dev-libs/libgee:0.8
 	gnome-extra/zeitgeist
 	pantheon-base/plank
+	>=x11-libs/gtk+-3.4:3
 	x11-libs/libnotify
+	x11-libs/pango
 	gvfs? ( gnome-base/gvfs )"
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -37,7 +37,7 @@ DEPEND="${RDEPEND}
 DOCS=( AUTHORS COPYING HACKING README )
 
 src_prepare() {
-	epatch_user
+	eapply_user
 
 	# Disable generation of the translations (if needed)
 	use nls || sed -i -e '/add_subdirectory (po)/d' CMakeLists.txt

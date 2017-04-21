@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
-inherit base bzr
+inherit bzr
 
 DESCRIPTION="The official elementary GTK theme"
 HOMEPAGE="https://launchpad.net/egtk"
@@ -37,11 +36,8 @@ RDEPEND="${DEPEND}
 
 RESTRICT="binchecks mirror strip"
 
-DOCS=( AUTHORS CONTRIBUTORS COPYING )
-
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-xfwm4.patch"
-	epatch_user
+	eapply_user
 
 	# Correct cursor theme name
 	sed -i 's/DMZ-Black/Vanilla-DMZ-AA/' index.theme
@@ -49,7 +45,5 @@ src_prepare() {
 
 src_install() {
 	insinto /usr/share/themes/elementary
-	doins -r index.theme gtk-2.0 gtk-3.0 xfwm4
-
-	base_src_install_docs
+	doins -r index.theme gtk-2.0 gtk-3.0
 }

@@ -1,8 +1,7 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI="5"
+EAPI=6
 GCONF_DEBUG="yes"
 GNOME2_LA_PUNT="yes"
 
@@ -112,18 +111,18 @@ set_gtk2_confdir() {
 
 src_prepare() {
 	# Fix tests running when building out of sources, bug #510596, upstream bug #730319
-	epatch "${FILESDIR}"/${PN}-2.24.24-out-of-source.patch
+	eapply "${FILESDIR}"/${PN}-2.24.24-out-of-source.patch
 
 	# Ubuntu patches
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
-			epatch "${WORKDIR}/debian/patches/${patch}"
+			eapply "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
 
 	# Rely on split gtk-update-icon-cache package, bug #528810
-	epatch "${FILESDIR}"/${PN}-2.24.27-update-icon-cache.patch
+	eapply "${FILESDIR}"/${PN}-2.24.27-update-icon-cache.patch
 
 	# marshalers code was pre-generated with glib-2.31, upstream bug #662109
 	rm -v gdk/gdkmarshalers.c gtk/gtkmarshal.c gtk/gtkmarshalers.c \
@@ -175,7 +174,7 @@ src_prepare() {
 		strip_builddir SRC_SUBDIRS demos Makefile.{am,in}
 	fi
 
-	epatch_user
+	eapply_user
 
 	eautoreconf
 	gnome2_src_prepare

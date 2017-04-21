@@ -14,7 +14,7 @@ SRC_URI="https://launchpad.net/${PN}/2.x/${PV}/+download/${PN}-text-editor-${PV}
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64 ~x86"
+KEYWORDS="amd64 x86"
 IUSE="nls contractor files pastebin spell terminal webkit zeitgeist"
 
 RDEPEND="
@@ -32,7 +32,8 @@ RDEPEND="
 	webkit? ( net-libs/webkit-gtk:3 )
 	terminal? ( || ( x11-libs/vte:2.91 x11-libs/vte:2.90 ) )
 	zeitgeist? ( gnome-extra/zeitgeist )"
-DEPEND="virtual/pkgconfig
+DEPEND="${RDEPEND}
+	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
 pkg_setup() {

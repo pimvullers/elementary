@@ -1,10 +1,7 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
-
-inherit base
+EAPI=6
 
 DESCRIPTION="A set of wallpapers used by the elementary OS"
 HOMEPAGE="http://www.elementaryos.org/journal/luna-wallpapers-officially-revealed"
@@ -19,6 +16,10 @@ RDEPEND=""
 DEPEND="${RDEPEND}"
 
 S="${WORKDIR}"
+
+src_prepare() {
+	default
+}
 
 src_install() {
 	insinto /usr/share/backgrounds/elementary

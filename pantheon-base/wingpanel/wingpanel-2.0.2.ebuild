@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
@@ -40,7 +39,6 @@ PDEPEND="
 	sound? ( pantheon-base/wingpanel-indicator-sound )"
 
 src_prepare() {
-	eapply "${FILESDIR}"/${P}-CMP0037.patch
 	eapply_user
 
 	use nls || sed -i '/add_subdirectory(po)/d' CMakeLists.txt || die
