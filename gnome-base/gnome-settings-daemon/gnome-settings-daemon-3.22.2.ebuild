@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
+GNOME2_EAUTORECONF="yes"
 GNOME2_LA_PUNT="yes"
 PYTHON_COMPAT=( python{2_7,3_4,3_5} )
 
@@ -19,7 +20,7 @@ REQUIRED_USE="
 	input_devices_wacom? ( udev )
 	smartcard? ( udev )
 "
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 COMMON_DEPEND="
 	>=dev-libs/glib-2.37.7:2[dbus]
@@ -95,6 +96,13 @@ DEPEND="${COMMON_DEPEND}
 	>=x11-proto/xproto-7.0.15
 "
 
+PATCHES=(
+	# Make colord and wacom optional; requires eautoreconf
+	"${FILESDIR}"/${PN}-3.22.0-optional.patch
+	# Allow specifying udevrulesdir via configure, bug 509484; requires eautoreconf
+	"${FILESDIR}"/${PV}-udevrulesdir-configure.patch
+)
+
 python_check_deps() {
 	use test && has_version "dev-python/pygobject:3[${PYTHON_USEDEP}]"
 }
@@ -112,10 +120,6 @@ src_prepare() {
 		done
 	fi
 
-	# Make colord and wacom optional; requires eautoreconf
-	eapply "${FILESDIR}"/${PN}-3.22.0-optional.patch
-
-	eautoreconf
 	gnome2_src_prepare
 }
 
@@ -123,6 +127,7 @@ src_configure() {
 	gnome2_src_configure \
 		--disable-static \
 		--enable-man \
+		--with-udevrulesdir="$(get_udevdir)"/rules.d \
 		$(use_enable colord color) \
 		$(use_enable cups) \
 		$(use_enable debug) \
@@ -136,10 +141,6 @@ src_configure() {
 
 src_test() {
 	virtx emake check
-}
-
-src_install() {
-	gnome2_src_install udevrulesdir="$(get_udevdir)"/rules.d #509484
 }
 
 pkg_postinst() {

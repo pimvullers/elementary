@@ -2,6 +2,7 @@
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
+GNOME2_EAUTORECONF="yes"
 inherit gnome2
 
 DESCRIPTION="Gnome session manager"
@@ -11,7 +12,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="GPL-2 LGPL-2 FDL-1.1"
 SLOT="0"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
 IUSE="doc elibc_FreeBSD ipv6 systemd +ubuntu"
 
 # x11-misc/xdg-user-dirs{,-gtk} are needed to create the various XDG_*_DIRs, and
@@ -66,9 +67,17 @@ DEPEND="${COMMON_DEPEND}
 	doc? (
 		app-text/xmlto
 		dev-libs/libxslt )
+	gnome-base/gnome-common
 "
 # gnome-common needed for eautoreconf
 # gnome-base/gdm does not provide gnome.desktop anymore
+
+PATCHES=(
+	# Make gnome wayland session launch inside a login shell for /etc/env.d and other stuff to work, bug 604110
+	"${FILESDIR}/${PV}-wayland-login-shell.patch"
+	# Restore Xorg as the default GNOME session instead of Wayland for the 3.22 release, bug 611146
+	"${FILESDIR}/${PV}-xorg-default.patch" # remove ewarn about this below when removing for 3.24
+)
 
 src_prepare() {
 	# Ubuntu patches
@@ -77,6 +86,10 @@ src_prepare() {
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
 			eapply "${WORKDIR}/debian/patches/${patch}"
 		done
+	else
+		PATCHES+=(
+			"${FILESDIR}/${PV}-xorg-default-translations.patch"
+		)
 	fi
 
 	gnome2_src_prepare
@@ -127,6 +140,12 @@ src_install() {
 
 pkg_postinst() {
 	gnome2_pkg_postinst
+
+	ewarn "The Gentoo GNOME team has decided to retain Xorg session default instead of"
+	ewarn "Wayland for GNOME 3.22 stable version, even if USE=wayland is set on applicable"
+	ewarn "packages. You can still choose the 'GNOME on Wayland' session explicitly, if"
+	ewarn "desired. GNOME 3.24 will default to Wayland again as upstream GNOME does, if"
+	ewarn "USE=wayland is used globally, but 'GNOME on Xorg' session will be a choice."
 
 	if ! has_version gnome-base/gdm && ! has_version x11-misc/sddm; then
 		ewarn "If you use a custom .xinitrc for your X session,"
