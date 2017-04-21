@@ -10,23 +10,25 @@ net-libs/gsignond **
 #pantheon-base/cerbere **
 #pantheon-base/pantheon-files **
 #pantheon-base/pantheon-greeter **
-pantheon-base/pantheon-settings **
+#pantheon-base/pantheon-settings **
 pantheon-base/pantheon-shell **
-pantheon-base/plank **
+#pantheon-base/plank **
 #pantheon-base/slingshot **
 #pantheon-base/switchboard **
 #pantheon-base/switchboard-plug-about **
+pantheon-base/switchboard-plug-bluetooth **
 #pantheon-base/switchboard-plug-default-applications **
 #pantheon-base/switchboard-plug-startup-applications **
 #pantheon-base/switchboard-plug-keyboard **
 #pantheon-base/switchboard-plug-locale **
+pantheon-base/switchboard-plug-network **
 #pantheon-base/switchboard-plug-pantheon-shell **
 #pantheon-base/switchboard-plug-power **
 #pantheon-base/switchboard-plug-onlineaccounts **
 #pantheon-base/switchboard-plug-security-privacy **
 #pantheon-base/wingpanel **
 #pantheon-base/wingpanel-indicator-datetime **
-#pantheon-base/wingpanel-indicator-accessibility **
+pantheon-base/wingpanel-indicator-accessibility **
 #pantheon-base/wingpanel-indicator-ayatana **
 #pantheon-base/wingpanel-indicator-bluetooth **
 #pantheon-base/wingpanel-indicator-keyboard **
@@ -36,7 +38,7 @@ pantheon-base/plank **
 #pantheon-base/wingpanel-indicator-session **
 #pantheon-base/wingpanel-indicator-sound **
 pantheon-extra/elementary-tweaks **
-pantheon-extra/pantheon-calculator **
+#pantheon-extra/pantheon-calculator **
 pantheon-extra/pantheon-print **
 sys-power/indicator-power **
 www-client/midori **
@@ -47,6 +49,6 @@ x11-misc/light-locker **
 #x11-themes/elementary-icon-theme **
 #x11-themes/elementary-theme **
 x11-themes/elementary-wallpapers **
-x11-themes/plank-theme-pantheon **
+#x11-themes/plank-theme-pantheon **
 x11-wm/gala **
 

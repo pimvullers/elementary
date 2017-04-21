@@ -1,6 +1,5 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 inherit gnome2 virtualx
@@ -51,7 +50,7 @@ src_prepare() {
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
-			epatch "${WORKDIR}/debian/patches/${patch}"
+			eapply "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
 

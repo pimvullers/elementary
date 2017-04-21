@@ -1,14 +1,13 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
-EAPI=5
+EAPI=6
 
 inherit gnome2-utils cmake-utils bzr
 
 DESCRIPTION="Default settings for the Pantheon Desktop Environment"
-HOMEPAGE="https://code.launchpad.net/~elementary-os/elementaryos/default-settings-trusty"
-EBZR_REPO_URI="lp:~elementary-os/elementaryos/default-settings-trusty"
+HOMEPAGE="https://code.launchpad.net/~elementary-os/elementaryos/default-settings-loki"
+EBZR_REPO_URI="lp:~elementary-os/elementaryos/default-settings-loki"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -46,16 +45,13 @@ src_install() {
 	doexe dpms/elementary-dpms-helper
 
 	insinto /usr/share/applications/
-	doins policykit.desktop
+	doins policykit.desktop sessioninstaller.desktop
 
 	insinto /usr/share/glib-2.0/schemas/
 	doins ${P}.gschema.override
 
 	insinto /etc/xdg/autostart/
 	doins dpms/elementary-dpms-helper.desktop 
-	
-	insinto /etc/xdg/xdg-elementary/autostart/
-	doins light-locker.desktop
 
 	insinto /etc/xdg/midori/
 	doins midori/config
@@ -68,6 +64,12 @@ src_install() {
 
 	insinto /etc/gtk-3.0/
 	doins settings.ini
+
+	insinto /etc/wingpanel.d/
+	doins wingpanel.d/* 
+
+	insinto /etc/sudoers.d/
+	doins sudoers.d/* 
 }
 
 pkg_postinst() {

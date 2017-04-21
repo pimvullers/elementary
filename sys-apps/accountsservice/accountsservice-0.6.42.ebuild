@@ -1,6 +1,5 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 inherit gnome2 systemd
@@ -41,7 +40,7 @@ RDEPEND="${CDEPEND}
 "
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-0.6.35-gentoo-system-users.patch"
+	eapply "${FILESDIR}/${PN}-0.6.35-gentoo-system-users.patch"
 	
 	sed -i s/gdm3/gdm/ ${WORKDIR}/debian/patches/0007-add-lightdm-support.patch
 
@@ -49,7 +48,7 @@ src_prepare() {
 	if use ubuntu; then
 		einfo "Applying patches from Ubuntu:"
 		for patch in `cat "${FILESDIR}/${P}-ubuntu-patch-series"`; do
-			epatch "${WORKDIR}/debian/patches/${patch}"
+			eapply "${WORKDIR}/debian/patches/${patch}"
 		done
 	fi
 

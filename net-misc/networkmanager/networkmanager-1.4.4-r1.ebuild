@@ -1,6 +1,5 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 GNOME_ORG_MODULE="NetworkManager"
@@ -133,6 +132,12 @@ src_prepare() {
 	DOC_CONTENTS="To modify system network connections without needing to enter the
 		root password, add your user account to the 'plugdev' group."
 
+	VAPIGEN_VERSIONED=vapigen-$(vala_best_api_version)
+	use vapi-fix && sed -i \
+		-e "s/vapigen\`/$(VAPIGEN_VERSIONED)\`/" \ 
+		-e "s/vapigen_pkg_name=vapigen/vapigen_pkg_name=$(VAPIGEN_VERSIONED)/" \
+		configure
+	
 	use vala && vala_src_prepare
 	gnome2_src_prepare
 }
@@ -288,10 +293,10 @@ multilib_src_install_all() {
 	doins "${FILESDIR}/01-org.freedesktop.NetworkManager.settings.modify.system.rules"
 
 	# Fix empty libnm-glib.vapi
-	if use vapi-fix; then
-		insinto /usr/share/vala/vapi
-		newins "${FILESDIR}/${PN}-1.2.4-libnm-glib.vapi" libnm-glib.vapi
-	fi
+#	if use vapi-fix; then
+#		insinto /usr/share/vala/vapi
+#		newins "${FILESDIR}/${PN}-1.2.4-libnm-glib.vapi" libnm-glib.vapi
+#	fi
 
 	# Remove empty /run/NetworkManager
 	rmdir "${D}"/run/NetworkManager "${D}"/run || die

@@ -1,10 +1,9 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
 
-VALA_MIN_API_VERSION=0.16
+VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 PYTHON_COMPAT=( python2_7 )
 
@@ -16,7 +15,7 @@ SRC_URI="https://launchpad.net/${PN}/${PV%.*}/${PV}/+download/${P}.tar.gz"
 
 LICENSE="LGPL-2.1 LGPL-3"
 SLOT="0"
-KEYWORDS="alpha amd64 ~arm hppa ~mips ppc ppc64 sparc x86"
+KEYWORDS="amd64 x86"
 IUSE="debug gtk2 gtk3 +introspection"
 
 RDEPEND="

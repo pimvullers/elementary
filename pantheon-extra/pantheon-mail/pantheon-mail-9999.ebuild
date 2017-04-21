@@ -1,8 +1,10 @@
-# Copyright 1999-2016 Gentoo Foundation
+# Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Id$
 
 EAPI=6
+
+VALA_MIN_VERSION=0.22
+VALA_USE_DEPEND=vapigen
 
 inherit cmake-utils vala
 
@@ -37,6 +39,7 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
+		-DVAPIGEN="${VALA_API_GEN}"
 	)
 
 	cmake-utils_src_configure

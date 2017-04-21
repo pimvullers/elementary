@@ -3,7 +3,7 @@
 
 EAPI=6
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.26
 
 inherit vala autotools
 
