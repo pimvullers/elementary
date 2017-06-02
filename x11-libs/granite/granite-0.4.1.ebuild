@@ -9,7 +9,7 @@ inherit gnome2-utils vala cmake-utils
 
 DESCRIPTION="A development library for elementary development"
 HOMEPAGE="https://launchpad.net/granite"
-SRC_URI="https://launchpad.net/${PN}/0.4/${PV}/+download/${P}.tar.xz"
+SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz"
 
 LICENSE="LGPL-3"
 SLOT="0"
@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING NEWS README )
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	eapply_user

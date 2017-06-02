@@ -25,7 +25,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING NEWS README )
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	eapply_user

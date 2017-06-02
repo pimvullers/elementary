@@ -6,10 +6,10 @@ EAPI=6
 VALA_MIN_VERSION=0.22
 
 inherit gnome2-utils vala cmake-utils
-
+z
 DESCRIPTION="Keyboard indicator for Wingpanel"
 HOMEPAGE="https://launchpad.net/wingpanel-indicator-keyboard"
-SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
+SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
