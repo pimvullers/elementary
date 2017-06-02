@@ -44,7 +44,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
 
-DOCS=( AUTHORS NEWS README )
+DOCS=( AUTHORS )
 
 src_prepare() {
 	eapply_user

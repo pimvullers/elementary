@@ -5,7 +5,7 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils
+inherit vala gnome2-utils cmake-utils
 
 DESCRIPTION="Configure various aspects of the security of the system."
 HOMEPAGE="https://launchpad.net/switchboard-plug-security-privacy"
@@ -38,6 +38,19 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
+		-DGSETTINGS_COMPILE=OFF
 	)
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
 }
