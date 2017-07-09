@@ -4,22 +4,22 @@
 EAPI=6
 GNOME2_LA_PUNT="yes"
 
-inherit autotools eutils flag-o-matic gnome2 multilib virtualx multilib-minimal
+inherit autotools flag-o-matic gnome2 multilib virtualx multilib-minimal
 
 DESCRIPTION="Gimp ToolKit +"
 HOMEPAGE="http://www.gtk.org/"
 
 LICENSE="LGPL-2+"
 SLOT="3"
-IUSE="aqua broadway cloudprint colord cups examples +introspection test +ubuntu vim-syntax wayland X xinerama"
+IUSE="aqua broadway cloudprint colord cups examples +introspection test +ubuntu vim-syntax wayland +X xinerama"
 REQUIRED_USE="
 	|| ( aqua wayland X )
 	xinerama? ( X )
 "
 
-KEYWORDS="alpha amd64 arm ~arm64 hppa ia64 ~mips ppc ppc64 ~s390 ~sh sparc x86 ~amd64-fbsd ~x86-fbsd ~x86-freebsd ~x86-interix ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~hppa ~ia64 ~mips ~ppc ~ppc64 ~s390 ~sh ~sparc ~x86 ~amd64-fbsd ~x86-fbsd ~amd64-linux ~arm-linux ~x86-linux ~ppc-macos ~x86-macos ~sparc-solaris ~sparc64-solaris ~x64-solaris ~x86-solaris"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_3.20.9-1ubuntu2.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gtk+3.0_3.22.15-0ubuntu2.debian.tar.xz )"
 
 # Upstream wants us to do their job:
 # https://bugzilla.gnome.org/show_bug.cgi?id=768662#c1
@@ -27,14 +27,13 @@ RESTRICT="test"
 
 # FIXME: introspection data is built against system installation of gtk+:3,
 # bug #????
-# NOTE: cairo[svg] dep is due to bug 291283 (not patched to avoid eautoreconf)
 COMMON_DEPEND="
 	>=dev-libs/atk-2.15[introspection?,${MULTILIB_USEDEP}]
-	>=dev-libs/glib-2.45.8:2[${MULTILIB_USEDEP}]
+	>=dev-libs/glib-2.49.4:2[${MULTILIB_USEDEP}]
 	media-libs/fontconfig[${MULTILIB_USEDEP}]
-	>=media-libs/libepoxy-1.0[${MULTILIB_USEDEP}]
+	>=media-libs/libepoxy-1.0[X(+)?,${MULTILIB_USEDEP}]
 	>=x11-libs/cairo-1.14[aqua?,glib,svg,X?,${MULTILIB_USEDEP}]
-	>=x11-libs/gdk-pixbuf-2.30:2[introspection?,X?,${MULTILIB_USEDEP}]
+	>=x11-libs/gdk-pixbuf-2.30:2[introspection?,${MULTILIB_USEDEP}]
 	>=x11-libs/pango-1.37.3[introspection?,${MULTILIB_USEDEP}]
 	x11-misc/shared-mime-info
 
@@ -46,13 +45,12 @@ COMMON_DEPEND="
 	introspection? ( >=dev-libs/gobject-introspection-1.39:= )
 	wayland? (
 		>=dev-libs/wayland-1.9.91[${MULTILIB_USEDEP}]
-		>=dev-libs/wayland-protocols-1.0
+		>=dev-libs/wayland-protocols-1.7
 		media-libs/mesa[wayland,${MULTILIB_USEDEP}]
 		>=x11-libs/libxkbcommon-0.2[${MULTILIB_USEDEP}]
 	)
 	X? (
 		>=app-accessibility/at-spi2-atk-2.5.3[${MULTILIB_USEDEP}]
-		x11-libs/libXrender[${MULTILIB_USEDEP}]
 		x11-libs/libX11[${MULTILIB_USEDEP}]
 		>=x11-libs/libXi-1.3[${MULTILIB_USEDEP}]
 		x11-libs/libXext[${MULTILIB_USEDEP}]
@@ -69,9 +67,9 @@ DEPEND="${COMMON_DEPEND}
 	app-text/docbook-xml-dtd:4.1.2
 	dev-libs/libxslt
 	dev-libs/gobject-introspection-common
-	>=dev-util/gdbus-codegen-2.38.2
+	>=dev-util/gdbus-codegen-2.48
 	>=dev-util/gtk-doc-am-1.20
-	>=sys-devel/gettext-0.18.3[${MULTILIB_USEDEP}]
+	>=sys-devel/gettext-0.19.7[${MULTILIB_USEDEP}]
 	virtual/pkgconfig[${MULTILIB_USEDEP}]
 	X? (
 		x11-proto/xextproto[${MULTILIB_USEDEP}]
@@ -86,14 +84,11 @@ DEPEND="${COMMON_DEPEND}
 "
 # gtk+-3.2.2 breaks Alt key handling in <=x11-libs/vte-0.30.1:2.90
 # gtk+-3.3.18 breaks scrolling in <=x11-libs/vte-0.31.0:2.90
-# >=xorg-server-1.11.4 needed for
-#  https://mail.gnome.org/archives/desktop-devel-list/2012-March/msg00024.html
 RDEPEND="${COMMON_DEPEND}
 	>=dev-util/gtk-update-icon-cache-3
 	!<gnome-base/gail-1000
 	!<x11-libs/vte-0.31.0:2.90
 	>=x11-themes/adwaita-icon-theme-3.14
-	X? ( !<x11-base/xorg-server-1.11.4 )
 "
 # librsvg for svg icons (PDEPEND to avoid circular dep), bug #547710
 PDEPEND="
@@ -123,10 +118,6 @@ src_prepare() {
 		done
 	fi
 
-	# -O3 and company cause random crashes in applications. Bug #133469
-	replace-flags -O3 -O2
-	strip-flags
-
 	if ! use test ; then
 		# don't waste time building tests
 		strip_builddir SRC_SUBDIRS testsuite Makefile.{am,in}
@@ -143,10 +134,10 @@ src_prepare() {
 	fi
 
 	# gtk-update-icon-cache is installed by dev-util/gtk-update-icon-cache
-	eapply "${FILESDIR}"/${PN}-3.16.2-remove_update-icon-cache.patch
+	eapply "${FILESDIR}"/${PN}-3.22.2-update-icon-cache.patch
 
-	gnome2_src_prepare
 	eautoreconf
+	gnome2_src_prepare
 }
 
 multilib_src_configure() {
@@ -196,6 +187,8 @@ multilib_src_install() {
 multilib_src_install_all() {
 	insinto /etc/gtk-3.0
 	doins "${FILESDIR}"/settings.ini
+	# Skip README.{in,commits,win32} and useless ChangeLog that would get installed by default
+	DOCS=( AUTHORS NEWS README )
 	einstalldocs
 }
 

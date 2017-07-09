@@ -22,3 +22,4 @@ ubuntu_fileselector_behaviour.patch
 unity-border-radius.patch
 unity-headerbar-maximized-mode.patch
 gtksocket-unscale-before-sending-configurenotify.patch
+no_content_hub.patch
