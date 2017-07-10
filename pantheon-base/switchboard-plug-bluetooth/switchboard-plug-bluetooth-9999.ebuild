@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils git-r3
 
 DESCRIPTION="Switchboard plug to setup bluetooth devices"
 HOMEPAGE="http://launchpad.net/switchboard-plug-bluetooth"
-EBZR_REPO_URI="lp:switchboard-plug-bluetooth"
+EGIT_REPO_URI="https://github.com/elementary/switchboard-plug-bluetooth.git"
 
 LICENSE="LGPL-2.1"
 SLOT="0"
