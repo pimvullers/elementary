@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.20
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils git-r3
 
 DESCRIPTION="Switchboard plug to show system information."
 HOMEPAGE="http://launchpad.net/switchboard-plug-about"
-EBZR_REPO_URI="lp:switchboard-plug-about"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

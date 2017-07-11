@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.24
 
-inherit fdo-mime gnome2-utils vala cmake-utils multilib bzr
+inherit fdo-mime gnome2-utils vala cmake-utils multilib git-r3
 
 DESCRIPTION="Stylish top panel that holds indicators and spawns an application launcher"
 HOMEPAGE="https://launchpad.net/wingpanel"
-EBZR_REPO_URI="lp:wingpanel"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

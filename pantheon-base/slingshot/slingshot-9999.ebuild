@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="http://launchpad.net/slingshot"
-EBZR_REPO_URI="lp:slingshot"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -43,7 +43,6 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DGSETTINGS_COMPILE=OFF
-		-DICONCACHE_UPDATE=OFF
 		-DUSE_UNITY=OFF
 		-DVALA_EXECUTABLE="${VALAC}"
 	)

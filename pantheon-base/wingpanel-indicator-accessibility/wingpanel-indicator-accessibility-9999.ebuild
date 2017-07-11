@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="Accessibility indicator for Wingpanel"
 HOMEPAGE="https://launchpad.net/wingpanel-indicator-accessibility"
-EBZR_REPO_URI="lp:wingpanel-indicator-a11y"
+EGIT_REPO_URI="https://github.com/elementary/wingpanel-indicator-a11y.git"
 
 LICENSE="GPL-3"
 SLOT="0"

@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit vala cmake-utils
 
 if [[ "${PV}" == "9999" ]]; then
-	inherit bzr
-	EBZR_REPO_URI="lp:${PN}"
+	inherit git-r3
+	EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 else
 	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
 	KEYWORDS="~amd64"

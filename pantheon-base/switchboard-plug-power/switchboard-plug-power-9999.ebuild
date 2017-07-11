@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils git-r3
 
 DESCRIPTION="Control system power consumption using Switchboard."
 HOMEPAGE="https://launchpad.net/switchboard-plug-power"
-EBZR_REPO_URI="lp:switchboard-plug-power"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

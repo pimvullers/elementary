@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils bzr
+inherit vala gnome2-utils cmake-utils git-r3
 
 DESCRIPTION="Configure various aspects of the security of the system."
 HOMEPAGE="https://launchpad.net/switchboard-plug-security-privacy"
-EBZR_REPO_URI="lp:switchboard-plug-security-privacy"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -38,6 +38,19 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
+		-DGSETTINGS_COMPILE=OFF
 	)
 	cmake-utils_src_configure
+}
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	gnome2_schemas_update
 }

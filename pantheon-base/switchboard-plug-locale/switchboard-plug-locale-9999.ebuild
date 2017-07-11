@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.24
 
-inherit vala gnome2-utils cmake-utils bzr
+inherit vala gnome2-utils cmake-utils git-r3
 
 DESCRIPTION="Adjust Locale settings using Switchboard."
 HOMEPAGE="https://launchpad.net/switchboard-plug-locale"
-EBZR_REPO_URI="lp:switchboard-plug-locale"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="Date & Time indicator for Wingpanel"
 HOMEPAGE="https://launchpad.net/wingpanel-indicator-datetime"
-EBZR_REPO_URI="lp:${PN}"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

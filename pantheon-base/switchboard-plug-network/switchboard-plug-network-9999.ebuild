@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit vala cmake-utils bzr
+inherit vala cmake-utils git-r3
 
 DESCRIPTION="Configure all available networks"
 HOMEPAGE="http://launchpad.net/switchboard-plug-networking"
-EBZR_REPO_URI="lp:switchboard-plug-networking"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"

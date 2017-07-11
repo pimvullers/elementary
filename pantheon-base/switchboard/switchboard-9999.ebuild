@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="http://launchpad.net/switchboard"
-EBZR_REPO_URI="lp:switchboard"
+EGIT_REPO_URI="https://github.com/elementary/${PN}.git"
 
 LICENSE="GPL-3"
 SLOT="0"
