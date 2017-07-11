@@ -3,11 +3,11 @@
 
 EAPI=6
 
-inherit bzr
+inherit git-r3
 
 DESCRIPTION="The official elementary GTK theme"
 HOMEPAGE="https://launchpad.net/egtk"
-EBZR_REPO_URI="lp:egtk"
+EGIT_REPO_URI="https://github.com/elementary/stylesheet.git"
 
 LICENSE="GPL-3"
 SLOT="0"

@@ -5,11 +5,11 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils bzr
+inherit gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://launchpad.net/pantheon-terminal"
-EBZR_REPO_URI="lp:pantheon-terminal"
+EGIT_REPO_URI="https://github.com/elementary/terminal.git"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -27,7 +27,7 @@ DEPEND="${RDEPEND}
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig"
 
-DOCS=( AUTHORS README )
+DOCS=( AUTHORS )
 
 src_prepare() {
 	use nls || sed -i '/add_subdirectory (po)/d' CMakeLists.txt

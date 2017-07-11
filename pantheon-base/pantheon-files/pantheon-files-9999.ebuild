@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.26
 inherit fdo-mime gnome2-utils vala cmake-utils multilib
 
 if [[ "${PV}" == "9999" ]]; then
-	inherit bzr
-	EBZR_REPO_URI="lp:${PN}"
+	inherit git-r3
+	EGIT_REPO_URI="https://github.com/elementary/files.git"
 	KEYWORDS=""
 else
 	SRC_URI="https://launchpad.net/${PN}/loki/${PV}/+download/${P}.tar.xz"
@@ -40,7 +40,7 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 	nls? ( sys-devel/gettext )"
 
-DOCS=( AUTHORS COPYING HACKING README )
+DOCS=( AUTHORS COPYING )
 
 src_prepare() {
 	eapply_user

@@ -20,9 +20,12 @@ RDEPEND="${DEPEND}
 
 DOCS=( COPYING )
 
+src_prepare() {
+	eapply_user
+	default
+}
+
 src_install() {
 	insinto /usr/share/plank/themes
 	doins -r Pantheon
-
-	base_src_install_docs
 }
