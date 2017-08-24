@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit gnome2-utils git-r3
+inherit cmake-utils gnome2-utils git-r3
 
 DESCRIPTION="Elementary icon theme is designed to be smooth, sexy, clear, and efficient"
 HOMEPAGE="https://launchpad.net/elementaryicons"
@@ -21,12 +21,10 @@ RESTRICT="binchecks mirror strip"
 
 DOCS=( AUTHORS CONTRIBUTORS COPYING )
 
-src_install() {
-	dodoc ${DOCS}
-	rm -r ${DOCS}
+src_prepare() {
+	sed -i '/add_subdirectory (volumeicon)/d' CMakeLists.txt
 
-	insinto /usr/share/icons/elementary
-	doins -r *
+	cmake-utils_src_prepare
 }
 
 pkg_preinst() {

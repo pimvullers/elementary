@@ -4,14 +4,15 @@
 EAPI=6
 GNOME2_EAUTORECONF="yes"
 GNOME2_LA_PUNT="yes"
-PYTHON_COMPAT=( python{2_7,3_4,3_5} )
+#PYTHON_COMPAT=( python{2_7,3_4,3_5,3_6} ) # https://bugzilla.gnome.org/show_bug.cgi?id=783186
+PYTHON_COMPAT=( python2_7 )
 
 inherit gnome2 python-any-r1 systemd udev virtualx
 
 DESCRIPTION="Gnome Settings Daemon"
 HOMEPAGE="https://git.gnome.org/browse/gnome-settings-daemon"
 SRC_URI="${SRC_URI}
-	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.22.1-0ubuntu2.debian.tar.xz )"
+	ubuntu? ( https://launchpad.net/ubuntu/+archive/primary/+files/gnome-settings-daemon_3.24.2-0ubuntu0.1.debian.tar.xz )"
 
 LICENSE="GPL-2+"
 SLOT="0"
@@ -20,13 +21,13 @@ REQUIRED_USE="
 	input_devices_wacom? ( udev )
 	smartcard? ( udev )
 "
-KEYWORDS="~alpha amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
+KEYWORDS="~alpha ~amd64 ~arm ~arm64 ~ia64 ~ppc ~ppc64 ~sparc ~x86 ~x86-fbsd ~amd64-linux ~x86-linux ~x86-solaris"
 
 COMMON_DEPEND="
-	>=dev-libs/glib-2.37.7:2[dbus]
-	>=x11-libs/gtk+-3.15.3:3
+	>=dev-libs/glib-2.44.0:2[dbus]
+	>=x11-libs/gtk+-3.15.3:3[X]
 	>=gnome-base/gnome-desktop-3.11.1:3=
-	>=gnome-base/gsettings-desktop-schemas-3.20
+	>=gnome-base/gsettings-desktop-schemas-3.23.3
 	>=gnome-base/librsvg-2.36.2:2
 	media-fonts/cantarell
 	media-libs/alsa-lib
@@ -76,36 +77,47 @@ RDEPEND="${COMMON_DEPEND}
 	!<gnome-base/gnome-control-center-2.22
 	!<gnome-extra/gnome-color-manager-3.1.1
 	!<gnome-extra/gnome-power-manager-3.1.3
+	!<gnome-base/gnome-session-3.23.2
 "
 # xproto-7.0.15 needed for power plugin
-# FIXME: tests require dbus-mock
 DEPEND="${COMMON_DEPEND}
 	cups? ( sys-apps/sed )
 	test? (
 		${PYTHON_DEPS}
 		$(python_gen_any_dep 'dev-python/pygobject:3[${PYTHON_USEDEP}]')
+		$(python_gen_any_dep 'dev-python/dbusmock[${PYTHON_USEDEP}]')
 		gnome-base/gnome-session )
-	app-text/docbook-xsl-stylesheets
 	dev-libs/libxml2:2
-	dev-libs/libxslt
 	sys-devel/gettext
 	>=dev-util/intltool-0.40
 	virtual/pkgconfig
 	x11-proto/inputproto
 	x11-proto/xf86miscproto
+	x11-proto/kbproto
 	>=x11-proto/xproto-7.0.15
 "
 
+# TypeErrors with python3; weird test errors with python2; all in power component that was made required now
+RESTRICT="test"
+# RESTRICT="!test? ( test )"
+
 PATCHES=(
 	# Make colord and wacom optional; requires eautoreconf
-	"${FILESDIR}"/${PN}-3.22.0-optional.patch
+	"${FILESDIR}"/${PV}-optional.patch
 	# Allow specifying udevrulesdir via configure, bug 509484; requires eautoreconf
 	"${FILESDIR}"/${PV}-udevrulesdir-configure.patch
+	# Fix uninstalled (during build) color plugin test run
+	"${FILESDIR}"/${PV}-fix-color-tests.patch
+	# Reduce memory usage by not initing GTK+ where not needed
+	"${FILESDIR}"/${PV}-remove-unneeded-gtk-init.patch
+	# Reduce memory usage by using a fake CSS theme instead of full Adwaita for GTK+ needing plugins; requires eautoreconf
+	"${FILESDIR}"/${PV}-reduce-memory-usage.patch
 )
 
 python_check_deps() {
 	if use test; then
-		has_version "dev-python/pygobject:3[${PYTHON_USEDEP}]"
+		has_version "dev-python/pygobject:3[${PYTHON_USEDEP}]" &&
+		has_version "dev-python/dbusmock[${PYTHON_USEDEP}]"
 	fi
 }
 
@@ -128,7 +140,6 @@ src_prepare() {
 src_configure() {
 	gnome2_src_configure \
 		--disable-static \
-		--enable-man \
 		--with-udevrulesdir="$(get_udevdir)"/rules.d \
 		$(use_enable colord color) \
 		$(use_enable cups) \

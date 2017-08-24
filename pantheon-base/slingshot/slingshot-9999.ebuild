@@ -17,6 +17,7 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/appstream
 	dev-libs/glib:2
 	dev-libs/json-glib
 	dev-libs/libgee:0.8

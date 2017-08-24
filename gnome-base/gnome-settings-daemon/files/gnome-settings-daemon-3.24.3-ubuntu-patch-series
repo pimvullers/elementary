@@ -1,0 +1,9 @@
+04_superP.patch
+45_suppress-printer-may-not-be-connected-notification.patch
+53_sync_input_sources_to_accountsservice.patch
+64_restore_terminal_keyboard_shortcut_schema.patch
+correct_logout_action.patch
+70_allow_sound_above_100.patch
+ubuntu-lid-close-suspend.patch
+revert-wacom-migration.patch
+revert-gsettings-removals.patch

@@ -3,7 +3,7 @@
 
 EAPI=6
 
-inherit versionator gnome2-utils
+inherit versionator gnome2-utils cmake-utils
 
 MY_PV=$(get_version_component_range 3)
 

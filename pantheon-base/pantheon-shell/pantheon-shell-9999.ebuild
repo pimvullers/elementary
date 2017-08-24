@@ -31,10 +31,10 @@ DEPEND="${CDEPEND}"
 
 src_prepare() {
 	# Use gnome as fallback instead of ubuntu and mutter instead of gala
-	sed -i -e 's/ubuntu/gnome/' debian/pantheon.session
+	sed -i -e 's/ubuntu/gnome/' gnome-session/pantheon.session
 
 	# Use gnome-session wrapper that sets XDG_CURRENT_DESKTOP
-	sed -i 's/gnome-session --session=pantheon/pantheon-session/' debian/pantheon.desktop
+	sed -i 's/gnome-session --session=pantheon/pantheon-session/' xsessions/pantheon.desktop
 
 	# Correct paths
 	sed -i 's#/usr/lib/[^/]*/#/usr/libexec/#' autostart/*
@@ -62,3 +62,12 @@ src_install() {
 	dobin "${FILESDIR}/pantheon-session"
 }
 
+pkg_postinst() {
+	use lightdm && \
+	  /usr/libexec/lightdm/lightdm-set-defaults --keep-old --session=pantheon
+}
+
+pkg_postrm() {
+	use lightdm && \
+	  /usr/libexec/lightdm/lightdm-set-defaults --remove --session=pantheon
+}

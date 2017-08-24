@@ -27,7 +27,7 @@ CDEPEND="
 	x11-libs/bamf
 	x11-libs/gtk+:3"
 RDEPEND="${CDEPEND}
-	x11-themes/plank-theme-pantheon"
+	|| ( >=x11-themes/elementary-theme-5.1 x11-themes/plank-theme-pantheon )"
 DEPEND="${CDEPEND}
 	$(vala_depend)
 	dev-util/intltool

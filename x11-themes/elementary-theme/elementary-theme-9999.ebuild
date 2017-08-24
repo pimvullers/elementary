@@ -15,7 +15,8 @@ KEYWORDS=""
 IUSE="+gtk +gtk3 +icons +wallpapers"
 
 DEPEND="
-	x11-themes/vanilla-dmz-aa-xcursors"
+	x11-themes/vanilla-dmz-aa-xcursors
+	!x11-themes/plank-theme-pantheon"
 RDEPEND="${DEPEND}
 	media-fonts/droid
 	gtk? (
@@ -45,5 +46,8 @@ src_prepare() {
 
 src_install() {
 	insinto /usr/share/themes/elementary
-	doins -r index.theme gtk-2.0 gtk-3.0
+	doins -r index.theme gtk-2.0 gtk-3.0 gtk-3.22
+
+	insinto /usr/share/plank/themes/Pantheon
+	doins plank/dock.theme
 }

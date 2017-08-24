@@ -17,6 +17,7 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
+	dev-libs/libpwquality
 	x11-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"
