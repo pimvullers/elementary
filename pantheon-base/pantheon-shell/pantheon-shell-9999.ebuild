@@ -38,6 +38,10 @@ src_prepare() {
 
 	# Correct paths
 	sed -i 's#/usr/lib/[^/]*/#/usr/libexec/#' autostart/*
+
+	eapply_user
+
+	default
 }
 
 src_install() {
