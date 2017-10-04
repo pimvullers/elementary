@@ -30,6 +30,8 @@ RDEPEND="${CDEPEND}
 DEPEND="${CDEPEND}"
 
 src_prepare() {
+	eapply_user
+
 	# Use gnome as fallback instead of ubuntu and mutter instead of gala
 	sed -i -e 's/ubuntu/gnome/' -e 's/gala/mutter/' debian/pantheon.session
 
