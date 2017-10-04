@@ -5,7 +5,7 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.20
 
-inherit vala cmake-utils
+inherit gnome2-utils vala cmake-utils
 
 if [[ "${PV}" == "9999" ]]; then
 	inherit git-r3
@@ -41,6 +41,22 @@ src_prepare() {
 src_configure() {
 	local mycmakeargs=(
 		-DVALA_EXECUTABLE="${VALAC}"
+		-DGSETTINGS_COMPILE=OFF
 	)
 	cmake-utils_src_configure
 }
+
+pkg_preinst() {
+	gnome2_schemas_savelist
+}
+
+pkg_postinst() {
+	fdo-mime_desktop_database_update
+	gnome2_schemas_update
+}
+
+pkg_postrm() {
+	fdo-mime_desktop_database_update
+	gnome2_schemas_update
+}
+
