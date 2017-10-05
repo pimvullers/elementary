@@ -5,7 +5,7 @@ EAPI=6
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils vala cmake-utils git-r3
+inherit xdg-utils gnome2-utils vala cmake-utils git-r3
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="http://launchpad.net/switchboard"
@@ -52,8 +52,10 @@ pkg_preinst() {
 
 pkg_postinst() {
 	gnome2_schemas_update
+	xdg_desktop_database_update
 }
 
 pkg_postrm() {
 	gnome2_schemas_update
+	xdg_desktop_database_update
 }

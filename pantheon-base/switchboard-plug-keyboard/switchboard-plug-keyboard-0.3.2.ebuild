@@ -4,6 +4,7 @@
 EAPI=6
 
 VALA_MIN_API_VERSION=0.22
+VALA_MAX_API_VERSION=0.34
 
 inherit vala cmake-utils
 
@@ -18,6 +19,7 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib
+	gnome-base/libgnomekbd
 	x11-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"
