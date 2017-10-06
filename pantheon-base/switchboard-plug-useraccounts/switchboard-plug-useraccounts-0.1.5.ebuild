@@ -17,7 +17,8 @@ KEYWORDS="~amd64 ~x86"
 IUSE="nls"
 
 RDEPEND="
-	>=x11-libs/granite-0.4.1
+	dev-libs/libpwquality
+	x11-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}
