@@ -17,7 +17,7 @@ KEYWORDS=""
 IUSE="nls"
 
 RDEPEND="
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3
 	gnome-base/gnome-desktop:3
 	>=pantheon-base/switchboard-2"

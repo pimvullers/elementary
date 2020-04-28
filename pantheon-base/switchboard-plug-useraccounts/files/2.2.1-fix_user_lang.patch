@@ -1,0 +1,42 @@
+--- /src/Views/UserSettingsView.vala	2019-03-15 19:51:19.000000000 +0300
++++ /src/Views/UserSettingsView.vala	2019-03-18 02:54:21.651227800 +0300
+@@ -289,7 +289,7 @@
+                         user_type_lock.set_opacity (0);
+                     }
+                 }
+- 
++
+                 if (!current_user) {
+                     language_box.set_sensitive (true);
+                     region_box.set_sensitive (true);
+@@ -385,18 +385,27 @@
+                 var languages = get_languages ();
+                 language_store = new Gtk.ListStore (2, typeof (string), typeof (string));
+                 Gtk.TreeIter iter;
+- 
++
+                 language_box.set_model (language_store);
+ 
+                 foreach (string language in languages) {
+                     language_store.insert (out iter, 0);
+                     language_store.set (iter, 0, language, 1, Gnome.Languages.get_language_from_code (language, null));
+-                    if (user.get_language ().slice (0, 2) == language)
++                    string user_lang = user.get_language ();
++                    if (user_lang == "") {
++                        user_lang = Environment.get_variable ("LANG");
++                    }
++                    if (user_lang.slice (0, 2) == language) {
+                         language_box.set_active_iter (iter);
++                    }
+                 }
+ 
+             } else {
+-                var language = Gnome.Languages.get_language_from_code (user.get_language ().slice (0, 2), null);
++                string user_lang = user.get_language ();
++                if (user_lang == "") {
++                    user_lang = Environment.get_variable ("LANG");
++                }
++                var language = Gnome.Languages.get_language_from_code (user_lang.slice (0, 2), null);
+                 language_button.set_label (language);
+             }
+         }

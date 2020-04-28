@@ -1,4 +1,32 @@
 #!/bin/sh
 
-export XDG_CURRENT_DESKTOP=Pantheon
-gnome-session --session=pantheon
+if test "x$XDG_DATA_DIRS" = "x"
+then
+  if test "x/usr/share" = "x/usr/local/share" -o "x/usr/share" = "x/usr/share"; then
+    XDG_DATA_DIRS="/usr/local/share:/usr/share"
+  else
+    XDG_DATA_DIRS="/usr/share:/usr/local/share:/usr/share"
+  fi
+else
+  XDG_DATA_DIRS="$XDG_DATA_DIRS:/usr/share"
+fi
+export XDG_DATA_DIRS
+
+if test "x$XDG_CONFIG_DIRS" = "x"
+then
+  if test "x/etc" = "x/etc"; then
+    XDG_CONFIG_DIRS="/etc/xdg"
+  else
+    XDG_CONFIG_DIRS="/etc/xdg:/etc/xdg"
+  fi
+else
+  XDG_CONFIG_DIRS="$XDG_CONFIG_DIRS:/etc/xdg"
+fi
+export XDG_CONFIG_DIRS
+
+XDG_CURRENT_DESKTOP=Pantheon
+export XDG_CURRENT_DESKTOP
+
+exec gnome-session --session=pantheon
+
+

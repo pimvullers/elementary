@@ -22,7 +22,7 @@ RDEPEND="
 	>=pantheon-base/wingpanel-2.0
 	virtual/opengl
 	x11-libs/gdk-pixbuf:2
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3
 	>=x11-misc/lightdm-1.2.1[vala]"
 DEPEND="${RDEPEND}

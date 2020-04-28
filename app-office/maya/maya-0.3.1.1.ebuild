@@ -29,7 +29,7 @@ RDEPEND="
 	net-libs/libsoup:2.4
 	sci-geosciences/geocode-glib
 	x11-libs/gtk+:3
-	x11-libs/granite"
+	dev-libs/granite"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

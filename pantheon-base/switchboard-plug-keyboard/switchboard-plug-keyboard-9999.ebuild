@@ -19,7 +19,7 @@ IUSE="nls"
 RDEPEND="
 	dev-libs/glib
 	gnome-base/libgnomekbd
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3
 	>=pantheon-base/switchboard-2"
 DEPEND="${RDEPEND}

@@ -1,0 +1,450 @@
+--- /meson.build	2019-08-11 20:08:13.341077700 +0300
++++ /meson.build	2019-08-11 18:50:23.525707000 +0300
+@@ -1,19 +1,8 @@
+-project('com.github.artemanufrij.playmymusic', ['vala', 'c'], version: '0.6.9')
+-
++project('io.elementary.melody', ['vala', 'c'], version: '2.2.1')
+ 
+ gnome = import('gnome')
+ i18n = import('i18n')
+ 
+-# Add vapi files
+-add_project_arguments(
+-  [
+-    '--vapidir',
+-    join_paths(meson.current_source_dir(), 'vapi')
+-  ],
+-  language: 'vala'
+-)
+-
+-
+ # Add locale support
+ conf = configuration_data()
+ conf.set_quoted('GETTEXT_PACKAGE', meson.project_name())
+@@ -33,7 +22,7 @@
+ # Arguments C - no gcc warnings
+ c_args = [
+   '-include', 'config.h',
+-  '-w', '-DGETTEXT_PACKAGE="' + meson.project_name() + '"'
++  '-w', '-DGETTEXT_PACKAGE="com.github.artemanufrij.playmymusic"'
+ ]
+ 
+ 
+--- /data/meson.build	2019-08-11 20:08:13.339037300 +0300
++++ /data/meson.build	2019-08-11 21:00:29.287630200 +0300
+@@ -1,6 +1,6 @@
+ 
+ i18n.merge_file(
+-  input: meson.project_name() + '.desktop.in',
++  input: 'com.github.artemanufrij.playmymusic.desktop.in',
+   output: meson.project_name() + '.desktop',
+   po_dir: join_paths(meson.source_root(), 'po', 'extra'),
+   type: 'desktop',
+@@ -8,14 +8,6 @@
+   install_dir: join_paths(get_option('datadir'), 'applications')
+ )
+ 
+-i18n.merge_file(
+-  input: meson.project_name() + '.appdata.xml.in',
+-  output: meson.project_name() + '.appdata.xml',
+-  po_dir: join_paths(meson.source_root(), 'po', 'extra'),
+-  install: true,
+-  install_dir: join_paths(get_option('datadir'), 'metainfo')
+-)
+-
+ desktop_file_validate = find_program('desktop-file-validate', required:false)
+ 
+ if desktop_file_validate.found()
+@@ -26,15 +18,6 @@
+   )
+ endif
+ 
+-appstreamcli = find_program(['appstreamcli', 'appstream-util'], required:false)
+-
+-if appstreamcli.found()
+-  test (
+-    'Validate appdata file',
+-    appstreamcli,
+-    args: ['validate', join_paths(meson.current_build_dir (), meson.project_name() + '.appdata.xml')]
+-  )
+-endif
+ 
++subdir('icons')
+ 
+-subdir('icons')
+\ В конце файла нет новой строки
+--- /data/icons/meson.build	2019-08-11 20:08:13.337385200 +0300
++++ /data/icons/meson.build	2019-08-11 18:44:40.123090000 +0300
+@@ -2,7 +2,8 @@
+ 
+ foreach i : icon_sizes
+     install_data(
+-        join_paths(i, meson.project_name() + '.svg'),
++        join_paths(i, 'com.github.artemanufrij.playmymusic.svg'),
++        rename: join_paths(meson.project_name() + '.svg'),
+         install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', i + 'x' + i, 'apps')
+     )
+ endforeach
+--- /schemas/meson.build	2019-08-11 20:08:13.551966700 +0300
++++ /schemas/meson.build	2019-08-11 18:35:55.227326000 +0300
+@@ -1,4 +1,5 @@
+ install_data(
+-    meson.project_name() + '.gschema.xml',
++    'com.github.artemanufrij.playmymusic.gschema.xml',
++    rename: meson.project_name() + '.gschema.xml',
+     install_dir: join_paths(get_option('datadir'), 'glib-2.0', 'schemas')
+ )
+--- /schemas/com.github.artemanufrij.playmymusic.gschema.xml	2019-08-11 20:08:13.551038100 +0300
++++ /schemas/com.github.artemanufrij.playmymusic.gschema.xml	2019-08-11 19:32:03.514576600 +0300
+@@ -1,10 +1,10 @@
+ <schemalist>
+-	<enum id="com.github.artemanufrij.playmymusic.repeat-mode">
++	<enum id="io.elementary.melody.repeat-mode">
+ 		<value nick="off" value="0" />
+ 		<value nick="all" value="1" />
+ 		<value nick="one" value="2" />
+ 	</enum>
+-	<schema path="/com/github/artemanufrij/playmymusic/" id="com.github.artemanufrij.playmymusic" gettext-domain="com.github.artemanufrij.playmymusic">
++	<schema path="/io/elementary/melody/" id="io.elementary.melody" gettext-domain="com.github.artemanufrij.playmymusic">
+ 		<key name="window-width" type="i">
+ 			<default>1024</default>
+ 			<summary>The saved width of the window.</summary>
+@@ -65,12 +65,17 @@
+ 			<summary>Maximized window.</summary>
+ 			<description>Maximized window.</description>
+ 		</key>
++        <key name="block-sleep-mode" type="b">
++            <default>true</default>
++            <summary>Block Sleep mode</summary>
++            <description>Block Sleep mode.</description>
++        </key>
+ 		<key name="shuffle-mode" type="b">
+ 			<default>false</default>
+ 			<summary>Shuffle mode.</summary>
+ 			<description>Shuffle mode.</description>
+ 		</key>
+-		<key name="repeat-mode" enum="com.github.artemanufrij.playmymusic.repeat-mode">
++		<key name="repeat-mode" enum="io.elementary.melody.repeat-mode">
+ 			<default>"off"</default>
+ 			<summary>Repeat mode.</summary>
+ 			<description>Repeat mode.</description>
+@@ -115,11 +120,6 @@
+ 			<summary>Load Artwork and Cover from MusicBrainz.</summary>
+ 			<description>Load Artwork and Cover from MusicBrainz.</description>
+ 		</key>
+-		<key name="use-dark-theme" type="b">
+-			<default>false</default>
+-			<summary>Use Dark Theme.</summary>
+-			<description>Use Dark Theme.</description>
+-		</key>
+ 		<key name="save-custom-covers" type="b">
+ 			<default>false</default>
+ 			<summary>Save custom Cover in Music folder.</summary>
+--- /src/Application.vala	2019-08-11 20:08:13.598336600 +0300
++++ /src/Application.vala	2019-08-11 19:04:07.154574000 +0300
+@@ -50,7 +50,7 @@
+         construct {
+             this.flags |= ApplicationFlags.HANDLES_OPEN;
+             this.flags |= ApplicationFlags.HANDLES_COMMAND_LINE;
+-            this.application_id = "com.github.artemanufrij.playmymusic";
++            this.application_id = "io.elementary.melody";
+             settings = Settings.get_default ();
+ 
+             var action_search_reset = action_generator ("Escape", "search-reset");
+@@ -227,28 +227,6 @@
+ 
+             activate ();
+         }
+-
+-        public string get_os_info (string field) {
+-            string return_value = "";
+-            var file = File.new_for_path ("/etc/os-release");
+-            try {
+-                var osrel = new Gee.HashMap<string, string> ();
+-                var dis = new DataInputStream (file.read ());
+-                string line;
+-                // Read lines until end of file (null) is reached
+-                while ((line = dis.read_line (null)) != null) {
+-                    var osrel_component = line.split ("=", 2);
+-                    if (osrel_component.length == 2) {
+-                        osrel[osrel_component[0]] = osrel_component[1].replace ("\"", "");
+-                    }
+-                }
+-
+-                return_value = osrel[field];
+-            } catch (Error e) {
+-                warning ("Couldn't read os-release file, assuming elementary OS");
+-            }
+-            return return_value;
+-        }
+     }
+ }
+ 
+--- /src/MainWindow.vala	2019-08-11 20:08:13.601487800 +0300
++++ /src/MainWindow.vala	2019-08-11 19:18:32.990762900 +0300
+@@ -89,9 +89,7 @@
+ 
+         construct {
+             settings = Settings.get_default ();
+-            settings.notify["use-dark-theme"].connect (() => {
+-                Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.use_dark_theme;
+-            });
++
+             settings.notify["repeat-mode"].connect (() => {
+                 set_repeat_symbol ();
+             });
+@@ -294,8 +292,6 @@
+ 
+             header_build_app_menu ();
+ 
+-            header_build_style_switcher ();
+-
+             header_build_search_entry ();
+ 
+             header_build_playlist_control ();
+@@ -625,22 +621,6 @@
+             headerbar.pack_end (app_menu);
+         }
+ 
+-        private void header_build_style_switcher () {
+-            if (PlayMyMusicApp.instance.get_os_info ("PRETTY_NAME").index_of ("elementary") == -1) {
+-                return;
+-            }
+-
+-            var mode_switch = new Granite.ModeSwitch.from_icon_name ("display-brightness-symbolic", "weather-clear-night-symbolic");
+-            mode_switch.primary_icon_tooltip_text = _ ("Light background");
+-            mode_switch.secondary_icon_tooltip_text = _ ("Dark background");
+-            mode_switch.valign = Gtk.Align.CENTER;
+-            mode_switch.active = settings.use_dark_theme;
+-            mode_switch.notify["active"].connect (() => {
+-                settings.use_dark_theme = mode_switch.active;
+-            });
+-            headerbar.pack_end (mode_switch);
+-        }
+-
+         private void header_build_search_entry () {
+             search_entry = new Gtk.SearchEntry ();
+             search_entry.placeholder_text = _ ("Search Music");
+@@ -813,7 +793,13 @@
+                 } else {
+                     desktop_notification.set_body (_ ("<b>%s</b> by <b>%s</b>").printf (track.album.title, track.album.artist.name));
+                     try {
+-                        var icon = GLib.Icon.new_for_string (track.album.cover_path);
++                        string cov_path = track.album.cover_path;
++                        GLib.Icon icon;
++                        if (FileUtils.test(cov_path, FileTest.EXISTS)) {
++                            icon = GLib.Icon.new_for_string (cov_path);
++                        } else {
++                            icon = new GLib.ThemedIcon (PlayMyMusicApp.instance.application_id);
++                        }
+                         desktop_notification.set_icon (icon);
+                     } catch (Error err) {
+                         warning (err.message);
+@@ -1050,8 +1036,6 @@
+             } else {
+                 this.move (settings.window_x, settings.window_y);
+             }
+-
+-            Gtk.Settings.get_default ().gtk_application_prefer_dark_theme = settings.use_dark_theme;
+         }
+ 
+         private void save_settings () {
+--- /src/Settings.vala	2019-08-11 20:08:13.609037700 +0300
++++ /src/Settings.vala	2019-08-11 19:30:07.154354900 +0300
+@@ -46,6 +46,7 @@
+         public int window_y { get; set; }
+         public bool window_maximized { get; set; }
+         public bool shuffle_mode { get; set; }
++        public bool block_sleep_mode { get; set; }
+         public RepeatMode repeat_mode { get; set; }
+         public int last_artist_id { get; set; }
+         public int last_album_id { get; set; }
+@@ -62,7 +63,6 @@
+         public int view_index { get; set; }
+         public string [] hidden_tracks_columns { get; set; }
+         public bool load_content_from_musicbrainz { get; set; }
+-        public bool use_dark_theme { get; set; }
+         public bool save_custom_covers { get; set; }
+         public bool save_id3_tags { get; set; }
+         public bool import_into_library { get; set; }
+@@ -70,7 +70,7 @@
+         public int sort_mode_album_view { get; set; }
+ 
+         private Settings () {
+-            base ("com.github.artemanufrij.playmymusic");
++            base ("io.elementary.melody");
+         }
+ 
+         public void switch_repeat_mode () {
+--- /src/Dialogs/Preferences.vala	2019-08-11 20:08:13.599378100 +0300
++++ /src/Dialogs/Preferences.vala	2019-08-11 19:28:28.577365200 +0300
+@@ -91,25 +91,31 @@
+             remember_track_progress.active = settings.remember_track_progress;
+             remember_track_progress.notify["active"].connect (() => { settings.remember_track_progress = remember_track_progress.active; });
+ 
++            var sleep_mode = new Gtk.Switch ();
++            sleep_mode.active = settings.block_sleep_mode;
++            sleep_mode.notify["active"].connect (() => { settings.block_sleep_mode = sleep_mode.active; });
++
+             grid.attach (label_generator (_ ("Play in background if closed")), 0, 0);
+-            grid.attach (play_in_background, 1, 0);
+-            grid.attach (label_generator (_ ("Sync files on start up")), 0, 1);
++            grid.attach (play_in_background,                                   1, 0);
++            grid.attach (label_generator (_ ("Sync files on start up")),       0, 1);
+             grid.attach (sync_files, 1, 1);
+-            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 2, 2, 1);
+-            grid.attach (label_generator (_ ("Load Content from MusicBrainz")), 0, 3);
+-            grid.attach (load_content, 1, 3);
+-            grid.attach (label_generator (_ ("Save custom Covers in Library folder")), 0, 4);
+-            grid.attach (save_custom_covers, 1, 4);
+-            grid.attach (label_generator (_ ("Save changes into ID3-Tag")), 0, 5);
+-            grid.attach (save_id3_tags, 1, 5);
+-            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 6, 2, 1);
+-            grid.attach (label_generator (_ ("Copy Imported Files into Library")), 0, 7);
+-            grid.attach (import_into_library, 1, 7);
+-            grid.attach (label_generator (_ ("Remove Playlist if last Track was removed")), 0, 8);
+-            grid.attach (remove_playlist_if_empty, 1, 8);
+-            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 9, 2, 1);
+-            grid.attach (label_generator (_ ("Remember Track progress")), 0, 10);
+-            grid.attach (remember_track_progress, 1, 10);
++            grid.attach (label_generator (_ ("Block sleep mode")), 0, 2);
++            grid.attach (sleep_mode, 1, 2);
++            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 3, 2, 1);
++            grid.attach (label_generator (_ ("Load Content from MusicBrainz")), 0, 4);
++            grid.attach (load_content, 1, 4);
++            grid.attach (label_generator (_ ("Save custom Covers in Library folder")), 0, 5);
++            grid.attach (save_custom_covers, 1, 5);
++            grid.attach (label_generator (_ ("Save changes into ID3-Tag")), 0, 6);
++            grid.attach (save_id3_tags, 1, 6);
++            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 7, 2, 1);
++            grid.attach (label_generator (_ ("Copy Imported Files into Library")), 0, 8);
++            grid.attach (import_into_library, 1, 8);
++            grid.attach (label_generator (_ ("Remove Playlist if last Track was removed")), 0, 9);
++            grid.attach (remove_playlist_if_empty, 1, 9);
++            grid.attach (new Gtk.Separator (Gtk.Orientation.HORIZONTAL), 0, 10, 2, 1);
++            grid.attach (label_generator (_ ("Remember Track progress")), 0, 11);
++            grid.attach (remember_track_progress, 1, 11);
+ 
+             content.pack_start (grid, false, false, 0);
+ 
+--- /src/Interfaces/Inhibitor.vala	2019-08-11 20:08:13.599813300 +0300
++++ /src/Interfaces/Inhibitor.vala	2019-08-11 19:34:41.073157600 +0300
+@@ -64,7 +64,7 @@
+         public void inhibit () {
+             if (screensaver_iface != null && timer == 0) {
+                 try {
+-                    inhibit_cookie = screensaver_iface.Inhibit ("com.github.artemanufrij.playmyvideos", "Playing movie");
++                    inhibit_cookie = screensaver_iface.Inhibit ("io.elementary.melody", "Playing music");
+                 } catch (Error e) {
+                     warning ("Could not inhibit screen: %s", e.message);
+                     return;
+--- /src/Interfaces/MediaKeys.vala	2019-08-11 20:08:13.600036700 +0300
++++ /src/Interfaces/MediaKeys.vala	2019-08-11 19:36:39.652646500 +0300
+@@ -45,7 +45,7 @@
+             assert (media_keys == null);
+ 
+             try {
+-                media_keys = Bus.get_proxy_sync (BusType.SESSION, "org.gnome.SettingsDaemon", "/org/gnome/SettingsDaemon/MediaKeys");
++                media_keys = Bus.get_proxy_sync (BusType.SESSION, "org.gnome.SettingsDaemon.MediaKeys", "/org/gnome/SettingsDaemon/MediaKeys");
+             } catch (Error e) {
+                 warning ("Mediakeys error: %s", e.message);
+             }
+--- /src/Interfaces/SoundIndicator.vala	2019-08-11 20:08:13.600454800 +0300
++++ /src/Interfaces/SoundIndicator.vala	2019-08-11 19:39:35.348261900 +0300
+@@ -162,8 +162,13 @@
+                             metadata.insert("xesam:title", player.current_track.title);
+                             metadata.insert("xesam:artist", get_simple_string_array (player.current_track.audio_cd.artist));
+                         } else {
+-                            var file = File.new_for_path (player.current_track.album.cover_path);
+-                            metadata.insert("mpris:artUrl", file.get_uri ());
++                            string cov_path = player.current_track.album.cover_path;
++
++                            if (FileUtils.test(cov_path, FileTest.EXISTS)) {
++                                var file = File.new_for_path (cov_path);
++                                metadata.insert("mpris:artUrl", file.get_uri ());
++                            }
++
+                             metadata.insert("xesam:title", player.current_track.title);
+                             metadata.insert("xesam:artist", get_simple_string_array (player.current_track.album.artist.name));
+                         }
+--- /src/Services/Player.vala	2019-08-11 20:08:13.608357700 +0300
++++ /src/Services/Player.vala	2019-08-11 19:13:35.851216900 +0300
+@@ -106,7 +106,9 @@
+                 switch (state) {
+                     case Gst.State.PLAYING:
+                         start_progress_signal ();
+-                        Interfaces.Inhibitor.instance.inhibit ();
++                        if (settings.block_sleep_mode) {
++                            Interfaces.Inhibitor.instance.inhibit ();
++                        }
+                         break;
+                     case Gst.State.READY:
+                         stop_progress_signal (true);
+--- /src/Widgets/Views/ArtistView.vala	2019-08-11 20:08:13.613413900 +0300
++++ /src/Widgets/Views/ArtistView.vala	2019-08-11 21:16:31.943310700 +0300
+@@ -52,16 +52,6 @@
+             player.state_changed.connect ((state) => {
+                 mark_playing_track (player.current_track);
+             });
+-
+-            settings.notify["use-dark-theme"].connect (() => {
+-                if (settings.use_dark_theme) {
+-                    tracks.get_style_context ().add_class ("artist-tracks-dark");
+-                    tracks.get_style_context ().remove_class ("artist-tracks");
+-                } else {
+-                    tracks.get_style_context ().add_class ("artist-tracks");
+-                    tracks.get_style_context ().remove_class ("artist-tracks-dark");
+-                }
+-            });
+         }
+ 
+         public ArtistView () {
+@@ -96,11 +86,11 @@
+             tracks = new Gtk.ListBox ();
+             tracks.set_sort_func (tracks_sort_func);
+             tracks.selected_rows_changed.connect (play_track);
+-            if (settings.use_dark_theme) {
+-                tracks.get_style_context ().add_class ("artist-tracks-dark");
+-            } else {
+-                tracks.get_style_context ().add_class ("artist-tracks");
+-            }
++            // if (settings.use_dark_theme) {
++            //     tracks.get_style_context ().add_class ("artist-tracks-dark");
++            // } else {
++            //     tracks.get_style_context ().add_class ("artist-tracks");
++            // }
+             tracks_scroll.add (tracks);
+ 
+             content.pack_start (header, false, false, 0);
+--- /data/com.github.artemanufrij.playmymusic.desktop.in	2019-08-11 20:08:13.328670100 +0300
++++ /data/com.github.artemanufrij.playmymusic.desktop.in	2019-08-11 21:29:42.194322500 +0300
+@@ -3,8 +3,8 @@
+ GenericName=Melody
+ Comment=Listen your music
+ Keywords=music;radio;playlist;
+-Exec=com.github.artemanufrij.playmymusic %U
+-Icon=com.github.artemanufrij.playmymusic
++Exec=io.elementary.melody %U
++Icon=io.elementary.melody
+ Terminal=false
+ Type=Application
+ Categories=Audio;Music;Player;AudioVideo;GNOME;GTK;
+@@ -15,15 +15,15 @@
+ 
+ [Desktop Action Toggle]
+ Name=Play/Pause
+-Exec=com.github.artemanufrij.playmymusic --play
++Exec=io.elementary.melody --play
+ Icon=media-playback-start-symbolic
+ 
+ [Desktop Action Next]
+ Name=Next
+-Exec=com.github.artemanufrij.playmymusic --next
++Exec=io.elementary.melody --next
+ Icon=media-skip-forward-symbolic
+ 
+ [Desktop Action Prev]
+ Name=Previous
+-Exec=com.github.artemanufrij.playmymusic --prev
++Exec=io.elementary.melody --prev
+ Icon=media-skip-backward-symbolic

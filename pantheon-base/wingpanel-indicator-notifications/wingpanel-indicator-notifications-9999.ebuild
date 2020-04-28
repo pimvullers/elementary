@@ -21,7 +21,7 @@ RDEPEND="
 	pantheon-base/wingpanel
 	x11-libs/gdk-pixbuf:2
 	x11-libs/gtk+:3
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/libwnck:3
 "
 DEPEND="${RDEPEND}

@@ -1,0 +1,38 @@
+--- /cli/GuestSessionToggle.vala	2019-11-16 01:25:40.000000000 +0300
++++ /cli/GuestSessionToggle.vala	2020-04-07 17:38:29.762641300 +0300
+@@ -158,10 +158,13 @@
+ 
+         // Find files
+         try {
+-            var dir = Dir.open (path);
+-            unowned string? name = null;
+-            while ((name = dir.read_name ()) != null)
+-                files.prepend (name);
++            if (FileUtils.test (path, FileTest.IS_DIR)) {
++                var dir = Dir.open (path);
++                unowned string? name = null;
++                while ((name = dir.read_name ()) != null) {
++                    files.prepend (name);
++                }
++            }
+         } catch (FileError e) {
+             printerr ("Failed to open configuration directory %s: %s\n", path, e.message);
+         }
+@@ -230,10 +233,13 @@
+ 
+         // Find files
+         try {
+-            var dir = Dir.open (path);
+-            unowned string? name = null;
+-            while ((name = dir.read_name ()) != null)
+-                files.prepend (name);
++            if (FileUtils.test (path, FileTest.IS_DIR)) {
++                var dir = Dir.open (path);
++                unowned string? name = null;
++                while ((name = dir.read_name ()) != null) {
++                    files.prepend (name);
++                }
++            }
+         } catch (FileError e) {
+             printerr ("Failed to open configuration directory %s: %s\n", path, e.message);
+         }

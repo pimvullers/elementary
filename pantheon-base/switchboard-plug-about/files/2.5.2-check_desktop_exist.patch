@@ -1,0 +1,15 @@
+--- /src/Dialogs/IssueDialog.vala	2018-11-05 16:31:12.476603000 +0300
++++ /src/Dialogs/IssueDialog.vala	2018-11-05 16:44:43.624288435 +0300
+@@ -63,8 +63,10 @@
+ 
+         foreach (var app in app_entries) {
+             var desktop_info = new DesktopAppInfo (app.app_id + ".desktop");
+-            var repo_row = new RepoRow (desktop_info.get_display_name (), desktop_info.get_icon (), Category.DEFAULT_APPS, app.github_suffix);
+-            listbox.add (repo_row);
++            if (desktop_info != null) {
++                var repo_row = new RepoRow (desktop_info.get_display_name (), desktop_info.get_icon (), Category.DEFAULT_APPS, app.github_suffix);
++                listbox.add (repo_row);
++            }
+         }
+ 
+         foreach (var entry in system_entries) {

@@ -19,7 +19,7 @@ IUSE="accessibility bluetooth keyboard network power sound nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3
 	x11-libs/libnotify
 	x11-wm/gala"

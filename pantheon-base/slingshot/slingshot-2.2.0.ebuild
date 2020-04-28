@@ -23,7 +23,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	gnome-base/gnome-menus:3
 	net-libs/libsoup:2.4
-	>=x11-libs/granite-0.3.0
+	>=dev-libs/granite-0.3.0
 	x11-libs/gtk+:3
 	gnome-extra/zeitgeist
 	>=pantheon-base/wingpanel-2"

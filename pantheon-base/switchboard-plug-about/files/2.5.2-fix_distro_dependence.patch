@@ -1,0 +1,104 @@
+--- /src/Plug.vala	2018-12-04 19:36:36.000000000 +0300
++++ /src/Plug.vala	2018-12-05 14:46:07.302733783 +0300
+@@ -23,9 +23,8 @@
+     private string support_url;
+     private string arch;
+     private string logo_icon_name;
+-    private Gtk.Label based_off;
+ 
+-    private string upstream_release;
++    private string upstream_release = null;
+     private Gtk.Grid main_grid;
+ 
+     public Plug () {
+@@ -88,7 +87,7 @@
+ 
+             os = osrel["PRETTY_NAME"];
+             website_url = osrel["HOME_URL"];
+-            support_url = osrel["SUPPORT_URL"];
++            support_url = "https://elementary.io/support";
+             logo_icon_name = osrel["LOGO"];
+         } catch (Error e) {
+             warning ("Couldn't read os-release file, assuming elementary OS");
+@@ -103,20 +102,23 @@
+         // Upstream distro version (for "Built on" text)
+         // FIXME: Add distro specific field to /etc/os-release and use that instead
+         // Like "ELEMENTARY_UPSTREAM_DISTRO_NAME" or something
+-        file = File.new_for_path ("/etc/upstream-release/lsb-release");
+-        try {
+-            var dis = new DataInputStream (file.read ());
+-            string line;
+-            // Read lines until end of file (null) is reached
+-            while ((line = dis.read_line (null)) != null) {
+-                var distrib_component = line.split ("=", 2);
+-                if (distrib_component.length == 2) {
+-                    upstream_release = distrib_component[1].replace ("\"", "");
++        string file_name = "/etc/upstream-release/lsb-release";
++        if (FileUtils.test(file_name, FileTest.IS_REGULAR)) {
++            file = File.new_for_path (file_name);
++            try {
++                var dis = new DataInputStream (file.read ());
++                string line;
++                // Read lines until end of file (null) is reached
++                while ((line = dis.read_line (null)) != null) {
++                    var distrib_component = line.split ("=", 2);
++                    if (distrib_component.length == 2) {
++                        upstream_release = distrib_component[1].replace ("\"", "");
++                    }
+                 }
++            } catch (Error e) {
++                warning ("Couldn't read upstream lsb-release file, assuming none");
++                upstream_release = null;
+             }
+-        } catch (Error e) {
+-            warning ("Couldn't read upstream lsb-release file, assuming none");
+-            upstream_release = null;
+         }
+ 
+         // Architecture
+@@ -156,11 +158,6 @@
+         arch_name.margin_bottom = 12;
+         arch_name.xalign = 0;
+ 
+-        if (upstream_release != null) {
+-            based_off = new Gtk.Label (_("Built on %s").printf (upstream_release));
+-            based_off.set_selectable (true);
+-        }
+-        
+         var kernel_version_label = new Gtk.Label (kernel_version);
+         kernel_version_label.set_selectable (true);
+ 
+@@ -205,16 +202,6 @@
+             issue_dialog.run ();
+         });
+ 
+-        // Update button
+-        var update_button = new Gtk.Button.with_label (_("Check for Updates"));
+-        update_button.clicked.connect (() => {
+-            try {
+-                Process.spawn_command_line_async ("io.elementary.appcenter --show-updates");
+-            } catch (Error e) {
+-                warning (e.message);
+-            }
+-        });
+-
+         // Restore settings button
+         var settings_restore_button = new Gtk.Button.with_label (_("Restore Default Settings"));
+         settings_restore_button.clicked.connect (settings_restore_clicked);
+@@ -227,7 +214,6 @@
+         button_grid.add (settings_restore_button);
+         button_grid.add (translate_button);
+         button_grid.add (bug_button);
+-        button_grid.add (update_button);
+         button_grid.set_child_non_homogeneous (help_button, true);
+ 
+         var software_grid = new Gtk.Grid ();
+@@ -238,6 +224,8 @@
+         software_grid.attach (arch_name, 1, 1, 1, 1);
+ 
+         if (upstream_release != null) {
++            Gtk.Label based_off = new Gtk.Label (_("Built on %s").printf (upstream_release));
++            based_off.set_selectable (true);
+             software_grid.attach (based_off, 0, 2, 2, 1);
+         }
+ 

@@ -1,0 +1,10 @@
+--- /src/Views/ShortcutsView.vala	2018-10-15 01:57:33.111780200 +0300
++++ /src/Views/ShortcutsView.vala	2018-10-15 02:29:01.973046525 +0300
+@@ -11,7 +11,6 @@
+     static construct {
+         system_entries = new Gee.ArrayList<ShortcutEntry> ();
+         system_entries.add (new ShortcutEntry (_("Applications Menu:"), SCHEMA_WM, "panel-main-menu"));
+-        system_entries.add (new ShortcutEntry (_("Cycle display mode:"), SCHEMA_MUTTER, "switch-monitor"));
+         system_entries.add (new ShortcutEntry (_("Zoom in:"), SCHEMA_GALA, "zoom-in"));
+         system_entries.add (new ShortcutEntry (_("Zoom out:"), SCHEMA_GALA, "zoom-out"));
+         system_entries.add (new ShortcutEntry (_("Lock screen:"), SCHEMA_MEDIA, "screensaver"));

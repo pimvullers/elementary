@@ -21,7 +21,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	media-libs/clutter-gtk
 	x11-libs/gtk+:3
-	>=x11-libs/granite-0.3"
+	>=dev-libs/granite-0.3"
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

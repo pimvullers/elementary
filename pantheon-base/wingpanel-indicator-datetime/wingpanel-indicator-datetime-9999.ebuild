@@ -22,7 +22,7 @@ RDEPEND="
 	net-libs/libsoup:2.4
 	pantheon-base/wingpanel
 	x11-libs/gtk+:3
-	x11-libs/granite
+	dev-libs/granite
 "
 DEPEND="${RDEPEND}
 	virtual/pkgconfig

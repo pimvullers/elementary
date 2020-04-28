@@ -19,7 +19,7 @@ IUSE="nls"
 RDEPEND="
 	dev-libs/glib:2
 	>=pantheon-base/switchboard-2
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)

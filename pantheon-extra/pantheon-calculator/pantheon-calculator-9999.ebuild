@@ -24,7 +24,7 @@ SLOT="0"
 IUSE="nls"
 
 RDEPEND="
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"

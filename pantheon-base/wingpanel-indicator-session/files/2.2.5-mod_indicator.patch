@@ -1,0 +1,311 @@
+--- /po/ru.po
++++ /po/ru.po
+@@ -16,75 +16,83 @@ msgstr ""
+ "X-Generator: Weblate 2.18\n"
+ "X-Launchpad-Export-Date: 2017-02-09 06:03+0000\n"
+ 
+-#: src/Indicator.vala:49
++#: Indicator.vala:50
+ msgid "Session"
+ msgstr "Сеанс"
+ 
+-#: src/Indicator.vala:50
++#: Indicator.vala:51
+ msgid "The session indicator"
+ msgstr "Индикатор сеанса"
+ 
+-#: src/Indicator.vala:89
++#: Indicator.vala:90
+ msgid "User Accounts Settings…"
+ msgstr "Настройки учётных записей…"
+ 
+-#: src/Indicator.vala:91
++#: Indicator.vala:92
+ msgid "Log Out…"
+ msgstr "Выйти из системы…"
+ 
+-#: src/Indicator.vala:97
++#: Indicator.vala:98
+ msgid "Lock"
+ msgstr "Заблокировать"
+ 
+-#: src/Indicator.vala:105
++#: Indicator.vala:106
+ msgid "Shut Down…"
+ msgstr "Выключить…"
+ 
+-#: src/Indicator.vala:108
++#: Indicator.vala:109
++msgid "Hibernate"
++msgstr "Спящий режим"
++
++#: Indicator.vala:112
+ msgid "Suspend"
+ msgstr "Ждущий режим"
+ 
+-#: src/Widgets/EndSessionDialog.vala:59
++#: Services/UserManager.vala:224
++msgid "Guest"
++msgstr "Гость"
++
++#: Widgets/EndSessionDialog.vala:59
+ msgid "Are you sure you want to Log Out?"
+ msgstr "Выйти из системы?"
+ 
+-#: src/Widgets/EndSessionDialog.vala:60
++#: Widgets/EndSessionDialog.vala:60
+ msgid "This will close all open applications."
+ msgstr "Это приведёт к закрытию всех приложений."
+ 
+-#: src/Widgets/EndSessionDialog.vala:61
++#: Widgets/EndSessionDialog.vala:61
+ msgid "Log Out"
+ msgstr "Выйти"
+ 
+-#: src/Widgets/EndSessionDialog.vala:66
++#: Widgets/EndSessionDialog.vala:66
+ msgid "Are you sure you want to Shut Down?"
+ msgstr "Выключить компьютер?"
+ 
+-#: src/Widgets/EndSessionDialog.vala:67
++#: Widgets/EndSessionDialog.vala:67
+ msgid "This will close all open applications and turn off this device."
+ msgstr ""
+ "Это приведёт к закрытию всех приложений и выключению данного устройства."
+ 
+-#: src/Widgets/EndSessionDialog.vala:68
++#: Widgets/EndSessionDialog.vala:68
+ msgid "Shut Down"
+ msgstr "Выключить"
+ 
+-#: src/Widgets/EndSessionDialog.vala:89
++#: Widgets/EndSessionDialog.vala:90
+ msgid "Cancel"
+ msgstr "Отменить"
+ 
+-#: src/Widgets/EndSessionDialog.vala:105
++#: Widgets/EndSessionDialog.vala:106
+ msgid "Restart"
+ msgstr "Перезагрузить"
+ 
+-#: src/Widgets/UserBox.vala:21
++#: Widgets/EndSessionDialog.vala:125
++msgid "Remember open applications"
++msgstr "Запомнить открытые приложения"
++
++#: Widgets/UserBox.vala:21
+ msgid "Logged in"
+ msgstr "Вход выполнен"
+ 
+-#: src/Widgets/UserBox.vala:22
++#: Widgets/UserBox.vala:22
+ msgid "Logged out"
+ msgstr "Вход не выполнен"
+-
+-#: src/Services/UserManager.vala:224
+-msgid "Guest"
+-msgstr "Гость"
+--- /po/session-indicator.pot
++++ /po/session-indicator.pot
+@@ -17,74 +17,82 @@ msgstr ""
+ "Content-Type: text/plain; charset=UTF-8\n"
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+-#: src/Indicator.vala:49
++#: Indicator.vala:50
+ msgid "Session"
+ msgstr ""
+ 
+-#: src/Indicator.vala:50
++#: Indicator.vala:51
+ msgid "The session indicator"
+ msgstr ""
+ 
+-#: src/Indicator.vala:89
++#: Indicator.vala:90
+ msgid "User Accounts Settings…"
+ msgstr ""
+ 
+-#: src/Indicator.vala:91
++#: Indicator.vala:92
+ msgid "Log Out…"
+ msgstr ""
+ 
+-#: src/Indicator.vala:97
++#: Indicator.vala:98
+ msgid "Lock"
+ msgstr ""
+ 
+-#: src/Indicator.vala:105
++#: Indicator.vala:106
+ msgid "Shut Down…"
+ msgstr ""
+ 
+-#: src/Indicator.vala:108
++#: Indicator.vala:109
++msgid "Hibernate"
++msgstr ""
++
++#: Indicator.vala:112
+ msgid "Suspend"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:59
++#: Services/UserManager.vala:224
++msgid "Guest"
++msgstr ""
++
++#: Widgets/EndSessionDialog.vala:59
+ msgid "Are you sure you want to Log Out?"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:60
++#: Widgets/EndSessionDialog.vala:60
+ msgid "This will close all open applications."
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:61
++#: Widgets/EndSessionDialog.vala:61
+ msgid "Log Out"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:66
++#: Widgets/EndSessionDialog.vala:66
+ msgid "Are you sure you want to Shut Down?"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:67
++#: Widgets/EndSessionDialog.vala:67
+ msgid "This will close all open applications and turn off this device."
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:68
++#: Widgets/EndSessionDialog.vala:68
+ msgid "Shut Down"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:89
++#: Widgets/EndSessionDialog.vala:90
+ msgid "Cancel"
+ msgstr ""
+ 
+-#: src/Widgets/EndSessionDialog.vala:105
++#: Widgets/EndSessionDialog.vala:106
+ msgid "Restart"
+ msgstr ""
+ 
+-#: src/Widgets/UserBox.vala:21
+-msgid "Logged in"
++#: Widgets/EndSessionDialog.vala:125
++msgid "Remember open applications"
+ msgstr ""
+ 
+-#: src/Widgets/UserBox.vala:22
+-msgid "Logged out"
++#: Widgets/UserBox.vala:21
++msgid "Logged in"
+ msgstr ""
+ 
+-#: src/Services/UserManager.vala:224
+-msgid "Guest"
++#: Widgets/UserBox.vala:22
++msgid "Logged out"
+ msgstr ""
+--- /src/Indicator.vala
++++ /src/Indicator.vala
+@@ -35,6 +35,7 @@ public class Session.Indicator : Wingpan
+     private Gtk.ModelButton user_settings;
+     private Gtk.ModelButton lock_screen;
+     private Gtk.ModelButton suspend;
++    private Gtk.ModelButton hibernate;
+     private Gtk.ModelButton shutdown;
+ 
+     private Session.Services.UserManager manager;
+@@ -104,6 +105,9 @@ public class Session.Indicator : Wingpan
+             shutdown.hexpand = true;
+             shutdown.text = _("Shut Down…");
+ 
++            hibernate = new Gtk.ModelButton ();
++            hibernate.text = _("Hibernate");
++
+             suspend = new Gtk.ModelButton ();
+             suspend.text = _("Suspend");
+ 
+@@ -132,6 +136,7 @@ public class Session.Indicator : Wingpan
+             }
+ 
+             main_grid.add (suspend);
++            main_grid.add (hibernate);
+             main_grid.add (shutdown);
+ 
+             connections ();
+@@ -158,6 +163,7 @@ public class Session.Indicator : Wingpan
+         } catch (IOError e) {
+             stderr.printf ("%s\n", e.message);
+             suspend.set_sensitive (false);
++            hibernate.set_sensitive (false);
+         }
+ 
+         if (server_type == Wingpanel.IndicatorManager.ServerType.SESSION) {
+@@ -192,6 +198,16 @@ public class Session.Indicator : Wingpan
+ 
+         shutdown.clicked.connect (() => show_dialog (Widgets.EndSessionDialogType.RESTART));
+ 
++        hibernate.clicked.connect (() => {
++            close ();
++
++            try {
++                suspend_interface.hibernate (false);
++            } catch (GLib.Error e) {
++                stderr.printf ("%s\n", e.message);
++            }
++        });
++
+         suspend.clicked.connect (() => {
+             close ();
+ 
+@@ -220,7 +236,7 @@ public class Session.Indicator : Wingpan
+                 return;
+             }
+         }
+-        
++
+         current_dialog = new Widgets.EndSessionDialog (type);
+         current_dialog.destroy.connect (() => current_dialog = null);
+         current_dialog.set_transient_for (indicator_icon.get_toplevel () as Gtk.Window);
+--- /src/Services/DbusInterfaces.vala
++++ /src/Services/DbusInterfaces.vala
+@@ -37,6 +37,7 @@ interface LogoutInterface : Object {
+ [DBus (name = "org.freedesktop.login1.Manager")]
+ interface SystemInterface : Object {
+     public abstract void suspend (bool interactive) throws GLib.Error;
++    public abstract void hibernate (bool interactive) throws GLib.Error;
+     public abstract void reboot (bool interactive) throws GLib.Error;
+     public abstract void power_off (bool interactive) throws GLib.Error;
+ 
+--- /src/Widgets/EndSessionDialog.vala	2019-07-19 16:47:00.000000000 +0300
++++ /src/Widgets/EndSessionDialog.vala	2019-10-04 10:57:50.271147600 +0300
+@@ -122,14 +122,21 @@
+         action_area.add (cancel);
+         action_area.add (confirm);
+
++        var save_session = new Gtk.CheckButton.with_label (_("Remember open applications"));
++        save_session.margin_top = 16;
++
+         var grid = new Gtk.Grid ();
+         grid.column_spacing = 12;
+         grid.margin = 12;
+         grid.margin_top = 6;
+-        grid.attach (image, 0, 0, 1, 2);
++        grid.attach (image, 0, 0, 1, 3);
+         grid.attach (primary_label, 1, 0);
+         grid.attach (secondary_label, 1, 1);
+-        grid.attach (action_area, 0, 2, 2);
++        grid.attach (save_session, 1, 2);
++        grid.attach (action_area, 0, 3, 2);
++
++        var session_settings = new GLib.Settings ("org.gnome.SessionManager");
++        session_settings.bind ("auto-save-session", save_session, "active", SettingsBindFlags.DEFAULT);
+
+         var titlebar = new Gtk.HeaderBar ();
+         titlebar.custom_title = new Gtk.Grid ();

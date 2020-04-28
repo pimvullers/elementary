@@ -1,0 +1,109 @@
+--- /src/Services/IndicatorSorter.vala	2020-03-02 22:36:38.000000000 +0300
++++ /src/Services/IndicatorSorter.vala	2020-03-03 01:51:13.646616000 +0300
+@@ -32,8 +32,14 @@
+     private static Gee.HashMap<string, int> indicator_order = new Gee.HashMap<string,int> ();
+     static construct {
+         indicator_order[AYATANA_INDICATOR] = 0;
++        indicator_order[Indicator.APP_LAUNCHER] = 0;
++        indicator_order["meteo-indicator"] = 0;
+         indicator_order[UNKNOWN_INDICATOR] = 1;
++        indicator_order[Indicator.DATETIME] = 1;
++        indicator_order["sensors-indicator"] = 1;
++        indicator_order["monitor-indicator"] = 2;
+         indicator_order[Indicator.KEYBOARD] = 2;
++        indicator_order["cpufreq-indicator"] = 3;
+         indicator_order[Indicator.SOUND] = 3;
+         indicator_order[Indicator.NETWORK] = 4;
+         indicator_order[Indicator.BLUETOOTH] = 5;
+@@ -76,7 +82,7 @@
+             return indicator_order[AYATANA_INDICATOR];
+         }
+ 
+-        if (node.base_indicator.code_name in indicator_order) {
++        if (indicator_order.has_key (node.base_indicator.code_name)) {
+             return indicator_order[node.base_indicator.code_name];
+         }
+ 
+--- /src/Widgets/Panel.vala	2020-03-02 22:36:38.000000000 +0300
++++ /src/Widgets/Panel.vala	2020-03-03 02:53:43.055444600 +0300
+@@ -21,8 +21,8 @@
+     public Services.PopoverManager popover_manager { get; construct; }
+ 
+     private IndicatorMenuBar right_menubar;
+-    private MenuBar left_menubar;
+-    private MenuBar center_menubar;
++    private IndicatorMenuBar left_menubar;
++    private IndicatorMenuBar center_menubar;
+ 
+     private Gtk.StyleContext style_context;
+     private Gtk.CssProvider? style_provider = null;
+@@ -39,11 +39,11 @@
+         this.valign = Gtk.Align.START;
+         this.get_style_context ().add_class (StyleClass.PANEL);
+ 
+-        left_menubar = new MenuBar ();
++        left_menubar = new IndicatorMenuBar ();
+         left_menubar.halign = Gtk.Align.START;
+         left_menubar.get_style_context ().add_provider (resource_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+ 
+-        center_menubar = new MenuBar ();
++        center_menubar = new IndicatorMenuBar ();
+         center_menubar.get_style_context ().add_provider (resource_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+ 
+         right_menubar = new IndicatorMenuBar ();
+@@ -132,6 +132,9 @@
+         IndicatorEntry? sibling = null;
+ 
+         switch (current.base_indicator.code_name) {
++            case "sensors-indicator":
++            case "monitor-indicator":
++            case "cpufreq-indicator":
+             case Indicator.APP_LAUNCHER:
+                 var children = left_menubar.get_children ();
+                 int index = children.index (current);
+@@ -147,6 +150,7 @@
+                 }
+ 
+                 break;
++            case "meteo-indicator":
+             case Indicator.DATETIME:
+                 var children = center_menubar.get_children ();
+                 int index = children.index (current);
+@@ -186,6 +190,9 @@
+         IndicatorEntry? sibling = null;
+ 
+         switch (current.base_indicator.code_name) {
++            case "sensors-indicator":
++            case "monitor-indicator":
++            case "cpufreq-indicator":
+             case Indicator.APP_LAUNCHER:
+                 var children = left_menubar.get_children ();
+                 int index = children.index (current);
+@@ -201,6 +208,7 @@
+                 }
+ 
+                 break;
++            case "meteo-indicator":
+             case Indicator.DATETIME:
+                 var children = center_menubar.get_children ();
+                 int index = children.index (current);
+@@ -240,13 +248,17 @@
+         var indicator_entry = new IndicatorEntry (indicator, popover_manager);
+ 
+         switch (indicator.code_name) {
++            case "sensors-indicator":
++            case "monitor-indicator":
++            case "cpufreq-indicator":
+             case Indicator.APP_LAUNCHER:
+                 indicator_entry.set_transition_type (Gtk.RevealerTransitionType.SLIDE_RIGHT);
+-                left_menubar.add (indicator_entry);
++                left_menubar.insert_sorted (indicator_entry);
+                 break;
++            case "meteo-indicator":
+             case Indicator.DATETIME:
+                 indicator_entry.set_transition_type (Gtk.RevealerTransitionType.SLIDE_DOWN);
+-                center_menubar.add (indicator_entry);
++                center_menubar.insert_sorted (indicator_entry);
+                 break;
+             default:
+                 indicator_entry.set_transition_type (Gtk.RevealerTransitionType.SLIDE_LEFT);

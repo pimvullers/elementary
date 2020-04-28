@@ -18,7 +18,7 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	>=x11-libs/granite-0.3
+	>=dev-libs/granite-0.3
 	x11-libs/libnotify
 	x11-libs/gtk+:3
 	x11-libs/vte:2.91[vala]"

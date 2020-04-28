@@ -21,7 +21,7 @@ RDEPEND="
 	pantheon-base/wingpanel
 	sys-apps/accountsservice
 	x11-libs/gtk+:3
-	x11-libs/granite
+	dev-libs/granite
 "
 DEPEND="${RDEPEND}
 	virtual/pkgconfig

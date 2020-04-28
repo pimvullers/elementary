@@ -23,7 +23,7 @@ RDEPEND="
 	>=pantheon-base/switchboard-2
 	sys-auth/polkit
 	sys-apps/accountsservice
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)

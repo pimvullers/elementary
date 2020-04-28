@@ -24,7 +24,7 @@ RDEPEND="
 	media-libs/clutter-gtk
 	>=pantheon-base/plank-0.3
 	x11-libs/bamf
-	>=x11-libs/granite-0.3
+	>=dev-libs/granite-0.3
 	>=x11-libs/gtk+-3.4:3
 	>=x11-wm/mutter-3.14.4
 	gnome-base/gnome-desktop:3"

@@ -21,7 +21,7 @@ RDEPEND="
 	gnome-extra/zeitgeist
 	>=pantheon-base/switchboard-2
 	sys-auth/polkit
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)

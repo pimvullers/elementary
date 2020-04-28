@@ -21,7 +21,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	dev-db/sqlheavy:0.1
-	x11-libs/granite
+	dev-libs/granite
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)

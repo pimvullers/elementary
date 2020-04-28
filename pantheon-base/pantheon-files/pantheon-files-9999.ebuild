@@ -27,7 +27,7 @@ RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/dbus-glib
 	dev-libs/glib:2
-	>=x11-libs/granite-0.3
+	>=dev-libs/granite-0.3
 	dev-libs/libgee:0.8
 	gnome-extra/zeitgeist
 	pantheon-base/plank
