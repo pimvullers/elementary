@@ -1,0 +1,76 @@
+--- /data/org.gnome.settings-daemon.plugins.power.gschema.xml.in	2019-12-18 00:55:45.000000000 +0300
++++ /data/org.gnome.settings-daemon.plugins.power.gschema.xml.in	2020-04-27 15:50:48.303112268 +0300
+@@ -1,6 +1,11 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <schemalist>
+   <schema gettext-domain="@GETTEXT_PACKAGE@" id="org.gnome.settings-daemon.plugins.power" path="/org/gnome/settings-daemon/plugins/power/">
++    <key name="manage-dpms-defaults" type="b">
++      <default>false</default>
++      <summary>Reset X DPMS values</summary>
++      <description>Whether DPMS values will be adjusted by gnome-settings-daemon</description>
++    </key>
+     <key name="idle-brightness" type="i">
+       <default>30</default>
+       <summary>The brightness of the screen when idle</summary>
+--- /plugins/power/gpm-common.c	2019-12-18 00:55:45.000000000 +0300
++++ /plugins/power/gpm-common.c	2020-04-27 17:05:26.205054539 +0300
+@@ -280,6 +280,18 @@
+         return TRUE;
+ }
+ 
++gboolean
++manage_dpms (void)
++{
++        GSettings *settings;
++        gboolean manage_dpms_defaults;
++
++        settings = g_settings_new ("org.gnome.settings-daemon.plugins.power");
++        manage_dpms_defaults = g_settings_get_boolean (settings, "manage-dpms-defaults");
++        g_object_unref (settings);
++        return manage_dpms_defaults;
++}
++
+ guint
+ gsd_power_enable_screensaver_watchdog (void)
+ {
+@@ -290,7 +302,7 @@
+          * way. The defaults are now applied in Fedora 20 from
+          * being "0" by default to being "600" by default */
+         gdk_x11_display_error_trap_push (gdk_display_get_default ());
+-        if (DPMSQueryExtension(GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &dummy, &dummy))
++        if (manage_dpms () && DPMSQueryExtension(GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), &dummy, &dummy))
+                 DPMSSetTimeouts (GDK_DISPLAY_XDISPLAY (gdk_display_get_default ()), 0, 0, 0);
+         gdk_x11_display_error_trap_pop_ignored (gdk_display_get_default ());
+         id = g_timeout_add_seconds (XSCREENSAVER_WATCHDOG_TIMEOUT,
+--- /plugins/power/gpm-common.h	2019-12-18 00:55:45.000000000 +0300
++++ /plugins/power/gpm-common.h	2020-04-27 15:57:51.499187202 +0300
+@@ -34,6 +34,7 @@
+ gboolean         gsd_power_is_hardware_a_vm             (void);
+ guint            gsd_power_enable_screensaver_watchdog  (void);
+ void             reset_idletime                         (void);
++gboolean         manage_dpms                            (void);
+ 
+ /* Backlight helpers */
+ 
+--- /plugins/power/gsd-power-manager.c	2019-12-18 00:55:45.000000000 +0300
++++ /plugins/power/gsd-power-manager.c	2020-04-27 16:57:59.144646238 +0300
+@@ -1033,6 +1033,9 @@
+         gboolean ret;
+         GError *error = NULL;
+ 
++        if (!(manage_dpms ()))
++                return;
++
+         iio_proxy_claim_light (manager, TRUE);
+         ret = gnome_rr_screen_set_dpms_mode (manager->rr_screen,
+                                              GNOME_RR_DPMS_ON,
+@@ -1052,6 +1055,9 @@
+         gboolean ret;
+         GError *error = NULL;
+ 
++        if (!(manage_dpms ()))
++               return;
++
+         iio_proxy_claim_light (manager, FALSE);
+         ret = gnome_rr_screen_set_dpms_mode (manager->rr_screen,
+                                              GNOME_RR_DPMS_OFF,
