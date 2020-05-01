@@ -29,7 +29,7 @@ RDEPEND="${DEPEND}
 	>=dev-libs/granite-5.3.0
 	dev-libs/libgee:0.8
 	dev-libs/libgit2-glib
-	dev-libs/libcloudproviders
+	dev-libs/libcloudproviders[vala]
 	gnome-base/gvfs
 	>=gnome-extra/zeitgeist-1.0.2
 	>=media-libs/libcanberra-0.30

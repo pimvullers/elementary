@@ -20,7 +20,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
 	gnome-extra/nm-applet
-	>=net-misc/networkmanager-1.8
+	>=net-misc/networkmanager-1.8[vala]
 	pantheon-base/switchboard
 	sys-auth/polkit
 	x11-libs/gtk+:3
