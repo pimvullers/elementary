@@ -30,7 +30,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PV}-fixed_vapi.patch"
+	eapply "${FILESDIR}/2.3.1-fixed_vapi.patch"
 	vala_src_prepare
 }
 

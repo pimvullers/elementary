@@ -1,0 +1,344 @@
+diff -Naur switchboard-plug-locale-2.5.1/src/meson.build switchboard-plug-locale-2.5.1_patched/src/meson.build
+--- switchboard-plug-locale-2.5.1/src/meson.build	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/meson.build	2020-05-01 16:57:54.795632932 +0200
+@@ -3,8 +3,6 @@
+     'ProgressDialog.vala',
+     'Utils.vala',
+     'LocaleManager.vala',
+-    'Installer/UbuntuInstaller.vala',
+-    'Installer/aptd-client.vala',
+     'Widgets/InstallPopover.vala',
+     'Widgets/LanguageListBox.vala',
+     'Widgets/LocaleView.vala',
+diff -Naur switchboard-plug-locale-2.5.1/src/Plug.vala switchboard-plug-locale-2.5.1_patched/src/Plug.vala
+--- switchboard-plug-locale-2.5.1/src/Plug.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/Plug.vala	2020-05-01 16:57:54.795632932 +0200
+@@ -21,10 +21,6 @@
+ 
+         public Gtk.InfoBar infobar;
+         public Gtk.InfoBar permission_infobar;
+-        public Gtk.InfoBar missing_lang_infobar;
+-
+-        private Installer.UbuntuInstaller installer;
+-        private ProgressDialog progress_dialog = null;
+ 
+         private Gee.ArrayList<string> langs;
+ 
+@@ -43,7 +39,6 @@
+         public override Gtk.Widget get_widget () {
+             if (grid == null) {
+                 Utils.init ();
+-                installer = Installer.UbuntuInstaller.get_default ();
+ 
+                 setup_ui ();
+                 setup_info ();
+@@ -54,7 +49,7 @@
+ 
+         private async void reload () {
+             new Thread<void*> ("load-lang-data", () => {
+-                langs = Utils.get_installed_languages ();
++                langs = Utils.get_installed_locales ();
+                 var locales = Utils.get_installed_locales ();
+ 
+                 Idle.add (() => {
+@@ -62,11 +57,8 @@
+                     view.locale_setting.reload_formats (locales);
+                     return false;
+                 });
+-
+                 return null;
+             });
+-
+-            yield installer.check_missing_languages ();
+         }
+ 
+         void setup_info () {
+@@ -76,19 +68,6 @@
+ 
+                 infobar.revealed = false;
+             }
+-
+-            installer.install_finished.connect ((langcode) => {
+-                langs.add (langcode);
+-                reload.begin ();
+-            });
+-
+-            installer.remove_finished.connect ((langcode) => {
+-                langs.remove (langcode);
+-                reload.begin ();
+-            });
+-
+-            installer.check_missing_finished.connect (on_check_missing_finished);
+-            installer.progress_changed.connect (on_progress_changed);
+         }
+ 
+         public override void shown () {
+@@ -124,50 +103,14 @@
+             infobar.revealed = false;
+             infobar.get_content_area ().add (label);
+ 
+-            // Gtk.InfoBar for language support installation
+-            var missing_label = new Gtk.Label (_("Language support is not installed completely"));
+-
+-            missing_lang_infobar = new Gtk.InfoBar ();
+-            missing_lang_infobar.message_type = Gtk.MessageType.WARNING;
+-            missing_lang_infobar.revealed = false;
+-            missing_lang_infobar.add_button (_("Complete Installation"), 0);
+-            missing_lang_infobar.get_content_area ().add (missing_label);
+-
+             view = new Widgets.LocaleView (this);
+ 
+             grid = new Gtk.Grid ();
+             grid.orientation = Gtk.Orientation.VERTICAL;
+             grid.add (infobar);
+-            grid.add (missing_lang_infobar);
+             grid.add (view);
+             grid.show ();
+ 
+-            missing_lang_infobar.response.connect (() => {
+-                missing_lang_infobar.revealed = false;
+-                installer.install_missing_languages ();
+-            });
+-        }
+-
+-        private void on_check_missing_finished (string[] missing) {
+-            if (missing.length > 0) {
+-                missing_lang_infobar.show_all ();
+-                missing_lang_infobar.revealed = true;
+-            } else {
+-                missing_lang_infobar.revealed = false;
+-            }
+-        }
+-
+-        private void on_progress_changed (int progress) {
+-            if (progress_dialog != null) {
+-                progress_dialog.progress = progress;
+-                return;
+-            }
+-
+-            progress_dialog = new ProgressDialog ();
+-            progress_dialog.progress = progress;
+-            progress_dialog.transient_for = (Gtk.Window) grid.get_toplevel ();
+-            progress_dialog.run ();
+-            progress_dialog = null;
+         }
+     }
+ }
+diff -Naur switchboard-plug-locale-2.5.1/src/ProgressDialog.vala switchboard-plug-locale-2.5.1_patched/src/ProgressDialog.vala
+--- switchboard-plug-locale-2.5.1/src/ProgressDialog.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/ProgressDialog.vala	2020-05-01 16:59:22.645639015 +0200
+@@ -30,28 +30,12 @@
+         var image = new Gtk.Image.from_icon_name ("preferences-desktop-locale", Gtk.IconSize.DIALOG);
+         image.valign = Gtk.Align.START;
+ 
+-        unowned Installer.UbuntuInstaller installer = Installer.UbuntuInstaller.get_default ();
+-
+-        var transaction_language_name = Utils.translate (installer.transaction_language_code, null);
+-
+         var primary_label = new Gtk.Label (null);
+         primary_label.max_width_chars = 50;
+         primary_label.wrap = true;
+         primary_label.xalign = 0;
+         primary_label.get_style_context ().add_class (Granite.STYLE_CLASS_PRIMARY_LABEL);
+ 
+-        switch (installer.transaction_mode) {
+-            case Installer.UbuntuInstaller.TransactionMode.INSTALL:
+-                primary_label.label = _("Installing %s").printf (transaction_language_name);
+-                break;
+-            case Installer.UbuntuInstaller.TransactionMode.REMOVE:
+-                primary_label.label = _("Removing %s").printf (transaction_language_name);
+-                break;
+-            case Installer.UbuntuInstaller.TransactionMode.INSTALL_MISSING:
+-                primary_label.label = _("Installing missing language");
+-                break;
+-        }
+-
+         progress_bar = new Gtk.ProgressBar ();
+         progress_bar.width_request = 300;
+         progress_bar.hexpand = true;
+@@ -59,8 +43,6 @@
+ 
+         var cancel_button = (Gtk.Button) add_button (_("Cancel"), 0);
+ 
+-        installer.bind_property ("install-cancellable", cancel_button, "sensitive");
+-
+         var grid = new Gtk.Grid ();
+         grid.column_spacing = 12;
+         grid.row_spacing = 6;
+@@ -75,7 +57,6 @@
+         get_content_area ().add (grid);
+ 
+         cancel_button.clicked.connect (() => {
+-            installer.cancel_install ();
+             destroy ();
+         });
+     }
+diff -Naur switchboard-plug-locale-2.5.1/src/Utils.vala switchboard-plug-locale-2.5.1_patched/src/Utils.vala
+--- switchboard-plug-locale-2.5.1/src/Utils.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/Utils.vala	2020-05-01 16:57:54.795632932 +0200
+@@ -16,89 +16,12 @@
+ 
+ namespace SwitchboardPlugLocale {
+     public class Utils : Object {
+-        private static Gee.ArrayList<string> installed_languages;
+         private static Gee.ArrayList<string> installed_locales;
+         private static Gee.HashMap<string, string> default_regions;
+-        private static Gee.ArrayList<string> blacklist_packages;
+ 
+         public static void init () {
+             installed_locales = new Gee.ArrayList<string> ();
+             default_regions = new Gee.HashMap<string, string> ();
+-            blacklist_packages = new Gee.ArrayList<string> ();
+-            installed_languages = new Gee.ArrayList<string> ();
+-        }
+-
+-        public static Gee.ArrayList<string>? get_installed_languages () {
+-            if (installed_languages.size > 0) {
+-                return installed_languages;
+-            }
+-
+-            string output;
+-            int status;
+-
+-            try {
+-                Process.spawn_sync (null,
+-                    {"/usr/share/language-tools/language-options", null},
+-                    Environ.get (),
+-                    SpawnFlags.SEARCH_PATH,
+-                    null,
+-                    out output,
+-                    null,
+-                    out status);
+-
+-                foreach (var lang in output.split ("\n")) {
+-                    installed_languages.add (lang);
+-                }
+-            } catch (Error e) {
+-                warning (e.message);
+-            }
+-
+-            return installed_languages;
+-        }
+-
+-        public static async string [] get_missing_languages () {
+-            if (blacklist_packages.size == 0) {
+-                blacklist_packages = yield get_blacklist_packages ();
+-            }
+-
+-            Pid pid;
+-            int input;
+-            int output;
+-            int error;
+-
+-            string[] missing = {};
+-            string[] missing_aux = {};
+-            try {
+-                string res = "";
+-
+-                Process.spawn_async_with_pipes (null,
+-                    {"check-language-support", null},
+-                    Environ.get (),
+-                    SpawnFlags.SEARCH_PATH,
+-                    null,
+-                    out pid,
+-                    out input,
+-                    out output,
+-                    out error);
+-                UnixInputStream read_stream = new UnixInputStream (output, true);
+-                DataInputStream out_channel = new DataInputStream (read_stream);
+-                string line = null;
+-                while ((line = yield out_channel.read_line_async (Priority.DEFAULT)) != null) {
+-                    res += line;
+-                }
+-
+-                missing_aux = res.strip ().split (" ");
+-
+-                for (var i = 0; i < missing_aux.length; i++) {
+-                    if (!blacklist_packages.contains (missing_aux[i])) {
+-                        missing += missing_aux[i];
+-                    }
+-                }
+-            } catch (Error e) {
+-                warning (e.message);
+-            }
+-
+-            return missing;
+         }
+ 
+         public static async Gee.ArrayList<string> get_blacklist_packages () {
+@@ -200,10 +123,15 @@
+ 
+         public static Gee.ArrayList<string> get_regions (string language) {
+             Gee.ArrayList<string> regions = new Gee.ArrayList<string> ();
+-            foreach (string locale in get_installed_languages ()) {
++            foreach (string locale in get_installed_locales ()) {
++                warning ("6");
++                warning(locale);
+                 if (locale.length == 5) {
+                     string code = locale.slice (0, 2);
+                     string region = locale.slice (3, 5);
++                    warning("7");
++                    warning(code);
++                    warning(region);
+ 
+                     if (!regions.contains (region) && code == language) {
+                         regions.add (region);
+diff -Naur switchboard-plug-locale-2.5.1/src/Widgets/LanguageListBox.vala switchboard-plug-locale-2.5.1_patched/src/Widgets/LanguageListBox.vala
+--- switchboard-plug-locale-2.5.1/src/Widgets/LanguageListBox.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/Widgets/LanguageListBox.vala	2020-05-01 16:57:54.796632932 +0200
+@@ -63,7 +63,7 @@
+         if (!languages.has_key (code)) {
+             var language_string = Utils.translate (code, null);
+ 
+-            if (lm.get_user_language ().slice (0, 2) == code) {
++            if (lm.get_user_language ().length > 0 && lm.get_user_language ().slice (0, 2) == code) {
+                 languages[code] = new LanguageRow (code, language_string, true);
+             } else {
+                 languages[code] = new LanguageRow (code, language_string);
+diff -Naur switchboard-plug-locale-2.5.1/src/Widgets/LocaleSetting.vala switchboard-plug-locale-2.5.1_patched/src/Widgets/LocaleSetting.vala
+--- switchboard-plug-locale-2.5.1/src/Widgets/LocaleSetting.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/Widgets/LocaleSetting.vala	2020-05-01 16:57:54.796632932 +0200
+@@ -236,6 +236,8 @@
+                 region_store.append (out iter);
+                 region_store.set (iter, 0, region_string, 1, region);
+ 
++                warning ("3");
++                warning (lm.get_user_language ());
+                 if (lm.get_user_language ().length == 5 && lm.get_user_language ().slice (0, 2) == language
+                     && lm.get_user_language ().slice (3, 5) == region) {
+                         selected_region = i;
+diff -Naur switchboard-plug-locale-2.5.1/src/Widgets/LocaleView.vala switchboard-plug-locale-2.5.1_patched/src/Widgets/LocaleView.vala
+--- switchboard-plug-locale-2.5.1/src/Widgets/LocaleView.vala	2020-04-02 00:48:03.000000000 +0200
++++ switchboard-plug-locale-2.5.1_patched/src/Widgets/LocaleView.vala	2020-05-01 16:57:54.796632932 +0200
+@@ -86,23 +86,12 @@
+                 }
+             });
+ 
+-            unowned Installer.UbuntuInstaller installer = Installer.UbuntuInstaller.get_default ();
+-
+-            installer.install_finished.connect (() => {
+-                make_sensitive (true);
+-            });
+-
+-            installer.remove_finished.connect (() => {
+-                make_sensitive (true);
+-            });
+-
+             remove_button.clicked.connect (() => {
+                 if (!Utils.allowed_permission ()) {
+                     return;
+                 }
+ 
+                 make_sensitive (false);
+-                installer.remove (list_box.get_selected_language_code ());
+             });
+ 
+             popover.language_selected.connect ((lang) => {
+@@ -111,7 +100,6 @@
+                 }
+ 
+                 make_sensitive (false);
+-                installer.install (lang);
+             });
+ 
+             show_all ();

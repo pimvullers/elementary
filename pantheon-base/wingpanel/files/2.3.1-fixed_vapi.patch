@@ -1,0 +1,21 @@
+--- /vapi/libmutter.vapi	2020-04-06 05:59:58.000000000 +0200
++++ /vapi/libmutter.vapi	2020-05-01 16:29:46.862516055 +0200
+@@ -436,7 +436,7 @@
+ 		public string get_pad_action_label (Clutter.InputDevice pad, Meta.PadActionType action_type, uint action_number);
+ #if HAS_MUTTER330
+ 		public int get_primary_monitor ();
+-#if !HAS_MUTTER334
++#if HAS_MUTTER334
+ 		public unowned Meta.Selection get_selection ();
+ #endif
+ 		public void get_size (out int width, out int height);
+@@ -1178,7 +1178,7 @@
+ 		public signal void window_removed (Meta.Window object);
+ 	}
+ #if HAS_MUTTER330
+-	[CCode (cheader_filename = "meta/meta-workspace-manager.h", type_id = "meta_workspace_manager_get_type ()")]
++	[CCode (cheader_filename = "meta/display.h,meta/meta-workspace-manager.h", type_id = "meta_workspace_manager_get_type ()")]
+ 	public class WorkspaceManager : GLib.Object {
+ 		[CCode (has_construct_function = false)]
+ 		protected WorkspaceManager ();
+

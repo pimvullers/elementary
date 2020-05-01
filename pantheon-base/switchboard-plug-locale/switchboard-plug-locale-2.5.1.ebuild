@@ -34,7 +34,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PV}-fix_ubuntu_langs.patch"
+	eapply "${FILESDIR}/2.5.1-fix_ubuntu_langs.patch"
 	vala_src_prepare
 }
 
