@@ -35,10 +35,9 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PV}-fix_dm_location.patch"
-	eapply "${FILESDIR}/${PV}-fix_lightdm.d.patch"
-	eapply "${FILESDIR}/${PV}-fix_user_lang.patch"
-	eapply "${FILESDIR}/${PV}-fix_create_user.patch"
+	eapply "${FILESDIR}/2.3.0-fix_dm_location.patch"
+	eapply "${FILESDIR}/2.3.0-fix_lightdm.d.patch"
+	eapply "${FILESDIR}/2.3.0-fix_user_lang.patch"
 	vala_src_prepare
 }
 
