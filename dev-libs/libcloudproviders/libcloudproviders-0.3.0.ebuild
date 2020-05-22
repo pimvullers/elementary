@@ -13,6 +13,10 @@ SLOT="0"
 KEYWORDS="~amd64"
 IUSE="doc +introspection +vala"
 
+REQUIRED_USE="
+	vala? ( introspection )
+"
+
 DEPEND="
 	doc? ( dev-util/gdbus-codegen )
 	virtual/pkgconfig
