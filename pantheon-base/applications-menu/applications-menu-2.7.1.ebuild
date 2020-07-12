@@ -32,6 +32,7 @@ RDEPEND="${DEPEND}
 	net-libs/libsoup:2.4
 	pantheon-base/switchboard
 	pantheon-base/wingpanel
+	gui-libs/libhandy
 	>=x11-libs/gtk+-3.12.0:3
 "
 

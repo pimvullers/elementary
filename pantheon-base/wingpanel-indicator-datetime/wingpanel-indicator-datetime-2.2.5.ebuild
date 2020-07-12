@@ -7,8 +7,7 @@ inherit gnome2-utils meson vala
 
 DESCRIPTION="Date & Time indicator for Wingpanel"
 HOMEPAGE="https://github.com/elementary/wingpanel-indicator-datetime"
-#SRC_URI="https://github.com/elementary/wingpanel-indicator-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
-SRC_URI="https://github.com/Dirli/wingpanel-indicator-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/elementary/wingpanel-indicator-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,7 +19,7 @@ RDEPEND="
 	dev-libs/granite
 	evolution? (
 		dev-libs/libical
-		gnome-extra/evolution-data-server[vala] 
+		gnome-extra/evolution-data-server[vala]
 	)
 	net-libs/libsoup:2.4
 	pantheon-base/wingpanel

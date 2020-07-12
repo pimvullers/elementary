@@ -35,7 +35,7 @@ src_prepare() {
 	eapply_user
 	vala_src_prepare
 
-	eapply "${FILESDIR}/${PV}-fix_unplugged_cable.patch"
-	eapply "${FILESDIR}/${PV}-fix_instance_button.patch"
+#	eapply "${FILESDIR}/${PV}-fix_unplugged_cable.patch"
+#	eapply "${FILESDIR}/${PV}-fix_instance_button.patch"
 }
 

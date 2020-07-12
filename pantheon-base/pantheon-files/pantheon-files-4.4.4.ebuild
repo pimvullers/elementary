@@ -48,7 +48,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dwith-unity=false
+		-Dwith-unity=disabled
 	)
 	meson_src_configure
 }
