@@ -59,7 +59,7 @@ pkg_preinst() {
 pkg_postinst() {
 	gnome2_gconf_install
 	gnome2_schemas_update
-	xdg_icon_cache_upadte
+	xdg_icon_cache_update
 }
 
 pkg_postrm() {
