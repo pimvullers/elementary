@@ -12,15 +12,13 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-datetime/archive/${PV
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="evolution nls"
+IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
-	evolution? (
-		dev-libs/libical
-		gnome-extra/evolution-data-server[vala]
-	)
+	dev-libs/libical
+	gnome-extra/evolution-data-server[vala]
 	net-libs/libsoup:2.4
 	pantheon-base/wingpanel
 	x11-libs/gtk+:3
@@ -34,13 +32,6 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	vala_src_prepare
-}
-
-src_configure() {
-	local emesonargs=(
-		-Devo=$(usex evolution true false)
-	)
-	meson_src_configure
 }
 
 pkg_preinst() {
