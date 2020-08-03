@@ -21,6 +21,7 @@ CDEPEND="
 	dev-libs/glib:2
 	dbus? ( dev-libs/libdbusmenu[gtk3] )
 	dev-libs/libgee:0.8
+	>=gnome-base/gnome-menus-3.32.0
 	>=x11-libs/bamf-0.2.92
 	>=x11-libs/cairo-1.10
 	>=x11-libs/gdk-pixbuf-2.26.0
