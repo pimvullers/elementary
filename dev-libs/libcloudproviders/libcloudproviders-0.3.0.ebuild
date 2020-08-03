@@ -11,7 +11,11 @@ SRC_URI="https://gitlab.gnome.org/World/libcloudproviders/-/archive/${PV}/libclo
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE="doc introspection vala"
+IUSE="doc +introspection +vala"
+
+REQUIRED_USE="
+	vala? ( introspection )
+"
 
 DEPEND="
 	doc? ( dev-util/gdbus-codegen )
