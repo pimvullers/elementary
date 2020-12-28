@@ -37,6 +37,9 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
+
+	eapply "${FILESDIR}/5216e59352924c89326fbdaba42e2662565a8fe9.patch"
+
 	vala_src_prepare
 }
 

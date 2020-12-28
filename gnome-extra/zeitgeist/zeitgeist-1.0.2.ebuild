@@ -1,9 +1,9 @@
-# Copyright 1999-2019 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
+PYTHON_COMPAT=( python{3_7,3_8} )
 
-PYTHON_COMPAT=( python2_7 )
 VALA_MIN_API_VERSION=0.22
 
 inherit bash-completion-r1 python-r1 vala versionator xdg
@@ -45,6 +45,11 @@ DEPEND="${RDEPEND}
 	>=sys-devel/gettext-0.19
 	virtual/pkgconfig
 "
+
+PATCHES=(
+	# Fix direct invocation of python in configure
+	"${FILESDIR}"/${PN}-1.0-python-detection.patch
+)
 
 src_prepare() {
 	# pure-python module is better managed manually, see src_install
@@ -92,4 +97,6 @@ src_install() {
 
 	# Redundant NEWS/AUTHOR installation
 	rm -r "${D}"/usr/share/zeitgeist/doc/ || die
+
+	prune_libtool_files
 }

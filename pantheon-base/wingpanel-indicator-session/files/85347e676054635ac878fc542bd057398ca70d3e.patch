@@ -1,0 +1,23 @@
+From 85347e676054635ac878fc542bd057398ca70d3e Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Daniel=20For=C3=A9?= <daniel@elementary.io>
+Date: Tue, 7 Jul 2020 12:09:39 -0700
+Subject: [PATCH] UserManager: Iterate Hashmap values not MapEntries
+
+---
+ src/Services/UserManager.vala | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Services/UserManager.vala b/src/Services/UserManager.vala
+index 609e0f8..3205bf7 100644
+--- a/src/Services/UserManager.vala
++++ b/src/Services/UserManager.vala
+@@ -197,7 +197,7 @@ public class Session.Services.UserManager : Object {
+     }
+ 
+     public void update_all () {
+-        foreach (var userbox in user_boxes) {
++        foreach (var userbox in user_boxes.values) {
+             userbox.update_state ();
+         }
+     }
+ 

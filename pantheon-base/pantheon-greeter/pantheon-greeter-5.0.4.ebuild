@@ -45,6 +45,9 @@ src_prepare() {
 }
 
 src_configure() {
+	local emesonargs=(
+		-Dubuntu-patched-gsd=false
+	)
 	meson_src_configure
 }
 
