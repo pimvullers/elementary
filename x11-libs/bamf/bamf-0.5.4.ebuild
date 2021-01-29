@@ -33,7 +33,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	${PYTHON_DEPS}
 	dev-libs/libxml2[python]
-	dev-libs/libxslt[python]
+	dev-libs/libxslt
 	gtk-doc? ( dev-util/gtk-doc )
 	introspection? ( dev-libs/gobject-introspection )
 	virtual/pkgconfig
