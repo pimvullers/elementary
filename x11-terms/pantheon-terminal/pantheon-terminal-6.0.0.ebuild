@@ -3,6 +3,8 @@
 
 EAPI=7
 
+VALA_MIN_API_VERSION=0.40
+
 inherit gnome2-utils meson vala xdg-utils
 
 DESCRIPTION="The terminal of the 21st century"

@@ -9,7 +9,7 @@ SRC_URI="https://archive.xfce.org/src/apps/${PN}/${PV%.*}/${P}.tar.bz2"
 
 LICENSE="GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 IUSE="curl ffmpeg gstreamer jpeg odf pdf raw"
 
 COMMON_DEPEND=">=dev-libs/glib-2.42:2

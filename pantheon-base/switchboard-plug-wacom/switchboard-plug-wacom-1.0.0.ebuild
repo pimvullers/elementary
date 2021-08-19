@@ -19,6 +19,8 @@ IUSE="nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
+	dev-libs/libgudev
+	dev-libs/libwacom
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
 "

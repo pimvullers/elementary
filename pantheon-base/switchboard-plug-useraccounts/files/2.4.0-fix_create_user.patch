@@ -1,0 +1,30 @@
+--- /src/Dialogs/NewUserDialog.vala
++++ /src/Dialogs/NewUserDialog.vala
+@@ -113,12 +113,22 @@ public class SwitchboardPlugUserAccounts
+ 
+                 if (get_permission ().allowed) {
+                     try {
+-                        var created_user = get_usermanager ().create_user (username, fullname, accounttype);
+-                        if (password != null) {
+-                            created_user.set_password (password, "");
+-                        }
++                        Act.User created_user;
++                        get_usermanager ().user_added.connect ((user) => {
++                            GLib.Idle.add (() => {
++                                if (user == created_user) {
++                                    created_user.set_locked (false);
+ 
+-                        created_user.set_locked (false);
++                                    if (password != null) {
++                                        created_user.set_password (password, "");
++                                    }
++                                }
++
++                                return false;
++                            });
++                        });
++
++                        created_user = get_usermanager ().create_user (username, fullname, accounttype);
+                     } catch (Error e) {
+                         critical ("Creation of user '%s' failed", username);
+                     }

@@ -1,0 +1,23 @@
+--- /po/ru.po
++++ /po/ru.po
+@@ -33,6 +33,9 @@ msgstr "Индикатор меню пр
+ msgid "Applications"
+ msgstr "Приложения"
+ 
++msgid "Menu"
++msgstr "Меню"
++
+ #: src/Indicator.vala:118
+ msgid "Open and search apps"
+ msgstr "Откройте и ищите приложения"
+--- /src/Indicator.vala
++++ /src/Indicator.vala
+@@ -72,7 +72,7 @@ public class Slingshot.Indicator : Wingp
+ 
+     public override Gtk.Widget get_display_widget () {
+         if (indicator_grid == null) {
+-            var indicator_label = new Gtk.Label (_("Applications"));
++            var indicator_label = new Gtk.Label (_("Menu"));
+             indicator_label.vexpand = true;
+ 
+             var indicator_icon = new Gtk.Image.from_icon_name ("system-search-symbolic", Gtk.IconSize.MENU);

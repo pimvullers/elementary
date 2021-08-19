@@ -1,0 +1,22 @@
+--- /src/Views/GridView.vala
++++ /src/Views/GridView.vala
+@@ -38,7 +38,7 @@ public class Slingshot.Widgets.Grid : Gt
+ 
+     construct {
+         page.rows = 3;
+-        page.columns = 5;
++        page.columns = 4;
+         page.number = 1;
+ 
+         paginator = new Hdy.Paginator ();
+@@ -48,8 +48,8 @@ public class Slingshot.Widgets.Grid : Gt
+         page_switcher.set_paginator (paginator);
+ 
+         orientation = Gtk.Orientation.VERTICAL;
+-        row_spacing = 24;
+-        margin_bottom = 12;
++        row_spacing = 12;
++        margin_bottom = 8;
+         add (paginator);
+         add (page_switcher);
+ 

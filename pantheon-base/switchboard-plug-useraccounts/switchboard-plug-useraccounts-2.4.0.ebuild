@@ -18,10 +18,11 @@ IUSE="nls"
 
 RDEPEND="
 	dev-libs/glib:2
-	>=dev-libs/granite-0.4.1
+	>=dev-libs/granite-6.0.0:=
 	dev-libs/libgee:0.8
 	dev-libs/libpwquality
 	gnome-base/gnome-desktop:3=
+	>=gui-libs/libhandy-1.1.90:1
 	pantheon-base/switchboard
 	sys-apps/accountsservice
 	>=sys-auth/polkit-0.115
@@ -35,9 +36,12 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/2.3.0-fix_dm_location.patch"
-	eapply "${FILESDIR}/2.3.0-fix_lightdm.d.patch"
-	eapply "${FILESDIR}/2.3.0-fix_user_lang.patch"
+
+	eapply "${FILESDIR}/${PV}-check_paths.patch"
+	eapply "${FILESDIR}/${PV}-avatar_icon_check.patch"
+	eapply "${FILESDIR}/${PV}-fix_user_lang.patch"
+	eapply "${FILESDIR}/${PV}-fix_create_user.patch"
+
 	vala_src_prepare
 }
 
