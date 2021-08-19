@@ -1,71 +1,76 @@
-# Copyright 1999-2019 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
+# Source overlay: https://github.com/BlueManCZ/edgets
+
 EAPI=7
+inherit autotools gnome2-utils vala xdg
 
-VALA_MIN_API_VERSION=0.24
-VALA_USE_DEPEND=vapigen
+DESCRIPTION="Elegant, simple, clean dock"
+HOMEPAGE="https://github.com/ricotz/plank"
 
-inherit gnome2-utils autotools vala xdg-utils
-
-DESCRIPTION="The dock for elementary Pantheon, stupidly simple"
-HOMEPAGE="https://launchpad.net/plank https://launchpad.net/pantheon-dock"
-SRC_URI="https://launchpad.net/plank/1.0/${PV}/+download/${P}.tar.xz"
+if [[ ${PV} == 9999 ]]; then
+	inherit git-r3
+	EGIT_REPO_URI="${HOMEPAGE}.git"
+	KEYWORDS=""
+else
+	SRC_URI="${HOMEPAGE}/archive/${PV}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+fi
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
-IUSE="+dbus debug nls static-libs"
+RESTRICT="mirror"
+IUSE="apport barriers benchmark dbus debug doc nls"
 
-CDEPEND="
-	dev-libs/glib:2
-	dbus? ( dev-libs/libdbusmenu[gtk3] )
-	dev-libs/libgee:0.8
-	>=gnome-base/gnome-menus-3.32.0
-	>=x11-libs/bamf-0.2.92
-	>=x11-libs/cairo-1.10
-	>=x11-libs/gdk-pixbuf-2.26.0
-	>=x11-libs/gtk+-3.10.0:3
-	x11-libs/libX11
-	x11-libs/libwnck:3
-"
-RDEPEND="${CDEPEND}"
-DEPEND="${CDEPEND}
-	$(vala_depend)
-	dev-util/intltool
-	virtual/pkgconfig
-	nls? ( sys-devel/gettext )
-"
+VALA_MIN_API_VERSION="0.34"
+VALA_USE_DEPEND="vapigen"
 
-DOCS=( AUTHORS COPYING COPYRIGHT NEWS README )
+RDEPEND="dev-libs/atk
+  dev-libs/glib:2
+  dev-libs/libdbusmenu[gtk,gtk3]
+  dev-libs/libgee
+  sys-libs/glibc
+  x11-libs/bamf
+  x11-libs/cairo
+  x11-libs/gdk-pixbuf
+  x11-libs/gtk+:3
+  x11-libs/libX11
+  x11-libs/libXfixes
+  x11-libs/libXi
+  x11-libs/libwnck
+  gnome-base/gnome-menus:3
+  x11-libs/pango"
 
-src_prepare() {
-	eautoreconf
+DEPEND="${RDEPEND}
+  $(vala_depend)
+  doc? ( dev-lang/vala[valadoc] )"
 
-	vala_src_prepare
-	default
-}
+  src_prepare() {
+    # dev-lang/vala[valadoc] does not create a symlink /usr/bin/valadoc
+    sed -i "308s/valadoc/valadoc-$(vala_best_api_version)/" configure.ac || die "sed failed"
+    eapply_user
+    eautoreconf
+    vala_src_prepare
+  }
 
-src_configure() {
-	econf \
-		$(use_enable debug) \
-		$(use_enable nls) \
-		$(use_enable dbus dbusmenu)
-}
+  src_configure() {
+    econf \
+      $(use_enable apport) \
+      $(use_enable barriers) \
+      $(use_enable benchmark) \
+      $(use_enable dbus dbusmenu) \
+      $(use_enable debug) \
+      $(use_enable doc docs) \
+      $(use_enable nls)
+  }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
+  pkg_postinst() {
+    gnome2_schemas_update
+    xdg_pkg_postinst
+  }
 
-pkg_postinst() {
-	gnome2_gconf_install
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
-
-pkg_postrm() {
-	gnome2_gconf_uninstall
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
-
+  pkg_postrm() {
+    gnome2_schemas_update
+    xdg_pkg_postrm
+  }

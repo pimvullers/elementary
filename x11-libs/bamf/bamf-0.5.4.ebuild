@@ -3,11 +3,10 @@
 
 EAPI=7
 
-PYTHON_COMPAT=( python{2_6,2_7} )
 VALA_MIN_API_VERSION=0.26
 VALA_USE_DEPEND=vapigen
 
-inherit python-r1 vala
+inherit vala
 
 DESCRIPTION="BAMF Application Matching Framework"
 HOMEPAGE="https://launchpad.net/bamf"
@@ -31,7 +30,6 @@ RDEPEND="
 
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	${PYTHON_DEPS}
 	dev-libs/libxml2[python]
 	dev-libs/libxslt[python]
 	gtk-doc? ( dev-util/gtk-doc )
