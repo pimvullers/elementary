@@ -1,8 +1,0 @@
-diff -Naur a/data/CMakeLists.txt b/data/CMakeLists.txt
---- a/data/CMakeLists.txt	2016-08-05 19:50:54.302500167 +0200
-+++ b/data/CMakeLists.txt	2016-08-05 19:52:05.315093569 +0200
-@@ -1,3 +1,4 @@
-+include(Translations)
- configure_file (org.pantheon.calculator.desktop.in.in ${CMAKE_CURRENT_BINARY_DIR}/org.pantheon.calculator.desktop.in)
- configure_file_translation (${CMAKE_CURRENT_BINARY_DIR}/org.pantheon.calculator.desktop.in ${CMAKE_CURRENT_BINARY_DIR}/org.pantheon.calculator.desktop ${CMAKE_SOURCE_DIR}/po/)
- configure_file_translation (${CMAKE_CURRENT_SOURCE_DIR}/org.pantheon.calculator.appdata.xml.in ${CMAKE_CURRENT_BINARY_DIR}/org.pantheon.calculator.appdata.xml ${CMAKE_SOURCE_DIR}/po/)

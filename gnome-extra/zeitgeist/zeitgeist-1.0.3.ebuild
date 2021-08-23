@@ -55,6 +55,7 @@ src_prepare() {
 	sed -e 's:@libexecdir@:@pkglibexecdir@:' \
 		-i extensions/fts++/zeitgeist-fts.service.in
 
+	eapply "${FILESDIR}/64ac3a6f94cd299e5e14945dc31b48f009dec152.patch"
 	vala_src_prepare
 	xdg_src_prepare
 	eautoreconf

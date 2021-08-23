@@ -23,7 +23,6 @@ RDEPEND="
 	sys-apps/dbus
 	sys-auth/polkit
 	x11-libs/gtk+:3
-	x11-misc/light-locker
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
