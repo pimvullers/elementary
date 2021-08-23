@@ -16,7 +16,7 @@ SRC_URI="https://launchpad.net/zeitgeist/${DIR_PV}/${PV}/+download/${P}.tar.xz"
 
 LICENSE="LGPL-2+ LGPL-3+ GPL-2+"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 IUSE="datahub downloads-monitor fts introspection nls sql-debug telepathy"
 
 REQUIRED_USE="

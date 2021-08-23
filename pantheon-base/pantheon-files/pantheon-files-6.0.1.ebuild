@@ -14,7 +14,7 @@ KEYWORDS="amd64"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="nls"
+IUSE="nls zeitgeist"
 
 DEPEND="
 	$(vala_depend)
@@ -24,19 +24,17 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-db/sqlite:3
-	dev-libs/dbus-glib
 	>=dev-libs/glib-2.40.0:2
-	>=dev-libs/granite-5.3.0
+	>=dev-libs/granite-6.1.0
 	dev-libs/libgee:0.8
-	dev-libs/libgit2-glib
-	dev-libs/libcloudproviders[vala]
-	gnome-base/gvfs
-	>=gnome-extra/zeitgeist-1.0.2
+	>=x11-libs/gtk+-3.22:3[X,wayland]
+	gui-libs/libhandy
+	zeitgeist? ( >=gnome-extra/zeitgeist-1.0.2 )
+	>=x11-misc/plank-0.10.9
+	dev-libs/libcloudproviders
 	>=media-libs/libcanberra-0.30
-	>=x11-libs/gtk+-3.22:3
 	>=x11-libs/libnotify-0.7.2
 	>=x11-libs/pango-1.1.2
-	xfce-extra/tumbler
 "
 
 S="${WORKDIR}/files-${PV}"

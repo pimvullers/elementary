@@ -19,11 +19,9 @@ IUSE="nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
-	gnome-extra/zeitgeist
 	pantheon-base/switchboard
 	>=sys-auth/polkit-0.115
 	x11-libs/gtk+:3
-	x11-misc/light-locker
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)

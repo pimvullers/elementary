@@ -29,14 +29,13 @@ RDEPEND="${DEPEND}
 	x11-libs/gtk+:3
 	x11-misc/lightdm[introspection,vala]
 	>=x11-wm/mutter-3.36.0:=
-	<=x11-wm/mutter-3.39.0:=
 "
 
 S="${WORKDIR}/greeter-${PV}"
 
 src_prepare() {
 	eapply_user
-
+	eapply "${FILESDIR}/550.patch"
 	vala_src_prepare
 }
 

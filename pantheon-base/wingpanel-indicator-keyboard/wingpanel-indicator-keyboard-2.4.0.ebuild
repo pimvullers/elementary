@@ -19,6 +19,7 @@ KEYWORDS="amd64"
 IUSE="nls"
 
 RDEPEND="
+	app-i18n/ibus[vala]
 	dev-libs/glib:2
 	dev-libs/granite
 	pantheon-base/wingpanel
