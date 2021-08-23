@@ -1,0 +1,2415 @@
+From 78cfc65a90e8d306a97a31b08e15d1159cafb0cc Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Corentin=20No=C3=ABl?= <corentin.noel@collabora.com>
+Date: Thu, 3 Dec 2020 12:04:33 +0100
+Subject: [PATCH 1/5] Add initial support for Mutter 40
+
+---
+ meson.build                   |  13 +++
+ src/ScreenshotManager.vala    |   7 ++
+ vapi/Clutter-8-custom.vala    |  42 ++++++++
+ vapi/Clutter-8.metadata       | 188 ++++++++++++++++++++++++++++++++++
+ vapi/Cogl-8-custom.vala       | 161 +++++++++++++++++++++++++++++
+ vapi/Cogl-8.metadata          |  69 +++++++++++++
+ vapi/Meta-8.metadata          | 182 ++++++++++++++++++++++++++++++++
+ vapi/libmutter-8.deps         |   1 +
+ vapi/libmutter-8.vapi         |   1 +
+ vapi/libmutter.vapi           |  30 ++++++
+ vapi/meson.build              |  69 +++++++++++++
+ vapi/mutter-clutter-8.deps    |   6 ++
+ vapi/mutter-clutter-8.vapi    |   1 +
+ vapi/mutter-clutter.vapi      | 166 +++++++++++++++++++++++++++++-
+ vapi/mutter-cogl-6.vapi       | 168 ++++++++++++++++++++++++++++++
+ vapi/mutter-cogl-8.deps       |   1 +
+ vapi/mutter-cogl-8.vapi       |   1 +
+ vapi/mutter-cogl-pango-8.vapi |   1 +
+ vapi/mutter-cogl-path-7.vapi  |   1 -
+ 19 files changed, 1104 insertions(+), 4 deletions(-)
+ create mode 100644 vapi/Clutter-8-custom.vala
+ create mode 100644 vapi/Clutter-8.metadata
+ create mode 100644 vapi/Cogl-8-custom.vala
+ create mode 100644 vapi/Cogl-8.metadata
+ create mode 100644 vapi/Meta-8.metadata
+ create mode 120000 vapi/libmutter-8.deps
+ create mode 120000 vapi/libmutter-8.vapi
+ create mode 100644 vapi/mutter-clutter-8.deps
+ create mode 120000 vapi/mutter-clutter-8.vapi
+ create mode 120000 vapi/mutter-cogl-8.deps
+ create mode 120000 vapi/mutter-cogl-8.vapi
+ create mode 120000 vapi/mutter-cogl-pango-8.vapi
+ delete mode 120000 vapi/mutter-cogl-path-7.vapi
+
+diff --git a/meson.build b/meson.build
+index 774f4e3ae..6b043dc6c 100644
+--- a/meson.build
++++ b/meson.build
+@@ -126,6 +126,19 @@ if mutter338_dep.found()
+ 		'-DCOGL_ENABLE_EXPERIMENTAL_API', '-DCOGL_ENABLE_EXPERIMENTAL_2_0_API'], language: 'c')
+ endif
+ 
++mutter40_dep = dependency('libmutter-8', version: ['>= 40', '< 41'], required: false)
++if mutter40_dep.found()
++	libmutter_dep = dependency('libmutter-8', version: '>= 40')
++	mutter_dep = [
++		libmutter_dep,
++		dependency('mutter-cogl-8'), dependency('mutter-cogl-pango-8'),
++		dependency('mutter-clutter-8')
++	]
++	vala_flags = ['--define', 'HAS_MUTTER330', '--define', 'HAS_MUTTER332', '--define', 'HAS_MUTTER334', '--define', 'HAS_MUTTER336', '--define', 'HAS_MUTTER338', '--define', 'HAS_MUTTER40']
++	add_project_arguments(['-DCLUTTER_ENABLE_COMPOSITOR_API', '-DCLUTTER_ENABLE_EXPERIMENTAL_API',
++		'-DCOGL_ENABLE_EXPERIMENTAL_API', '-DCOGL_ENABLE_EXPERIMENTAL_2_0_API'], language: 'c')
++endif
++
+ if mutter_dep.length() == 0
+     error ('No supported mutter library found!')
+ endif
+diff --git a/src/ScreenshotManager.vala b/src/ScreenshotManager.vala
+index 072dfa808..2f981b521 100644
+--- a/src/ScreenshotManager.vala
++++ b/src/ScreenshotManager.vala
+@@ -416,7 +416,14 @@ namespace Gala {
+         Cairo.ImageSurface composite_stage_cursor (Cairo.ImageSurface image, Cairo.RectangleInt image_rect) {
+             unowned Meta.CursorTracker cursor_tracker = wm.get_display ().get_cursor_tracker ();
+             int x, y;
++#if HAS_MUTTER40
++            Graphene.Point coords;
++            cursor_tracker.get_pointer (coords, null);
++            x = coords.x;
++            y = coords.y;
++#else
+             cursor_tracker.get_pointer (out x, out y, null);
++#endif
+ 
+             var region = new Cairo.Region.rectangle (image_rect);
+             if (!region.contains_point (x, y)) {
+diff --git a/vapi/Clutter-8-custom.vala b/vapi/Clutter-8-custom.vala
+new file mode 100644
+index 000000000..7350fd909
+--- /dev/null
++++ b/vapi/Clutter-8-custom.vala
+@@ -0,0 +1,42 @@
++namespace Clutter {
++
++	public struct Color {
++		[CCode (cname = "clutter_color_from_hls")]
++		public Color.from_hls (float hue, float luminance, float saturation);
++		[CCode (cname = "clutter_color_from_pixel")]
++		public Color.from_pixel (uint32 pixel);
++		[CCode (cname = "clutter_color_from_string")]
++		public Color.from_string (string str);
++		[CCode (cname = "clutter_color_from_string")]
++		public bool parse_string (string str);
++	}
++
++	public interface Container : GLib.Object {
++		public void add (params Clutter.Actor[] actors);
++		[CCode (cname = "clutter_container_class_find_child_property")]
++		public class unowned GLib.ParamSpec find_child_property (string property_name);
++		[CCode (cname = "clutter_container_class_list_child_properties")]
++		public class unowned GLib.ParamSpec[] list_child_properties ();
++	}
++
++	public struct Units {
++		[CCode (cname = "clutter_units_from_cm")]
++		public Units.from_cm (float cm);
++		[CCode (cname = "clutter_units_from_em")]
++		public Units.from_em (float em);
++		[CCode (cname = "clutter_units_from_em_for_font")]
++		public Units.from_em_for_font (string font_name, float em);
++		[CCode (cname = "clutter_units_from_mm")]
++		public Units.from_mm (float mm);
++		[CCode (cname = "clutter_units_from_pixels")]
++		public Units.from_pixels (int px);
++		[CCode (cname = "clutter_units_from_pt")]
++		public Units.from_pt (float pt);
++		[CCode (cname = "clutter_units_from_string")]
++		public Units.from_string (string str);
++	}
++
++	[CCode (cheader_filename = "clutter/clutter.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
++	public struct Capture {
++	}
++}
+diff --git a/vapi/Clutter-8.metadata b/vapi/Clutter-8.metadata
+new file mode 100644
+index 000000000..a4ad7e72b
+--- /dev/null
++++ b/vapi/Clutter-8.metadata
+@@ -0,0 +1,188 @@
++// Non mini-object
++ActorBox struct
++Color struct
++Knot struct
++Margin struct
++PaintVolume struct
++PathNode struct
++Perspective struct
++Units struct
++
++*.ref unowned
++
++init.argv unowned
++init_with_args
++	.argv unowned
++Actor
++	.apply_transform.matrix ref
++	.get_abs_allocation_vertices.verts out=false
++Canvas
++	.new symbol_type="constructor"
++Event.type#method name="get_type"
++Image
++	.new symbol_type="constructor"
++
++// ???
++Actor.has_pointer#method name="get_has_pointer"
++InitError errordomain=false
++
++// Not all backing symbols are deprecated
++Actor.pick deprecated=false
++
++// Nullable return values
++Actor
++	.get_parent nullable
++value_get_color nullable
++
++// method/virtual-method/signal don't match
++Actor
++	.event#method name="emit_event"
++	.get_paint_volume#virtual_method name="get_paint_volume_vfunc"
++	.get_paint_volume#virtual_method.volume out
++Container
++	.add_actor skip=false
++	.class_* skip
++Text
++	.activate#method name="try_activate"
++	.insert_text#signal skip
++TextBuffer.get_text#virtual_method name="get_text_with_length"
++
++// virtual/abstract distinction
++Container
++	.lower virtual
++	.raise virtual
++	.*_child_meta#virtual_method virtual
++
++// Default values
++Container
++	.lower.sibling nullable default=null
++	.raise.sibling nullable default=null
++Stage.read_pixels
++	.width default=-1
++	.height default=-1
++Stage.paint_to_buffer
++    .data type="uint8[]"
++Text
++	.position_to_coords.line_height default=null
++
++// Reparented funcs methods can't be instance methods
++feature_available skip
++feature_get_all skip
++
++// Skipped by g-i for unknown reasons
++LayoutManager
++	.create_child_meta skip=false
++
++// Variadic arguments
++Backend
++	.get_cogl_context skip=false
++Container
++	.child_get skip=false
++	.child_set skip=false
++	.remove skip=false
++Interval
++	.new skip=false
++	.get_interval skip=false
++	.set_final skip=false
++	.set_initial skip=false
++	.set_interval skip=false
++LayoutManager
++	.child_get skip=false
++	.child_set skip=false
++Script
++	.get_objects skip=false
++
++// Skipped upstream for unknown reasons
++Interval.register_progress_func skip=false
++get_option_group skip=false
++get_option_group_without_init skip=false
++threads_add_idle skip=false
++threads_add_idle_full skip=false
++threads_add_timeout skip=false
++threads_add_timeout_full skip=false
++
++// struct/class confusion
++ActorBox
++	.new skip
++	.from_vertices skip
++Units.from_* skip
++Color
++	.new skip
++Margin
++	.new skip
++
++// Class methods
++container_class_find_child_property skip
++container_class_list_child_properties skip
++
++// Move symbols
++color_from_* skip
++units_from_* skip
++
++// Struct return values
++color_get_static nullable
++
++// Upstream
++Event
++	.get_position.position out
++
++FrameListenerIface skip
++FrameClock.new skip
++
++// Remove for clutter-2.0
++/////////////////////////
++
++StageView.layout skip
++
++Stage
++ 	.event name="emit_event"
++	.paint_view.redraw_clip type="Cairo.Region"
++
++Capture
++  .image type="Cairo.ImageSurface"
++
++// *Event should be compact classes derived from Clutter.Event
++Event.type skip=false
++AnyEvent struct=false base_type="Clutter.Event"
++ButtonEvent struct=false base_type="Clutter.Event"
++CrossingEvent struct=false base_type="Clutter.Event"
++DeviceEvent struct=false base_type="Clutter.Event"
++IMEvent struct=false base_type="Clutter.Event"
++KeyEvent struct=false base_type="Clutter.Event"
++MotionEvent struct=false base_type="Clutter.Event"
++ScrollEvent struct=false base_type="Clutter.Event"
++StageStateEvent struct=false base_type="Clutter.Event"
++TouchEvent struct=false base_type="Clutter.Event"
++TouchpadPinchEvent struct=false base_type="Clutter.Event"
++TouchpadSwipeEvent struct=false base_type="Clutter.Event"
++ProximityEvent struct=false base_type="Clutter.Event"
++PadButtonEvent struct=false base_type="Clutter.Event"
++PadRingEvent struct=false base_type="Clutter.Event"
++PadStripEvent struct=false base_type="Clutter.Event"
++
++// Keysyms used to be CLUTTER_X instead of CLUTTER_KEY_X
++*#constant skip
++COGL skip=false
++CURRENT_TIME skip=false
++FLAVOUR skip=false
++PATH_RELATIVE skip=false
++PRIORITY_REDRAW skip=false
++
++// Clutter devs don't like us creating nested namespaces
++value_* name="value_(.+)" parent="Clutter.Value"
++threads_* name="threads_(.+)" parent="Clutter.Threads"
++threads_add_idle name="add" parent="Clutter.Threads.Idle"
++threads_add_idle_full name="add_full" parent="Clutter.Threads.Idle"
++threads_add_timeout name="add" parent="Clutter.Threads.Timeout"
++threads_add_timeout_full name="add_full" parent="Clutter.Threads.Timeout"
++
++// Backwards compatibility
++Color.alloc symbol_type="function"
++
++BinAlignment deprecated=false deprecated_since=null
++BinAlignment.* deprecated
++BinAlignment.start deprecated=false
++BinLayout.new.*_align default=Clutter.BinAlignment.START
++
++// Possibly keep
++KEY_* skip=false name="KEY_(.+)" type="uint" parent="Clutter.Key"
+diff --git a/vapi/Cogl-8-custom.vala b/vapi/Cogl-8-custom.vala
+new file mode 100644
+index 000000000..f6034717c
+--- /dev/null
++++ b/vapi/Cogl-8-custom.vala
+@@ -0,0 +1,161 @@
++namespace Cogl {
++	public struct Color {
++		[Version (since = "1.4")]
++		[CCode (cname="cogl_color_init_from_4f")]
++		public Color.from_4f (float red, float green, float blue, float alpha);
++		[Version (since = "1.4")]
++		[CCode (cname="cogl_color_init_from_4fv")]
++		public Color.from_4fv (float color_array);
++		[Version (since = "1.4")]
++		[CCode (cname="cogl_color_init_from_4ub")]
++		public Color.from_4ub (uint8 red, uint8 green, uint8 blue, uint8 alpha);
++		[Version (since = "1.16")]
++		[CCode (cname="cogl_color_init_from_hsl")]
++		public Color.from_hsl (float hue, float saturation, float luminance);
++	}
++
++	[Compact]
++	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++	public class Shader : Cogl.Handle {
++	}
++
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_primitive_get_gtype ()")]
++	public class Primitive : Cogl.Object {
++		[CCode (has_construct_function = false)]
++		protected Primitive ();
++		[Version (since = "1.10")]
++		public Cogl.Primitive copy ();
++		[Version (since = "1.16")]
++		public void draw (Cogl.Framebuffer framebuffer, Cogl.Pipeline pipeline);
++		public int get_first_vertex ();
++		public Cogl.VerticesMode get_mode ();
++		[Version (since = "1.8")]
++		public int get_n_vertices ();
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2C4[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p2t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p2t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2C4[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p3 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p3c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3C4[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p3t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2[] data);
++		[CCode (has_construct_function = false)]
++		[Version (since = "1.6")]
++		public Primitive.p3t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2C4[] data);
++		public void set_first_vertex (int first_vertex);
++		public void set_mode (Cogl.VerticesMode mode);
++		[Version (since = "1.8")]
++		public void set_n_vertices (int n_vertices);
++	}
++
++	[Compact]
++	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++	public class Program : Cogl.Handle {
++	}
++
++	[Compact]
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++	public class Handle {
++		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_material")]
++		[Version (deprecated = true, deprecated_since = "1.16")]
++		public bool is_material ();
++		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_program")]
++		[Version (deprecated = true, deprecated_since = "1.16")]
++		public bool is_program (Cogl.Handle handle);
++		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_shader")]
++		[Version (deprecated = true, deprecated_since = "1.16")]
++		public bool is_shader ();
++		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_texture")]
++		public bool is_texture ();
++	}
++
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP2 {
++		public float x;
++		public float y;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP2C4 {
++		public float x;
++		public float y;
++		public uint8 r;
++		public uint8 g;
++		public uint8 b;
++		public uint8 a;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP2T2 {
++		public float x;
++		public float y;
++		public float s;
++		public float t;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP2T2C4 {
++		public float x;
++		public float y;
++		public float s;
++		public float t;
++		public uint8 r;
++		public uint8 g;
++		public uint8 b;
++		public uint8 a;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP3 {
++		public float x;
++		public float y;
++		public float z;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP3C4 {
++		public float x;
++		public float y;
++		public float z;
++		public uint8 r;
++		public uint8 g;
++		public uint8 b;
++		public uint8 a;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP3T2 {
++		public float x;
++		public float y;
++		public float z;
++		public float s;
++		public float t;
++	}
++	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++	[Version (since = "1.6")]
++	public struct VertexP3T2C4 {
++		public float x;
++		public float y;
++		public float z;
++		public float s;
++		public float t;
++		public uint8 r;
++		public uint8 g;
++		public uint8 b;
++		public uint8 a;
++	}
++}
+diff --git a/vapi/Cogl-8.metadata b/vapi/Cogl-8.metadata
+new file mode 100644
+index 000000000..2564c2358
+--- /dev/null
++++ b/vapi/Cogl-8.metadata
+@@ -0,0 +1,69 @@
++* cheader_filename="cogl/cogl.h"
++
++Color struct
++
++Material base_type="Cogl.Handle"
++MaterialLayer base_type="Cogl.Handle"
++
++_ColorSizeCheck skip
++_TextureVertexSizeCheck skip
++
++Color
++  .init_* skip
++color_init_from_hsl skip
++color_equal.v1 type="Cogl.Color"
++color_equal.v2 type="Cogl.Color"
++color_equal symbol_type=method
++
++texture_new_* name="texture_new_(.+)" parent="Cogl.Texture"
++Texture
++  .get_data.data type="uint8[]"
++  .new_from_data.data type="uint8[]"
++  .set_data.data type="uint8[]"
++  .set_region.data type="uint8[]"
++
++Texture2D
++  .new_from_data skip=false
++  .new_from_data.data array=true
++
++shader_* name="shader_(.+)" parent="Cogl.Shader"
++shader_* symbol_type="method" instance_idx=0
++
++program_* name="program_(.+)" parent="Cogl.Program"
++program_attach_shader symbol_type="method" instance_idx=0
++program_get_uniform_location symbol_type="method" instance_idx=0
++program_link symbol_type="method" instance_idx=0
++program_set_uniform_1f symbol_type="method" instance_idx=0
++program_set_uniform_1i symbol_type="method" instance_idx=0
++program_set_uniform_float symbol_type="method" instance_idx=0
++program_set_uniform_int symbol_type="method" instance_idx=0
++program_set_uniform_matrix symbol_type="method" instance_idx=0
++
++is_bitmap parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_program parent="Cogl.Handle"
++is_shader parent="Cogl.Handle"
++is_texture parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_context parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_framebuffer parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_frame_info parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_pipeline parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_texture_2d parent="Cogl.Object" symbol_type="method" instance_idx=0
++is_texture_2d_sliced parent="Cogl.Object" symbol_type="method" instance_idx=0
++
++create_program type="unowned Cogl.Program" name="create" parent="Cogl.Program"
++create_shader type="unowned Cogl.Shader" name="create" parent="Cogl.Shader"
++
++foreach_feature parent="Cogl.Context" symbol_type="method" instance_idx=0
++get_clock_time parent="Cogl.Context" symbol_type="method" instance_idx=0
++get_graphics_reset_status parent="Cogl.Context" symbol_type="method" instance_idx=0
++has_feature parent="Cogl.Context" symbol_type="method" instance_idx=0
++
++Bitmap.error_quark parent="Cogl.BitmapError" name="quark"
++Texture.error_quark parent="Cogl.TextureError" name="quark"
++texture_error_quark skip
++
++BitmapError errordomain
++BlendStringError errordomain
++RendererError errordomain
++SystemError errordomain
++TextureError errordomain
+diff --git a/vapi/Meta-8.metadata b/vapi/Meta-8.metadata
+new file mode 100644
+index 000000000..85a393172
+--- /dev/null
++++ b/vapi/Meta-8.metadata
+@@ -0,0 +1,182 @@
++* skip=false
++*.* skip=false
++* cheader_filename="meta/main.h"
++
++Backend cheader_filename="meta/meta-backend.h"
++Backend.gpu_added skip
++get_backend parent="Meta.Backend" cheader_filename="meta/meta-backend.h"
++Background cheader_filename="meta/meta-background.h"
++Background.set_file.file nullable
++BackgroundContent.new symbol_type="constructor"
++BackgroundActor cheader_filename="meta/meta-background-actor.h"
++BackgroundContent cheader_filename="meta/meta-background-content.h"
++BackgroundGroup cheader_filename="meta/meta-background-group.h"
++BackgroundImage cheader_filename="meta/meta-background-image.h"
++BackgroundImageCache cheader_filename="meta/meta-background-image.h"
++Barrier cheader_filename="meta/barrier.h"
++BarrierDirection cheader_filename="meta/barrier.h"
++BarrierEvent cheader_filename="meta/barrier.h"
++ButtonFunction cheader_filename="meta/common.h"
++ButtonLayout cheader_filename="meta/common.h"
++Compositor cheader_filename="meta/compositor.h"
++Compositor.sync_stack.stack type_arguments="Meta.Window"
++get_feedback_group_for_display parent="Meta.Display" symbol_type="method" name="get_feedback_group" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++get_stage_for_display parent="Meta.Display" symbol_type="method" name="get_stage" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++get_top_window_group_for_display parent="Meta.Display" symbol_type="method" name="get_top_window_group" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++get_window_group_for_display parent="Meta.Display" symbol_type="method" name="get_window_group" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++disable_unredirect_for_display parent="Meta.Display" symbol_type="method" name="disable_unredirect" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++enable_unredirect_for_display parent="Meta.Display" symbol_type="method" name="enable_unredirect" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++
++get_window_actors parent="Meta.Display" symbol_type="method" instance_idx=0 cheader_filename="meta/compositor-mutter.h" type_arguments="Meta.WindowActor"
++focus_stage_window parent="Meta.Display" symbol_type="method" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++
++CompEffect cheader_filename="meta/compositor.h"
++CloseDialog cheader_filename="meta/meta-close-dialog.h"
++CloseDialogResponse cheader_filename="meta/meta-close-dialog.h"
++Cursor cheader_filename="meta/common.h"
++CursorTracker cheader_filename="meta/meta-cursor-tracker.h"
++CursorTracker.get_for_display parent="Meta.Display" symbol_type="method" instance_idx=0 name="get_cursor_tracker"
++CursorTracker.get_pointer.mods out
++DebugTopic cheader_filename="meta/util.h"
++Direction cheader_filename="meta/common.h"
++Display cheader_filename="meta/display.h"
++DisplayCorner cheader_filename="meta/display.h"
++DisplayDirection cheader_filename="meta/display.h"
++Dnd cheader_filename="meta/meta-dnd.h"
++EdgeType cheader_filename="meta/boxes.h"
++Edge cheader_filename="meta/boxes.h"
++Frame cheader_filename="meta/types.h"
++FrameBorders cheader_filename="meta/common.h"
++FrameFlags cheader_filename="meta/common.h"
++FrameType cheader_filename="meta/common.h"
++GrabOp cheader_filename="meta/common.h"
++Group cheader_filename="meta/group.h"
++Group.property_notify.event type="X.Event" ref
++IdleMonitor cheader_filename="meta/meta-idle-monitor.h"
++IdleMonitorWatchFunc cheader_filename="meta/meta-idle-monitor.h"
++InhibitShortcutsDialog cheader_filename="meta/meta-inhibit-shortcuts-dialog.h"
++InhibitShortcutsDialogResponse cheader_filename="meta/meta-inhibit-shortcuts-dialog.h"
++KeyBinding cheader_filename="meta/keybindings.h"
++keybindings_set_custom_handler parent="Meta.KeyBinding" name="set_custom_handler" cheader_filename="meta/keybindings.h"
++KeyBindingAction cheader_filename="meta/prefs.h"
++KeyBindingFlags cheader_filename="meta/prefs.h"
++KeyHandlerFunc cheader_filename="meta/prefs.h"
++KeyHandlerFunc.event type="Clutter.KeyEvent"
++LaunchContext cheader_filename="meta/meta-launch-context.h"
++LaterType cheader_filename="meta/util.h"
++LocaleDirection cheader_filename="meta/util.h"
++MaximizeFlags cheader_filename="meta/window.h"
++ModalOptions cheader_filename="meta/meta-plugin.h"
++MonitorManager cheader_filename="meta/meta-monitor-manager.h"
++MonitorSwitchConfigType cheader_filename="meta/meta-monitor-manager.h"
++MotionDirection cheader_filename="meta/common.h"
++PadActionType cheader_filename="meta/display.h"
++Plugin cheader_filename="meta/meta-plugin.h"
++Plugin.xevent_filter.event type="X.Event" ref
++PluginInfo cheader_filename="meta/meta-plugin.h"
++Preference cheader_filename="meta/prefs.h"
++PrefsChangedFunc cheader_filename="meta/prefs.h"
++Rectangle cheader_filename="meta/boxes.h" struct
++RemoteAccessController cheader_filename="meta/meta-remote-access-controller.h"
++RemoteAccessHandle cheader_filename="meta/meta-remote-access-controller.h"
++Selection cheader_filename="meta/meta-selection.h"
++SelectionSource cheader_filename="meta/meta-selection-source.h"
++SelectionSourceMemory cheader_filename="meta/meta-selection-source-memory.h"
++SelectionType cheader_filename="meta/meta-selection-source.h"
++Settings cheader_filename="meta/meta-settings.h"
++Shadow cheader_filename="meta/meta-shadow-factory.h"
++ShadowFactory cheader_filename="meta/meta-shadow-factory.h"
++ShadowMode cheader_filename="meta/meta-window-actor.h"
++ShadowParams cheader_filename="meta/meta-shadow-factory.h"
++ShapedTexture cheader_filename="meta/meta-shaped-texture.h"
++Side cheader_filename="meta/common.h"
++SizeChange cheader_filename="meta/compositor.h"
++SoundPlayer cheader_filename="meta/meta-sound-player.h"
++StartupNotification cheader_filename="meta/meta-startup-notification.h"
++StartupNotification.changed.object type="Meta.StartupSequence"
++StartupNotification.get_sequences type_arguments="Meta.StartupSequence"
++StartupSequence cheader_filename="meta/meta-startup-notification.h"
++StackLayer cheader_filename="meta/common.h"
++Stage cheader_filename="meta/meta-stage.h"
++Stage.is_focused parent="Meta.Display" symbol_type="method" name="stage_is_focused" instance_idx=0 cheader_filename="meta/compositor-mutter.h"
++Strut cheader_filename="meta/boxes.h"
++TabList cheader_filename="meta/display.h"
++TabShowType cheader_filename="meta/display.h"
++Theme cheader_filename="meta/theme.h"
++theme_get_default cheader_filename="meta/theme.h"
++theme_new cheader_filename="meta/theme.h"
++VirtualModifier cheader_filename="meta/common.h"
++Workspace cheader_filename="meta/workspace.h"
++WorkspaceManager cheader_filename="meta/meta-workspace-manager.h"
++Window cheader_filename="meta/window.h"
++Window.focus#signal name="focused"
++Window.icon type="Cairo.Surface"
++Window.mini_icon type="Cairo.Surface"
++WindowActor cheader_filename="meta/meta-window-actor.h"
++WindowClientType cheader_filename="meta/window.h"
++WindowForeachFunc cheader_filename="meta/window.h"
++WindowGroup cheader_filename="meta/meta-window-group.h"
++WindowMenuType cheader_filename="meta/compositor.h"
++WindowShape cheader_filename="meta/meta-window-shape.h"
++WindowType cheader_filename="meta/window.h"
++X11Display cheader_filename="meta/meta-x11-display.h"
++
++rect skip
++prefs_* parent="Meta.Prefs" name="prefs_(.+)" cheader_filename="meta/prefs.h"
++
++g_utf8_strndup skip
++
++preference_to_string cheader_filename="meta/prefs.h"
++frame_type_to_string cheader_filename="meta/util.h"
++
++CURRENT_TIME cheader_filename="meta/common.h"
++ICON_WIDTH cheader_filename="meta/common.h"
++ICON_HEIGHT cheader_filename="meta/common.h"
++MINI_ICON_WIDTH cheader_filename="meta/common.h"
++MINI_ICON_HEIGHT cheader_filename="meta/common.h"
++DEFAULT_ICON_NAME cheader_filename="meta/common.h"
++PRIORITY_RESIZE cheader_filename="meta/common.h"
++PRIORITY_BEFORE_REDRAW cheader_filename="meta/common.h"
++PRIORITY_REDRAW cheader_filename="meta/common.h"
++PRIORITY_PREFS_NOTIFY cheader_filename="meta/common.h"
++VIRTUAL_CORE_POINTER_ID cheader_filename="meta/common.h"
++VIRTUAL_CORE_KEYBOARD_ID cheader_filename="meta/common.h"
++
++add_verbose_topic parent="Meta.Util" cheader_filename="meta/util.h"
++bug parent="Meta.Util" cheader_filename="meta/util.h"
++external_binding_name_for_action parent="Meta.Util" cheader_filename="meta/util.h"
++fatal parent="Meta.Util" cheader_filename="meta/util.h"
++get_locale_direction parent="Meta.Util" cheader_filename="meta/util.h"
++gravity_to_string parent="Meta.Gravity" name="to_string" cheader_filename="meta/util.h" symbol_type="method" instance_idx=0
++is_syncing parent="Meta.Util" cheader_filename="meta/util.h"
++is_verbose parent="Meta.Util" cheader_filename="meta/util.h"
++is_wayland_compositor parent="Meta.Util" cheader_filename="meta/util.h"
++later_add parent="Meta.Util" cheader_filename="meta/util.h"
++later_remove parent="Meta.Util" cheader_filename="meta/util.h"
++pop_no_msg_prefix parent="Meta.Util" cheader_filename="meta/util.h"
++push_no_msg_prefix parent="Meta.Util" cheader_filename="meta/util.h"
++remove_verbose_topic parent="Meta.Util" cheader_filename="meta/util.h"
++show_dialog parent="Meta.Util" cheader_filename="meta/util.h"
++show_dialog.columns type_arguments="string" nullable default=null
++show_dialog.entries type_arguments="string" nullable default=null
++show_dialog.transient_for default=0
++show_dialog.icon_name nullable default=null
++show_dialog.cancel_text nullable default=null
++show_dialog.ok_text nullable default=null
++show_dialog.display nullable default=null
++show_dialog.timeout nullable default=null
++topic_real parent="Meta.Util" cheader_filename="meta/util.h"
++unsigned_long_equal parent="Meta.Util" name="ulong_equal" cheader_filename="meta/util.h"
++unsigned_long_equal.v1 type="ulong?"
++unsigned_long_equal.v2 type="ulong?"
++unsigned_long_hash parent="Meta.Util" name="ulong_hash" cheader_filename="meta/util.h"
++unsigned_long_hash.v type="ulong?"
++verbose_real parent="Meta.Util" cheader_filename="meta/util.h"
++warning parent="Meta.Util" cheader_filename="meta/util.h"
++set_gnome_wm_keybindings parent="Meta.Util"
++set_wm_name parent="Meta.Util"
++
++x11_error_trap_pop parent="Meta.X11Display" symbol_type="method" name="error_trap_pop" instance_idx=0 cheader_filename="meta/meta-x11-errors.h"
++x11_error_trap_pop_with_return parent="Meta.X11Display" symbol_type="method" name="error_trap_pop_with_return" instance_idx=0 cheader_filename="meta/meta-x11-errors.h"
++x11_error_trap_push parent="Meta.X11Display" symbol_type="method" name="error_trap_push" instance_idx=0 cheader_filename="meta/meta-x11-errors.h"
++x11_init_gdk_display parent="Meta.X11Display" cheader_filename="meta/meta-x11-display.h"
+diff --git a/vapi/libmutter-8.deps b/vapi/libmutter-8.deps
+new file mode 120000
+index 000000000..afb44fa35
+--- /dev/null
++++ b/vapi/libmutter-8.deps
+@@ -0,0 +1 @@
++libmutter-7.deps
+\ No newline at end of file
+diff --git a/vapi/libmutter-8.vapi b/vapi/libmutter-8.vapi
+new file mode 120000
+index 000000000..cf71cf246
+--- /dev/null
++++ b/vapi/libmutter-8.vapi
+@@ -0,0 +1 @@
++libmutter-7.vapi
+\ No newline at end of file
+diff --git a/vapi/libmutter.vapi b/vapi/libmutter.vapi
+index 6c63d525b..59fd01bde 100644
+--- a/vapi/libmutter.vapi
++++ b/vapi/libmutter.vapi
+@@ -97,16 +97,20 @@ namespace Meta {
+ 		public static void add_verbose_topic (Meta.DebugTopic topic);
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_bug")]
+ 		public static void bug (string format, ...);
++#if !HAS_MUTTER40
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_debug_spew_real")]
+ 		public static void debug_spew_real (string format, ...);
++#endif
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_external_binding_name_for_action")]
+ 		public static string external_binding_name_for_action (uint keybinding_action);
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_fatal")]
+ 		public static void fatal (string format, ...);
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_get_locale_direction")]
+ 		public static Meta.LocaleDirection get_locale_direction ();
++#if !HAS_MUTTER40
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_is_debugging")]
+ 		public static bool is_debugging ();
++#endif
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_is_syncing")]
+ 		public static bool is_syncing ();
+ 		[CCode (cheader_filename = "meta/util.h", cname = "meta_is_verbose")]
+@@ -307,7 +311,11 @@ namespace Meta {
+ 		[CCode (has_construct_function = false)]
+ 		protected CursorTracker ();
+ 		public void get_hot (out int x, out int y);
++#if HAS_MUTTER40
++		public void get_pointer (Graphene.Point coords, out Clutter.ModifierType mods);
++#else
+ 		public void get_pointer (out int x, out int y, out Clutter.ModifierType mods);
++#endif
+ 		public bool get_pointer_visible ();
+ 		public unowned Cogl.Texture get_sprite ();
+ 		public void set_pointer_visible (bool visible);
+@@ -316,6 +324,9 @@ namespace Meta {
+ 		public Meta.Backend backend { owned get; construct; }
+ #endif
+ 		public signal void cursor_changed ();
++#if HAS_MUTTER40
++		public signal void position_invalidated ();
++#endif
+ 		public signal void cursor_moved (float x, float y);
+ 		public signal void visibility_changed ();
+ 	}
+@@ -636,7 +647,9 @@ namespace Meta {
+ 		public unowned Cogl.Texture get_texture ();
+ 		public void set_create_mipmaps (bool create_mipmaps);
+ 		public void set_mask_texture (Cogl.Texture mask_texture);
++#if !HAS_MUTTER40
+ 		public void set_opaque_region (owned Cairo.Region opaque_region);
++#endif
+ 		public signal void size_changed ();
+ 	}
+ 	[CCode (cheader_filename = "meta/meta-sound-player.h", type_id = "meta_sound_player_get_type ()")]
+@@ -1040,6 +1053,7 @@ namespace Meta {
+ 		public weak string license;
+ 		public weak string description;
+ 	}
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "meta/meta-plugin.h", has_type_id = false)]
+ 	public struct PluginVersion {
+ 		public uint version_major;
+@@ -1047,6 +1061,7 @@ namespace Meta {
+ 		public uint version_micro;
+ 		public uint version_api;
+ 	}
++#endif
+ 	[CCode (cheader_filename = "meta/boxes.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "meta_rectangle_get_type ()")]
+ 	public struct Rectangle {
+ 		public int x;
+@@ -1148,7 +1163,9 @@ namespace Meta {
+ 		FOCUS,
+ 		WORKAREA,
+ 		STACK,
++#if !HAS_MUTTER40
+ 		THEMES,
++#endif
+ 		SM,
+ 		EVENTS,
+ 		WINDOW_STATE,
+@@ -1156,18 +1173,27 @@ namespace Meta {
+ 		GEOMETRY,
+ 		PLACEMENT,
+ 		PING,
++#if !HAS_MUTTER40
+ 		XINERAMA,
++#endif
+ 		KEYBINDINGS,
+ 		SYNC,
++#if !HAS_MUTTER40
+ 		ERRORS,
++#endif
+ 		STARTUP,
+ 		PREFS,
+ 		GROUPS,
+ 		RESIZING,
+ 		SHAPES,
++#if !HAS_MUTTER40
+ 		COMPOSITOR,
++#endif
+ 		EDGE_RESISTANCE,
+ 		INPUT,
++#if HAS_MUTTER40
++		WAYLAND,
++#endif
+ 		DBUS
+ 	}
+ 	[CCode (cheader_filename = "meta/common.h", cprefix = "META_DIRECTION_", type_id = "meta_direction_get_type ()")]
+@@ -1643,6 +1669,10 @@ namespace Meta {
+ 	public static void init ();
+ 	[CCode (cheader_filename = "meta/main.h")]
+ 	public static bool is_restart ();
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "meta/main.h")]
++	public static bool is_topic_enabled (Meta.DebugTopic topic);
++#endif
+ 	[CCode (cheader_filename = "meta/main.h")]
+ 	public static void quit (Meta.ExitCode code);
+ 	[CCode (cheader_filename = "meta/main.h")]
+diff --git a/vapi/meson.build b/vapi/meson.build
+index 8f5603e07..7444ba7e2 100644
+--- a/vapi/meson.build
++++ b/vapi/meson.build
+@@ -148,3 +148,72 @@ if mutter338_dep.found()
+ 		output: 'libmutter-7.vapi'
+ 	)
+ endif
++if mutter40_dep.found()
++	cogl_target = custom_target('mutter-cogl-8',
++		command: [
++			vapigen,
++			mutter_typelib_dir / 'Cogl-8.gir',
++			'--library=mutter-cogl-8',
++			'--pkg=gobject-2.0',
++			'--pkg=cairo',
++			'--pkg=graphene-gobject-1.0',
++			vapigen_args,
++			files('Cogl-8-custom.vala')
++		],
++		output: 'mutter-cogl-8.vapi'
++	)
++
++	cogl_pango_target = custom_target('mutter-cogl-pango-8',
++		command: [
++			vapigen,
++			mutter_typelib_dir / 'CoglPango-8.gir',
++			'--library=mutter-cogl-pango-8',
++			'--pkg=mutter-cogl-8',
++			'--pkg=pangocairo',
++			vapigen_args
++		],
++		depends: cogl_target,
++		output: 'mutter-cogl-pango-8.vapi'
++	)
++
++	clutter_target = custom_target('mutter-clutter-8',
++		command: [
++			vapigen,
++			mutter_typelib_dir / 'Clutter-8.gir',
++			'--library=mutter-clutter-8',
++			'--pkg=graphene-gobject-1.0',
++			'--pkg=mutter-cogl-8',
++			'--pkg=mutter-cogl-pango-8',
++			'--pkg=atk',
++			'--pkg=gio-2.0',
++			'--pkg=json-glib-1.0',
++			'--pkg=pangocairo',
++			vapigen_args,
++			files('Clutter-8-custom.vala')
++		],
++		depends: [ cogl_target, cogl_pango_target ],
++		output: 'mutter-clutter-8.vapi'
++	)
++
++	libmutter_target = custom_target('libmutter-8',
++		command: [
++			vapigen,
++			mutter_typelib_dir / 'Meta-8.gir',
++			'--library=libmutter-8',
++			'--pkg=graphene-gobject-1.0',
++			'--pkg=mutter-cogl-8',
++			'--pkg=mutter-cogl-pango-8',
++			'--pkg=mutter-clutter-8',
++			'--pkg=atk',
++			'--pkg=gio-2.0',
++			'--pkg=json-glib-1.0',
++			'--pkg=pangocairo',
++			'--pkg=gtk+-3.0',
++			'--pkg=x11',
++			'--pkg=xfixes-4.0',
++			vapigen_args
++		],
++		depends: [ cogl_target, cogl_pango_target, clutter_target ],
++		output: 'libmutter-8.vapi'
++	)
++endif
+diff --git a/vapi/mutter-clutter-8.deps b/vapi/mutter-clutter-8.deps
+new file mode 100644
+index 000000000..c20dbfabe
+--- /dev/null
++++ b/vapi/mutter-clutter-8.deps
+@@ -0,0 +1,6 @@
++atk
++cairo
++pango
++json-glib-1.0
++mutter-cogl-8
++graphene-gobject-1.0
+diff --git a/vapi/mutter-clutter-8.vapi b/vapi/mutter-clutter-8.vapi
+new file mode 120000
+index 000000000..571bb0e4d
+--- /dev/null
++++ b/vapi/mutter-clutter-8.vapi
+@@ -0,0 +1 @@
++mutter-clutter-7.vapi
+\ No newline at end of file
+diff --git a/vapi/mutter-clutter.vapi b/vapi/mutter-clutter.vapi
+index 376d7c49f..1bc87f329 100644
+--- a/vapi/mutter-clutter.vapi
++++ b/vapi/mutter-clutter.vapi
+@@ -4687,7 +4687,11 @@ namespace Clutter {
+ 		[Version (since = "0.6")]
+ 		public Graphene.Point3D apply_relative_transform_to_point (Clutter.Actor? ancestor, Graphene.Point3D point);
+ 		[NoWrapper]
++#if HAS_MUTTER40
++		public virtual void apply_transform (ref Graphene.Matrix matrix);
++#else
+ 		public virtual void apply_transform (ref Clutter.Matrix matrix);
++#endif
+ 		[Version (since = "0.4")]
+ 		public Graphene.Point3D apply_transform_to_point (Graphene.Point3D point);
+ 		[Version (since = "1.24")]
+@@ -4743,7 +4747,11 @@ namespace Clutter {
+ 		[Version (since = "1.10")]
+ 		public unowned Clutter.Actor get_child_at_index (int index_);
+ 		[Version (since = "1.12")]
++#if HAS_MUTTER40
++		public Graphene.Matrix get_child_transform ();
++#else
+ 		public Clutter.Matrix get_child_transform ();
++#endif
+ 		[Version (since = "1.10")]
+ 		public GLib.List<weak Clutter.Actor> get_children ();
+ 		[Version (since = "0.6")]
+@@ -4875,7 +4883,11 @@ namespace Clutter {
+ 		[Version (since = "1.2")]
+ 		public Clutter.TextDirection get_text_direction ();
+ 		[Version (since = "1.12")]
++#if HAS_MUTTER40
++		public Graphene.Matrix get_transform ();
++#else
+ 		public Clutter.Matrix get_transform ();
++#endif
+ #if HAS_MUTTER338
+ 		public Graphene.Rect get_transformed_extents ();
+ #endif
+@@ -5020,7 +5032,11 @@ namespace Clutter {
+ 		[Version (since = "1.10")]
+ 		public void set_child_below_sibling (Clutter.Actor child, Clutter.Actor? sibling);
+ 		[Version (since = "1.12")]
++#if HAS_MUTTER40
++		public void set_child_transform (Graphene.Matrix? transform);
++#else
+ 		public void set_child_transform (Clutter.Matrix? transform);
++#endif
+ 		[Version (since = "0.6")]
+ 		public void set_clip (float xoff, float yoff, float width, float height);
+ 		[Version (since = "1.4")]
+@@ -5097,7 +5113,11 @@ namespace Clutter {
+ 		[Version (since = "1.2")]
+ 		public void set_text_direction (Clutter.TextDirection text_dir);
+ 		[Version (since = "1.12")]
++#if HAS_MUTTER40
++		public void set_transform (Graphene.Matrix? transform);
++#else
+ 		public void set_transform (Clutter.Matrix? transform);
++#endif
+ 		[Version (since = "1.12")]
+ 		public void set_translation (float translate_x, float translate_y, float translate_z);
+ 		[Version (since = "0.2")]
+@@ -5120,7 +5140,11 @@ namespace Clutter {
+ 		[Version (deprecated = true, deprecated_since = "1.12", since = "1.0")]
+ 		public void set_z_rotation_from_gravity (double angle, Clutter.Gravity gravity);
+ #endif
++#if HAS_MUTTER40
++		public bool should_pick (Clutter.PickContext pick_context);
++#else
+ 		public bool should_pick_paint ();
++#endif
+ #if !HAS_MUTTER338
+ 		[Version (deprecated = true, deprecated_since = "1.10", since = "0.2")]
+ 		public virtual void show_all ();
+@@ -5161,6 +5185,10 @@ namespace Clutter {
+ 		[NoAccessorMethod]
+ 		[Version (since = "1.12")]
+ 		public bool child_transform_set { get; }
++#if HAS_MUTTER40
++		[Version (since = "1.12")]
++		public Graphene.Matrix child_transform { get; set; }
++#endif
+ 		[NoAccessorMethod]
+ 		[Version (since = "1.12")]
+ 		public Graphene.Rect clip_rect { owned get; set; }
+@@ -5313,6 +5341,10 @@ namespace Clutter {
+ 		public Graphene.Size size { owned get; set; }
+ 		[Version (since = "1.0")]
+ 		public Clutter.TextDirection text_direction { get; set; }
++#if HAS_MUTTER40
++		[Version (since = "1.12")]
++		public Graphene.Matrix transform { get; set; }
++#endif
+ 		[NoAccessorMethod]
+ 		[Version (since = "1.12")]
+ 		public bool transform_set { get; }
+@@ -5963,7 +5995,9 @@ namespace Clutter {
+ 		public void get_coords (out float x, out float y);
+ 		[Version (since = "1.0")]
+ 		public unowned Clutter.InputDevice get_device ();
++#if !HAS_MUTTER40
+ 		public int get_device_id ();
++#endif
+ 		[Version (since = "1.28")]
+ 		public unowned Clutter.InputDeviceTool get_device_tool ();
+ 		[Version (since = "1.0")]
+@@ -6022,8 +6056,10 @@ namespace Clutter {
+ 		public bool has_shift_modifier ();
+ 		[Version (since = "1.12")]
+ 		public bool is_pointer_emulated ();
++#if !HAS_MUTTER40
+ 		[Version (since = "0.4")]
+ 		public static unowned Clutter.Event peek ();
++#endif
+ 		[Version (since = "0.6")]
+ 		public void put ();
+ 		[Version (since = "1.18")]
+@@ -6252,16 +6288,24 @@ namespace Clutter {
+ 		[Version (since = "1.2")]
+ 		public unowned Clutter.Actor get_actor (Clutter.EventSequence? sequence);
+ #endif
++#if !HAS_MUTTER40
+ 		[Version (since = "1.6")]
+ 		public unowned Clutter.InputDevice get_associated_device ();
++#endif
+ 		[Version (since = "1.6")]
+ 		public Clutter.InputAxis get_axis (uint index_);
+ 		[Version (since = "1.6")]
++#if HAS_MUTTER40
++		public bool get_axis_value (double axes, Clutter.InputAxis axis, double value);
++#else
+ 		public bool get_axis_value ([CCode (array_length = false)] double[] axes, Clutter.InputAxis axis, out double value);
++#endif
++#if !HAS_MUTTER40
+ 		[Version (since = "1.12")]
+ 		public bool get_coords (Clutter.EventSequence? sequence, out Graphene.Point point);
+ 		[Version (since = "1.0")]
+ 		public int get_device_id ();
++#endif
+ 		[Version (since = "1.6")]
+ 		public Clutter.InputMode get_device_mode ();
+ 		[Version (since = "1.2")]
+@@ -6269,26 +6313,37 @@ namespace Clutter {
+ 		public unowned string get_device_node ();
+ 		[Version (since = "1.0")]
+ 		public Clutter.InputDeviceType get_device_type ();
++#if !HAS_MUTTER40
+ 		[Version (since = "1.6")]
+ 		public bool get_enabled ();
++#endif
+ 		[Version (since = "1.10")]
+ 		public unowned Clutter.Actor get_grabbed_actor ();
+ 		public virtual int get_group_n_modes (int group);
+ 		[Version (since = "1.6")]
+ 		public bool get_has_cursor ();
++#if !HAS_MUTTER40
+ 		[Version (since = "1.6")]
+ 		public bool get_key (uint index_, out uint keyval, out Clutter.ModifierType modifiers);
+-		public Clutter.InputDeviceMapping get_mapping_mode ();
++        public Clutter.InputDeviceMapping get_mapping_mode ();
++#endif
+ 		public int get_mode_switch_button_group (uint button);
++#if !HAS_MUTTER40
+ 		[Version (since = "1.16")]
+ 		public Clutter.ModifierType get_modifier_state ();
++#endif
+ 		[Version (since = "1.6")]
+ 		public uint get_n_axes ();
++#if HAS_MUTTER40
++		public int get_n_buttons ();
++#else
+ 		[Version (since = "1.6")]
+ 		public uint get_n_keys ();
++#endif
+ 		public int get_n_mode_groups ();
+ 		public int get_n_rings ();
+ 		public int get_n_strips ();
++#if !HAS_MUTTER40
+ #if HAS_MUTTER338
+ 		[Version (since = "1.6")]
+ 		public GLib.List<weak Clutter.InputDevice> get_physical_devices ();
+@@ -6298,6 +6353,11 @@ namespace Clutter {
+ #endif
+ 		[Version (since = "1.2")]
+ 		public unowned Clutter.Stage get_pointer_stage ();
++#endif
++#if HAS_MUTTER40
++		public virtual int get_pad_feature_group (Clutter.InputDevicePadFeature feature, int n_feature);
++#endif
++
+ 		[Version (since = "1.22")]
+ 		public unowned string get_product_id ();
+ 		public unowned Clutter.Seat get_seat ();
+@@ -6311,23 +6371,29 @@ namespace Clutter {
+ 		public void grab (Clutter.Actor actor);
+ 		public virtual bool is_grouped (Clutter.InputDevice other_device);
+ 		public virtual bool is_mode_switch_button (uint group, uint button);
++#if !HAS_MUTTER40
+ 		[Version (since = "1.10")]
+ 		public virtual bool keycode_to_evdev (uint hardware_keycode, uint evdev_keycode);
++#endif
+ 		[Version (since = "1.12")]
+ 		public unowned Clutter.Actor sequence_get_grabbed_actor (Clutter.EventSequence sequence);
+ 		[Version (since = "1.12")]
+ 		public void sequence_grab (Clutter.EventSequence sequence, Clutter.Actor actor);
+ 		[Version (since = "1.12")]
+ 		public void sequence_ungrab (Clutter.EventSequence sequence);
++#if !HAS_MUTTER40
+ 		[Version (since = "1.6")]
+ 		public void set_enabled (bool enabled);
+ 		[Version (since = "1.6")]
+ 		public void set_key (uint index_, uint keyval, Clutter.ModifierType modifiers);
+ 		public void set_mapping_mode (Clutter.InputDeviceMapping mapping);
++#endif
+ 		[Version (since = "1.10")]
+ 		public void ungrab ();
++#if !HAS_MUTTER40
+ 		[Version (since = "1.2")]
+ 		public void update_from_event (Clutter.Event event, bool update_stage);
++#endif
+ 		[NoWrapper]
+ 		public virtual void update_from_tool (Clutter.InputDeviceTool tool);
+ 		[NoAccessorMethod]
+@@ -6337,16 +6403,23 @@ namespace Clutter {
+ 		public string device_node { get; construct; }
+ 		[Version (since = "1.2")]
+ 		public Clutter.InputDeviceType device_type { get; construct; }
++#if !HAS_MUTTER40
+ 		[Version (since = "1.6")]
+ 		public bool enabled { get; set; }
++#endif
+ 		[Version (since = "1.6")]
+ 		public bool has_cursor { get; construct; }
++#if !HAS_MUTTER40
+ 		[NoAccessorMethod]
+ 		[Version (since = "1.2")]
+ 		public int id { get; construct; }
+ 		public Clutter.InputDeviceMapping mapping_mode { get; set; }
+ 		[Version (since = "1.6")]
+ 		public uint n_axes { get; }
++#endif
++#if HAS_MUTTER40
++		public int n_buttons { get; construct; }
++#endif
+ 		public int n_mode_groups { get; construct; }
+ 		public int n_rings { get; construct; }
+ 		public int n_strips { get; construct; }
+@@ -6363,11 +6436,17 @@ namespace Clutter {
+ 	public abstract class InputDeviceTool : GLib.Object {
+ 		[CCode (has_construct_function = false)]
+ 		protected InputDeviceTool ();
++#if HAS_MUTTER40
++		public Clutter.InputAxisFlags get_axes ();
++#endif
+ 		public uint64 get_id ();
+ 		[Version (since = "1.28")]
+ 		public uint64 get_serial ();
+ 		[Version (since = "1.28")]
+ 		public Clutter.InputDeviceToolType get_tool_type ();
++#if HAS_MUTTER40
++		public Clutter.InputAxisFlags axes { get; construct; }
++#endif
+ 		public uint64 id { get; construct; }
+ 		public uint64 serial { get; construct; }
+ 		[NoAccessorMethod]
+@@ -6516,7 +6595,11 @@ namespace Clutter {
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_layer_node_get_type ()")]
+ 	public class LayerNode : Clutter.PaintNode {
+ 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
++#if HAS_MUTTER40
++		public LayerNode (Graphene.Matrix projection, Cairo.Rectangle viewport, float width, float height, uint8 opacity);
++#else
+ 		public LayerNode (Cogl.Matrix projection, Cairo.Rectangle viewport, float width, float height, uint8 opacity);
++#endif
+ 	}
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_layout_manager_get_type ()")]
+ 	[Version (since = "1.2")]
+@@ -6584,7 +6667,10 @@ namespace Clutter {
+ 		[CCode (has_construct_function = false)]
+ 		protected OffscreenEffect ();
+ 		public virtual Cogl.Handle create_texture (float width, float height);
+-		[Version (since = "1.14")]
++#if HAS_MUTTER40
++		public unowned Cogl.Pipeline? get_pipeline ();
++#endif
++        [Version (since = "1.14")]
+ 		public bool get_target_rect (out Graphene.Rect rect);
+ 		[Version (deprecated = true, deprecated_since = "1.14", since = "1.8")]
+ 		public bool get_target_size (out float width, out float height);
+@@ -6759,14 +6845,27 @@ namespace Clutter {
+ 	[Compact]
+ 	public class PickContext {
+ 		public void destroy ();
++#if HAS_MUTTER40
++		public Graphene.Matrix get_transform ();
++		public void log_pick (Clutter.ActorBox box, Clutter.Actor actor);
++		public void pop_clip ();
++		public void pop_transform ();
++		public void push_clip (Clutter.ActorBox box);
++		public void push_transform (Graphene.Matrix transform);
++#endif
+ 		public unowned Clutter.PickContext @ref ();
+ 		public void unref ();
+ 	}
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_pipeline_node_get_type ()")]
+ 	[Version (since = "1.10")]
+ 	public class PipelineNode : Clutter.PaintNode {
++#if HAS_MUTTER40
++		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
++		public PipelineNode (Cogl.Pipeline? pipeline);
++#else
+ 		[CCode (has_construct_function = false)]
+ 		protected PipelineNode ();
++#endif
+ 	}
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_property_transition_get_type ()")]
+ 	[Version (since = "1.10")]
+@@ -6907,8 +7006,10 @@ namespace Clutter {
+ 	public abstract class Seat : GLib.Object {
+ 		[CCode (has_construct_function = false)]
+ 		protected Seat ();
++#if !HAS_MUTTER40
+ 		[NoWrapper]
+ 		public virtual void apply_kbd_a11y_settings (Clutter.KbdA11ySettings settings);
++#endif
+ 		public virtual void bell_notify ();
+ 		public virtual void compress_motion (Clutter.Event event, Clutter.Event to_discard);
+ 		[NoWrapper]
+@@ -6917,7 +7018,9 @@ namespace Clutter {
+ 		public void ensure_a11y_state ();
+ 		[NoWrapper]
+ 		public virtual void free_event_data (Clutter.Event event);
++#if !HAS_MUTTER40
+ 		public void get_kbd_a11y_settings (Clutter.KbdA11ySettings settings);
++#endif
+ 		public virtual unowned Clutter.InputDevice get_keyboard ();
+ 		public virtual unowned Clutter.Keymap get_keymap ();
+ 		public virtual unowned Clutter.InputDevice get_pointer ();
+@@ -6926,7 +7029,9 @@ namespace Clutter {
+ 		public virtual Clutter.VirtualDeviceType get_supported_virtual_device_types ();
+ #endif
+ 		public bool get_touch_mode ();
+-#if HAS_MUTTER338
++#if HAS_MUTTER40
++		public virtual bool handle_event_post (Clutter.Event event);
++#elif HAS_MUTTER338
+ 		public virtual bool handle_device_event (Clutter.Event event);
+ #endif
+ 		public void inhibit_unfocus ();
+@@ -6936,7 +7041,9 @@ namespace Clutter {
+ #else
+ 		public virtual GLib.List<weak Clutter.InputDevice> list_devices ();
+ #endif
++#if !HAS_MUTTER40
+ 		public void set_kbd_a11y_settings (Clutter.KbdA11ySettings settings);
++#endif
+ 		public void set_pointer_a11y_dwell_click_type (Clutter.PointerA11yDwellClickType click_type);
+ 		public void set_pointer_a11y_settings (Clutter.PointerA11ySettings settings);
+ 		public void uninhibit_unfocus ();
+@@ -6952,7 +7059,9 @@ namespace Clutter {
+ 		public signal void ptr_a11y_dwell_click_type_changed (Clutter.PointerA11yDwellClickType click_type);
+ 		public signal void ptr_a11y_timeout_started (Clutter.InputDevice device, Clutter.PointerA11yTimeoutType timeout_type, uint delay);
+ 		public signal void ptr_a11y_timeout_stopped (Clutter.InputDevice device, Clutter.PointerA11yTimeoutType timeout_type, bool clicked);
++#if !HAS_MUTTER40
+ 		public signal void tool_changed (Clutter.InputDevice object, Clutter.InputDeviceTool p0);
++#endif
+ 	}
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_settings_get_type ()")]
+ 	[Version (since = "1.4")]
+@@ -7229,8 +7338,15 @@ namespace Clutter {
+ #endif
+ 		public unowned Cogl.Framebuffer get_framebuffer ();
+ 		public void get_layout (Cairo.RectangleInt rect);
++#if HAS_MUTTER40
++		public virtual void get_offscreen_transformation_matrix (Graphene.Matrix matrix);
++#else
+ 		public virtual void get_offscreen_transformation_matrix (Cogl.Matrix matrix);
++#endif
+ 		public unowned Cogl.Framebuffer get_onscreen ();
++#if HAS_MUTTER40
++		public float get_refresh_rate ();
++#endif
+ 		public float get_scale ();
+ 		public void invalidate_offscreen_blit_pipeline ();
+ 		[NoWrapper]
+@@ -7241,9 +7357,17 @@ namespace Clutter {
+ #else
+ 		public void transform_to_onscreen (float x, float y);
+ #endif
++#if HAS_MUTTER40
++		[NoAccessorMethod]
++		public Cogl.Framebuffer framebuffer { owned get; set construct; }
++#endif
+ #if HAS_MUTTER338
+ 		[NoAccessorMethod]
+ 		public string name { owned get; construct; }
++#if HAS_MUTTER40
++		[NoAccessorMethod]
++		public Cogl.Offscreen offscreen { owned get; construct; }
++#endif
+ 		[NoAccessorMethod]
+ 		public float refresh_rate { get; set construct; }
+ #endif
+@@ -7670,7 +7794,11 @@ namespace Clutter {
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_transform_node_get_type ()")]
+ 	public class TransformNode : Clutter.PaintNode {
+ 		[CCode (has_construct_function = false, type = "ClutterPaintNode*")]
++#if HAS_MUTTER40
++		public TransformNode (Graphene.Matrix projection);
++#else
+ 		public TransformNode (Cogl.Matrix projection);
++#endif
+ 	}
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "clutter_transition_get_type ()")]
+ 	[Version (since = "1.10")]
+@@ -7927,6 +8055,7 @@ namespace Clutter {
+ 		[Version (since = "0.2")]
+ 		public string to_string ();
+ 	}
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "clutter/clutter.h", has_type_id = false)]
+ 	public struct KbdA11ySettings {
+ 		public Clutter.KeyboardA11yFlags controls;
+@@ -7937,6 +8066,7 @@ namespace Clutter {
+ 		public int mousekeys_max_speed;
+ 		public int mousekeys_accel_time;
+ 	}
++#endif
+ 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_knot_get_type ()")]
+ 	[Version (since = "0.2")]
+ 	public struct Knot {
+@@ -7956,6 +8086,7 @@ namespace Clutter {
+ 		public Clutter.Margin? copy ();
+ 		public void free ();
+ 	}
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "clutter/clutter.h", type_id = "cogl_matrix_get_gtype ()")]
+ 	public struct Matrix : Cogl.Matrix {
+ 		[Version (since = "1.12")]
+@@ -7972,6 +8103,7 @@ namespace Clutter {
+ 		[Version (since = "1.12")]
+ 		public unowned Clutter.Matrix? init_identity ();
+ 	}
++#endif
+ 	[CCode (cheader_filename = "clutter/clutter.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "clutter_paint_volume_get_type ()")]
+ 	[Version (since = "1.4")]
+ 	public struct PaintVolume {
+@@ -8370,6 +8502,22 @@ namespace Clutter {
+ 		SLIDER,
+ 		LAST
+ 	}
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_AXIS_FLAG_", type_id = "clutter_input_axis_flags_get_type ()")]
++	[Flags]
++	public enum InputAxisFlags {
++		NONE,
++		X,
++		Y,
++		PRESSURE,
++		XTILT,
++		YTILT,
++		WHEEL,
++		DISTANCE,
++		ROTATION,
++		SLIDER
++	}
++#endif
+ 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_CONTENT_HINT_", type_id = "clutter_input_content_hint_flags_get_type ()")]
+ 	[Flags]
+ 	public enum InputContentHintFlags {
+@@ -8400,11 +8548,21 @@ namespace Clutter {
+ 		DATETIME,
+ 		TERMINAL
+ 	}
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_PAD_FEATURE_", type_id = "clutter_input_device_pad_feature_get_type ()")]
++	public enum InputDevicePadFeature {
++		BUTTON,
++		RING,
++		STRIP
++	}
++#endif
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_DEVICE_MAPPING_", type_id = "clutter_input_device_mapping_get_type ()")]
+ 	public enum InputDeviceMapping {
+ 		ABSOLUTE,
+ 		RELATIVE
+ 	}
++#endif
+ 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_INPUT_DEVICE_PAD_SOURCE_", type_id = "clutter_input_device_pad_source_get_type ()")]
+ 	public enum InputDevicePadSource {
+ 		UNKNOWN,
+@@ -8468,6 +8626,7 @@ namespace Clutter {
+ 		RELEASED,
+ 		PRESSED
+ 	}
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_A11Y_", type_id = "clutter_keyboard_a11y_flags_get_type ()")]
+ 	[Flags]
+ 	public enum KeyboardA11yFlags {
+@@ -8486,6 +8645,7 @@ namespace Clutter {
+ 		STICKY_KEYS_BEEP,
+ 		FEATURE_STATE_CHANGE_BEEP
+ 	}
++#endif
+ 	[CCode (cheader_filename = "clutter/clutter.h", cprefix = "CLUTTER_LONG_PRESS_", type_id = "clutter_long_press_state_get_type ()")]
+ 	[Version (since = "1.8")]
+ 	public enum LongPressState {
+diff --git a/vapi/mutter-cogl-6.vapi b/vapi/mutter-cogl-6.vapi
+index 992fe5bce..9e364ab38 100644
+--- a/vapi/mutter-cogl-6.vapi
++++ b/vapi/mutter-cogl-6.vapi
+@@ -32,11 +32,17 @@ namespace Cogl {
+ 		public int64 get_clock_time ();
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_get_graphics_reset_status")]
+ 		public Cogl.GraphicsResetStatus get_graphics_reset_status ();
++#if HAS_MUTTER40
++		public unowned Cogl.Pipeline get_named_pipeline (Cogl.PipelineKey key);
++#endif
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_has_feature")]
+ 		[Version (since = "1.10")]
+ 		public bool has_feature (Cogl.FeatureID feature);
+ #if HAS_MUTTER338
+ 		public bool is_hardware_accelerated ();
++#endif
++#if HAS_MUTTER40
++		public void set_named_pipeline (Cogl.PipelineKey key, Cogl.Pipeline? pipeline);
+ #endif
+ 	}
+ 	[CCode (cheader_filename = "cogl/cogl.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "cogl_frame_closure_get_gtype ()")]
+@@ -56,6 +62,132 @@ namespace Cogl {
+ 		[Version (since = "1.14")]
+ 		public float get_refresh_rate ();
+ 	}
++#endif
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_framebuffer_get_type ()")]
++	public abstract class Framebuffer : GLib.Object {
++		[CCode (has_construct_function = false)]
++		protected Framebuffer ();
++		[Version (since = "1.8")]
++		public virtual bool allocate () throws GLib.Error;
++		[Version (since = "1.8")]
++		public void clear (ulong buffers, Cogl.Color color);
++		[Version (since = "1.8")]
++		public void clear4f (ulong buffers, float red, float green, float blue, float alpha);
++		[Version (since = "1.8")]
++		public void discard_buffers (ulong buffers);
++		[Version (since = "1.10")]
++		public void draw_multitextured_rectangle (Cogl.Pipeline pipeline, float x_1, float y_1, float x_2, float y_2, [CCode (array_length = false)] float[] tex_coords, int tex_coords_len);
++		[Version (since = "1.10")]
++		public void draw_rectangle (Cogl.Pipeline pipeline, float x_1, float y_1, float x_2, float y_2);
++		[Version (since = "1.10")]
++		public void draw_rectangles (Cogl.Pipeline pipeline, [CCode (array_length = false)] float[] coordinates, uint n_rectangles);
++		[Version (since = "1.10")]
++		public void draw_textured_rectangle (Cogl.Pipeline pipeline, float x_1, float y_1, float x_2, float y_2, float s_1, float t_1, float s_2, float t_2);
++		[Version (since = "1.10")]
++		public void draw_textured_rectangles (Cogl.Pipeline pipeline, [CCode (array_length = false)] float[] coordinates, uint n_rectangles);
++		public static uint32 error_quark ();
++		[Version (since = "1.10")]
++		public void finish ();
++		public void flush ();
++		[Version (since = "1.10")]
++		public void frustum (float left, float right, float bottom, float top, float z_near, float z_far);
++		[Version (since = "1.8")]
++		public int get_alpha_bits ();
++		[Version (since = "1.8")]
++		public int get_blue_bits ();
++		[Version (since = "1.8")]
++		public unowned Cogl.Context get_context ();
++		[Version (since = "2.0")]
++		public int get_depth_bits ();
++		[Version (since = "1.18")]
++		public bool get_depth_write_enabled ();
++		[Version (since = "1.8")]
++		public bool get_dither_enabled ();
++		[Version (since = "1.8")]
++		public int get_green_bits ();
++		[Version (since = "1.8")]
++		public int get_height ();
++		public bool get_is_stereo ();
++		[Version (since = "1.10")]
++		public Graphene.Matrix get_modelview_matrix ();
++		[Version (since = "1.10")]
++		public Graphene.Matrix get_projection_matrix ();
++		[Version (since = "1.8")]
++		public int get_red_bits ();
++		[Version (since = "1.10")]
++		public int get_samples_per_pixel ();
++		[Version (since = "1.20")]
++		public Cogl.StereoMode get_stereo_mode ();
++		[Version (since = "1.8")]
++		public void get_viewport4fv ([CCode (array_length = false)] out unowned float viewport[4]);
++		[Version (since = "1.8")]
++		public float get_viewport_height ();
++		[Version (since = "1.8")]
++		public float get_viewport_width ();
++		[Version (since = "1.8")]
++		public float get_viewport_x ();
++		[Version (since = "1.8")]
++		public float get_viewport_y ();
++		[Version (since = "1.8")]
++		public int get_width ();
++		[Version (since = "1.10")]
++		public void identity_matrix ();
++		[NoWrapper]
++		public virtual bool is_y_flipped ();
++		[Version (since = "1.10")]
++		public void orthographic (float x_1, float y_1, float x_2, float y_2, float near, float far);
++		[Version (since = "1.10")]
++		public void perspective (float fov_y, float aspect, float z_near, float z_far);
++		[Version (since = "1.10")]
++		public void pop_clip ();
++		[Version (since = "1.10")]
++		public void pop_matrix ();
++		[Version (since = "1.10")]
++		public void push_matrix ();
++		[Version (since = "1.10")]
++		public void push_rectangle_clip (float x_1, float y_1, float x_2, float y_2);
++		public void push_region_clip (Cairo.Region region);
++		[Version (since = "1.10")]
++		public void push_scissor_clip (int x, int y, int width, int height);
++		[Version (since = "1.10")]
++		public bool read_pixels (int x, int y, int width, int height, Cogl.PixelFormat format, uint8 pixels);
++		[Version (since = "1.10")]
++		public bool read_pixels_into_bitmap (int x, int y, Cogl.ReadPixelsFlags source, Cogl.Bitmap bitmap);
++		[Version (since = "1.8")]
++		public void resolve_samples ();
++		[Version (since = "1.8")]
++		public void resolve_samples_region (int x, int y, int width, int height);
++		[Version (since = "1.10")]
++		public void rotate (float angle, float x, float y, float z);
++		[Version (since = "2.0")]
++		public void rotate_euler (Graphene.Euler euler);
++		[Version (since = "1.10")]
++		public void scale (float x, float y, float z);
++		[Version (since = "1.18")]
++		public void set_depth_write_enabled (bool depth_write_enabled);
++		[Version (since = "1.8")]
++		public void set_dither_enabled (bool dither_enabled);
++		[Version (since = "1.10")]
++		public void set_modelview_matrix (Graphene.Matrix matrix);
++		[Version (since = "1.10")]
++		public void set_projection_matrix (Graphene.Matrix matrix);
++		[Version (since = "1.8")]
++		public void set_samples_per_pixel (int samples_per_pixel);
++		[Version (since = "1.20")]
++		public void set_stereo_mode (Cogl.StereoMode stereo_mode);
++		[Version (since = "1.8")]
++		public void set_viewport (float x, float y, float width, float height);
++		[Version (since = "1.10")]
++		public void transform (Graphene.Matrix matrix);
++		[Version (since = "1.10")]
++		public void translate (float x, float y, float z);
++		[NoAccessorMethod]
++		public int height { get; set construct; }
++		[NoAccessorMethod]
++		public int width { get; set construct; }
++		public signal void destroy ();
++	}
+ #endif
+ 	[CCode (cheader_filename = "cogl/cogl.h", ref_function = "cogl_object_ref", type_id = "cogl_handle_get_gtype ()", unref_function = "cogl_object_unref")]
+ 	[Compact]
+@@ -97,7 +229,11 @@ namespace Cogl {
+ 		[Version (deprecated = true, deprecated_since = "1.16")]
+ 		public void set_layer_filters (int layer_index, Cogl.MaterialFilter min_filter, Cogl.MaterialFilter mag_filter);
+ 		[Version (deprecated = true, deprecated_since = "1.16")]
++#if HAS_MUTTER40
++		public void set_layer_matrix (int layer_index, Graphene.Matrix matrix);
++#else
+ 		public void set_layer_matrix (int layer_index, Cogl.Matrix matrix);
++#endif
+ 		[Version (deprecated = true, deprecated_since = "1.16", since = "1.4")]
+ 		public bool set_layer_point_sprite_coords_enabled (int layer_index, bool enable) throws GLib.Error;
+ 		[Version (deprecated = true, deprecated_since = "1.16", since = "1.4")]
+@@ -122,6 +258,7 @@ namespace Cogl {
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_is_framebuffer")]
+ 		[Version (since = "1.10")]
+ 		public bool is_framebuffer ();
++#if !HAS_MUTTER40
+ 		[Version (since = "2.0")]
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_is_frame_info")]
+ 		public bool is_frame_info ();
+@@ -130,6 +267,7 @@ namespace Cogl {
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_is_onscreen")]
+ 		[Version (since = "1.10")]
+ 		public bool is_onscreen ();
++#endif
+ 		[CCode (cheader_filename = "cogl/cogl.h", cname = "cogl_is_pipeline")]
+ 		[Version (since = "2.0")]
+ 		public bool is_pipeline ();
+@@ -141,8 +279,13 @@ namespace Cogl {
+ 		[Version (since = "1.10")]
+ 		public bool is_texture_2d_sliced ();
+ 	}
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_offscreen_get_type ()")]
++	public class Offscreen : Cogl.Framebuffer {
++#else
+ 	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_offscreen_get_gtype ()")]
+ 	public class Offscreen : Cogl.Object, Cogl.Framebuffer {
++#endif
+ 		[CCode (has_construct_function = false)]
+ 		protected Offscreen ();
+ 		[CCode (has_construct_function = false)]
+@@ -151,8 +294,13 @@ namespace Cogl {
+ 		[CCode (has_construct_function = false)]
+ 		public Offscreen.with_texture (Cogl.Texture texture);
+ 	}
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_onscreen_get_type ()")]
++	public class Onscreen : Cogl.Framebuffer {
++#else
+ 	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_onscreen_get_gtype ()")]
+ 	public class Onscreen : Cogl.Object, Cogl.Framebuffer {
++#endif
+ 		[CCode (has_construct_function = false)]
+ 		protected Onscreen ();
+ 		[Version (since = "1.16")]
+@@ -273,7 +421,11 @@ namespace Cogl {
+ 		[Version (since = "1.10")]
+ 		public void set_layer_filters (int layer_index, Cogl.PipelineFilter min_filter, Cogl.PipelineFilter mag_filter);
+ 		[Version (since = "1.10")]
++#if HAS_MUTTER40
++		public void set_layer_matrix (int layer_index, Graphene.Matrix matrix);
++#else
+ 		public void set_layer_matrix (int layer_index, Cogl.Matrix matrix);
++#endif
+ #if HAS_MUTTER338
+ 		public void set_layer_max_mipmap_level (int layer, int max_level);
+ #endif
+@@ -305,6 +457,12 @@ namespace Cogl {
+ 		[Version (since = "2.0")]
+ 		public void set_user_program (Cogl.Handle program);
+ 	}
++#if HAS_MUTTER40
++	[CCode (cheader_filename = "cogl/cogl.h", type_id = "G_TYPE_STRING")]
++	[Compact]
++	public class PipelineKey : string {
++	}
++#endif
+ 	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_primitive_get_gtype ()")]
+ 	public class Primitive : Cogl.Object {
+ 		[CCode (has_construct_function = false)]
+@@ -423,6 +581,7 @@ namespace Cogl {
+ 	public class TraceContext {
+ 	}
+ #endif
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_framebuffer_get_gtype ()")]
+ 	public interface Framebuffer : Cogl.Object {
+ 		[Version (since = "1.8")]
+@@ -542,6 +701,7 @@ namespace Cogl {
+ 		[Version (since = "1.10")]
+ 		public void translate (float x, float y, float z);
+ 	}
++#endif
+ 	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_texture_get_gtype ()")]
+ 	public interface Texture : Cogl.Object {
+ 		public bool allocate () throws GLib.Error;
+@@ -659,6 +819,7 @@ namespace Cogl {
+ 		public weak string name;
+ 		public ulong instance_count;
+ 	}
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "cogl/cogl.h", copy_function = "g_boxed_copy", free_function = "g_boxed_free", type_id = "cogl_matrix_get_gtype ()")]
+ 	public struct Matrix {
+ 		public float xx;
+@@ -716,6 +877,7 @@ namespace Cogl {
+ 		[Version (since = "1.8")]
+ 		public void view_2d_in_perspective (float fov_y, float aspect, float z_near, float z_2d, float width_2d, float height_2d);
+ 	}
++#endif
+ 	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+ 	[Version (since = "1.16")]
+ 	public struct OnscreenDirtyInfo {
+@@ -871,10 +1033,12 @@ namespace Cogl {
+ 		OGL_FEATURE_ID_MAP_BUFFER_FOR_READ,
+ 		[CCode (cname = "COGL_FEATURE_ID_MAP_BUFFER_FOR_WRITE")]
+ 		OGL_FEATURE_ID_MAP_BUFFER_FOR_WRITE,
++#if !HAS_MUTTER40
+ 		[CCode (cname = "COGL_FEATURE_ID_SWAP_BUFFERS_EVENT")]
+ 		OGL_FEATURE_ID_SWAP_BUFFERS_EVENT,
+ 		[CCode (cname = "COGL_FEATURE_ID_PRESENTATION_TIME")]
+ 		OGL_FEATURE_ID_PRESENTATION_TIME,
++#endif
+ 		[CCode (cname = "COGL_FEATURE_ID_FENCE")]
+ 		OGL_FEATURE_ID_FENCE,
+ 		[CCode (cname = "COGL_FEATURE_ID_TEXTURE_RG")]
+@@ -1188,9 +1352,11 @@ namespace Cogl {
+ 	public static bool blit_framebuffer (Cogl.Framebuffer src, Cogl.Framebuffer dest, int src_x, int src_y, int dst_x, int dst_y, int width, int height) throws GLib.Error;
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	public static bool clutter_winsys_has_feature_CLUTTER (Cogl.WinsysFeature feature);
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	[Version (since = "2.0")]
+ 	public static void debug_matrix_print (Cogl.Matrix matrix);
++#endif
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	[Version (since = "1.8")]
+ 	public static void debug_object_foreach_type (Cogl.DebugObjectForeachTypeCallback func);
+@@ -1209,9 +1375,11 @@ namespace Cogl {
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	[Version (deprecated = true, deprecated_since = "1.16", since = "1.0")]
+ 	public static GLib.OptionGroup get_option_group ();
++#if !HAS_MUTTER40
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	[Version (deprecated = true, deprecated_since = "1.18")]
+ 	public static GLib.Type gtype_matrix_get_type ();
++#endif
+ 	[CCode (cheader_filename = "cogl/cogl.h")]
+ 	[Version (deprecated = true, deprecated_since = "1.16")]
+ 	public static void set_backface_culling_enabled (bool setting);
+diff --git a/vapi/mutter-cogl-8.deps b/vapi/mutter-cogl-8.deps
+new file mode 120000
+index 000000000..fe200eefc
+--- /dev/null
++++ b/vapi/mutter-cogl-8.deps
+@@ -0,0 +1 @@
++mutter-cogl-7.deps
+\ No newline at end of file
+diff --git a/vapi/mutter-cogl-8.vapi b/vapi/mutter-cogl-8.vapi
+new file mode 120000
+index 000000000..a137dda44
+--- /dev/null
++++ b/vapi/mutter-cogl-8.vapi
+@@ -0,0 +1 @@
++mutter-cogl-7.vapi
+\ No newline at end of file
+diff --git a/vapi/mutter-cogl-pango-8.vapi b/vapi/mutter-cogl-pango-8.vapi
+new file mode 120000
+index 000000000..a6665b6e4
+--- /dev/null
++++ b/vapi/mutter-cogl-pango-8.vapi
+@@ -0,0 +1 @@
++mutter-cogl-pango-7.vapi
+\ No newline at end of file
+diff --git a/vapi/mutter-cogl-path-7.vapi b/vapi/mutter-cogl-path-7.vapi
+deleted file mode 120000
+index 47842e753..000000000
+--- a/vapi/mutter-cogl-path-7.vapi
++++ /dev/null
+@@ -1 +0,0 @@
+-mutter-cogl-path-6.vapi
+\ No newline at end of file
+
+From 4747bf3eb04abc1755e3eb055068ac88335d1843 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Date: Wed, 14 Jul 2021 07:43:20 +0200
+Subject: [PATCH 2/5] Migrate CursorTracker get_pointer to Mutter 40
+
+---
+ src/ScreenshotManager.vala       | 6 +++---
+ src/Widgets/DwellClickTimer.vala | 7 +++++++
+ src/Widgets/PointerLocator.vala  | 7 +++++++
+ vapi/libmutter.vapi              | 2 +-
+ 4 files changed, 18 insertions(+), 4 deletions(-)
+
+diff --git a/src/ScreenshotManager.vala b/src/ScreenshotManager.vala
+index 2f981b521..d4de42618 100644
+--- a/src/ScreenshotManager.vala
++++ b/src/ScreenshotManager.vala
+@@ -418,9 +418,9 @@ namespace Gala {
+             int x, y;
+ #if HAS_MUTTER40
+             Graphene.Point coords;
+-            cursor_tracker.get_pointer (coords, null);
+-            x = coords.x;
+-            y = coords.y;
++            cursor_tracker.get_pointer (out coords, null);
++            x = (int)coords.x;
++            y = (int)coords.y;
+ #else
+             cursor_tracker.get_pointer (out x, out y, null);
+ #endif
+diff --git a/src/Widgets/DwellClickTimer.vala b/src/Widgets/DwellClickTimer.vala
+index 3ff71f9c6..7f11fda79 100644
+--- a/src/Widgets/DwellClickTimer.vala
++++ b/src/Widgets/DwellClickTimer.vala
+@@ -74,7 +74,14 @@ namespace Gala {
+             seat.ptr_a11y_timeout_started.connect ((device, type, timeout) => {
+                 var tracker = wm.get_display ().get_cursor_tracker ();
+                 int x, y;
++#if HAS_MUTTER40
++                Graphene.Point coords;
++                tracker.get_pointer (out coords, null);
++                x = (int)coords.x;
++                y = (int)coords.y;
++#else
+                 tracker.get_pointer (out x, out y, null);
++#endif
+ 
+                 this.x = x - (width / 2);
+                 this.y = y - (width / 2);
+diff --git a/src/Widgets/PointerLocator.vala b/src/Widgets/PointerLocator.vala
+index 97306bc9d..dc30285db 100644
+--- a/src/Widgets/PointerLocator.vala
++++ b/src/Widgets/PointerLocator.vala
+@@ -129,7 +129,14 @@ namespace Gala {
+ 
+             var tracker = wm.get_display ().get_cursor_tracker ();
+             int x, y;
++#if HAS_MUTTER40
++            Graphene.Point coords;
++            tracker.get_pointer (out coords, null);
++            x = (int)coords.x;
++            y = (int)coords.y;
++#else
+             tracker.get_pointer (out x, out y, null);
++#endif
+ 
+             this.x = x - (width / 2);
+             this.y = y - (width / 2);
+diff --git a/vapi/libmutter.vapi b/vapi/libmutter.vapi
+index 59fd01bde..e4c5768f6 100644
+--- a/vapi/libmutter.vapi
++++ b/vapi/libmutter.vapi
+@@ -312,7 +312,7 @@ namespace Meta {
+ 		protected CursorTracker ();
+ 		public void get_hot (out int x, out int y);
+ #if HAS_MUTTER40
+-		public void get_pointer (Graphene.Point coords, out Clutter.ModifierType mods);
++		public void get_pointer (out Graphene.Point coords, out Clutter.ModifierType mods);
+ #else
+ 		public void get_pointer (out int x, out int y, out Clutter.ModifierType mods);
+ #endif
+
+From 53df714fb0d3cdcfc4dd6746242c28f8d3620b79 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Date: Wed, 14 Jul 2021 07:43:48 +0200
+Subject: [PATCH 3/5] Migrate Effect.post_paint to Mutter 40
+
+---
+ src/DBus.vala            |  7 ++++++-
+ vapi/mutter-clutter.vapi | 13 ++++++++++---
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/src/DBus.vala b/src/DBus.vala
+index fb105152b..b6e7aabda 100644
+--- a/src/DBus.vala
++++ b/src/DBus.vala
+@@ -93,8 +93,13 @@ namespace Gala {
+         class DummyOffscreenEffect : Clutter.OffscreenEffect {
+             public signal void done_painting ();
+ 
++#if HAS_MUTTER40
++            public override void post_paint (Clutter.PaintNode node, Clutter.PaintContext context) {
++                base.post_paint (node, context);
++#else
+             public override void post_paint (Clutter.PaintContext context) {
+-                base.post_paint (context);
++               base.post_paint (context);
++#endif
+                 done_painting ();
+             }
+         }
+diff --git a/vapi/mutter-clutter.vapi b/vapi/mutter-clutter.vapi
+index 1bc87f329..6f04076b9 100644
+--- a/vapi/mutter-clutter.vapi
++++ b/vapi/mutter-clutter.vapi
+@@ -5959,14 +5959,21 @@ namespace Clutter {
+ 		protected Effect ();
+ 		[NoWrapper]
+ 		public virtual bool modify_paint_volume (Clutter.PaintVolume volume);
+-		[NoWrapper]
+-		public virtual void paint (Clutter.PaintContext paint_context, Clutter.EffectPaintFlags flags);
++        [NoWrapper]
++        public virtual void paint (Clutter.PaintContext paint_context, Clutter.EffectPaintFlags flags);
+ 		[NoWrapper]
+ 		public virtual void pick (Clutter.PickContext pick_context);
++#if HAS_MUTTER40
++        [NoWrapper]
++		public virtual void post_paint (Clutter.PaintNode node, Clutter.PaintContext paint_context);
++        [NoWrapper]
++		public virtual bool pre_paint (Clutter.PaintNode node, Clutter.PaintContext paint_context);
++#else
+ 		[NoWrapper]
+ 		public virtual void post_paint (Clutter.PaintContext paint_context);
+-		[NoWrapper]
++        [NoWrapper]
+ 		public virtual bool pre_paint (Clutter.PaintContext paint_context);
++#endif
+ 		[Version (since = "1.8")]
+ 		public void queue_repaint ();
+ 	}
+
+From 8ba33af34394bd9504cdf6d532e6cf4565a6f78b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Date: Wed, 14 Jul 2021 07:44:21 +0200
+Subject: [PATCH 4/5] DBusAccelerator: Device ID not available on Mutter 40
+
+---
+ src/DBusAccelerator.vala | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/DBusAccelerator.vala b/src/DBusAccelerator.vala
+index b2afc2705..aa55a74b7 100644
+--- a/src/DBusAccelerator.vala
++++ b/src/DBusAccelerator.vala
+@@ -50,7 +50,9 @@ namespace Gala {
+             foreach (string accelerator in grabbed_accelerators.get_keys ()) {
+                 if (grabbed_accelerators[accelerator] == action) {
+                     var parameters = new GLib.HashTable<string, Variant> (null, null);
++#if !HAS_MUTTER40
+                     parameters.set ("device-id", new Variant.uint32 (device.id));
++#endif
+                     parameters.set ("timestamp", new Variant.uint32 (timestamp));
+ 
+                     accelerator_activated (action, parameters);
+
+From c2688baae597b1ae3f2530bd643a205c2c902f74 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Jos=C3=A9=20Exp=C3=B3sito?= <jose.exposito89@gmail.com>
+Date: Wed, 14 Jul 2021 08:03:38 +0200
+Subject: [PATCH 5/5] vapi: Use spaces instead of tabs
+
+---
+ vapi/Clutter-8-custom.vala |  72 ++++-----
+ vapi/Cogl-8-custom.vala    | 308 ++++++++++++++++++-------------------
+ 2 files changed, 190 insertions(+), 190 deletions(-)
+
+diff --git a/vapi/Clutter-8-custom.vala b/vapi/Clutter-8-custom.vala
+index 7350fd909..da1d68c49 100644
+--- a/vapi/Clutter-8-custom.vala
++++ b/vapi/Clutter-8-custom.vala
+@@ -1,42 +1,42 @@
+ namespace Clutter {
+ 
+-	public struct Color {
+-		[CCode (cname = "clutter_color_from_hls")]
+-		public Color.from_hls (float hue, float luminance, float saturation);
+-		[CCode (cname = "clutter_color_from_pixel")]
+-		public Color.from_pixel (uint32 pixel);
+-		[CCode (cname = "clutter_color_from_string")]
+-		public Color.from_string (string str);
+-		[CCode (cname = "clutter_color_from_string")]
+-		public bool parse_string (string str);
+-	}
++    public struct Color {
++        [CCode (cname = "clutter_color_from_hls")]
++        public Color.from_hls (float hue, float luminance, float saturation);
++        [CCode (cname = "clutter_color_from_pixel")]
++        public Color.from_pixel (uint32 pixel);
++        [CCode (cname = "clutter_color_from_string")]
++        public Color.from_string (string str);
++        [CCode (cname = "clutter_color_from_string")]
++        public bool parse_string (string str);
++    }
+ 
+-	public interface Container : GLib.Object {
+-		public void add (params Clutter.Actor[] actors);
+-		[CCode (cname = "clutter_container_class_find_child_property")]
+-		public class unowned GLib.ParamSpec find_child_property (string property_name);
+-		[CCode (cname = "clutter_container_class_list_child_properties")]
+-		public class unowned GLib.ParamSpec[] list_child_properties ();
+-	}
++    public interface Container : GLib.Object {
++        public void add (params Clutter.Actor[] actors);
++        [CCode (cname = "clutter_container_class_find_child_property")]
++        public class unowned GLib.ParamSpec find_child_property (string property_name);
++        [CCode (cname = "clutter_container_class_list_child_properties")]
++        public class unowned GLib.ParamSpec[] list_child_properties ();
++    }
+ 
+-	public struct Units {
+-		[CCode (cname = "clutter_units_from_cm")]
+-		public Units.from_cm (float cm);
+-		[CCode (cname = "clutter_units_from_em")]
+-		public Units.from_em (float em);
+-		[CCode (cname = "clutter_units_from_em_for_font")]
+-		public Units.from_em_for_font (string font_name, float em);
+-		[CCode (cname = "clutter_units_from_mm")]
+-		public Units.from_mm (float mm);
+-		[CCode (cname = "clutter_units_from_pixels")]
+-		public Units.from_pixels (int px);
+-		[CCode (cname = "clutter_units_from_pt")]
+-		public Units.from_pt (float pt);
+-		[CCode (cname = "clutter_units_from_string")]
+-		public Units.from_string (string str);
+-	}
++    public struct Units {
++        [CCode (cname = "clutter_units_from_cm")]
++        public Units.from_cm (float cm);
++        [CCode (cname = "clutter_units_from_em")]
++        public Units.from_em (float em);
++        [CCode (cname = "clutter_units_from_em_for_font")]
++        public Units.from_em_for_font (string font_name, float em);
++        [CCode (cname = "clutter_units_from_mm")]
++        public Units.from_mm (float mm);
++        [CCode (cname = "clutter_units_from_pixels")]
++        public Units.from_pixels (int px);
++        [CCode (cname = "clutter_units_from_pt")]
++        public Units.from_pt (float pt);
++        [CCode (cname = "clutter_units_from_string")]
++        public Units.from_string (string str);
++    }
+ 
+-	[CCode (cheader_filename = "clutter/clutter.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
+-	public struct Capture {
+-	}
++    [CCode (cheader_filename = "clutter/clutter.h", has_copy_function = false, has_destroy_function = false, has_type_id = false)]
++    public struct Capture {
++    }
+ }
+diff --git a/vapi/Cogl-8-custom.vala b/vapi/Cogl-8-custom.vala
+index f6034717c..5ad9e216c 100644
+--- a/vapi/Cogl-8-custom.vala
++++ b/vapi/Cogl-8-custom.vala
+@@ -1,161 +1,161 @@
+ namespace Cogl {
+-	public struct Color {
+-		[Version (since = "1.4")]
+-		[CCode (cname="cogl_color_init_from_4f")]
+-		public Color.from_4f (float red, float green, float blue, float alpha);
+-		[Version (since = "1.4")]
+-		[CCode (cname="cogl_color_init_from_4fv")]
+-		public Color.from_4fv (float color_array);
+-		[Version (since = "1.4")]
+-		[CCode (cname="cogl_color_init_from_4ub")]
+-		public Color.from_4ub (uint8 red, uint8 green, uint8 blue, uint8 alpha);
+-		[Version (since = "1.16")]
+-		[CCode (cname="cogl_color_init_from_hsl")]
+-		public Color.from_hsl (float hue, float saturation, float luminance);
+-	}
++    public struct Color {
++        [Version (since = "1.4")]
++        [CCode (cname="cogl_color_init_from_4f")]
++        public Color.from_4f (float red, float green, float blue, float alpha);
++        [Version (since = "1.4")]
++        [CCode (cname="cogl_color_init_from_4fv")]
++        public Color.from_4fv (float color_array);
++        [Version (since = "1.4")]
++        [CCode (cname="cogl_color_init_from_4ub")]
++        public Color.from_4ub (uint8 red, uint8 green, uint8 blue, uint8 alpha);
++        [Version (since = "1.16")]
++        [CCode (cname="cogl_color_init_from_hsl")]
++        public Color.from_hsl (float hue, float saturation, float luminance);
++    }
+ 
+-	[Compact]
+-	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
+-	public class Shader : Cogl.Handle {
+-	}
++    [Compact]
++    [CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++    public class Shader : Cogl.Handle {
++    }
+ 
+-	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_primitive_get_gtype ()")]
+-	public class Primitive : Cogl.Object {
+-		[CCode (has_construct_function = false)]
+-		protected Primitive ();
+-		[Version (since = "1.10")]
+-		public Cogl.Primitive copy ();
+-		[Version (since = "1.16")]
+-		public void draw (Cogl.Framebuffer framebuffer, Cogl.Pipeline pipeline);
+-		public int get_first_vertex ();
+-		public Cogl.VerticesMode get_mode ();
+-		[Version (since = "1.8")]
+-		public int get_n_vertices ();
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2C4[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p2t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p2t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2C4[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p3 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p3c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3C4[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p3t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2[] data);
+-		[CCode (has_construct_function = false)]
+-		[Version (since = "1.6")]
+-		public Primitive.p3t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2C4[] data);
+-		public void set_first_vertex (int first_vertex);
+-		public void set_mode (Cogl.VerticesMode mode);
+-		[Version (since = "1.8")]
+-		public void set_n_vertices (int n_vertices);
+-	}
++    [CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_primitive_get_gtype ()")]
++    public class Primitive : Cogl.Object {
++        [CCode (has_construct_function = false)]
++        protected Primitive ();
++        [Version (since = "1.10")]
++        public Cogl.Primitive copy ();
++        [Version (since = "1.16")]
++        public void draw (Cogl.Framebuffer framebuffer, Cogl.Pipeline pipeline);
++        public int get_first_vertex ();
++        public Cogl.VerticesMode get_mode ();
++        [Version (since = "1.8")]
++        public int get_n_vertices ();
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2C4[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p2t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p2t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP2T2C4[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p3 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p3c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3C4[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p3t2 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2[] data);
++        [CCode (has_construct_function = false)]
++        [Version (since = "1.6")]
++        public Primitive.p3t2c4 (Cogl.Context context, Cogl.VerticesMode mode, [CCode (array_length_cname = "n_vertices", array_length_pos = 2.5)] Cogl.VertexP3T2C4[] data);
++        public void set_first_vertex (int first_vertex);
++        public void set_mode (Cogl.VerticesMode mode);
++        [Version (since = "1.8")]
++        public void set_n_vertices (int n_vertices);
++    }
+ 
+-	[Compact]
+-	[CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
+-	public class Program : Cogl.Handle {
+-	}
++    [Compact]
++    [CCode (cname = "CoglHandle", cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++    public class Program : Cogl.Handle {
++    }
+ 
+-	[Compact]
+-	[CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
+-	public class Handle {
+-		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_material")]
+-		[Version (deprecated = true, deprecated_since = "1.16")]
+-		public bool is_material ();
+-		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_program")]
+-		[Version (deprecated = true, deprecated_since = "1.16")]
+-		public bool is_program (Cogl.Handle handle);
+-		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_shader")]
+-		[Version (deprecated = true, deprecated_since = "1.16")]
+-		public bool is_shader ();
+-		[CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_texture")]
+-		public bool is_texture ();
+-	}
++    [Compact]
++    [CCode (cheader_filename = "cogl/cogl.h", type_id = "cogl_handle_get_gtype ()", ref_function = "cogl_object_ref", unref_function = "cogl_object_unref")]
++    public class Handle {
++        [CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_material")]
++        [Version (deprecated = true, deprecated_since = "1.16")]
++        public bool is_material ();
++        [CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_program")]
++        [Version (deprecated = true, deprecated_since = "1.16")]
++        public bool is_program (Cogl.Handle handle);
++        [CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_shader")]
++        [Version (deprecated = true, deprecated_since = "1.16")]
++        public bool is_shader ();
++        [CCode (cheader_filename = "cogl/cogl.h", cname="cogl_is_texture")]
++        public bool is_texture ();
++    }
+ 
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP2 {
+-		public float x;
+-		public float y;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP2C4 {
+-		public float x;
+-		public float y;
+-		public uint8 r;
+-		public uint8 g;
+-		public uint8 b;
+-		public uint8 a;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP2T2 {
+-		public float x;
+-		public float y;
+-		public float s;
+-		public float t;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP2T2C4 {
+-		public float x;
+-		public float y;
+-		public float s;
+-		public float t;
+-		public uint8 r;
+-		public uint8 g;
+-		public uint8 b;
+-		public uint8 a;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP3 {
+-		public float x;
+-		public float y;
+-		public float z;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP3C4 {
+-		public float x;
+-		public float y;
+-		public float z;
+-		public uint8 r;
+-		public uint8 g;
+-		public uint8 b;
+-		public uint8 a;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP3T2 {
+-		public float x;
+-		public float y;
+-		public float z;
+-		public float s;
+-		public float t;
+-	}
+-	[CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
+-	[Version (since = "1.6")]
+-	public struct VertexP3T2C4 {
+-		public float x;
+-		public float y;
+-		public float z;
+-		public float s;
+-		public float t;
+-		public uint8 r;
+-		public uint8 g;
+-		public uint8 b;
+-		public uint8 a;
+-	}
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP2 {
++        public float x;
++        public float y;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP2C4 {
++        public float x;
++        public float y;
++        public uint8 r;
++        public uint8 g;
++        public uint8 b;
++        public uint8 a;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP2T2 {
++        public float x;
++        public float y;
++        public float s;
++        public float t;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP2T2C4 {
++        public float x;
++        public float y;
++        public float s;
++        public float t;
++        public uint8 r;
++        public uint8 g;
++        public uint8 b;
++        public uint8 a;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP3 {
++        public float x;
++        public float y;
++        public float z;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP3C4 {
++        public float x;
++        public float y;
++        public float z;
++        public uint8 r;
++        public uint8 g;
++        public uint8 b;
++        public uint8 a;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP3T2 {
++        public float x;
++        public float y;
++        public float z;
++        public float s;
++        public float t;
++    }
++    [CCode (cheader_filename = "cogl/cogl.h", has_type_id = false)]
++    [Version (since = "1.6")]
++    public struct VertexP3T2C4 {
++        public float x;
++        public float y;
++        public float z;
++        public float s;
++        public float t;
++        public uint8 r;
++        public uint8 g;
++        public uint8 b;
++        public uint8 a;
++    }
+ }

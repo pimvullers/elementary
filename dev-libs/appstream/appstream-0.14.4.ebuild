@@ -10,8 +10,8 @@ if [[ ${PV} = *9999* ]]; then
 	EGIT_REPO_URI="https://github.com/ximion/${PN}"
 else
 	SRC_URI="https://www.freedesktop.org/software/appstream/releases/AppStream-${PV}.tar.xz"
-	KEYWORDS="amd64 ~arm arm64 ~ppc64 x86"
 	S="${WORKDIR}/AppStream-${PV}"
+	KEYWORDS="amd64 ~arm arm64 ~ppc64 x86"
 fi
 
 DESCRIPTION="Cross-distro effort for providing metadata for software in the Linux ecosystem"
@@ -23,15 +23,6 @@ SLOT="0/4"
 IUSE="apt doc +introspection qt5 test vala"
 RESTRICT="test" # bug 691962
 
-BDEPEND="
-	dev-libs/appstream-glib
-	dev-libs/libxslt
-	dev-util/itstool
-	>=sys-devel/gettext-0.19.8
-	doc? ( app-text/docbook-xml-dtd:4.5 )
-	test? ( dev-qt/linguist-tools:5 )
-	vala? ( $(vala_depend) )
-"
 RDEPEND="
 	dev-db/lmdb:=
 	>=dev-libs/glib-2.58:2
@@ -45,9 +36,18 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	test? ( qt5? ( dev-qt/qttest:5 ) )
 "
+BDEPEND="
+	dev-libs/appstream-glib
+	dev-libs/libxslt
+	dev-util/itstool
+	>=sys-devel/gettext-0.19.8
+	doc? ( app-text/docbook-xml-dtd:4.5 )
+	test? ( dev-qt/linguist-tools:5 )
+	vala? ( $(vala_depend) )
+"
 
 PATCHES=(
-	"${FILESDIR}"/${P}-disable-Werror-flags.patch # bug 733774
+	"${FILESDIR}"/${PN}-0.14.3-disable-Werror-flags.patch # bug 733774
 )
 
 src_prepare() {
@@ -56,6 +56,7 @@ src_prepare() {
 	if ! use test; then
 		sed -e "/^subdir.*tests/s/^/#DONT /" -i {,qt/}meson.build || die # bug 675944
 	fi
+	vala_src_prepare
 }
 
 src_configure() {

@@ -27,6 +27,7 @@ RDEPEND="
 	>=x11-libs/gtk+-3.10.0:3
 	>=x11-misc/plank-0.11.0
 	>=x11-wm/mutter-3.35.1:=
+	x11-libs/bamf[introspection]
 "
 #	>=media-libs/clutter-1.12
 	#media-libs/clutter-gtk
@@ -39,6 +40,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
+	eapply "${FILESDIR}/1181.patch"
 	vala_src_prepare
 }
 
