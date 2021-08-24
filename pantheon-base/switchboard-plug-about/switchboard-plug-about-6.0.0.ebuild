@@ -17,6 +17,7 @@ KEYWORDS="amd64"
 IUSE="nls"
 
 RDEPEND="
+	sys-apps/fwupd[introspection]
 	dev-libs/glib:2
 	dev-libs/granite
 	pantheon-base/switchboard

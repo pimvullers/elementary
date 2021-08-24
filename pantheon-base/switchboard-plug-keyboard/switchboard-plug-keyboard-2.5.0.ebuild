@@ -33,7 +33,6 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	eapply "${FILESDIR}/${PV}-fix_terminal_key.patch"
 	eapply_user
 	vala_src_prepare
 }
