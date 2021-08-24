@@ -28,6 +28,14 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
+	sed -i "s/subdir('tests')//" libmalcontent/meson.build
 	vala_src_prepare
 }
 
+pkg_postinst() {
+	xdg_icon_cache_update
+}
+
+pkg_postrm() {
+	xdg_icon_cache_update
+}

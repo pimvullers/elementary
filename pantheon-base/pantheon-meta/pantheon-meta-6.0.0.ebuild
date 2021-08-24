@@ -19,16 +19,13 @@ RDEPEND="${DEPEND}
 		pantheon-base/switchboard-plug-a11y
 		pantheon-base/wingpanel-indicator-a11y
 	)
-	archive? (
-		pantheon-extra/contract-archive
-	)
 	bluetooth? (
 		pantheon-base/switchboard-plug-bluetooth
 		pantheon-base/wingpanel-indicator-bluetooth
 	)
 	cups? (
 		pantheon-base/switchboard-plug-printers
-		pantheon-extra/contract-print
+		pantheon-extra/pantheon-print
 	)
 	!minimal? (
 		pantheon-extra/pantheon-calculator
@@ -37,7 +34,6 @@ RDEPEND="${DEPEND}
 		pantheon-extra/pantheon-code
 		pantheon-extra/pantheon-music
 		pantheon-extra/pantheon-photos
-		pantheon-extra/pantheon-print
 		pantheon-extra/pantheon-screenshot
 		pantheon-extra/pantheon-videos
 	)

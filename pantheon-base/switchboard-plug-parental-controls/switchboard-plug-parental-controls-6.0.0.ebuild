@@ -19,6 +19,7 @@ IUSE="systemd nls"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
+	dev-libs/malcontent
 	pantheon-base/switchboard
 	sys-auth/polkit
 	systemd? ( sys-apps/systemd )

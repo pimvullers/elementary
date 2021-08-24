@@ -8,7 +8,7 @@ inherit meson vala
 DESCRIPTION="Small utility to print documents"
 HOMEPAGE="https://github.com/elementary/print"
 SRC_URI="https://github.com/elementary/print/archive/${PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="~amd64"
+KEYWORDS="amd64"
 
 LICENSE="GPL-3"
 SLOT="0"
