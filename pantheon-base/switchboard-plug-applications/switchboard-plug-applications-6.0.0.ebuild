@@ -21,6 +21,7 @@ RDEPEND="
 	dev-libs/granite
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
+	sys-apps/flatpak
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)

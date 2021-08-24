@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.40
 
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2-utils meson vala xdg-utils systemd
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="https://github.com/elementary/files"
@@ -14,7 +14,7 @@ KEYWORDS="amd64"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="nls zeitgeist"
+IUSE="nls zeitgeist systemd"
 
 DEPEND="
 	$(vala_depend)
@@ -35,18 +35,25 @@ RDEPEND="${DEPEND}
 	>=media-libs/libcanberra-0.30
 	>=x11-libs/libnotify-0.7.2
 	>=x11-libs/pango-1.1.2
+	systemd? ( sys-apps/systemd )
 "
 
 S="${WORKDIR}/files-${PV}"
 
 src_prepare() {
 	eapply_user
+	sed -i 's/flatpak-builder/true/' filechooser-portal/meson.build
 	vala_src_prepare
 }
 
 src_configure() {
+	local systemduserunitdir=no
+	if use systemd; then
+		systemduserunitdir=$(systemd_get_userunitdir)
+	fi
 	local emesonargs=(
 		-Dwith-unity=disabled
+		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)
 	)
 	meson_src_configure
 }

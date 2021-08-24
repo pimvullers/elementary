@@ -24,7 +24,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
-	>=dev-lang/vala-0.40.3
+	$(vala_depend)
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "

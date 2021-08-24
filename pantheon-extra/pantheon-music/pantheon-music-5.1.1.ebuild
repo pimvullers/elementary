@@ -7,6 +7,8 @@ DESCRIPTION="Elementary OS music player"
 HOMEPAGE="https://github.com/elementary/music"
 SRC_URI="https://github.com/elementary/music/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+VALA_MAX_API_VERSION=0.48
+
 inherit gnome2-utils meson vala xdg-utils
 
 LICENSE="GPL-3"

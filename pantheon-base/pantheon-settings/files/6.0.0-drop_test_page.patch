@@ -1,0 +1,17 @@
+--- /meson.build	2021-07-15 22:59:55.000000000 +0300
++++ /meson.build	2021-08-20 13:16:50.086553688 +0300
+@@ -26,10 +26,10 @@
+ )
+ 
+ # CUPS Printing testpage
+-install_data(
+-    'cups/default-testpage.pdf',
+-    install_dir: join_paths(datadir, 'cups', 'data')
+-)
++#install_data(
++#   'cups/default-testpage.pdf',
++#    install_dir: join_paths(datadir, 'cups', 'data')
++#)
+ 
+ # GTK3 Settings
+ install_data(

@@ -27,7 +27,7 @@ RDEPEND="
 "
 
 DEPEND="${RDEPEND}
-	dev-lang/vala
+	$(vala_depend)
 	dev-libs/libxml2[python]
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig

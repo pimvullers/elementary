@@ -26,7 +26,7 @@ RDEPEND="
 	x11-libs/vte:2.91[vala]
 "
 DEPEND="${RDEPEND}
-	>=dev-lang/vala-0.40
+	$(vala_depend)
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "

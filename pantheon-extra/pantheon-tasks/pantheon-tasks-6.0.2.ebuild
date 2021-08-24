@@ -15,7 +15,7 @@ KEYWORDS="amd64"
 IUSE="nls"
 
 DEPEND="
-	>=dev-lang/vala-0.40
+	$(vala_depend)
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "

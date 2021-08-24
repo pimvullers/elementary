@@ -23,7 +23,7 @@ RDEPEND="
 	>=x11-wm/mutter-3.27:=
 "
 DEPEND="${RDEPEND}
-	dev-lang/vala
+	$(vala_depend)
 	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
