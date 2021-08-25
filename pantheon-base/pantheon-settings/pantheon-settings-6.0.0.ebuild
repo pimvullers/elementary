@@ -22,6 +22,7 @@ RDEPEND="${DEPEND}
 	x11-themes/elementary-wallpapers
 	media-fonts/open-sans
 	media-fonts/roboto
+	pantheon-base/pantheon-settings-daemon
 "
 
 S="${WORKDIR}/default-settings-${PV}"
