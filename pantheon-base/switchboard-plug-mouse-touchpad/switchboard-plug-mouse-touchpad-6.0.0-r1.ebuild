@@ -20,6 +20,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
 	pantheon-base/switchboard
+	>=pantheon-base/pantheon-settings-daemon-1.0.0-r1
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
