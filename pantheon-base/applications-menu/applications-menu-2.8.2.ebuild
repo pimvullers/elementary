@@ -14,11 +14,10 @@ SRC_URI="https://github.com/elementary/applications-menu/archive/${PV}.tar.gz ->
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls zeitgeist"
+IUSE="zeitgeist"
 
 DEPEND="
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}

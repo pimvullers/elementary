@@ -5,8 +5,6 @@ EAPI=7
 
 VALA_MIN_VERSION=0.22
 
-#PYTHON_COMPAT=( python2_7 )
-
 inherit gnome2-utils meson vala
 
 DESCRIPTION="Keyboard indicator for Wingpanel"
@@ -16,7 +14,7 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-keyboard/archive/${PV
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
 	app-i18n/ibus[vala]
@@ -29,7 +27,6 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	dev-libs/libxml2[python]
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

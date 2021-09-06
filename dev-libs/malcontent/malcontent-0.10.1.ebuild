@@ -14,7 +14,7 @@ SRC_URI="https://gitlab.freedesktop.org/pwithnall/malcontent/-/archive/${PV}/${P
 LICENSE="LGPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="doc nls"
+IUSE="doc"
 
 RDEPEND="
 	>=dev-libs/glib-2.50:2
@@ -22,7 +22,6 @@ RDEPEND="
 
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

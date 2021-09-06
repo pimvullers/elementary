@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-onlineaccounts/archive/$
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64 ~x86"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
@@ -25,11 +25,9 @@ RDEPEND="
 	gui-libs/libhandy"
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	virtual/pkgconfig
-	nls? ( sys-devel/gettext )"
+	virtual/pkgconfig"
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/202.patch"
 	vala_src_prepare
 }

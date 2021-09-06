@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/terminal/archive/${PV}.tar.gz -> ${P}.tar
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls patched"
+IUSE="patched"
 
 RDEPEND="
 	dev-libs/libgee:0.8
@@ -27,7 +27,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

@@ -30,7 +30,7 @@ S="${WORKDIR}/default-settings-${PV}"
 src_prepare() {
 	eapply_user
 
-	eapply "${FILESDIR}/${PV}-drop_test_page.patch"
+	eapply "${FILESDIR}/6.0.0-drop_test_page.patch"
 }
 
 src_configure() {

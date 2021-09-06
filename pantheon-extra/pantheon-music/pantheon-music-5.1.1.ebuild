@@ -14,11 +14,10 @@ inherit gnome2-utils meson vala xdg-utils
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls plugins ipod"
+IUSE="plugins ipod"
 
 DEPEND="
 	>=dev-lang/vala-0.40
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

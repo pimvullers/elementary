@@ -12,7 +12,7 @@ SRC_URI="https://github.com/elementary/wingpanel/archive/${PV}.tar.gz -> ${P}.ta
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls example"
+IUSE="example"
 
 RDEPEND="
 	>=dev-libs/glib-2.40:2
@@ -24,7 +24,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

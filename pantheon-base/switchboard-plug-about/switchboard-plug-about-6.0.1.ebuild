@@ -7,30 +7,30 @@ VALA_MIN_API_VERSION=0.22
 
 inherit meson vala
 
-DESCRIPTION="Control system power consumption using Switchboard."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-power"
-SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Switchboard plug to show system information"
+HOMEPAGE="https://github.com/elementary/switchboard-plug-about"
+SRC_URI="https://github.com/elementary/switchboard-plug-about/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
+	sys-apps/fwupd[introspection]
 	dev-libs/glib:2
 	dev-libs/granite
 	pantheon-base/switchboard
-	sys-apps/dbus
-	sys-auth/polkit
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 
 src_prepare() {
 	eapply_user
+	#eapply "${FILESDIR}/${PV}-fix_distro_dependence.patch"
+	#eapply "${FILESDIR}/${PV}-check_desktop_exist.patch"
 	vala_src_prepare
 }

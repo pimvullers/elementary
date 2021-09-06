@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-sound/archive/${PV}.t
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="bluetooth nls"
+IUSE="bluetooth"
 
 RDEPEND="
 	dev-libs/glib:2
@@ -27,7 +27,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

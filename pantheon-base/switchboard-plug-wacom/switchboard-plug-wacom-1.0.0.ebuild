@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-wacom/archive/${PV}.tar.
 KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
@@ -26,7 +26,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

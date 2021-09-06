@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-printers/archive/${PV}.t
 KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
@@ -25,7 +25,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 

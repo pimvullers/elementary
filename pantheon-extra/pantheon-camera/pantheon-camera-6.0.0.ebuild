@@ -12,22 +12,20 @@ SRC_URI="https://github.com/elementary/camera/archive/${PV}.tar.gz -> ${P}.tar.g
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls"
+IUSE=""
 
 DEPEND="
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}
-	dev-libs/appstream
 	dev-libs/glib:2
-	>=dev-libs/granite-5.1
+	>=dev-libs/granite-6.0.0
 	dev-libs/libgee:0.8
-	media-libs/clutter-gst:3.0
-	media-libs/clutter-gtk:1.0
 	media-libs/libcanberra
-	>=x11-libs/gtk+-3.22:3
+	gui-libs/libhandy
+	media-libs/gstreamer
+	x11-libs/gtk+:3
 "
 S=${WORKDIR}/camera-${PV}
 

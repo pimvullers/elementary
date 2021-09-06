@@ -14,12 +14,11 @@ KEYWORDS="amd64"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE="nls zeitgeist systemd"
+IUSE="zeitgeist systemd"
 
 DEPEND="
 	$(vala_depend)
 	>=dev-util/meson-0.50.0
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}

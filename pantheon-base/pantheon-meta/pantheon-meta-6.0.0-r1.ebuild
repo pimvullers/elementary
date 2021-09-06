@@ -25,13 +25,13 @@ RDEPEND="${DEPEND}
 	)
 	cups? (
 		pantheon-base/switchboard-plug-printers
-		pantheon-extra/pantheon-print
+		pantheon-extra/contract-print
 	)
 	!minimal? (
 		pantheon-extra/pantheon-calculator
 		pantheon-extra/pantheon-calendar
 		pantheon-extra/pantheon-camera
-		pantheon-extra/pantheon-code
+		app-editors/pantheon-code
 		pantheon-extra/pantheon-music
 		pantheon-extra/pantheon-photos
 		pantheon-extra/pantheon-screenshot

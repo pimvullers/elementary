@@ -12,11 +12,10 @@ SRC_URI="https://github.com/elementary/code/archive/${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls plugins policykit"
+IUSE="plugins policykit"
 
 DEPEND="
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	policykit? ( sys-auth/polkit )
 	virtual/pkgconfig
 "

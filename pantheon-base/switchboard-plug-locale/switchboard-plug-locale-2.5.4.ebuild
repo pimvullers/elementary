@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-locale/archive/${PV}.tar
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="nls"
+IUSE=""
 
 RDEPEND="
 	app-i18n/ibus[vala]
@@ -28,7 +28,6 @@ RDEPEND="
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
-	nls? ( sys-devel/gettext )
 	virtual/pkgconfig
 "
 
