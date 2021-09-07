@@ -16,7 +16,6 @@ IUSE=""
 
 DEPEND="
 	$(vala_depend)
-	sys-devel/gettext
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}
@@ -30,7 +29,6 @@ RDEPEND="${DEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/1.1.1-fix_static_initialize.patch"
 	vala_src_prepare
 }
 
