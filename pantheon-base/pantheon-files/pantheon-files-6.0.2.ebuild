@@ -33,7 +33,7 @@ RDEPEND="${DEPEND}
 	dev-libs/libcloudproviders
 	>=media-libs/libcanberra-0.30
 	>=x11-libs/libnotify-0.7.2
-	>=x11-libs/pango-1.1.2
+	>=x11-libs/pango-1.48.5-r1
 	systemd? ( sys-apps/systemd )
 "
 

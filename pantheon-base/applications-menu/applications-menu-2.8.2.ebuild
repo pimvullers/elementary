@@ -5,7 +5,7 @@ EAPI=7
 
 inherit gnome2-utils meson vala xdg-utils
 
-VALA_MIN_API_VERSION="0.32"
+VALA_MIN_API_VERSION="0.52"
 
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="https://github.com/elementary/applications-menu"
@@ -33,6 +33,7 @@ RDEPEND="${DEPEND}
 	pantheon-base/wingpanel
 	gui-libs/libhandy
 	>=x11-libs/gtk+-3.12.0:3
+	!pantheon-base/slingshot
 "
 
 src_prepare() {
@@ -43,7 +44,6 @@ src_prepare() {
 src_configure() {
 	local emesonargs=(
 		-Dwith-zeitgeist=$(usex zeitgeist true false)
-		-Dwith-unity=false
 	)
 	meson_src_configure
 }

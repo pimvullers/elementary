@@ -17,6 +17,7 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
+	app-i18n/ibus
 	dev-libs/glib:2
 	dev-libs/granite
 	dev-libs/libxml2

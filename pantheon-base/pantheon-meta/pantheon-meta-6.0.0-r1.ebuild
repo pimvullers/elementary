@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}
 	)
 	bluetooth? (
 		pantheon-base/switchboard-plug-bluetooth
-		pantheon-base/wingpanel-indicator-bluetooth
+		>=pantheon-base/wingpanel-indicator-bluetooth-2.1.5
 	)
 	cups? (
 		pantheon-base/switchboard-plug-printers
@@ -31,7 +31,7 @@ RDEPEND="${DEPEND}
 		pantheon-extra/pantheon-calculator
 		pantheon-extra/pantheon-calendar
 		pantheon-extra/pantheon-camera
-		app-editors/pantheon-code
+		>=app-editors/pantheon-code-6.0.0
 		pantheon-extra/pantheon-music
 		pantheon-extra/pantheon-photos
 		pantheon-extra/pantheon-screenshot
@@ -39,11 +39,12 @@ RDEPEND="${DEPEND}
 	)
 	networkmanager? (
 		pantheon-base/switchboard-plug-network
-		pantheon-base/wingpanel-indicator-network
+		>=pantheon-base/wingpanel-indicator-network-2.3.0
 	)
 	>=pantheon-base/pantheon-files-6.0.0
 	>=pantheon-base/pantheon-greeter-6.0.0
 	>=pantheon-base/pantheon-shell-6.0.0[accessibility?]
+	>=pantheon-base/switchboard-6.0.0
 	pantheon-base/switchboard-plug-about
 	pantheon-base/switchboard-plug-applications
 	pantheon-base/switchboard-plug-datetime
@@ -55,17 +56,18 @@ RDEPEND="${DEPEND}
 	pantheon-base/switchboard-plug-parental-controls
 	pantheon-base/switchboard-plug-sharing
 	pantheon-base/switchboard-plug-useraccounts
-	pantheon-base/wingpanel-indicator-datetime
-	pantheon-base/wingpanel-indicator-keyboard
-	pantheon-base/wingpanel-indicator-notifications
-	pantheon-base/wingpanel-indicator-session
+	pantheon-base/wingpanel
+	>=pantheon-base/wingpanel-indicator-datetime-2.3.0
+	>=pantheon-base/wingpanel-indicator-keyboard-2.4.0
+	>=pantheon-base/wingpanel-indicator-notifications-6.0.0
+	>=pantheon-base/wingpanel-indicator-session-2.3.0
 	pulseaudio? (
 		pantheon-base/switchboard-plug-sound
-		pantheon-base/wingpanel-indicator-sound
+		>=pantheon-base/wingpanel-indicator-sound-6.0.0
 	)
 	upower? (
 		pantheon-base/switchboard-plug-power
-		pantheon-base/wingpanel-indicator-power
+		>=pantheon-base/wingpanel-indicator-power-6.1.0
 	)
 	virtual/notification-daemon[pantheon]
 	x11-misc/lightdm
