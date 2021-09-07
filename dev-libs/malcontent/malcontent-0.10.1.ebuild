@@ -18,6 +18,7 @@ IUSE="doc"
 
 RDEPEND="
 	>=dev-libs/glib-2.50:2
+	sys-apps/flatpak
 "
 
 DEPEND="${RDEPEND}
