@@ -3,7 +3,7 @@
 
 EAPI=7
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.50
 
 inherit meson vala
 
