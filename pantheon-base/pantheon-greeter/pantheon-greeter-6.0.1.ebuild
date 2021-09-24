@@ -35,7 +35,6 @@ S="${WORKDIR}/greeter-${PV}"
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/550.patch"
 	vala_src_prepare
 }
 
