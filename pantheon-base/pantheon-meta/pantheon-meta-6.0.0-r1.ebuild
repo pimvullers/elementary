@@ -10,7 +10,7 @@ SRC_URI=""
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility archive bluetooth cups networkmanager +minimal pulseaudio upower"
+IUSE="accessibility archive bluetooth cups networkmanager +minimal pulseaudio upower input_devices_wacom"
 
 #pantheon-base/switchboard-plug-security-privacy
 DEPEND=""
@@ -26,6 +26,9 @@ RDEPEND="${DEPEND}
 	cups? (
 		pantheon-base/switchboard-plug-printers
 		pantheon-extra/contract-print
+	)
+	input_devices_wacom? (
+		pantheon-base/switchboard-plug-wacom
 	)
 	media-fonts/inter
 	!minimal? (

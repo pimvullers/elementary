@@ -1,8 +1,7 @@
-diff --git a/data/io.elementary.settings-daemon.gschema.xml b/data/io.elementary.settings-daemon.gschema.xml
-index 4bcdc0c..5255bdf 100644
---- a/data/io.elementary.settings-daemon.gschema.xml
-+++ b/data/io.elementary.settings-daemon.gschema.xml
-@@ -54,4 +54,112 @@
+diff -Naur settings-daemon-1.0.0/data/io.elementary.settings-daemon.gschema.xml settings-daemon-1.0.0.updated/data/io.elementary.settings-daemon.gschema.xml
+--- settings-daemon-1.0.0/data/io.elementary.settings-daemon.gschema.xml	2021-07-16 01:29:21.000000000 +0200
++++ settings-daemon-1.0.0.updated/data/io.elementary.settings-daemon.gschema.xml	2021-09-27 20:19:11.169190703 +0200
+@@ -54,4 +54,120 @@
        <description>The user's preferred visual style for the user interface.</description>
      </key>
    </schema>
@@ -112,6 +111,14 @@ index 4bcdc0c..5255bdf 100644
 +      <default>0</default>
 +      <range min="0" max="24"/>
 +      <summary>Mouse wheel emulation button. 0 to disable the feature.</summary>
++    </key>
++  </schema>
++
++  <!-- Missing schema -->
++  <schema id="org.gnome.settings-daemon.peripherals.touchscreen" path="/io/elementary/settings-daemon/peripherals/touchscreen/">
++    <key name="orientation-lock" type="b">
++      <default>false</default>
++      <summary>Whether the tablet’s orientation is locked, or rotated automatically.</summary>
 +    </key>
 +  </schema>
  </schemalist>
