@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/gala/archive/${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="systemd"
 
 RDEPEND="
 	media-libs/libcanberra
@@ -37,6 +37,14 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	vala_src_prepare
+}
+
+src_configure() {
+	local emesonargs=(
+		-Dsystemd=$(usex systemd true false)
+		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)
+	)
+	meson_src_configure
 }
 
 pkg_preinst() {

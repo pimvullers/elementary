@@ -1,4 +1,4 @@
-# Copyright 1999-2020 Gentoo Foundation
+# Copyright 1999-2021 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -36,22 +36,6 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 
-	eapply "${FILESDIR}/${PV}-check_paths.patch"
-	eapply "${FILESDIR}/${PV}-avatar_icon_check.patch"
-	eapply "${FILESDIR}/${PV}-fix_user_lang.patch"
-	eapply "${FILESDIR}/${PV}-fix_create_user.patch"
-
 	vala_src_prepare
 }
 
-pkg_postinst() {
-	if [ ! -d "/etc/lightdm/lightdm.conf.d" ]; then
-        mkdir -p "/etc/lightdm/lightdm.conf.d"
-    fi
-	if [ ! -d "/usr/share/lightdm/lightdm.conf.d/" ]; then
-		mkdir -p "/usr/share/lightdm/lightdm.conf.d/"
-	fi
-	if [ ! -f "/usr/share/lightdm/lightdm.conf.d/60-guest-session.conf" ]; then
-		touch "/usr/share/lightdm/lightdm.conf.d/60-guest-session.conf"
-	fi
-}

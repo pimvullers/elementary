@@ -46,10 +46,6 @@ src_prepare() {
 }
 
 src_configure() {
-	local systemduserunitdir=no
-	if use systemd; then
-		systemduserunitdir=$(systemd_get_userunitdir)
-	fi
 	local emesonargs=(
 		-Dwith-unity=disabled
 		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)

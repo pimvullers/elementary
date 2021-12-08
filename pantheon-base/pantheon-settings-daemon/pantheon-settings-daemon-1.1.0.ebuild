@@ -12,13 +12,14 @@ SRC_URI="https://github.com/elementary/settings-daemon/archive/${PV}.tar.gz -> $
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="systemd"
 
 DEPEND=""
 RDEPEND="${DEPEND}
 	dev-libs/granite
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
+	systemd? ( sys-apps/systemd )
 "
 
 S="${WORKDIR}/settings-daemon-${PV}"
@@ -27,6 +28,13 @@ src_prepare() {
 	eapply "${FILESDIR}/gsd-deprecated-missing.patch"
 	eapply_user
 	vala_src_prepare
+}
+
+src_configure() {
+	local emesonargs=(
+		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)
+	)
+	meson_src_configure
 }
 
 pkg_preinst() {
