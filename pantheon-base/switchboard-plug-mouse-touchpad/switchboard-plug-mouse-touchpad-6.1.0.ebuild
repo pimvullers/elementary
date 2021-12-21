@@ -34,7 +34,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dgnome40=true
+		-Dgnome_40=true
 	)
 	meson_src_configure
 }

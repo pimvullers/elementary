@@ -36,7 +36,6 @@ src_configure() {
 		-Dintrospection=$(usex introspection true false)
 		-Dvapigen=$(usex vala true false)
 		-Denable-gtk-doc=$(usex doc true false)
-		-Dtest=false
 	)
 	meson_src_configure
 }
