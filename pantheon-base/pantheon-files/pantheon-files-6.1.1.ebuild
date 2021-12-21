@@ -47,7 +47,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dwith-zeitgeist=$(usex zeitgeist true false)
+		-Dwith-zeitgeist=$(usex zeitgeist enabled disabled)
 		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)
 	)
 	meson_src_configure
