@@ -21,13 +21,14 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	dev-libs/libical
+	gnome-extra/evolution-data-server
 	media-libs/clutter:1.0
 	media-libs/clutter-gtk:1.0
 	media-libs/libchamplain:0.12[gtk]
 	sci-geosciences/geocode-glib
 	app-misc/geoclue:2.0
-    gui-libs/libhandy:1
-    dev-libs/libgdata
+	gui-libs/libhandy:1
+	dev-libs/libgdata
 	>=dev-libs/glib-2.39:2
 	>=dev-libs/granite-0.5
 	x11-libs/gtk+:3

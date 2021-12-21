@@ -3,8 +3,6 @@
 
 EAPI=7
 
-VALA_MIN_VERSION=0.26
-
 inherit gnome2-utils meson vala
 
 DESCRIPTION="Sound indicator for Wingpanel"
@@ -14,7 +12,7 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-sound/archive/${PV}.t
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="bluetooth"
+IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
@@ -32,10 +30,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-
-	if use !bluetooth; then
-		eapply "${FILESDIR}/${PV}-rm_bluetooth.patch"
-	fi
 
 	vala_src_prepare
 }
