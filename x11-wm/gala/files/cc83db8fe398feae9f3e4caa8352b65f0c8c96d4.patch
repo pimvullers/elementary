@@ -1,0 +1,206 @@
+From cc83db8fe398feae9f3e4caa8352b65f0c8c96d4 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Corentin=20No=C3=ABl?= <corentin@elementary.io>
+Date: Thu, 25 Nov 2021 00:27:32 +0100
+Subject: [PATCH] WindowSwitcher: Simplify the window indicator by handling
+ directly its content
+
+Remove the RoundedActor class.
+---
+ src/Widgets/RoundedActor.vala   | 60 ---------------------------------
+ src/Widgets/WindowSwitcher.vala | 44 +++++++++++++++++-------
+ src/meson.build                 |  1 -
+ 3 files changed, 31 insertions(+), 74 deletions(-)
+ delete mode 100644 src/Widgets/RoundedActor.vala
+
+diff --git a/src/Widgets/RoundedActor.vala b/src/Widgets/RoundedActor.vala
+deleted file mode 100644
+index 54b0bac87..000000000
+--- a/src/Widgets/RoundedActor.vala
++++ /dev/null
+@@ -1,60 +0,0 @@
+-/*
+- * Copyright 2017 Popye <sailor3101@gmail.com>
+- * SPDX-License-Identifier: GPL-3.0-or-later
+- */
+-
+-namespace Gala {
+-    public class RoundedActor : Clutter.Actor {
+-        private Clutter.Canvas canvas;
+-        public Clutter.Color back_color { get; protected set; }
+-        public int rect_radius { get; protected set; }
+-
+-        public RoundedActor (Clutter.Color background_color, int radius) {
+-            Object (
+-                back_color: background_color,
+-                rect_radius: radius
+-            );
+-        }
+-
+-        construct {
+-            canvas = new Clutter.Canvas ();
+-            this.set_content (canvas);
+-            canvas.draw.connect (this.drawit);
+-        }
+-
+-        protected virtual bool drawit (Cairo.Context ctx) {
+-            Granite.Drawing.BufferSurface buffer;
+-            buffer = new Granite.Drawing.BufferSurface ((int)this.width, (int)this.height);
+-
+-            /*
+-            * copied from popover-granite-drawing
+-            * https://code.launchpad.net/~tombeckmann/wingpanel/popover-granite-drawing
+-            */
+-
+-            buffer.context.clip ();
+-            buffer.context.reset_clip ();
+-
+-            // draw rect
+-            Clutter.cairo_set_source_color (buffer.context, back_color);
+-            Granite.Drawing.Utilities.cairo_rounded_rectangle (buffer.context, 0, 0, (int)this.width, (int)this.height, rect_radius);
+-            buffer.context.fill ();
+-
+-            //clear surface to transparent
+-            ctx.set_operator (Cairo.Operator.SOURCE);
+-            ctx.set_source_rgba (0, 0, 0, 0);
+-            ctx.paint ();
+-
+-            //now paint our buffer on
+-            ctx.set_source_surface (buffer.surface, 0, 0);
+-            ctx.paint ();
+-
+-            return true;
+-        }
+-
+-        public void resize (int width, int height) {
+-            set_size (width, height);
+-            canvas.set_size (width, height);
+-            canvas.invalidate ();
+-        }
+-    }
+-}
+diff --git a/src/Widgets/WindowSwitcher.vala b/src/Widgets/WindowSwitcher.vala
+index 4c018651c..421021870 100644
+--- a/src/Widgets/WindowSwitcher.vala
++++ b/src/Widgets/WindowSwitcher.vala
+@@ -24,7 +24,7 @@ namespace Gala {
+         private Granite.Settings granite_settings;
+         private Clutter.Canvas canvas;
+         Clutter.Actor container;
+-        RoundedActor indicator;
++        Clutter.Actor indicator;
+         Clutter.Text caption;
+ 
+         int modifier_mask;
+@@ -48,6 +48,7 @@ namespace Gala {
+             scaling_factor = InternalUtils.get_ui_scaling_factor ();
+ 
+             canvas = new Clutter.Canvas ();
++            canvas.scale_factor = scaling_factor;
+             set_content (canvas);
+ 
+             // Carry out the initial draw
+@@ -71,6 +72,7 @@ namespace Gala {
+                 var cur_scale = InternalUtils.get_ui_scaling_factor ();
+                 if (cur_scale != scaling_factor) {
+                     scaling_factor = cur_scale;
++                    canvas.scale_factor = scaling_factor;
+                     create_components ();
+                 }
+             });
+@@ -78,7 +80,7 @@ namespace Gala {
+             canvas.draw.connect (draw);
+         }
+ 
+-        private bool draw (Cairo.Context ctx) {
++        private bool draw (Cairo.Context ctx, int width, int height) {
+             ctx.save ();
+ 
+             var widget_path = new Gtk.WidgetPath ();
+@@ -86,6 +88,7 @@ namespace Gala {
+             widget_path.iter_set_object_name (-1, "window");
+ 
+             var style_context = new Gtk.StyleContext ();
++            style_context.set_scale (scaling_factor);
+             style_context.set_path (widget_path);
+             style_context.add_class ("background");
+             style_context.add_class ("csd");
+@@ -97,9 +100,8 @@ namespace Gala {
+                 style_context.add_provider (css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION);
+             }
+ 
+-            style_context.render_background (ctx, 0, 0, (int) width, (int) height);
+-            style_context.render_frame (ctx, 0, 0, (int) width, (int) height);
+-
++            style_context.render_background (ctx, 0, 0, width, height);
++            style_context.render_frame (ctx, 0, 0, width, height);
+             ctx.restore ();
+ 
+             return true;
+@@ -128,11 +130,27 @@ namespace Gala {
+                 (uint8) (rgba.alpha * 255)
+             );
+ 
+-            indicator = new RoundedActor (accent_color, WRAPPER_BORDER_RADIUS * scaling_factor);
+-
++            var rect_radius = WRAPPER_BORDER_RADIUS * scaling_factor;
++            indicator = new Clutter.Actor ();
+             indicator.margin_left = indicator.margin_top =
+                 indicator.margin_right = indicator.margin_bottom = 0;
+             indicator.set_pivot_point (0.5f, 0.5f);
++            var indicator_canvas = new Clutter.Canvas ();
++            indicator.set_content (indicator_canvas);
++            indicator_canvas.scale_factor = scaling_factor;
++            indicator_canvas.draw.connect ((ctx, width, height) => {
++                ctx.save ();
++                ctx.clip ();
++                ctx.reset_clip ();
++
++                // draw rect
++                Clutter.cairo_set_source_color (ctx, accent_color);
++                Granite.Drawing.Utilities.cairo_rounded_rectangle (ctx, 0, 0, width, height, rect_radius);
++                ctx.fill ();
++
++                ctx.restore ();
++                return true;
++            });
+ 
+             var caption_color = "#2e2e31";
+ 
+@@ -229,10 +247,9 @@ namespace Gala {
+             l.column_spacing = l.row_spacing = WRAPPER_PADDING * scaling_factor;
+ 
+             indicator.visible = false;
+-            indicator.resize (
+-                (ICON_SIZE + WRAPPER_PADDING * 2) * scaling_factor,
+-                (ICON_SIZE + WRAPPER_PADDING * 2) * scaling_factor
+-            );
++            var indicator_size = (ICON_SIZE + WRAPPER_PADDING * 2) * scaling_factor;
++            indicator.set_size (indicator_size, indicator_size);
++            ((Clutter.Canvas) indicator.content).set_size (indicator_size, indicator_size);
+             caption.visible = false;
+             caption.margin_bottom = caption.margin_top = WRAPPER_PADDING * scaling_factor;
+ 
+@@ -268,8 +285,9 @@ namespace Gala {
+ 
+             opacity = 0;
+ 
+-            set_size ((int) nat_width, (int) (nat_height + caption_height / 2 - container.margin_bottom + WRAPPER_PADDING * 3 * scaling_factor));
+-            canvas.set_size ((int) nat_width, (int) (nat_height + caption_height / 2 - container.margin_bottom + WRAPPER_PADDING * 3 * scaling_factor));
++            var switcher_height = (int) (nat_height + caption_height / 2 - container.margin_bottom + WRAPPER_PADDING * 3 * scaling_factor);
++            set_size ((int) nat_width, switcher_height);
++            canvas.set_size ((int) nat_width, switcher_height);
+             canvas.invalidate ();
+ 
+             set_position (
+diff --git a/src/meson.build b/src/meson.build
+index de57f830e..0ff54d15f 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -38,7 +38,6 @@ gala_bin_sources = files(
+     'Widgets/MonitorClone.vala',
+     'Widgets/MultitaskingView.vala',
+     'Widgets/PixelPicker.vala',
+-    'Widgets/RoundedActor.vala',
+     'Widgets/SafeWindowClone.vala',
+     'Widgets/ScreenShield.vala',
+     'Widgets/SelectionArea.vala',

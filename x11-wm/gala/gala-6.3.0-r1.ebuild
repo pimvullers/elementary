@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.28
 
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2-utils systemd meson vala xdg-utils
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://github.com/elementary/gala"
@@ -15,6 +15,8 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="systemd"
+
+VALA_USE_DEPEND="vapigen"
 
 RDEPEND="
 	media-libs/libcanberra
@@ -36,7 +38,10 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
+	eapply ${FILESDIR}/cc83db8fe398feae9f3e4caa8352b65f0c8c96d4.patch
 	vala_src_prepare
+
+	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
 }
 
 src_configure() {
