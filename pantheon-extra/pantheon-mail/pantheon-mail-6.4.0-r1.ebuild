@@ -17,7 +17,11 @@ IUSE=""
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite
-	gnome-extra/evolution-data-server
+	dev-libs/folks
+	dev-libs/libgee:0.8
+	gui-libs/libhandy:1
+	net-libs/webkit-gtk:4
+	gnome-extra/evolution-data-server[vala]
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
