@@ -17,8 +17,14 @@ KEYWORDS="amd64"
 IUSE="doc"
 
 RDEPEND="
+	dev-libs/appstream
 	>=dev-libs/glib-2.50:2
+	dev-libs/gobject-introspection
 	sys-apps/flatpak
+	sys-apps/accountsservice
+	sys-auth/polkit
+	sys-libs/pam
+	x11-libs/gtk+:3
 "
 
 DEPEND="${RDEPEND}
