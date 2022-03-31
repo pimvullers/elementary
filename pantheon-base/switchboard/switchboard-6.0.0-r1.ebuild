@@ -29,6 +29,8 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
+	eapply ${FILESDIR}/226.diff
+
 	eapply_user
 	vala_src_prepare
 }

@@ -1,0 +1,18 @@
+--- a/data/meson.build	2022-03-31 19:13:42.392067138 +0200
++++ b/data/meson.build	2022-03-31 19:13:57.138732948 +0200
+@@ -27,7 +27,6 @@
+ 
+ i18n = import('i18n')
+ desktop_file = i18n.merge_file(
+-    'desktop',
+     input: meson.project_name() + '.desktop.in',
+     output: meson.project_name() + '.desktop',
+     install: true,
+@@ -37,7 +36,6 @@
+ )
+ 
+ appdata_file = i18n.merge_file(
+-    'appdata',
+     input: meson.project_name() + '.appdata.xml.in',
+     output: meson.project_name() + '.appdata.xml',
+     install: true,

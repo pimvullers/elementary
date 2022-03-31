@@ -21,7 +21,7 @@ DEPEND="
 "
 
 RDEPEND="${DEPEND}
-	plugins? ( 
+	plugins? (
 		app-text/editorconfig-core-c
 		app-text/gtkspell:3[vala]
 		net-libs/libsoup:2.4
@@ -41,6 +41,8 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/code-${PV}"
 
 src_prepare() {
+	eapply ${FILESDIR}/1165.diff
+
 	eapply_user
 	vala_src_prepare
 }

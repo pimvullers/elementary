@@ -26,8 +26,9 @@ RDEPEND="${DEPEND}
 	x11-libs/gtk+:3
 "
 
-
 src_prepare() {
+	eapply ${FILESDIR}/113.diff
+
 	eapply_user
 	vala_src_prepare
 }

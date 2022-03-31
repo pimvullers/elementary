@@ -1,0 +1,41 @@
+diff --git a/accounts-service/meson.build b/accounts-service/meson.build
+index 6942d2bf0def942bbf7420fb16cb163663897872..198692cf4d4165bd6e28cc68ae050c56de309ffb 100644
+--- a/accounts-service/meson.build
++++ b/accounts-service/meson.build
+@@ -1,4 +1,4 @@
+-i18n.merge_file('com.endlessm.ParentalControls.policy',
++i18n.merge_file(
+   input: 'com.endlessm.ParentalControls.policy.in',
+   output: 'com.endlessm.ParentalControls.policy',
+   po_dir: po_dir,
+diff --git a/malcontent-control/meson.build b/malcontent-control/meson.build
+index 82633062437d10a54668157b2e60aa3f624e2c85..d4ef3c11faf46a974e428456865dcd03dc76b2bf 100644
+--- a/malcontent-control/meson.build
++++ b/malcontent-control/meson.build
+@@ -36,7 +36,7 @@ malcontent_control = executable('malcontent-control',
+   install: true,
+ )
+ 
+-desktop_file = i18n.merge_file('desktop-file',
++desktop_file = i18n.merge_file(
+   type: 'desktop',
+   input: '@0@.desktop.in'.format(application_id),
+   output: '@0@.desktop'.format(application_id),
+@@ -57,7 +57,7 @@ if desktop_file_validate.found()
+   )
+ endif
+ 
+-appdata_file = i18n.merge_file('appdata-file',
++appdata_file = i18n.merge_file(
+   input: '@0@.appdata.xml.in'.format(application_id),
+   output: '@0@.appdata.xml'.format(application_id),
+   po_dir: join_paths(meson.current_source_dir(), '..', 'po'),
+@@ -94,7 +94,7 @@ if xmllint.found()
+   )
+ endif
+ 
+-policy_file = i18n.merge_file('policy-file',
++policy_file = i18n.merge_file(
+   input: '@0@.policy.in'.format(application_id),
+   output: '@0@.policy'.format(application_id),
+   po_dir: join_paths(meson.current_source_dir(), '..', 'po'),

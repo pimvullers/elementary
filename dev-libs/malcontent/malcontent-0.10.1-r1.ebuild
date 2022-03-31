@@ -33,6 +33,8 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
+	eapply ${FILESDIR}/f433aaf8c8f82f0aeaedee664f08bc6fcad47b0d.diff
+
 	eapply_user
 	sed -i "s/subdir('tests')//" libmalcontent/meson.build
 	vala_src_prepare

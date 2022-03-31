@@ -44,6 +44,8 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/music-${PV}"
 
 src_prepare() {
+	eapply ${FILESDIR}/meson.patch
+
 	eapply_user
 	vala_src_prepare
 }

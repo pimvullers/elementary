@@ -34,6 +34,8 @@ RDEPEND="${DEPEND}
 S=${WORKDIR}/screenshot-${PV}
 
 src_prepare() {
+	eapply ${FILESDIR}/241.diff
+
 	eapply_user
 	vala_src_prepare
 }
