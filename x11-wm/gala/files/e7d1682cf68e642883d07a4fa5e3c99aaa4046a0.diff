@@ -1,0 +1,11 @@
+diff --git a/vapi/mutter-clutter-9.deps b/vapi/mutter-clutter-9.deps
+index f4c6e420..fffc4803 100644
+--- a/vapi/mutter-clutter-9.deps
++++ b/vapi/mutter-clutter-9.deps
+@@ -2,5 +2,5 @@ atk
+ cairo
+ pango
+ json-glib-1.0
+-mutter-cogl-10
++mutter-cogl-9
+ graphene-gobject-1.0

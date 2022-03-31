@@ -39,6 +39,10 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	eapply ${FILESDIR}/cc83db8fe398feae9f3e4caa8352b65f0c8c96d4.patch
+	eapply ${FILESDIR}/1368.diff
+	eapply ${FILESDIR}/e7d1682cf68e642883d07a4fa5e3c99aaa4046a0.diff
+	eapply ${FILESDIR}/cdcb87afcb4fb5729548a934885ba46b40a601ac.diff
+
 	vala_src_prepare
 
 	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
