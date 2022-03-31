@@ -12,14 +12,18 @@ SRC_URI="https://github.com/elementary/session-settings/archive/${PV}.tar.gz -> 
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility"
+IUSE="accessibility gnome-keyring"
 
 DEPEND=""
 RDEPEND="${DEPEND}
-	accessibility? ( app-accessibility/orca )
+	accessibility? (
+		app-accessibility/orca
+		app-accessibility/onboard
+	)
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
 	gnome-base/gsettings-desktop-schemas
+	gnome-keyring? ( gnome-base/gnome-keyring )
 	pantheon-base/applications-menu
 	>=pantheon-base/wingpanel-3.0.0
 	pantheon-extra/pantheon-agent-polkit
@@ -38,12 +42,8 @@ src_prepare() {
 	eapply_user
 
 	eapply "${FILESDIR}/${PV}-fix_access_deps.patch"
+	use accessibility || sed -i -e "/orca/d" session/meson.build
+	use accessibility || sed -i -e "/onboard/d" session/meson.build
+	use gnome-keyring || sed -i -e "/gnome-keyring/d" session/meson.build
 }
 
-src_configure() {
-	local emesonargs=(
-		-Ddetect-program-prefixes=false
-		-Daccessibility=$(usex accessibility true false)
-	)
-	meson_src_configure
-}
