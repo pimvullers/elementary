@@ -33,6 +33,7 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/terminal-${PV}"
 
 src_prepare() {
+	eapply ${FILESDIR}/c62ebe9f45633043d9454900b91e044f49f77b4c.diff
 	eapply_user
 	vala_src_prepare
 }
