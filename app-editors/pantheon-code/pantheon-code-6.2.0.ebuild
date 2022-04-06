@@ -41,8 +41,6 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/code-${PV}"
 
 src_prepare() {
-	eapply ${FILESDIR}/1165.diff
-
 	eapply_user
 	vala_src_prepare
 }
