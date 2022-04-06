@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply ${FILESDIR}/434.patch
-	eapply ${FILESDIR}/435.patch
+	eapply ${FILESDIR}/435.diff
 
 	eapply_user
 	vala_src_prepare
