@@ -16,7 +16,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/libical
 	gnome-extra/evolution-data-server[vala]
 	net-libs/libsoup:2.4

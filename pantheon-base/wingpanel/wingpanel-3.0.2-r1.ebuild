@@ -17,7 +17,7 @@ IUSE="example"
 RDEPEND="
 	>=dev-libs/glib-2.40:2
 	dev-libs/libgee:0.8
-	dev-libs/granite
+	dev-libs/granite:0
 	>=x11-libs/gtk+-3.22:3
 	x11-wm/gala
 	>=x11-wm/mutter-3.27:=

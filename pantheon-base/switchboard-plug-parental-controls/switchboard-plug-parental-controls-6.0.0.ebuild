@@ -18,7 +18,7 @@ IUSE="systemd"
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/malcontent
 	pantheon-base/switchboard
 	sys-auth/polkit

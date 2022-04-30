@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	pantheon-base/switchboard
 	gnome-extra/evolution-data-server
 	x11-libs/gtk+:3

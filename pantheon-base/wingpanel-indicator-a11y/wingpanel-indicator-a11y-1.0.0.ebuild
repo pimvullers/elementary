@@ -21,7 +21,7 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	>=pantheon-base/wingpanel-3.0.0:=
 	x11-libs/gtk+:3
 "

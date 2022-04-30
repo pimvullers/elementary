@@ -19,7 +19,7 @@ IUSE=""
 RDEPEND="
 	app-i18n/ibus
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/libxml2
 	gnome-base/libgnomekbd
 	pantheon-base/switchboard

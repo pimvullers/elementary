@@ -21,7 +21,7 @@ VALA_USE_DEPEND="vapigen"
 RDEPEND="
 	media-libs/libcanberra
 	>=dev-libs/glib-2.44:2
-	>=dev-libs/granite-5.4.0
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	gnome-base/gnome-desktop:3
 	>=gnome-base/gnome-settings-daemon-3.15.2

@@ -26,7 +26,7 @@ RDEPEND="${DEPEND}
 	app-misc/geoclue:2.0
 	dev-libs/folks
 	dev-libs/glib:2
-	>=dev-libs/granite-6.0.0
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	dev-libs/libical
 	>=gnome-extra/evolution-data-server-3.8

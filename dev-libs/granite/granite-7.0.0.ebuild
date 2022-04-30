@@ -12,8 +12,8 @@ HOMEPAGE="https://github.com/elementary/granite"
 SRC_URI="https://github.com/elementary/granite/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="LGPL-3"
-SLOT="0"
-KEYWORDS=""
+SLOT="7"
+KEYWORDS="amd64"
 IUSE="doc"
 
 RDEPEND="

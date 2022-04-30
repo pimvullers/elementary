@@ -16,7 +16,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	gui-libs/libhandy
 	app-crypt/gcr
 	net-libs/webkit-gtk:4

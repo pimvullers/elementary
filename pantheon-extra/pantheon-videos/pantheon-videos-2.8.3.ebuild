@@ -24,7 +24,7 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	media-libs/clutter-gst:3.0
 	media-libs/clutter-gtk:1.0[gtk]

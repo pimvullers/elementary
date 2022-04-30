@@ -19,7 +19,7 @@ IUSE=""
 RDEPEND="
 	app-i18n/ibus[vala]
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	gnome-base/gnome-desktop:3
 	pantheon-base/switchboard
 	sys-apps/accountsservice

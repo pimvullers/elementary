@@ -16,7 +16,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/folks
 	dev-libs/libgee:0.8
 	gui-libs/libhandy:1

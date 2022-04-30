@@ -16,7 +16,7 @@ IUSE="systemd"
 
 DEPEND=""
 RDEPEND="${DEPEND}
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
 	sys-apps/accountsservice

@@ -22,7 +22,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	dev-libs/dbus-glib
 	>=dev-libs/glib-2.39:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/json-glib
 	dev-libs/libgee:0.8
 	dev-libs/libpeas[gtk]

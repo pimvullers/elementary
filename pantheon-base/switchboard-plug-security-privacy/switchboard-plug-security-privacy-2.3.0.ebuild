@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	pantheon-base/switchboard
 	>=sys-auth/polkit-0.115
 	x11-libs/gtk+:3

@@ -19,7 +19,7 @@ IUSE="systemd"
 RDEPEND="
 	sys-apps/fwupd[introspection]
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
 	systemd? ( sys-apps/systemd )

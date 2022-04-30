@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	>=dev-libs/granite-5.2.0
+	dev-libs/granite:0
 	pantheon-base/wingpanel
 	sys-apps/accountsservice:=
 	x11-libs/gtk+:3

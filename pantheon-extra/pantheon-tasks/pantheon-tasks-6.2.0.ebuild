@@ -30,7 +30,7 @@ RDEPEND="${DEPEND}
 	gui-libs/libhandy:1
 	dev-libs/libgdata
 	>=dev-libs/glib-2.39:2
-	>=dev-libs/granite-0.5
+	dev-libs/granite:0
 	x11-libs/gtk+:3
 "
 

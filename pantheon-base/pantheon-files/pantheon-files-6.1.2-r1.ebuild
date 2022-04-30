@@ -24,7 +24,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	dev-db/sqlite:3
 	>=dev-libs/glib-2.40.0:2
-	>=dev-libs/granite-6.1.0
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	>=x11-libs/gtk+-3.22:3[X,wayland]
 	gui-libs/libhandy
