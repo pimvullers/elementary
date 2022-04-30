@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-about/archive/${PV}.tar.
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="systemd"
 
 RDEPEND="
 	sys-apps/fwupd[introspection]
@@ -22,6 +22,8 @@ RDEPEND="
 	dev-libs/granite
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
+	systemd? ( sys-apps/systemd )
+	!systemd? ( app-admin/openrc-settingsd )
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -30,7 +32,10 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	#eapply "${FILESDIR}/${PV}-fix_distro_dependence.patch"
-	#eapply "${FILESDIR}/${PV}-check_desktop_exist.patch"
 	vala_src_prepare
 }
+
+pkg_postinst() {
+	use systemd || einfo "Ensure openrc-settingsd is running when you want to use this plug."
+}
+
