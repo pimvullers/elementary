@@ -12,7 +12,7 @@ inherit gnome2-utils meson vala xdg-utils
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="plugins ipod"
+IUSE=""
 
 DEPEND="
 	>=dev-lang/vala-0.40
@@ -20,49 +20,20 @@ DEPEND="
 "
 
 RDEPEND="${DEPEND}
-	dev-libs/dbus-glib
 	>=dev-libs/glib-2.39:2
-	dev-libs/granite:0
-	dev-libs/json-glib
-	dev-libs/libgee:0.8
-	dev-libs/libpeas[gtk]
-	dev-libs/libxml2
-	gnome-extra/libgda:5
-	gnome-extra/zeitgeist
-	media-libs/clutter-gtk
+	dev-libs/granite:7
 	media-libs/gst-plugins-base
 	media-libs/gstreamer
-	ipod? ( media-libs/libgpod )
-	media-libs/taglib
 	media-plugins/gst-plugins-meta[mp3]
-	net-libs/libaccounts-glib
-	net-libs/libsoup:2.4
-	>=x11-libs/gtk+-3.22:3
-	x11-libs/libnotify
+	gui-libs/gtk:4
 "
 
 S="${WORKDIR}/music-${PV}"
 
 src_prepare() {
-	eapply ${FILESDIR}/meson.patch
-
 	eapply_user
 	vala_src_prepare
 }
-
-src_configure() {
-	local plugs="[ 'audioplayer'"
-	if [ $(usex ipod true false ) = true ]; then
-		plugs=$plugs", 'ipod'"
-	fi
-	plugs=$plugs" ]"
-	local emesonargs=(
-		-D'build-plugins'=$(usex plugins true false)
-		-Dplugins="$plugs"
-	)
-	meson_src_configure
-}
-
 
 pkg_preinst() {
 	gnome2_schemas_savelist
