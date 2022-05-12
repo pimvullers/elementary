@@ -32,9 +32,3 @@ src_prepare() {
 	vala_src_prepare
 }
 
-src_configure() {
-	local emesonargs=(
-		-Dgnome_40=true
-	)
-	meson_src_configure
-}
