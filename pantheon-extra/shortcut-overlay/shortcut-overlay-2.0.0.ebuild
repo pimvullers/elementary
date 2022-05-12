@@ -20,15 +20,13 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite:0
+	dev-libs/granite:7
 	dev-libs/libgee:0.8
 	>=gui-libs/libhandy-0.80.0:1
-	x11-libs/gtk+:3
+	gui-libs/gtk:4
 "
 
 src_prepare() {
-	eapply ${FILESDIR}/113.diff
-
 	eapply_user
 	vala_src_prepare
 }
