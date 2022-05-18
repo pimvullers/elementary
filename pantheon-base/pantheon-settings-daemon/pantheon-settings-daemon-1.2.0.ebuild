@@ -26,7 +26,6 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/settings-daemon-${PV}"
 
 src_prepare() {
-	eapply "${FILESDIR}/gsd-deprecated-missing.patch"
 	eapply_user
 	vala_src_prepare
 }
