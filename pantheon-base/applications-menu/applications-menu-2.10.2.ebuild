@@ -23,7 +23,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	>=dev-libs/appstream-0.10.0[vala]
 	dev-libs/glib:2
-	>=dev-libs/granite-0.5
+	dev-libs/granite:0
 	dev-libs/json-glib
 	dev-libs/libgee:0.8
 	gnome-base/gnome-menus:3

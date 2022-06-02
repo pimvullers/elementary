@@ -1,4 +1,4 @@
-# Copyright 1999-2019 Gentoo Foundation
+# Copyright 1999-2020 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
@@ -7,21 +7,19 @@ VALA_MIN_API_VERSION=0.22
 
 inherit meson vala
 
-DESCRIPTION="Control system power consumption using Switchboard."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-power"
-SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Mouse and touchpad settings"
+HOMEPAGE="https://github.com/elementary/switchboard-plug-mouse-touchpad"
+SRC_URI="https://github.com/elementary/switchboard-plug-mouse-touchpad/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	pantheon-base/switchboard
-	sys-apps/dbus
-	sys-auth/polkit
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
@@ -33,3 +31,4 @@ src_prepare() {
 	eapply_user
 	vala_src_prepare
 }
+

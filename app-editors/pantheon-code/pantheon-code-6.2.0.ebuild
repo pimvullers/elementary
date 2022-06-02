@@ -28,7 +28,7 @@ RDEPEND="${DEPEND}
 		x11-libs/vte:2.91
 	)
 	>=dev-libs/glib-2.30:2
-	>=dev-libs/granite-6.0.0
+	dev-libs/granite:0
 	>=dev-libs/libgee-0.8.5:0.8
 	dev-libs/libgit2-glib
 	dev-libs/libpeas[gtk]

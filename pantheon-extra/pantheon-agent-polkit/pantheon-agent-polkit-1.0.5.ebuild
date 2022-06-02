@@ -23,7 +23,7 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	>=dev-libs/granite-6.0.0:=
+	dev-libs/granite:0
 	sys-auth/polkit[introspection]
 	x11-libs/gtk+:3
 "

@@ -7,21 +7,26 @@ VALA_MIN_API_VERSION=0.22
 
 inherit meson vala
 
-DESCRIPTION="Mouse and touchpad settings"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-mouse-touchpad"
-SRC_URI="https://github.com/elementary/switchboard-plug-mouse-touchpad/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Adjust keyboard settings from Switchboard"
+HOMEPAGE="https://github.com/elementary/switchboard-plug-keyboard"
+SRC_URI="https://github.com/elementary/switchboard-plug-keyboard/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="0"
+KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
+	app-i18n/ibus
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
+	dev-libs/libxml2
+	gnome-base/libgnomekbd
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
+	x11-libs/libxklavier
 "
+
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
@@ -30,11 +35,4 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	vala_src_prepare
-}
-
-src_configure() {
-	local emesonargs=(
-		-Dgnome_40=true
-	)
-	meson_src_configure
 }

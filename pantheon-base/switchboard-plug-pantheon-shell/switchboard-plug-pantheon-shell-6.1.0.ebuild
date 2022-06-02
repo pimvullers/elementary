@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	media-libs/gexiv2[vala]
 	gnome-base/gnome-desktop:=
 	pantheon-base/switchboard

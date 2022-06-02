@@ -23,7 +23,7 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	>=dev-libs/granite-6.0.0:=
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	pantheon-base/switchboard
 	!pantheon-extra/elementary-tweaks

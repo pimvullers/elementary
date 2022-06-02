@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	gnome-base/libgtop:2
 	pantheon-base/wingpanel
 	virtual/libudev

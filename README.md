@@ -1,21 +1,44 @@
-## Getting Pantheon
+# Elementary OS experience for Gentoo
 
-### Via Layman
+## Installing the overlay
 
-To install this overlay using Layman ([app-portage/layman](https://packages.gentoo.org/packages/app-portage/layman)) run the following command: `layman -a elementary`
+### Manually
 
-To keep your checkout of the elementary overlay up-to-date run: `layman -s elementary`
+To install this overlay using Portage's built-in repos.conf mechanism, be sure the repos.conf directory exists:
+> `mkdir -p /etc/portage/repos.conf`
 
-Alternatively, to update all overlays managed by layman run: `layman -S`
+Then get the elementary.conf file from the base of this repository:
+> `wget https://raw.githubusercontent.com/pimvullers/elementary/master/elementary.conf -O /etc/portage/repos.conf/elementary.conf`
 
-### Via Portage's repos.conf
+Finallty use `emaint` to sync the repo:
+> `emaint sync -r elementary`
 
-To install this overlay using Portage's built in repos.conf, be sure the repos.conf directory exists: `mkdir -p /etc/portage/repos.conf`
+### Using eselect
 
-Then wget the elementary.conf file in the base of the repository: `wget https://raw.githubusercontent.com/pimvullers/elementary/master/elementary.conf -O /etc/portage/repos.conf/elementary.conf`
+To install this overlay using eselect ([app-eselect/eselect-repository](https://packages.gentoo.org/packages/app-eselect/eselect-repository)) run the following command:
+> `eselect repository enable elementary`
 
-Then use `emaint` to sync the repo: `emaint sync -r elementary`
+Then use `emaint` to sync the repo:
+> `emaint sync -r elementary`
 
-## Want to chat?
+### Using Layman
 
-We have opened the [#gentoo-pantheon](https://webchat.freenode.net/?channels=gentoo-pantheon) channel on the Freenode IRC network. This is NOT a place to report issues (go [here](https://github.com/pimvullers/elementary/issues) for that), but it is a place for community to gather and discussion to take place.
+To install this overlay using Layman ([app-portage/layman](https://packages.gentoo.org/packages/app-portage/layman)) run the following command:
+> `layman -a elementary`
+
+To keep your checkout of the elementary overlay up-to-date run:
+> `layman -s elementary`
+
+Alternatively, to update all overlays managed by layman run:
+> `layman -S`
+
+## Installing the Pantheon desktop environment
+
+Just install the meta package to pull in all required packages (you can tweak using USE flags):
+> `emerge -va pantheon-meta`
+
+## Reporting bugs/issues
+
+For installation issues, and Gentoo integration problems, please use this repository's [issues page](https://github.com/pimvullers/elementary/issues).
+
+For other issues, please report them in the [upstream repositories](https://github.com/elementary/).

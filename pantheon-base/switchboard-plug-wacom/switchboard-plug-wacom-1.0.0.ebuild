@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/libgudev
 	dev-libs/libwacom
 	pantheon-base/switchboard

@@ -18,7 +18,7 @@ IUSE="example"
 
 RDEPEND="
 	>=dev-libs/glib-2.32:2
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	media-libs/clutter-gtk
 	>=x11-libs/gtk+-3.10:3
@@ -29,8 +29,6 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
-	eapply ${FILESDIR}/226.diff
-
 	eapply_user
 	vala_src_prepare
 }

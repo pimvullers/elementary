@@ -16,7 +16,7 @@ IUSE="systemd"
 
 DEPEND=""
 RDEPEND="${DEPEND}
-	dev-libs/granite
+	dev-libs/granite:0
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
 	sys-apps/accountsservice
@@ -26,7 +26,6 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/settings-daemon-${PV}"
 
 src_prepare() {
-	eapply "${FILESDIR}/gsd-deprecated-missing.patch"
 	eapply_user
 	vala_src_prepare
 }

@@ -3,9 +3,9 @@
 
 EAPI=7
 
-DESCRIPTION="Elementary OS mail reader"
-HOMEPAGE="https://github.com/elementary/mail"
-SRC_URI="https://github.com/elementary/mail/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Captive Network Assistant"
+HOMEPAGE="https://github.com/elementary/capnet-assist"
+SRC_URI="https://github.com/elementary/capnet-assist/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 inherit gnome2-utils meson vala xdg-utils
 
@@ -16,17 +16,15 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
-	dev-libs/folks
-	dev-libs/libgee:0.8
-	gui-libs/libhandy:1
+	dev-libs/granite:0
+	gui-libs/libhandy
+	app-crypt/gcr
 	net-libs/webkit-gtk:4
-	gnome-extra/evolution-data-server[vala]
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
 
-S="${WORKDIR}/mail-${PV}"
+S="${WORKDIR}/capnet-assist-${PV}"
 
 src_prepare() {
 	eapply_user

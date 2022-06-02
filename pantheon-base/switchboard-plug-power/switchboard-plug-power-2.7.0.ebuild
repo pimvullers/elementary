@@ -1,15 +1,15 @@
-# Copyright 1999-2020 Gentoo Foundation
+# Copyright 1999-2019 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-VALA_MIN_API_VERSION=0.20
+VALA_MIN_API_VERSION=0.22
 
 inherit meson vala
 
-DESCRIPTION="Switchboard Sharing Plug"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-sharing"
-SRC_URI="https://github.com/elementary/switchboard-plug-sharing/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Control system power consumption using Switchboard."
+HOMEPAGE="https://github.com/elementary/switchboard-plug-power"
+SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -20,6 +20,8 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:0
 	pantheon-base/switchboard
+	sys-apps/dbus
+	sys-auth/polkit
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}

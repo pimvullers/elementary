@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite
+	dev-libs/granite:0
 	gnome-extra/nm-applet
 	>=net-misc/networkmanager-1.8[vala]
 	pantheon-base/switchboard
