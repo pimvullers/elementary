@@ -30,8 +30,6 @@ RDEPEND="${DEPEND}
 S=${WORKDIR}/camera-${PV}
 
 src_prepare() {
-	eapply ${FILESDIR}/216.diff
-
 	eapply_user
 	vala_src_prepare
 }
