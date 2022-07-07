@@ -24,6 +24,7 @@ IUSE="apt doc +introspection qt5 test vala"
 RESTRICT="test" # bug 691962
 
 RDEPEND="
+	dev-libs/libxmlb
 	dev-db/lmdb:=
 	>=dev-libs/glib-2.58:2
 	dev-libs/libxml2:2
