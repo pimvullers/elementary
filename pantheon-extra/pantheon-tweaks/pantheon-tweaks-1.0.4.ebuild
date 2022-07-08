@@ -1,9 +1,9 @@
-# Copyright 1999-2021 Gentoo Foundation
+# Copyright 2022 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=7
 
-VALA_MIN_API_VERSION=0.22
+VALA_MIN_API_VERSION=0.40
 
 inherit gnome2-utils meson vala xdg-utils
 
@@ -14,7 +14,6 @@ SRC_URI="https://github.com/pantheon-tweaks/pantheon-tweaks/archive/refs/tags//$
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
