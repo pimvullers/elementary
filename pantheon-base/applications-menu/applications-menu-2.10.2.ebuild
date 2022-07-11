@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 VALA_MIN_API_VERSION="0.52"
 
@@ -48,16 +48,3 @@ src_configure() {
 	meson_src_configure
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-}
