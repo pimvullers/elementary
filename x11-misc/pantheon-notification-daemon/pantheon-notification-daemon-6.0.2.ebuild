@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit gnome2-utils meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Gtk notification server for Pantheon"
 HOMEPAGE="https://github.com/elementary/notifications"
@@ -33,14 +33,3 @@ src_prepare() {
 	vala_src_prepare
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-}
