@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit gnome2-utils meson
+inherit gnome2 meson
 
 DESCRIPTION="Default settings for the Pantheon Desktop Environment"
 HOMEPAGE="https://github.com/elementary/default-settings"
@@ -40,15 +40,3 @@ src_configure() {
 	meson_src_configure
 }
 
-
-pkg_preinst() {
-	GNOME2_ECLASS_GLIB_SCHEMAS=1 gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	GNOME2_ECLASS_GLIB_SCHEMAS=1 gnome2_schemas_update
-}
-
-pkg_postrm() {
-	GNOME2_ECLASS_GLIB_SCHEMAS=1 gnome2_schemas_update
-}
