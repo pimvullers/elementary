@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.40
 
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://github.com/elementary/terminal"
@@ -43,21 +43,5 @@ src_configure() {
 		-Dubuntu-bionic-patched-vte=$(usex patched true false)
 	)
 	meson_src_configure
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-	xdg_desktop_database_update
 }
 
