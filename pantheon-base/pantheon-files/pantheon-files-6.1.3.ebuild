@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.40
 
-inherit gnome2-utils meson vala xdg-utils systemd
+inherit gnome2 meson vala systemd
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"
 HOMEPAGE="https://github.com/elementary/files"
@@ -54,18 +54,3 @@ src_configure() {
 	meson_src_configure
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-	xdg_desktop_database_update
-}
