@@ -3,7 +3,7 @@
 
 EAPI=7
 
-inherit meson vala xdg-utils
+inherit meson vala xdg
 
 DESCRIPTION="LightDM Greeter for Pantheon"
 HOMEPAGE="https://github.com/elementary/greeter"
@@ -36,13 +36,5 @@ S="${WORKDIR}/greeter-${PV}"
 src_prepare() {
 	eapply_user
 	vala_src_prepare
-}
-
-pkg_postinst() {
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_desktop_database_update
 }
 
