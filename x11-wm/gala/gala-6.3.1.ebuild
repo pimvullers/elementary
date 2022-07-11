@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.28
 
-inherit gnome2-utils systemd meson vala xdg-utils
+inherit gnome2 systemd meson vala
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://github.com/elementary/gala"
@@ -51,16 +51,3 @@ src_configure() {
 	meson_src_configure
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}

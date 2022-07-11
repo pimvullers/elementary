@@ -5,10 +5,11 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.28
 
-inherit git-r3 gnome2-utils systemd meson vala xdg-utils
+inherit git-r3 gnome2 systemd meson vala
 
 DESCRIPTION="Pantheon's Window Manager"
 HOMEPAGE="https://github.com/elementary/gala"
+SRC_URI="" # Ignore gnome.org default SRC_URI due to gnome2 inherit
 EGIT_REPO_URI="https://github.com/elementary/gala.git"
 
 LICENSE="GPL-3"
@@ -51,16 +52,3 @@ src_configure() {
 	meson_src_configure
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
