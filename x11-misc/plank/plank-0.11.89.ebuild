@@ -4,7 +4,7 @@
 # Source overlay: https://github.com/BlueManCZ/edgets
 
 EAPI=7
-inherit autotools gnome2-utils vala xdg
+inherit autotools gnome2 vala
 
 DESCRIPTION="Elegant, simple, clean dock"
 HOMEPAGE="https://github.com/ricotz/plank"
@@ -61,12 +61,3 @@ src_configure() {
 		$(use_enable nls)
 }
 
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_pkg_postinst
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_pkg_postrm
-}
