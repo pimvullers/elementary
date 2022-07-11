@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.22
 
-inherit gnome2-utils meson vala xdg
+inherit gnome2 meson vala xdg
 
 DESCRIPTION="Modular desktop settings hub"
 HOMEPAGE="https://github.com/elementary/switchboard"
@@ -40,17 +40,3 @@ src_configure() {
 	meson_src_configure
 }
 
-pkg_preinst() {
-	gnome2_schemas_savelist
-	xdg_pkg_preinst
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_pkg_postinst
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_pkg_postrm
-}
