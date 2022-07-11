@@ -5,7 +5,7 @@ EAPI=7
 
 VALA_MIN_API_VERSION=0.40
 
-inherit meson vala xdg-utils
+inherit meson vala xdg
 
 DESCRIPTION="Parental controls support library"
 HOMEPAGE="https://gitlab.freedesktop.org/pwithnall/malcontent"
@@ -38,10 +38,3 @@ src_prepare() {
 	vala_src_prepare
 }
 
-pkg_postinst() {
-	xdg_icon_cache_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-}
