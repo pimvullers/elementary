@@ -3,8 +3,6 @@
 
 EAPI=7
 
-VALA_MIN_API_VERSION=0.28
-
 inherit git-r3 gnome2 systemd meson vala
 
 DESCRIPTION="Pantheon's Window Manager"
