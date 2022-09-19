@@ -38,7 +38,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dexample=$(usex example true false)
+		-Dexample=$(usex examples true false)
 	)
 	meson_src_configure
 }
