@@ -1,7 +1,8 @@
 # Copyright 2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
+
 inherit meson vala
 
 DESCRIPTION="Cloudproviders integration API"
@@ -24,11 +25,12 @@ DEPEND="
 BDEPEND="${DEPEND}
 	>=dev-libs/glib-2.51.2:2
 	introspection? ( dev-libs/gobject-introspection:= )
+	vala? ( $(vala_depend) )
 "
 
 src_prepare() {
 	eapply_user
-	vala_src_prepare
+	vala_setup
 }
 
 src_configure() {

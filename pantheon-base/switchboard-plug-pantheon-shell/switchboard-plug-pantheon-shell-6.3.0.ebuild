@@ -1,7 +1,7 @@
 # Copyright 1999-2020 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 VALA_MIN_API_VERSION=0.20
 
@@ -33,6 +33,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	vala_src_prepare
+	vala_setup
 }
 

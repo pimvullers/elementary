@@ -1,7 +1,7 @@
-# Copyright 1999-2021 Gentoo Authors
+# Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 VALA_MIN_API_VERSION=0.48
 
@@ -13,7 +13,7 @@ SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 
 LICENSE="LGPL-3+"
 SLOT="7"
-KEYWORDS="amd64"
+KEYWORDS="amd64 ~arm ~x86"
 IUSE="doc"
 
 RDEPEND="
@@ -29,7 +29,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	vala_src_prepare
+	vala_setup
 }
 
 src_configure() {

@@ -1,7 +1,7 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 DESCRIPTION="Elementary OS mail reader"
 HOMEPAGE="https://github.com/elementary/mail"
@@ -30,7 +30,7 @@ S="${WORKDIR}/mail-${PV}"
 
 src_prepare() {
 	eapply_user
-	vala_src_prepare
+	vala_setup
 }
 
 pkg_preinst() {

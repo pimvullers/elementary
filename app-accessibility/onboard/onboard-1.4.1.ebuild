@@ -1,15 +1,15 @@
 # Copyright 1999-2018 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=8
 
-PYTHON_COMPAT=( python3_{8,9,10} )
+PYTHON_COMPAT=( python3_{8,9,10,11} )
 
-inherit distutils-r1 gnome2-utils versionator
+inherit gnome2 distutils-r1
 
 DESCRIPTION="Onscreen keyboard for everybody who can't use a hardware keyboard"
 HOMEPAGE="https://launchpad.net/onboard"
-SRC_URI="https://launchpad.net/${PN}/$(get_version_component_range 1-2)/${PV}/+download/${P}.tar.gz"
+SRC_URI="https://launchpad.net/${PN}/$(ver_cut 1-2)/${PV}/+download/${P}.tar.gz"
 
 # po/* are licensed under BSD 3-clause
 LICENSE="GPL-3+ BSD"
@@ -49,29 +49,9 @@ DOCS=( AUTHORS CHANGELOG HACKING NEWS README onboard-defaults.conf.example
 	onboard-default-settings.gschema.override.example )
 PATCHES=( "${FILESDIR}/${P}-remove-duplicated-docs.patch" )
 
-src_prepare() {
-	distutils-r1_src_prepare
-	eapply_user
-}
-
 src_install() {
 	distutils-r1_src_install
 
-	# Delete duplicated docs installed by original dustutils
+	# Delete duplicated docs installed by original distutils
 	rm "${D}"/usr/share/doc/onboard/*
-}
-
-pkg_preinst() {
-	gnome2_icon_savelist
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	gnome2_icon_cache_update
-	gnome2_schemas_update
 }

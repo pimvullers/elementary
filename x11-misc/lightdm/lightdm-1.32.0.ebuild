@@ -1,18 +1,18 @@
 # Copyright 1999-2022 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit autotools pam qmake-utils readme.gentoo-r1 systemd vala xdg-utils
 
 DESCRIPTION="A lightweight display manager"
-HOMEPAGE="https://github.com/CanonicalLtd/lightdm"
-SRC_URI="https://github.com/CanonicalLtd/lightdm/releases/download/${PV}/${P}.tar.xz
+HOMEPAGE="https://github.com/canonical/lightdm"
+SRC_URI="https://github.com/canonical/lightdm/releases/download/${PV}/${P}.tar.xz
 	mirror://gentoo/introspection-20110205.m4.tar.bz2"
 
 LICENSE="GPL-3 LGPL-3"
 SLOT="0"
-KEYWORDS="~alpha amd64 arm arm64 ~loong ppc ppc64 ~riscv x86"
+KEYWORDS="~alpha amd64 ~arm ~arm64 ~loong ~ppc ~ppc64 ~riscv ~x86"
 IUSE="audit +gnome +gtk +introspection non-root qt5 vala"
 
 COMMON_DEPEND="
@@ -51,8 +51,14 @@ DOCS=( NEWS )
 RESTRICT="test"
 REQUIRED_USE="vala? ( introspection )"
 
+PATCHES=(
+	"${FILESDIR}"/${PN}-1.30.0-musl-locale.patch
+	"${FILESDIR}"/${PN}-1.30.0-musl-updwtmpx.patch
+)
+
 pkg_setup() {
 	export LIGHTDM_USER=${LIGHTDM_USER:-lightdm}
+	vala_setup
 }
 
 src_prepare() {
@@ -80,8 +86,6 @@ src_prepare() {
 	else
 		AT_M4DIR=${WORKDIR} eautoreconf
 	fi
-
-	use vala && vala_src_prepare
 }
 
 src_configure() {
@@ -104,7 +108,6 @@ src_configure() {
 		--disable-tests
 		$(use_enable audit libaudit)
 		$(use_enable introspection)
-		--disable-liblightdm-qt
 		$(use_enable qt5 liblightdm-qt5)
 		$(use_enable vala)
 		--with-user-session=${_session}

@@ -1,7 +1,7 @@
 # Copyright 2021 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit gnome2-utils meson vala xdg-utils
 
@@ -48,7 +48,7 @@ S="${WORKDIR}/photos-${PV}"
 
 src_prepare() {
 	eapply_user
-	vala_src_prepare
+	vala_setup
 }
 
 src_configure() {

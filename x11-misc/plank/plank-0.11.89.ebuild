@@ -3,7 +3,7 @@
 
 # Source overlay: https://github.com/BlueManCZ/edgets
 
-EAPI=7
+EAPI=8
 inherit autotools gnome2 vala
 
 DESCRIPTION="Elegant, simple, clean dock"
@@ -48,7 +48,7 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	eautoreconf
-	vala_src_prepare
+	vala_setup
 }
 
 src_configure() {

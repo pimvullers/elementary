@@ -1,14 +1,14 @@
 # Copyright 1999-2021 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=6
+EAPI=8
 
 PYTHON_COMPAT=( python3_{6,7,8,9,10} )
 VALA_MIN_API_VERSION=0.22
 
-inherit autotools bash-completion-r1 python-r1 vala versionator xdg
+inherit autotools bash-completion-r1 python-r1 vala xdg
 
-DIR_PV=$(get_version_component_range 1-2)
+DIR_PV=$(ver_cut 1-2)
 
 DESCRIPTION="Service to log activities and present to other apps"
 HOMEPAGE="https://launchpad.net/zeitgeist/"
@@ -55,8 +55,8 @@ src_prepare() {
 	sed -e 's:@libexecdir@:@pkglibexecdir@:' \
 		-i extensions/fts++/zeitgeist-fts.service.in
 
-	vala_src_prepare
-	xdg_src_prepare
+	eapply_user
+	vala_setup
 	eautoreconf
 }
 

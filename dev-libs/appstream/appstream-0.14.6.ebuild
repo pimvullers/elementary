@@ -1,7 +1,7 @@
 # Copyright 1999-2021 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
-EAPI=7
+EAPI=8
 
 inherit meson vala xdg-utils
 
@@ -56,7 +56,7 @@ src_prepare() {
 	if ! use test; then
 		sed -e "/^subdir.*tests/s/^/#DONT /" -i {,qt/}meson.build || die # bug 675944
 	fi
-	vala_src_prepare
+	vala_setup
 }
 
 src_configure() {
