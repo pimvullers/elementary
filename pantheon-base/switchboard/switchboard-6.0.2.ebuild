@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/switchboard/archive/${PV}.tar.gz -> ${P}.
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="example"
+IUSE="examples"
 
 RDEPEND="
 	>=dev-libs/glib-2.32:2
@@ -35,8 +35,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Dexample=$(usex example true false)
+		-Dexample=$(usex examples true false)
 	)
 	meson_src_configure
 }
-

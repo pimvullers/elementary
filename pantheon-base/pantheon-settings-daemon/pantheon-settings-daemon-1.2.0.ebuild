@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit gnome2 meson vala
+inherit systemd gnome2 meson vala
 
 DESCRIPTION="Pantheon settings daemon"
 HOMEPAGE="https://github.com/elementary/settings-daemon"
@@ -36,4 +36,3 @@ src_configure() {
 	)
 	meson_src_configure
 }
-

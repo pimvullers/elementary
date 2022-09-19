@@ -1,2 +1,4 @@
-ubuntu - Apply patches from Ubuntu
+examples - Install examples, usually source code
+pantheon - Add Pantheon support
+plugins - Install plugins, offering additional functionality
 zeitgeist - Add support for Zeitgeist event tracking system

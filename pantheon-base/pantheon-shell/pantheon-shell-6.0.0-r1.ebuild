@@ -37,7 +37,6 @@ PDEPEND="
 
 S="${WORKDIR}/session-settings-${PV}"
 
-
 src_prepare() {
 	eapply_user
 
@@ -46,4 +45,3 @@ src_prepare() {
 	use accessibility || sed -i -e "/onboard/d" session/meson.build
 	use gnome-keyring || sed -i -e "/gnome-keyring/d" session/meson.build
 }
-

@@ -34,7 +34,6 @@ src_prepare() {
 	vala_setup
 }
 
-
 pkg_preinst() {
 	gnome2_schemas_savelist
 }

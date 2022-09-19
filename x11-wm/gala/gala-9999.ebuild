@@ -12,7 +12,6 @@ EGIT_REPO_URI="https://github.com/elementary/gala.git"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
 IUSE="systemd"
 
 VALA_USE_DEPEND="vapigen"
@@ -49,4 +48,3 @@ src_configure() {
 	)
 	meson_src_configure
 }
-

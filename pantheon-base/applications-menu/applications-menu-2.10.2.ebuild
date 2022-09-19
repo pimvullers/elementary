@@ -47,4 +47,3 @@ src_configure() {
 	)
 	meson_src_configure
 }
-

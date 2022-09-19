@@ -12,10 +12,9 @@ HOMEPAGE="https://github.com/ricotz/plank"
 if [[ ${PV} == 9999 ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="${HOMEPAGE}.git"
-	KEYWORDS=""
 else
-	SRC_URI="${HOMEPAGE}/archive/${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+	SRC_URI="https://github.com/ricotz/plank/archive/${PV}.tar.gz -> ${P}.tar.gz"
+	KEYWORDS="amd64 ~arm ~arm64 ~x86"
 fi
 
 LICENSE="GPL-3"
@@ -60,4 +59,3 @@ src_configure() {
 		$(use_enable debug) \
 		$(use_enable nls)
 }
-

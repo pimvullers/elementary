@@ -14,7 +14,6 @@ EGIT_REPO_URI="https://github.com/elementary/applications-menu.git"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
 IUSE="zeitgeist"
 
 DEPEND="
@@ -48,4 +47,3 @@ src_configure() {
 	)
 	meson_src_configure
 }
-

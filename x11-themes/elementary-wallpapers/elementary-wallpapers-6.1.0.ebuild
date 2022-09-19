@@ -7,7 +7,7 @@ inherit meson
 
 DESCRIPTION="Wallpapers for elementary OS"
 HOMEPAGE="https://github.com/elementary/wallpapers"
-SRC_URI="https://github.com/elementary/wallpapers/archive/${PV}.tar.gz"
+SRC_URI="https://github.com/elementary/wallpapers/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="metapackage"
 SLOT="0"
@@ -18,4 +18,3 @@ DEPEND=""
 RDEPEND="${DEPEND}"
 
 S=${WORKDIR}/wallpapers-${PV}
-

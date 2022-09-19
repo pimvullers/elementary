@@ -12,7 +12,7 @@ SRC_URI="https://github.com/elementary/photos/archive/${PV}.tar.gz -> ${P}.tar.g
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="plugins docs"
+IUSE="plugins doc"
 
 DEPEND="
 	$(vala_depend)
@@ -54,7 +54,7 @@ src_prepare() {
 src_configure() {
 	local emesonargs=(
 		-Dplugins=$(usex plugins true false)
-		-Ddocumentation=$(usex docs true false)
+		-Ddocumentation=$(usex doc true false)
 	)
 	meson_src_configure
 }
@@ -74,4 +74,3 @@ pkg_postrm() {
 	gnome2_schemas_update
 	xdg_desktop_database_update
 }
-

@@ -33,4 +33,3 @@ src_prepare() {
 	eapply_user
 	vala_setup
 }
-

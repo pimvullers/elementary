@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/terminal/archive/${PV}.tar.gz -> ${P}.tar
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="patched"
+IUSE=""
 
 RDEPEND="
 	dev-libs/libgee:0.8
@@ -32,15 +32,6 @@ DEPEND="${RDEPEND}
 
 S="${WORKDIR}/terminal-${PV}"
 
-src_prepare() {
-	eapply_user
+pkg_setup() {
 	vala_setup
 }
-
-src_configure() {
-	local emesonargs=(
-		-Dubuntu-bionic-patched-vte=$(usex patched true false)
-	)
-	meson_src_configure
-}
-

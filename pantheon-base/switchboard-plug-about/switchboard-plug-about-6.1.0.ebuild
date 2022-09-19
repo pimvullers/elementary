@@ -38,4 +38,3 @@ src_prepare() {
 pkg_postinst() {
 	use systemd || einfo "Ensure openrc-settingsd is running when you want to use this plug."
 }
-

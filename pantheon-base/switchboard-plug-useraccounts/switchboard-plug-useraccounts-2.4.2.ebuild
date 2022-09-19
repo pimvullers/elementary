@@ -38,4 +38,3 @@ src_prepare() {
 
 	vala_setup
 }
-
