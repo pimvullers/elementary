@@ -1,0 +1,35 @@
+diff -Naur portals-1.2.0/data/meson.build portals-1.2.0_patched/data/meson.build
+--- portals-1.2.0/data/meson.build	2022-10-27 18:44:00.000000000 +0200
++++ portals-1.2.0_patched/data/meson.build	2022-10-28 21:29:21.823438147 +0200
+@@ -11,19 +11,6 @@
+     install_dir: join_paths(datadir, 'dbus-1', 'services')
+ )
+ 
+-systemd_systemduserunitdir = get_option('systemduserunitdir')
+-if systemd_systemduserunitdir == ''
+-    systemd_systemduserunitdir = systemd_dep.get_pkgconfig_variable('systemduserunitdir', define_variable: ['prefix', prefix])
+-endif
+-
+-configure_file(
+-    input: meson.project_name() + '.service.in',
+-    output: '@BASENAME@',
+-    configuration: conf_data,
+-    install: true,
+-    install_dir: systemd_systemduserunitdir
+-)
+-
+ i18n.merge_file(
+     input: 'portals.appdata.xml.in',
+     output: 'io.elementary.portals.appdata.xml',
+diff -Naur portals-1.2.0/meson.build portals-1.2.0_patched/meson.build
+--- portals-1.2.0/meson.build	2022-10-27 18:44:00.000000000 +0200
++++ portals-1.2.0_patched/meson.build	2022-10-28 21:32:10.713444909 +0200
+@@ -7,8 +7,6 @@
+ libexecdir = join_paths(prefix, get_option('libexecdir'))
+ localedir = join_paths(prefix, get_option('localedir'))
+ 
+-systemd_dep = dependency('systemd')
+-
+ glib_dep = dependency('glib-2.0')
+ gobject_dep = dependency('gobject-2.0')
+ gio_dep = dependency('gio-2.0')
