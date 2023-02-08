@@ -29,7 +29,9 @@ DEPEND="${RDEPEND}
 S="${WORKDIR}/mail-${PV}"
 
 src_prepare() {
+	eapply "${FILESDIR}/794.patch"
 	eapply_user
+
 	vala_setup
 }
 

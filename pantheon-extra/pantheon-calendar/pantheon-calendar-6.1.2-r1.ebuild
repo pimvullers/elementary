@@ -42,7 +42,9 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/calendar-${PV}"
 
 src_prepare() {
-	default
+	eapply "${FILESDIR}/9c6308b2a1f3a57b1c5fffbbc2550a08fefe2cca.patch"
+	eapply_user
+
 	vala_setup
 }
 
