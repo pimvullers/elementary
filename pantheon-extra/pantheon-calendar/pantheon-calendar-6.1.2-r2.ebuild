@@ -35,7 +35,7 @@ RDEPEND="${DEPEND}
 	media-libs/clutter-gtk:1.0
 	media-libs/libchamplain:0.12[gtk,vala]
 	net-libs/libsoup:2.4
-	sci-geosciences/geocode-glib
+	sci-geosciences/geocode-glib:0
 	>=x11-libs/gtk+-3.22:3
 "
 
