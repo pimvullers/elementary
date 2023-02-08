@@ -21,7 +21,7 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	dev-libs/libical
-	gnome-extra/evolution-data-server
+	<gnome-extra/evolution-data-server-3.46
 	media-libs/clutter:1.0
 	media-libs/clutter-gtk:1.0
 	media-libs/libchamplain:0.12[gtk]
