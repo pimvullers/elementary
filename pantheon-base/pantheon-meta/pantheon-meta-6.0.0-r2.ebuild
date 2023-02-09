@@ -40,7 +40,6 @@ RDEPEND="${DEPEND}
 		pantheon-extra/pantheon-music
 		pantheon-extra/pantheon-photos
 		pantheon-extra/pantheon-screenshot
-		pantheon-extra/pantheon-tasks
 		pantheon-extra/pantheon-tweaks
 		pantheon-extra/pantheon-videos
 		pantheon-extra/shortcut-overlay
@@ -85,3 +84,5 @@ RDEPEND="${DEPEND}
 	x11-misc/lightdm
 	>=x11-terms/pantheon-terminal-6.0.0
 "
+#	!minimal? ( pantheon-extra/pantheon-tasks )
+
