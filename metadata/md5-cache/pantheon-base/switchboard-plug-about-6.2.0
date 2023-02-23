@@ -1,0 +1,15 @@
+BDEPEND=>=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
+DEFINED_PHASES=compile configure install postinst prepare test
+DEPEND=sys-apps/fwupd[introspection] dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard x11-libs/gtk+:3 systemd? ( sys-apps/systemd ) !systemd? ( app-admin/openrc-settingsd ) || ( dev-lang/vala:0.56 ) virtual/pkgconfig
+DESCRIPTION=Switchboard plug to show system information
+EAPI=8
+HOMEPAGE=https://github.com/elementary/switchboard-plug-about
+INHERIT=meson vala
+IUSE=systemd
+KEYWORDS=amd64
+LICENSE=GPL-3
+RDEPEND=sys-apps/fwupd[introspection] dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard x11-libs/gtk+:3 systemd? ( sys-apps/systemd ) !systemd? ( app-admin/openrc-settingsd )
+SLOT=0
+SRC_URI=https://github.com/elementary/switchboard-plug-about/archive/6.2.0.tar.gz -> switchboard-plug-about-6.2.0.tar.gz
+_eclasses_=multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	38c85b725d0467e51954ea921b6c104b	toolchain-funcs	6001248ef162a5fa2a21ce132a212f6b	multilib	5ca4e49abed8e3a2f7b56920eadee157	python-utils-r1	429bfd4e8d8e39db5385ba5744f30788	meson	1994a5aef5d4f5798b92f64d6f9a6003	vala	2633382950a3a9ce912c9258150d5db8
+_md5_=0211e14b89c3a540313d4183050039aa
