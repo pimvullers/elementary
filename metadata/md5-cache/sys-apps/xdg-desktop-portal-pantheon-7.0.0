@@ -1,14 +1,15 @@
 BDEPEND=>=dev-util/meson-0.62.2 >=dev-util/ninja-1.8.2 dev-util/meson-format-array
 DEFINED_PHASES=compile configure install prepare test
-DEPEND=dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard x11-libs/gtk+:3 || ( dev-lang/vala:0.56 ) virtual/pkgconfig
-DESCRIPTION=Switchboard plug to show displays information
+DEPEND=dev-libs/granite:0 gui-libs/libhandy:1 x11-libs/gtk+:3 x11-libs/vte:2.91
+DESCRIPTION=Pantheon XDG Desktop Portals
 EAPI=8
-HOMEPAGE=https://github.com/elementary/switchboard-plug-display
+HOMEPAGE=https://github.com/elementary/portals
 INHERIT=meson vala
+IUSE=systemd
 KEYWORDS=amd64
 LICENSE=GPL-3
-RDEPEND=dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard x11-libs/gtk+:3
+RDEPEND=dev-libs/granite:0 gui-libs/libhandy:1 x11-libs/gtk+:3 x11-libs/vte:2.91 systemd? ( sys-apps/systemd )
 SLOT=0
-SRC_URI=https://github.com/elementary/switchboard-plug-display/archive/2.3.3.tar.gz -> switchboard-plug-display-2.3.3.tar.gz
+SRC_URI=https://github.com/elementary/portals/archive/refs/tags/1.2.0.tar.gz -> xdg-desktop-portal-pantheon-7.0.0.tar.gz
 _eclasses_=multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	38c85b725d0467e51954ea921b6c104b	toolchain-funcs	6001248ef162a5fa2a21ce132a212f6b	multilib	5ca4e49abed8e3a2f7b56920eadee157	python-utils-r1	429bfd4e8d8e39db5385ba5744f30788	meson	1994a5aef5d4f5798b92f64d6f9a6003	vala	2633382950a3a9ce912c9258150d5db8
-_md5_=8a95749779670cafc0a0bf3313faf928
+_md5_=d163961ab4305700bb9beb6877787945
