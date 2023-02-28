@@ -7,7 +7,7 @@ inherit meson vala
 
 DESCRIPTION="Pantheon XDG Desktop Portals"
 HOMEPAGE="https://github.com/elementary/portals"
-SRC_URI="https://github.com/elementary/portals/archive/refs/tags/1.2.0.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/elementary/portals/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
