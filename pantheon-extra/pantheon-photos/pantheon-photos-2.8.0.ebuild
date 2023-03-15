@@ -40,7 +40,7 @@ RDEPEND="${DEPEND}
 	>=net-libs/libsoup-2.26:2.4
 	>=net-libs/rest-0.7:0.7
 	>=net-libs/webkit-gtk-2.0.0:4
-	sci-geosciences/geocode-glib
+	sci-geosciences/geocode-glib:0
 	>=x11-libs/gtk+-3.6.0:3
 "
 
