@@ -28,8 +28,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig"
 
 src_prepare() {
-	eapply "${FILESDIR}/244.patch"
-
 	eapply_user
 	vala_setup
 }
