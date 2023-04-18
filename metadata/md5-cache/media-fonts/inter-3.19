@@ -10,5 +10,5 @@ KEYWORDS=amd64 ~arm ~arm64 ~x86 ~x86-linux ~x64-macos
 LICENSE=OFL-1.1
 SLOT=0
 SRC_URI=https://github.com/rsms/inter/releases/download/v3.19/Inter-3.19.zip
-_eclasses_=font	5e03cb70902daa9ff8967c61130f0f60
+_eclasses_=font	aa113a3df9cd0a9693a1c1ee7c34a6eb
 _md5_=4e67e5b8b0575af88632a4e21270a730

@@ -35,3 +35,9 @@ S="${WORKDIR}/terminal-${PV}"
 pkg_setup() {
 	vala_setup
 }
+
+src_prepare() {
+	eapply "${FILESDIR}/drop-tests.patch"
+	eapply_user
+}
+
