@@ -3,7 +3,7 @@
 
 EAPI=8
 
-PYTHON_COMPAT=( python3_{6,7,8,9,10} )
+PYTHON_COMPAT=( python3_{6,7,8,9,10,11} )
 VALA_MIN_API_VERSION=0.22
 
 inherit autotools bash-completion-r1 python-r1 vala xdg
