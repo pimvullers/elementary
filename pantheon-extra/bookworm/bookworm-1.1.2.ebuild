@@ -12,13 +12,9 @@ SRC_URI="https://github.com/babluboy/${PN}/archive/refs/tags/${PV}.tar.gz -> ${P
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-
+IUSE="comics"
 DEPEND="
-	app-arch/unzip
-	app-arch/unar
 	app-text/poppler[utils]
-	dev-python/html2text
-	dev-lang/python:2.7
 	x11-libs/gtk+:3
 	dev-libs/libgee:0.8
 	dev-libs/granite:0
@@ -27,7 +23,11 @@ DEPEND="
 	net-libs/webkit-gtk:4
 	dev-libs/appstream
 "
-RDEPEND="${DEPEND}"
+RDEPEND="${DEPEND}
+	app-arch/unzip
+	dev-python/html2text
+	dev-lang/python:2.7
+	comics? ( app-arch/unar )"
 BDEPEND=""
 
 src_prepare() {
