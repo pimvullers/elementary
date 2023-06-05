@@ -9,6 +9,6 @@ KEYWORDS=amd64
 LICENSE=GPL-3
 RDEPEND=dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard >=sys-auth/polkit-0.115 x11-libs/gtk+:3 gnome-extra/zeitgeist
 SLOT=0
-SRC_URI=https://github.com/elementary/switchboard-plug-security-privacy/archive/2.4.1.tar.gz -> switchboard-plug-security-privacy-2.4.1.tar.gz
+SRC_URI=https://github.com/elementary/switchboard-plug-security-privacy/archive/7.0.0.tar.gz -> switchboard-plug-security-privacy-7.0.0.tar.gz
 _eclasses_=toolchain-funcs	14a8ae365191b518fad51caad7a08f3e	multilib	c19072c3cd7ac5cb21de013f7e9832e0	xdg-utils	baea6080dd821f5562d715887954c9d3	gnome2-utils	b0183db3b2e07b18f3b77bffec72e116	multiprocessing	b4e253ab22cef7b1085e9b67c7a3b730	ninja-utils	76050953ad5b70d7e09a6ca55558db92	python-utils-r1	ba15b8b81f30ca448294d759a9f7902c	meson	915ec7c25e08d7886558215e6809ca1e	vala	1343f639cc74d2aa8b36fc08677da58d
 _md5_=e345ab9b8d02ab71b2ad978bb42b8154
