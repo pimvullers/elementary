@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 LICENSE="LGPL-3+"
 SLOT="7"
 KEYWORDS="amd64 ~arm ~x86"
-IUSE="doc"
+IUSE="demo doc"
 
 RDEPEND="
 	>=dev-libs/glib-2.50:2
@@ -29,6 +29,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
+	use demo || sed -i -e '/demo/d' meson.build
 	vala_setup
 }
 
