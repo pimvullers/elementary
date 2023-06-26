@@ -27,7 +27,7 @@ S="${WORKDIR}/portals-${PV}"
 
 src_prepare() {
 	eapply_user
-	use systemd || eapply "${FILESDIR}/${P}.patch"
+	use systemd || eapply "${FILESDIR}/${PN}-7.0.0.patch"
 	vala_setup
 }
 
