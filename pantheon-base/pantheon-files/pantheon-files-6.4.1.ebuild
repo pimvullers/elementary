@@ -30,7 +30,7 @@ RDEPEND="${DEPEND}
 	gui-libs/libhandy
 	zeitgeist? ( >=gnome-extra/zeitgeist-1.0.2 )
 	>=x11-misc/plank-0.10.9
-	dev-libs/libcloudproviders[vala]
+	net-libs/libcloudproviders[vala]
 	dev-libs/libgit2-glib[vala]
 	>=media-libs/libcanberra-0.30
 	>=x11-libs/libnotify-0.7.2
