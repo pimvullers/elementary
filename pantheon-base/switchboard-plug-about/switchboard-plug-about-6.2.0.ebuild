@@ -18,6 +18,7 @@ IUSE="systemd"
 
 RDEPEND="
 	sys-apps/fwupd[introspection]
+	sys-fs/udisks[introspection]
 	dev-libs/glib:2
 	dev-libs/granite:0
 	pantheon-base/switchboard
