@@ -42,6 +42,7 @@ BDEPEND="
 	gnome-base/gnome-common
 	dev-util/gdbus-codegen
 	dev-util/gtk-doc
+	dev-python/lxml
 "
 
 src_prepare() {
