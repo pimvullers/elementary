@@ -30,7 +30,7 @@ RDEPEND="dev-libs/atk
 	dev-libs/libdbusmenu[gtk,gtk3]
 	dev-libs/libgee
 	sys-libs/glibc
-	x11-libs/bamf
+	x11-libs/bamf[introsopection]
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf
 	x11-libs/gtk+:3
