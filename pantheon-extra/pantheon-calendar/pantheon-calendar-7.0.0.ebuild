@@ -29,6 +29,7 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	dev-libs/libical
+	dev-libs/libportal
 	>=gnome-extra/evolution-data-server-3.8
 	>=gui-libs/libhandy-0.90.0:1
 	media-libs/clutter:1.0
@@ -42,7 +43,6 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/calendar-${PV}"
 
 src_prepare() {
-	eapply "${FILESDIR}/9c6308b2a1f3a57b1c5fffbbc2550a08fefe2cca.patch"
 	eapply_user
 
 	vala_setup

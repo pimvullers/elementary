@@ -33,6 +33,7 @@ src_prepare() {
 src_configure() {
 	local emesonargs=(
 		-Dsystemduserunitdir=$(usex systemd $(systemd_get_userunitdir) no)
+		-Dsystemdsystemunitdir=$(usex systemd $(systemd_get_systemunitdir) no)
 	)
 	meson_src_configure
 }
