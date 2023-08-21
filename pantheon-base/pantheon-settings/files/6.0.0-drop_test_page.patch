@@ -6,11 +6,11 @@
  # CUPS Printing testpage
 -install_data(
 -    'cups/default-testpage.pdf',
--    install_dir: join_paths(datadir, 'cups', 'data')
+-    install_dir: datadir / 'cups' / 'data'
 -)
 +#install_data(
-+#   'cups/default-testpage.pdf',
-+#    install_dir: join_paths(datadir, 'cups', 'data')
++#    'cups/default-testpage.pdf',
++#    install_dir: datadir / 'cups' / 'data'
 +#)
  
  # GTK3 Settings

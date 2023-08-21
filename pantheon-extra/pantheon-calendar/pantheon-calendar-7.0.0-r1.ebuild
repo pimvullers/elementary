@@ -29,15 +29,14 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	dev-libs/libical
-	dev-libs/libportal
-	>=gnome-extra/evolution-data-server-3.8
-	>=gui-libs/libhandy-0.90.0:1
+	dev-libs/libportal[gtk]
+	gnome-extra/evolution-data-server
+	gui-libs/libhandy:1
 	media-libs/clutter:1.0
 	media-libs/clutter-gtk:1.0
 	media-libs/libchamplain:0.12[gtk,vala]
-	net-libs/libsoup:2.4
-	sci-geosciences/geocode-glib:0
-	>=x11-libs/gtk+-3.22:3
+	sci-geosciences/geocode-glib:2
+	x11-libs/gtk+:3
 "
 
 S="${WORKDIR}/calendar-${PV}"

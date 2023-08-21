@@ -22,32 +22,28 @@ DEPEND="
 "
 
 RDEPEND="${DEPEND}
-	>=dev-db/sqlite-3.5.9:3
-	>=dev-libs/glib-2.30:2
+	dev-db/sqlite:3
+	dev-libs/glib:2
 	dev-libs/granite:0
-	dev-libs/json-glib
-	>=dev-libs/libgudev-145
-	>=dev-libs/libgee-0.8.5:0.8
-	>=dev-libs/libxml2-2.6.32:2[python]
+	dev-libs/libgudev
+	dev-libs/libgee:0.8
 	gui-libs/libhandy:1
-	>=media-libs/gexiv2-0.4.90
-	>=media-libs/gstreamer-1.0.0:1.0
-	>=media-libs/gst-plugins-base-1.0.0:1.0
-	>=media-libs/libexif-0.6.16
-	>=media-libs/libgphoto2-2.4.2
-	>=media-libs/libraw-0.13.2
-	>=media-libs/libwebp-0.4.4
-	>=net-libs/libsoup-2.26:2.4
-	>=net-libs/rest-0.7:0.7
-	>=net-libs/webkit-gtk-2.0.0:4
-	sci-geosciences/geocode-glib:0
-	>=x11-libs/gtk+-3.6.0:3
+	media-libs/gexiv2
+	media-libs/gstreamer:1.0
+	media-libs/gst-plugins-base:1.0
+	media-libs/libexif
+	media-libs/libgphoto2
+	media-libs/libraw
+	media-libs/libwebp
+	sci-geosciences/geocode-glib:2
+	x11-libs/gtk+:3
 "
 
 S="${WORKDIR}/photos-${PV}"
 
 src_prepare() {
 	eapply_user
+	eapply "${FILESDIR}/746.patch"
 	vala_setup
 }
 
