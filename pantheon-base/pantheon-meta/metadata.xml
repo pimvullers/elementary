@@ -6,7 +6,4 @@
 		<name>Pim Vullers</name>
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
-	<use>
-		<flag name="archive">Add archive support</flag>
-	</use>
 </pkgmetadata>
