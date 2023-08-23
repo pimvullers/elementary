@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+
+<pkgmetadata>
+  <maintainer type="person">
+    <name>Pim Vullers</name>
+    <email>elementary@vullersmail.nl</email>
+  </maintainer>
+  <upstream>
+    <remote-id type="github">elementary/code</remote-id>
+  </upstream>
+  <use>
+    <flag name="plugins">Build and install additional plugins</flag>
+  </use>
+</pkgmetadata>

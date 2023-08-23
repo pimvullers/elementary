@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.22
-
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="Location services agent"
 HOMEPAGE="https://github.com/elementary/pantheon-agent-geoclue2"
@@ -30,18 +28,4 @@ RDEPEND="${DEPEND}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_desktop_database_update
 }

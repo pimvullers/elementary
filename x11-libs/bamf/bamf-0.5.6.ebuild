@@ -15,8 +15,8 @@ if [[ ${PV} == 9999 ]]; then
 	inherit git-r3
 	EGIT_REPO_URI="https://git.launchpad.net/bamf"
 else
-	SRC_URI="https://launchpad.net/bamf/0.5/${PV}/+download/${P}.tar.gz"
-	KEYWORDS="~alpha amd64 ~arm ~arm64 ~hppa ~ia64 ~ppc ~ppc64 ~sparc ~x86"
+	SRC_URI="https://launchpad.net/bamf/$(ver_cut 1-2)/${PV}/+download/${P}.tar.gz"
+	KEYWORDS="amd64"
 fi
 
 LICENSE="LGPL-3"

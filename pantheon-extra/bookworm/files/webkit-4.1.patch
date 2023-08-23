@@ -1,0 +1,45 @@
+diff -Naur bookworm-1.1.2_orig/meson.build bookworm-1.1.2/meson.build
+--- bookworm-1.1.2_orig/meson.build	2023-08-23 19:42:21.192350438 +0200
++++ bookworm-1.1.2/meson.build	2023-08-23 19:42:44.569018712 +0200
+@@ -62,7 +62,7 @@
+     dependencies: [
+         dependency('gtk+-3.0'),
+         dependency('gee-0.8'),
+-        dependency('webkit2gtk-4.0'),
++        dependency('webkit2gtk-4.1'),
+         dependency('poppler-glib'),
+         dependency('libxml-2.0'),
+         dependency('granite', version: '>=0.5'),
+diff -Naur bookworm-1.1.2_orig/src/utils.vala bookworm-1.1.2/src/utils.vala
+--- bookworm-1.1.2_orig/src/utils.vala	2023-08-23 19:42:21.199017105 +0200
++++ bookworm-1.1.2/src/utils.vala	2023-08-23 19:53:00.539061312 +0200
+@@ -639,7 +639,7 @@
+ 		}
+ 
+ 		public static string decodeHTMLChars(string inputString){
+-			string outputString = Soup.URI.decode(inputString);
++			string outputString = GLib.Uri.unescape_string(inputString);
+ 			return outputString;
+ 		}
+ 
+@@ -649,7 +649,7 @@
+ 		}
+ 
+ 		public static string removeMarkUp(string inputString){
+-			string outputString = Soup.URI.decode(inputString);
++			string outputString = GLib.Uri.unescape_string(inputString);
+ 			//replace the escape char for space present in HTML converted from PDF
+ 			outputString = outputString.replace("&#160;", " ").replace("#160;", " ").replace("&#160", " ");
+ 			return outputString;
+diff -Naur bookworm-1.1.2_orig/src/window.vala bookworm-1.1.2/src/window.vala
+--- bookworm-1.1.2_orig/src/window.vala	2023-08-23 19:42:21.199017105 +0200
++++ bookworm-1.1.2/src/window.vala	2023-08-23 19:53:09.169061904 +0200
+@@ -448,7 +448,7 @@
+                 WebKit.NavigationAction aNavAction = aNavDecision.get_navigation_action();
+                 WebKit.URIRequest aURIReq = aNavAction.get_request ();
+                 string url_clicked_on_webview = BookwormApp.Utils.decodeHTMLChars(aURIReq.get_uri().strip());
+-                url_clicked_on_webview = Soup.URI.decode(url_clicked_on_webview);
++                url_clicked_on_webview = GLib.Uri.unescape_string(url_clicked_on_webview);
+                 debug("URL Captured:"+url_clicked_on_webview);
+ 
+                 //Handle external links (not file://) by opening the default browser i.e. http://, ftp://

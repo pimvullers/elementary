@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.34
-
-inherit gnome2-utils meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Adjust Locale settings using Switchboard."
 HOMEPAGE="https://github.com/elementary/switchboard-plug-locale"
@@ -34,16 +32,4 @@ DEPEND="${RDEPEND}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
 }

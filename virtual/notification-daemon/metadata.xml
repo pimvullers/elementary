@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="project">
+		<email>freedesktop-bugs@gentoo.org</email>
+	</maintainer>
+	<maintainer type="person">
+		<name>Pim Vullers</name>
+		<email>elementary@vullersmail.nl</email>
+	</maintainer>
+	<stabilize-allarches/>
+	<use>
+		<flag name="pantheon">Add Pantheon desktop environment support</flag>
+	</use>
+</pkgmetadata>

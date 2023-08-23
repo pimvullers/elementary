@@ -12,7 +12,7 @@ EGIT_REPO_URI="https://github.com/elementary/dock.git"
 
 LICENSE="GPL-3"
 SLOT="0"
-KEYWORDS="~amd64"
+KEYWORDS=""
 
 DEPEND="gui-libs/gtk"
 RDEPEND="${DEPEND}"
@@ -22,4 +22,3 @@ src_prepare() {
 	eapply_user
 	vala_setup
 }
-

@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="The camera app designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/camera"
@@ -32,18 +32,4 @@ S=${WORKDIR}/camera-${PV}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
 }

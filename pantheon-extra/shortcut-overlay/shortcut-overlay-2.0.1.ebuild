@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="A native OS-wide shortcut overlay to be launched by Gala"
 HOMEPAGE="https://github.com/elementary/shortcut-overlay"
@@ -29,12 +29,4 @@ RDEPEND="${DEPEND}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_postinst() {
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_desktop_database_update
 }

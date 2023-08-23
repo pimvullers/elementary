@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_VERSION=0.40
-
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="Video player and library app designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/videos"
@@ -41,20 +39,4 @@ S=${WORKDIR}/videos-${PV}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-	xdg_desktop_database_update
 }

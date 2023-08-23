@@ -14,22 +14,20 @@ if [[ ${PV} == 9999 ]]; then
 	EGIT_REPO_URI="${HOMEPAGE}.git"
 else
 	SRC_URI="https://github.com/ricotz/plank/archive/${PV}.tar.gz -> ${P}.tar.gz"
-	KEYWORDS="amd64 ~arm ~arm64 ~x86"
+	KEYWORDS="amd64"
 fi
 
 LICENSE="GPL-3"
 SLOT="0"
 RESTRICT="mirror"
-IUSE="apport barriers benchmark dbus debug nls"
+IUSE="dbus debug nls"
 
-VALA_MIN_API_VERSION="0.34"
 VALA_USE_DEPEND="vapigen"
 
-RDEPEND="dev-libs/atk
+RDEPEND="app-accessibility/at-spi2-core
 	dev-libs/glib:2
 	dev-libs/libdbusmenu[gtk,gtk3]
 	dev-libs/libgee
-	sys-libs/glibc
 	x11-libs/bamf[introspection]
 	x11-libs/cairo
 	x11-libs/gdk-pixbuf
@@ -52,9 +50,6 @@ src_prepare() {
 
 src_configure() {
 	econf \
-		$(use_enable apport) \
-		$(use_enable barriers) \
-		$(use_enable benchmark) \
 		$(use_enable dbus dbusmenu) \
 		$(use_enable debug) \
 		$(use_enable nls)

@@ -4,5 +4,9 @@
 	<maintainer type="project">
 		<email>freedesktop-bugs@gentoo.org</email>
 	</maintainer>
+	<maintainer type="person">
+		<name>Pim Vullers</name>
+		<email>elementary@vullersmail.nl</email>
+	</maintainer>
 	<stabilize-allarches/>
 </pkgmetadata>

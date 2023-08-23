@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.40
-
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="A system settings panel for the Pantheon DE"
 HOMEPAGE="https://github.com/pantheon-tweaks/pantheon-tweaks"
@@ -25,24 +23,10 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	pantheon-base/switchboard
-	!pantheon-extra/elementary-tweaks
 	x11-libs/gtk+:3
 "
 
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
-}
-pkg_postrm() {
-	gnome2_schemas_update
-	xdg_icon_cache_update
 }

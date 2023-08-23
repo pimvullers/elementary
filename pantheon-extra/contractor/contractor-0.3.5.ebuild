@@ -3,8 +3,6 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.26
-
 inherit meson vala
 
 DESCRIPTION="A desktop-wide extension service"

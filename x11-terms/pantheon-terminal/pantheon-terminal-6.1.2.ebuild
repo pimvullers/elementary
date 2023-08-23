@@ -40,4 +40,3 @@ src_prepare() {
 	eapply "${FILESDIR}/drop-tests.patch"
 	eapply_user
 }
-

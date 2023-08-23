@@ -1,0 +1,96 @@
+diff -Naur switchboard-plug-security-privacy-7.1.0_orig/src/meson.build switchboard-plug-security-privacy-7.1.0/src/meson.build
+--- switchboard-plug-security-privacy-7.1.0_orig/src/meson.build	2023-08-23 19:09:25.358880769 +0200
++++ switchboard-plug-security-privacy-7.1.0/src/meson.build	2023-08-23 19:32:08.935641468 +0200
+@@ -5,21 +5,15 @@
+ )
+ 
+ plug_files = files(
+-    'BlackList.vala',
+     'Plug.vala',
+     'UFWHelpers.vala',
+-    'ZGUtilities.vala',
+     'DBus/PermissionStore.vala',
+     'Views/FirewallPanel.vala',
+     'Views/HouseKeepingPanel.vala',
+     'Views/LockPanel.vala',
+-    'Views/TrackPanel.vala',
+     'Views/LocationPanel.vala',
+     'Widgets/AppChooser.vala',
+     'Widgets/AppRow.vala',
+-    'Widgets/ClearUsagePopover.vala',
+-    'Widgets/ExcludeTreeView.vala',
+-    'Widgets/IncludeTreeView.vala',
+     'Widgets/ServiceItem.vala',
+     'Widgets/ServiceList.vala'
+ )
+@@ -30,7 +24,6 @@
+         dependency('gobject-2.0'),
+         dependency('granite'),
+         dependency('gtk+-3.0'),
+-        dependency('zeitgeist-2.0'),
+         meson.get_compiler('vala').find_library('posix'),
+         polkit_dep,
+         switchboard_dep
+diff -Naur switchboard-plug-security-privacy-7.1.0_orig/src/Plug.vala switchboard-plug-security-privacy-7.1.0/src/Plug.vala
+--- switchboard-plug-security-privacy-7.1.0_orig/src/Plug.vala	2023-08-23 19:09:25.358880769 +0200
++++ switchboard-plug-security-privacy-7.1.0/src/Plug.vala	2023-08-23 19:25:27.338946994 +0200
+@@ -25,7 +25,6 @@
+     public static LocationPanel location;
+     public static FirewallPanel firewall;
+     public static HouseKeepingPanel housekeeping;
+-    public static TrackPanel tracking;
+ 
+     public class Plug : Switchboard.Plug {
+         Gtk.Grid main_grid;
+@@ -120,13 +119,11 @@
+                 critical (e.message);
+             }
+ 
+-            tracking = new TrackPanel ();
+             var locking = new LockPanel ();
+             firewall = new FirewallPanel ();
+             housekeeping = new HouseKeepingPanel ();
+             location = new LocationPanel ();
+ 
+-            stack.add_titled (tracking, HISTORY, _("Privacy"));
+             stack.add_titled (locking, LOCKING, _("Locking"));
+             stack.add_titled (firewall, FIREWALL, _("Firewall"));
+             stack.add_titled (housekeeping, HOUSEKEEPING, _("Housekeeping"));
+diff -Naur switchboard-plug-security-privacy-7.1.0_orig/src/Widgets/ServiceList.vala switchboard-plug-security-privacy-7.1.0/src/Widgets/ServiceList.vala
+--- switchboard-plug-security-privacy-7.1.0_orig/src/Widgets/ServiceList.vala	2023-08-23 19:09:25.358880769 +0200
++++ switchboard-plug-security-privacy-7.1.0/src/Widgets/ServiceList.vala	2023-08-23 19:30:55.635636376 +0200
+@@ -28,7 +28,6 @@
+     }
+ 
+     construct {
+-        var privacy_item = new ServiceItem ("document-open-recent", "tracking", _("History"));
+         var lock_item = new ServiceItem ("system-lock-screen", "locking", _("Locking"));
+         var firewall_item = new ServiceItem ("network-firewall", "firewall", _("Firewall"));
+         housekeeping_item = new ServiceItem (
+@@ -37,7 +36,6 @@
+             _("Housekeeping")
+         );
+ 
+-        add_service (privacy_item);
+         add_service (lock_item);
+         add_service (firewall_item);
+         add_service (housekeeping_item);
+@@ -46,18 +44,12 @@
+             update_service_status (firewall_item, SecurityPrivacy.firewall.status_switch.active);
+         });
+ 
+-        update_service_status (privacy_item, SecurityPrivacy.tracking.status_switch.active);
+-
+         SecurityPrivacy.housekeeping.notify["status-type"].connect (() => {
+             update_housekeeping_status ();
+         });
+ 
+         update_housekeeping_status ();
+ 
+-        SecurityPrivacy.tracking.status_switch.notify["active"].connect (() => {
+-            update_service_status (privacy_item, SecurityPrivacy.tracking.status_switch.active);
+-        });
+-
+         var location_item = new ServiceItem ("preferences-system-privacy-location", "location", _("Location Services"));
+         add_service (location_item);
+         update_service_status (location_item, SecurityPrivacy.location.status_switch.active);

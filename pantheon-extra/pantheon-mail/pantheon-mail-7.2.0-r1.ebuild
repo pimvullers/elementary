@@ -3,11 +3,11 @@
 
 EAPI=8
 
+inherit gnome2 meson vala
+
 DESCRIPTION="Elementary OS mail reader"
 HOMEPAGE="https://github.com/elementary/mail"
 SRC_URI="https://github.com/elementary/mail/archive/${PV}.tar.gz -> ${P}.tar.gz"
-
-inherit gnome2-utils meson vala xdg-utils
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -30,22 +30,5 @@ S="${WORKDIR}/mail-${PV}"
 
 src_prepare() {
 	eapply_user
-
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-	xdg_desktop_database_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-	xdg_desktop_database_update
 }

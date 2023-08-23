@@ -3,8 +3,6 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.48
-
 inherit meson vala xdg
 
 DESCRIPTION="Elementary OS library that extends GTK+"
@@ -13,7 +11,7 @@ SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 
 LICENSE="LGPL-3+"
 SLOT="7"
-KEYWORDS="amd64 ~arm ~x86"
+KEYWORDS="amd64"
 IUSE="demo doc"
 
 RDEPEND="

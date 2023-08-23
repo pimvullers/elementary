@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_VERSION=0.26
-
-inherit gnome2-utils meson vala xdg-utils
+inherit gnome2 meson vala
 
 DESCRIPTION="A tiny, simple calculator written in GTK+ and Vala"
 HOMEPAGE="https://github.com/elementary/calculator"
@@ -34,18 +32,4 @@ S=${WORKDIR}/calculator-${PV}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	xdg_icon_cache_update
-	gnome2_schemas_update
 }

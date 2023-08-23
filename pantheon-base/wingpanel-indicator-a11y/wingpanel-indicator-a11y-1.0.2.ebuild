@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit gnome2-utils meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Wingpanel Universal Access Indicator"
 HOMEPAGE="https://github.com/elementary/wingpanel-indicator-a11y"
@@ -29,16 +29,4 @@ RDEPEND="${DEPEND}
 src_prepare() {
 	eapply_user
 	vala_setup
-}
-
-pkg_preinst() {
-	gnome2_schemas_savelist
-}
-
-pkg_postinst() {
-	gnome2_schemas_update
-}
-
-pkg_postrm() {
-	gnome2_schemas_update
 }

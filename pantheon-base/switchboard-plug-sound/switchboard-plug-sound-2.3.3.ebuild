@@ -20,7 +20,7 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:0
 	media-libs/libcanberra[gtk3]
-	media-sound/pulseaudio
+	media-libs/libpulse[glib]
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
 "
