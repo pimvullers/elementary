@@ -21,17 +21,6 @@ To install this overlay using eselect ([app-eselect/eselect-repository](https://
 Then use `emaint` to sync the repo:
 > `emaint sync -r elementary`
 
-### Using Layman
-
-To install this overlay using Layman ([app-portage/layman](https://packages.gentoo.org/packages/app-portage/layman)) run the following command:
-> `layman -a elementary`
-
-To keep your checkout of the elementary overlay up-to-date run:
-> `layman -s elementary`
-
-Alternatively, to update all overlays managed by layman run:
-> `layman -S`
-
 ## Installing the Pantheon desktop environment
 
 Just install the meta package to pull in all required packages (you can tweak using USE flags):
