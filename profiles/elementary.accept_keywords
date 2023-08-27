@@ -1,8 +1,0 @@
-# Gtk+ 3.12 (required by Granite 0.3)
-=dev-libs/glib-2.40* ~amd64
-=dev-libs/gobject-introspection-1.40* ~amd64
-=dev-libs/gobject-introspection-common-1.40* ~amd64
-=x11-libs/gtk+-3.12* ~amd64
-
-# Elementary theme 4.0 (required for Gtk+ >3.6)
-=x11-themes/elementary-theme-4.0* ~amd64

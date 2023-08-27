@@ -4,7 +4,7 @@
   <repo quality="experimental" status="unofficial">
     <name>elementary</name>
     <description lang="en">The elementary OS experience for Gentoo Linux.</description>
-    <homepage>http://www.elementaryos.org/</homepage>
+    <homepage>https://elementary.io//</homepage>
     <owner type="person">
       <email>elementary@vullersmail.nl</email>
       <name>Pim Vullers</name>

@@ -1,5 +1,0 @@
-# Gtk+ 3.12 (required by Granite 0.3)
-=dev-libs/glib-2.40*
-=dev-libs/gobject-introspection-1.40*
-=dev-libs/gobject-introspection-common-1.40*
-=x11-libs/gtk+-3.12*
