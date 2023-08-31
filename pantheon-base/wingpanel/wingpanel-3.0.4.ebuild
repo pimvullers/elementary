@@ -29,9 +29,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/mutter-44.patch"
-	rm -rf "${S}/vapi"
-	unpack "${FILESDIR}/mutter-44_vapi.tar.gz"
 	vala_setup
 }
 
