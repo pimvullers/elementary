@@ -41,7 +41,7 @@ BDEPEND="
 	virtual/pkgconfig
 	gnome-base/gnome-common
 	dev-util/gdbus-codegen
-	dev-util/gtk-doc
+	doc? ( dev-util/gtk-doc )
 	dev-python/lxml
 "
 
@@ -56,6 +56,8 @@ src_prepare() {
 src_configure() {
 	local econfargs=(
 		$(use_enable doc gtk-doc)
+		$(use_enable doc gtk-doc-html)
+		$(use_enable doc gtk-doc-pdf)
 		$(use_enable dbus export-actions-menu)
 		$(use_enable introspection)
 		--disable-gtktest
