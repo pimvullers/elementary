@@ -57,7 +57,7 @@ src_configure() {
 	local econfargs=(
 		$(use_enable doc gtk-doc)
 		$(use_enable doc gtk-doc-html)
-		$(use_enable doc gtk-doc-pdf)
+		--disable-gtk-doc-pdf
 		$(use_enable dbus export-actions-menu)
 		$(use_enable introspection)
 		--disable-gtktest
