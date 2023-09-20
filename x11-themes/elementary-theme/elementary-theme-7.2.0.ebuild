@@ -17,6 +17,5 @@ IUSE=""
 DEPEND="
 	dev-lang/sassc
 "
-RDEPEND="${DEPEND}"
 
 S="${WORKDIR}/stylesheet-${PV}"

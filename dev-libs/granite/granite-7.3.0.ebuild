@@ -22,6 +22,7 @@ RDEPEND="
 
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	dev-lang/sassc
 	virtual/pkgconfig
 "
 
