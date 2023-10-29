@@ -1,0 +1,86 @@
+From 7aa7904252ba28eb0fa5232bbf094eafe1d9b966 Mon Sep 17 00:00:00 2001
+From: Dani Llewellyn <diddledani@ubuntu.com>
+Date: Thu, 14 Oct 2021 15:08:34 +0100
+Subject: [PATCH] dockitem: Fix for entries disappearing when updated
+
+Newer GLib has changed the semantics of the `FileMonitor`.
+
+Handle newer `FileMonitor` semantics to fix entries disappearing after
+system updates, snap updates, or flatpak updates.
+
+https://launchpad.net/bugs/1760433
+---
+ lib/Items/DockItem.vala | 38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
+
+diff --git a/lib/Items/DockItem.vala b/lib/Items/DockItem.vala
+index 3f699b23..62c55648 100644
+--- a/lib/Items/DockItem.vala
++++ b/lib/Items/DockItem.vala
+@@ -316,19 +316,10 @@ namespace Plank
+ 			case FileMonitorEvent.CHANGES_DONE_HINT:
+ 				Logger.verbose ("Launcher file '%s' changed, reloading", f.get_uri ());
+ 				
+-				load_from_launcher ();
+-				break;
+-			case FileMonitorEvent.MOVED:
+-				if (other == null)
+-					break;
+-				var launcher = other.get_uri ();
+-				Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
+-				
+-				replace_launcher (launcher);
+-				
+ 				load_from_launcher ();
+ 				break;
+ 			case FileMonitorEvent.DELETED:
++			case FileMonitorEvent.MOVED_OUT:
+ 				debug ("Launcher file '%s' deleted, item is invalid now", f.get_uri ());
+ 				
+ 				launcher_exists = false;
+@@ -338,11 +329,36 @@ namespace Plank
+ 				schedule_removal_if_needed ();
+ 				break;
+ 			case FileMonitorEvent.CREATED:
++			case FileMonitorEvent.MOVED_IN:
+ 				debug ("Launcher file '%s' created, item is valid again", f.get_uri ());
+ 				
+ 				launcher_exists = true;
+ 				State &= ~ItemState.INVALID;
+ 				
++				stop_removal ();
++				break;
++			case FileMonitorEvent.RENAMED:
++				if (other == null)
++					break;
++				
++				var launcher = other.get_uri ();
++				
++				// Rename of launcher file to new name
++				if (launcher_exists) {
++					Logger.verbose ("Launcher file '%s' moved to '%s'", f.get_uri (), launcher);
++					
++					replace_launcher (launcher);
++					
++					load_from_launcher ();
++					break;
++				}
++				
++				// Rename of temporary file to launcher name
++				debug ("Launcher file '%s' created from rename of '%s', item is valid again", launcher, f.get_uri ());
++				
++				launcher_exists = true;
++				State &= ~ItemState.INVALID;
++				
+ 				stop_removal ();
+ 				break;
+ 			default:
+@@ -366,7 +382,7 @@ namespace Plank
+ 			try {
+ 				var launcher_file = File.new_for_uri (launcher);
+ 				launcher_exists = launcher_file.query_exists ();
+-				launcher_file_monitor = launcher_file.monitor_file (FileMonitorFlags.SEND_MOVED);
++				launcher_file_monitor = launcher_file.monitor_file (FileMonitorFlags.WATCH_MOVES);
+ 				launcher_file_monitor.changed.connect (launcher_file_changed);
+ 			} catch {
+ 				warning ("Unable to watch the launcher file '%s'", launcher);
