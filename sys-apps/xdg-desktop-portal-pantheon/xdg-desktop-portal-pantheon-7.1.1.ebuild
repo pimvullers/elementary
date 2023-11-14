@@ -15,10 +15,10 @@ KEYWORDS="amd64"
 IUSE="systemd"
 
 DEPEND="
-	dev-libs/granite:0
-	gui-libs/libhandy:1
-	x11-libs/gtk+:3
-	x11-libs/vte:2.91"
+	dev-libs/glib:2
+	dev-libs/granite:7
+	gui-libs/gtk:4
+	x11-libs/libX11"
 RDEPEND="${DEPEND}
 	systemd? ( sys-apps/systemd )"
 BDEPEND=""
