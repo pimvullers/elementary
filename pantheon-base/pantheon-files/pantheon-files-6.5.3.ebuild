@@ -18,7 +18,6 @@ IUSE="systemd"
 
 DEPEND="
 	$(vala_depend)
-	>=dev-util/meson-0.50.0
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}
