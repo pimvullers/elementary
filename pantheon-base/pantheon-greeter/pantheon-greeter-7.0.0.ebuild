@@ -34,6 +34,7 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/greeter-${PV}"
 
 src_prepare() {
+	eapply "${FILESDIR}/683.patch"
 	eapply_user
 	vala_setup
 }
