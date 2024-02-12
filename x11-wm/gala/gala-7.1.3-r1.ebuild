@@ -28,7 +28,7 @@ RDEPEND="
 	media-libs/gexiv2
 	>=x11-libs/gtk+-3.10.0:3
 	>=x11-misc/plank-0.11.0
-	>=x11-wm/mutter-3.35.1:=
+	>=x11-wm/mutter-3.35.1[wayland]
 "
 
 DEPEND="${RDEPEND}
