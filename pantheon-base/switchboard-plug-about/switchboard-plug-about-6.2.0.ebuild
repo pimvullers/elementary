@@ -21,8 +21,12 @@ RDEPEND="
 	sys-fs/udisks[introspection]
 	dev-libs/glib:2
 	dev-libs/granite:0
+	dev-libs/libgudev
+	gnome-base/libgtop
 	pantheon-base/switchboard
 	x11-libs/gtk+:3
+	gui-libs/libhandy
+	<dev-libs/appstream-1.0.0
 	systemd? ( sys-apps/systemd )
 	!systemd? ( app-admin/openrc-settingsd )
 "
