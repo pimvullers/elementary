@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala xdg-utils
+inherit meson xdg-utils vala
 
 if [[ ${PV} == *9999* ]]; then
 	inherit git-r3
@@ -11,7 +11,7 @@ if [[ ${PV} == *9999* ]]; then
 else
 	MY_PN="AppStream"
 	SRC_URI="https://www.freedesktop.org/software/appstream/releases/${MY_PN}-${PV}.tar.xz"
-	KEYWORDS="amd64 ~arm ~arm64 ~loong ~ppc ~ppc64 ~riscv ~x86"
+	KEYWORDS="amd64 ~arm arm64 ~loong ppc ppc64 ~riscv x86"
 	S="${WORKDIR}/${MY_PN}-${PV}"
 fi
 

@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala xdg-utils
+inherit meson xdg-utils vala
 
 if [[ ${PV} == *9999* ]]; then
 	inherit git-r3
