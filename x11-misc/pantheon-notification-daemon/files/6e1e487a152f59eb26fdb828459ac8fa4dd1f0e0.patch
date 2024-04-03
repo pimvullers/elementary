@@ -1,0 +1,24 @@
+From 6e1e487a152f59eb26fdb828459ac8fa4dd1f0e0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Corentin=20No=C3=ABl?= <tintou@noel.tf>
+Date: Tue, 26 Mar 2024 18:05:13 +0100
+Subject: [PATCH] FdoActionGroup: Update to new Valac (#223)
+
+---
+ src/FdoActionGroup.vala | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/FdoActionGroup.vala b/src/FdoActionGroup.vala
+index 6bc4edb..29af9ec 100644
+--- a/src/FdoActionGroup.vala
++++ b/src/FdoActionGroup.vala
+@@ -62,8 +62,8 @@ public sealed class Notifications.Fdo.ActionGroup : Object, GLib.ActionGroup {
+     public override bool query_action (
+         string action_name,
+         out bool enabled,
+-        out VariantType parameter_type,
+-        out VariantType state_type,
++        out unowned VariantType parameter_type,
++        out unowned VariantType state_type,
+         out Variant state_hint,
+         out Variant state
+     ) {
