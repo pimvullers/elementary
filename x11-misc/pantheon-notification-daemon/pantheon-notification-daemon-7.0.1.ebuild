@@ -29,7 +29,12 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/notifications-${PV}"
 
 src_prepare() {
-	eapply "${FILESDIR}/6e1e487a152f59eb26fdb828459ac8fa4dd1f0e0.patch"
 	eapply_user
 	vala_setup
+	vala_version=`${VALAC} --version`
+	vala_minor_patch=${vala_version#*.}
+	vala_patch=${vala_minor_patch#*.}
+	if ((${vala_patch} > 14)); then
+		eapply "${FILESDIR}/6e1e487a152f59eb26fdb828459ac8fa4dd1f0e0.patch"
+	fi
 }
