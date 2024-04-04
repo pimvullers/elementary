@@ -29,6 +29,7 @@ RDEPEND="${DEPEND}
 S="${WORKDIR}/notifications-${PV}"
 
 src_prepare() {
+	eapply "${FILESDIR}/6e1e487a152f59eb26fdb828459ac8fa4dd1f0e0.patch"
 	eapply_user
 	vala_setup
 }
