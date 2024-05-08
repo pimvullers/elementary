@@ -10,6 +10,7 @@ HOMEPAGE="https://github.com/elementary/dock"
 SRC_URI=""
 EGIT_REPO_URI="https://github.com/elementary/dock.git"
 
+IUSE="systemd"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
@@ -20,5 +21,6 @@ BDEPEND=""
 
 src_prepare() {
 	eapply_user
+	use systemd || eapply "${FILESDIR}/systemd.patch"
 	vala_setup
 }
