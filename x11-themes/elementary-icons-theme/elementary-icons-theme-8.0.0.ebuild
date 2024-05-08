@@ -21,7 +21,7 @@ S=${WORKDIR}/icons-${PV}
 
 src_configure() {
 	local emesonargs=(
-		-Dvolume_icons=false
+		-Dvolume_icons=true
 		-Dpalettes=false
 	)
 	meson_src_configure
