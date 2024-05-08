@@ -28,13 +28,13 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	use demo || sed -i -e '/demo/d' meson.build
 	vala_setup
 }
 
 src_configure() {
 	local emesonargs=(
 		-Ddocumentation=$(usex doc true false)
+		-Ddemo=$(usex demo true false)
 	)
 	meson_src_configure
 }
