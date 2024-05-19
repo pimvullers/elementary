@@ -22,7 +22,6 @@ RDEPEND="${DEPEND}
 	dev-libs/glib:2
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
-	pantheon-base/switchboard
 	x11-libs/gtk+:3
 "
 
