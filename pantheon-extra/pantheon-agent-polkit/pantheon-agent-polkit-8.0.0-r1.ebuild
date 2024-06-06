@@ -20,6 +20,7 @@ DEPEND="
 	virtual/pkgconfig
 "
 RDEPEND="${DEPEND}
+	gui-libs/libadwaita:1
 	dev-libs/glib:2
 	dev-libs/granite:0
 	sys-auth/polkit[introspection]
