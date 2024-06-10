@@ -22,7 +22,6 @@ RDEPEND="${DEPEND}
 	dev-libs/glib:2
 	dev-libs/granite:7
 	dev-libs/libgee:0.8
-	>=gui-libs/libhandy-0.80.0:1
 	gui-libs/gtk:4
 "
 
