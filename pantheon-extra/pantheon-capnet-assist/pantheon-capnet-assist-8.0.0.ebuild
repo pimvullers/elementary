@@ -16,11 +16,10 @@ IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
-	dev-libs/granite:0
-	gui-libs/libhandy
-	app-crypt/gcr
-	net-libs/webkit-gtk:4.1
-	x11-libs/gtk+:3"
+	dev-libs/granite:7
+	app-crypt/gcr:4
+	net-libs/webkit-gtk:6
+	gui-libs/gtk:4"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
 
