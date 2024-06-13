@@ -28,6 +28,7 @@ RDEPEND="${DEPEND}
 	dev-libs/libgudev
 	dev-libs/libgee:0.8
 	gui-libs/libhandy:1
+	dev-libs/libportal[gtk]
 	media-libs/gexiv2
 	media-libs/gstreamer:1.0
 	media-libs/gst-plugins-base:1.0
@@ -43,7 +44,6 @@ S="${WORKDIR}/photos-${PV}"
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/746.patch"
 	vala_setup
 }
 
