@@ -20,6 +20,7 @@ RDEPEND="
 	dev-libs/folks
 	dev-libs/libgee:0.8
 	gui-libs/libhandy:1
+	dev-libs/libportal[gtk]
 	net-libs/webkit-gtk:4.1
 	gnome-extra/evolution-data-server[vala]
 	x11-libs/gtk+:3"
