@@ -22,6 +22,7 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	media-libs/clutter-gtk
 	>=x11-libs/gtk+-3.10:3
+	!pantheon-base/switchboard:0
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
