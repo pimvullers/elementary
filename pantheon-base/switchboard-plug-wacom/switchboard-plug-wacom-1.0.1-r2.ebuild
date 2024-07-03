@@ -13,7 +13,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-wacom/archive/${PV}.tar.
 
 KEYWORDS="amd64"
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="2"
 IUSE=""
 
 RDEPEND="
