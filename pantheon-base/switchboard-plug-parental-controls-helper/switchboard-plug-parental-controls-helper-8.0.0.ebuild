@@ -13,7 +13,7 @@ SRC_URI="https://github.com/elementary/switchboard-plug-parental-controls/archiv
 
 KEYWORDS="amd64"
 LICENSE="GPL-3"
-SLOT="3"
+SLOT="0"
 IUSE="systemd"
 
 RDEPEND="
