@@ -12,11 +12,12 @@ HOMEPAGE="https://github.com/elementary/switchboard-plug-useraccounts"
 SRC_URI="https://github.com/elementary/switchboard-plug-useraccounts/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="2"
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
+	!pantheon-base/switchboard-plug-useraccounts:0
 	dev-libs/glib:2
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
