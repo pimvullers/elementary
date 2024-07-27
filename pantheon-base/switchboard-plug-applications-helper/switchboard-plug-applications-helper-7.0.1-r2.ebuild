@@ -9,16 +9,15 @@ inherit gnome2 meson vala
 
 DESCRIPTION="Application configuration management"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-applications"
-SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${PV}.tar.gz -> switchboard-plug-applications-${PV}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="2"
+SLOT="0"
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-applications:0
-	pantheon-base/switchboard-plug-applications-helper
 	dev-libs/glib:2
 	dev-libs/granite:0
 	pantheon-base/switchboard:2
@@ -30,6 +29,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
+S="${WORKDIR}/switchboard-plug-applications-${PV}"
+
 src_prepare() {
 	eapply_user
 	vala_setup
@@ -37,5 +38,6 @@ src_prepare() {
 
 src_install() {
 	meson_src_install
-	rm -r ${ED}/usr/share/icons
+	rm -r ${ED}/usr/lib64
+	rm -r ${ED}/usr/share/{doc,locale,metainfo}
 }
