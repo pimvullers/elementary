@@ -1,0 +1,14 @@
+BDEPEND=>=dev-build/meson-1.2.3 app-alternatives/ninja dev-build/meson-format-array
+DEFINED_PHASES=compile configure install prepare test
+DEPEND=!pantheon-base/switchboard-plug-bluetooth:0 dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard:2 x11-libs/gtk+:3 || ( dev-lang/vala:0.56 ) virtual/pkgconfig
+DESCRIPTION=Switchboard plug to setup bluetooth devices
+EAPI=8
+HOMEPAGE=https://github.com/elementary/switchboard-plug-bluetooth
+INHERIT=meson vala
+KEYWORDS=amd64
+LICENSE=LGPL-2.1
+RDEPEND=!pantheon-base/switchboard-plug-bluetooth:0 dev-libs/glib:2 dev-libs/granite:0 pantheon-base/switchboard:2 x11-libs/gtk+:3
+SLOT=2
+SRC_URI=https://github.com/elementary/switchboard-plug-bluetooth/archive/2.3.6.tar.gz -> switchboard-plug-bluetooth-2.3.6.tar.gz
+_eclasses_=toolchain-funcs	e56c7649b804f051623c8bc1a1c44084	multilib	c19072c3cd7ac5cb21de013f7e9832e0	flag-o-matic	e503ea5acc20410237ba33ec3f7c857d	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	python-utils-r1	8b220bbce5c119fb1d4d5c2f5588f3ea	meson	99466844dd8d4fcfb07578a76f5a9922	vala	e477903dbe0105930c51f170a592dc16
+_md5_=c6c824e8d77f7c530fbc4b092ecb8b3e
