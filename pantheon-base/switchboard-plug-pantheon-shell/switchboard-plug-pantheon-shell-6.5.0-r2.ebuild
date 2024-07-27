@@ -13,10 +13,11 @@ SRC_URI="https://github.com/elementary/switchboard-plug-pantheon-shell/archive/$
 
 KEYWORDS="amd64"
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="2"
 IUSE=""
 
 RDEPEND="
+	!pantheon-base/switchboard-plug-pantheon-shell:0
 	dev-libs/glib:2
 	dev-libs/granite:0
 	media-libs/gexiv2[vala]
