@@ -10,17 +10,21 @@ HOMEPAGE="https://github.com/elementary/dock"
 SRC_URI=""
 EGIT_REPO_URI="https://github.com/elementary/dock.git"
 
-IUSE="systemd"
+IUSE=""
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS=""
 
-DEPEND="gui-libs/gtk"
-RDEPEND="${DEPEND}"
-BDEPEND=""
+BDEPEND="${RDEPEND}"
+RDEPEND="
+	gui-libs/gtk:4[wayland]
+	gui-libs/libadwaita:1
+	dev-libs/libgee:0.8
+	dev-libs/glib:2
+	dev-libs/granite:7
+"
 
 src_prepare() {
 	eapply_user
-	use systemd || eapply "${FILESDIR}/systemd.patch"
 	vala_setup
 }

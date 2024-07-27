@@ -25,7 +25,7 @@ RDEPEND="${DEPEND}
 	gui-libs/libadwaita:1
 	media-libs/gst-plugins-base:1.0
 	media-libs/gstreamer:1.0
-	media-plugins/gst-plugins-meta[mp3]:1.0
+	media-plugins/gst-plugins-meta:1.0[mp3]
 	gui-libs/gtk:4
 "
 
