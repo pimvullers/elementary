@@ -12,11 +12,12 @@ HOMEPAGE="https://github.com/elementary/switchboard-plug-about"
 SRC_URI="https://github.com/elementary/switchboard-plug-about/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="2"
 KEYWORDS="amd64"
 IUSE="systemd"
 
 RDEPEND="
+	!pantheon-base/switchboard-plug-about:0
 	sys-apps/fwupd[introspection]
 	sys-fs/udisks[introspection]
 	dev-libs/glib:2
