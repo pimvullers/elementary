@@ -12,11 +12,12 @@ HOMEPAGE="https://github.com/elementary/switchboard-plug-display"
 SRC_URI="https://github.com/elementary/switchboard-plug-display/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="2"
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
+	!pantheon-base/switchboard-plug-display:0
 	dev-libs/glib:2
 	dev-libs/granite:0
 	pantheon-base/switchboard:2
