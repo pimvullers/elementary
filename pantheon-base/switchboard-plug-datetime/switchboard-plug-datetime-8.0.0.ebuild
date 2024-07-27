@@ -12,7 +12,7 @@ HOMEPAGE="https://github.com/elementary/switchboard-plug-datetime"
 SRC_URI="https://github.com/elementary/switchboard-plug-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="3"
 KEYWORDS="amd64"
 IUSE=""
 
@@ -23,9 +23,10 @@ DEPEND="${RDEPEND}
 
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite:0
-	pantheon-base/switchboard:2
-	x11-libs/gtk+:3
+	dev-libs/granite:7
+	pantheon-base/switchboard:3
+	gui-libs/gtk:4
+	gui-libs/libadwaita:1
 "
 
 src_prepare() {
