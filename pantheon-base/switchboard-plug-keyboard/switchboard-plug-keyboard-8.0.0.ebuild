@@ -12,20 +12,18 @@ HOMEPAGE="https://github.com/elementary/switchboard-plug-keyboard"
 SRC_URI="https://github.com/elementary/switchboard-plug-keyboard/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="2"
+SLOT="3"
 KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
-	!pantheon-base/switchboard-plug-keyboard:0
 	app-i18n/ibus
+	gui-libs/libadwaita:1
 	dev-libs/glib:2
-	dev-libs/granite:0
+	dev-libs/granite:7
 	dev-libs/libxml2
-	gnome-base/libgnomekbd
-	pantheon-base/switchboard:2
-	x11-libs/gtk+:3
-	x11-libs/libxklavier
+	pantheon-base/switchboard:3
+	gui-libs/gtk:4
 "
 
 DEPEND="${RDEPEND}
