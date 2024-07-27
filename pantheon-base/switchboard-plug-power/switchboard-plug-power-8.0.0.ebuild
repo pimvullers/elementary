@@ -18,7 +18,7 @@ IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-power:0
-	pantheon-base/switchboard-plug-power-logind-helper
+	pantheon-base/switchboard-plug-power-helper
 	dev-libs/glib:2
 	dev-libs/granite:7
 	pantheon-base/switchboard:3
