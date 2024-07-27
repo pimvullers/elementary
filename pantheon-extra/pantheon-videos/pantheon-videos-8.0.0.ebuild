@@ -22,16 +22,13 @@ DEPEND="
 
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite:0
+	dev-libs/granite:7
 	dev-libs/libgee:0.8
-	media-libs/clutter-gst:3.0
-	media-libs/clutter-gtk:1.0[gtk]
-	media-plugins/gst-plugins-meta
+	media-plugins/gst-plugins-meta:1.0
 	media-libs/gstreamer:1.0
-	media-libs/libdvbpsi
-	media-libs/libmad
-	media-libs/libsamplerate
-	>=x11-libs/gtk+-3.22:3
+	gui-libs/gtk:4
+	gui-libs/libadwaita:1
+	x11-libs/gdk-pixbuf:2
 "
 
 S=${WORKDIR}/videos-${PV}

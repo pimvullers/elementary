@@ -23,7 +23,7 @@ DEPEND="
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
 	dev-libs/granite:0
-	>=gui-libs/libhandy-0.83.0:1
+	gui-libs/libhandy:1
 	x11-libs/gdk-pixbuf:2
 	x11-libs/gtk+:3
 "

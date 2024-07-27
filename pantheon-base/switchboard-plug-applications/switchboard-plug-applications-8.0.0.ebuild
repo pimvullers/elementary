@@ -7,9 +7,9 @@ VALA_MIN_API_VERSION=0.22
 
 inherit meson vala
 
-DESCRIPTION="Adjust keyboard settings from Switchboard"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-keyboard"
-SRC_URI="https://github.com/elementary/switchboard-plug-keyboard/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Application configuration management"
+HOMEPAGE="https://github.com/elementary/switchboard-plug-applications"
+SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -17,16 +17,12 @@ KEYWORDS="amd64"
 IUSE=""
 
 RDEPEND="
-	app-i18n/ibus
 	dev-libs/glib:2
 	dev-libs/granite:0
-	dev-libs/libxml2
-	gnome-base/libgnomekbd
 	pantheon-base/switchboard:2
 	x11-libs/gtk+:3
-	x11-libs/libxklavier
+	sys-apps/flatpak
 "
-
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig

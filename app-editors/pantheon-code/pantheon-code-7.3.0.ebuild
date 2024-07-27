@@ -25,17 +25,18 @@ RDEPEND="${DEPEND}
 		app-text/editorconfig-core-c
 		app-text/gtkspell:3[vala]
 		net-libs/libsoup:2.4
-		x11-libs/vte:2.91
 	)
-	>=dev-libs/glib-2.30:2
+	dev-libs/glib:2
 	dev-libs/granite:0
-	>=dev-libs/libgee-0.8.5:0.8
+	dev-libs/libgee:0.8
 	dev-libs/libgit2-glib
 	dev-libs/libpeas[gtk]
 	gui-libs/libhandy
 	media-libs/fontconfig
-	>=x11-libs/gtk+-3.6:3
+	x11-libs/gtk+:3
 	x11-libs/gtksourceview:4
+	x11-libs/pango
+	x11-libs/vte:2.91
 "
 
 S="${WORKDIR}/code-${PV}"

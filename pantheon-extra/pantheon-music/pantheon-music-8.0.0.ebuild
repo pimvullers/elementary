@@ -15,16 +15,17 @@ KEYWORDS="amd64"
 IUSE=""
 
 DEPEND="
-	>=dev-lang/vala-0.40
+	$(vala_depend)
 	virtual/pkgconfig
 "
 
 RDEPEND="${DEPEND}
-	>=dev-libs/glib-2.39:2
+	dev-libs/glib:2
 	dev-libs/granite:7
-	media-libs/gst-plugins-base
-	media-libs/gstreamer
-	media-plugins/gst-plugins-meta[mp3]
+	gui-libs/libadwaita:1
+	media-libs/gst-plugins-base:1.0
+	media-libs/gstreamer:1.0
+	media-plugins/gst-plugins-meta[mp3]:1.0
 	gui-libs/gtk:4
 "
 
