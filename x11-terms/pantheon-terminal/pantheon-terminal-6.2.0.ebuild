@@ -20,8 +20,8 @@ RDEPEND="
 	dev-libs/libgee:0.8
 	dev-libs/glib:2
 	dev-libs/granite:0
-	dev-libs/libpcre
-	gui-libs/libhandy
+	dev-libs/libpcre2
+	gui-libs/libhandy:1
 	x11-libs/gtk+:3
 	x11-libs/vte:2.91[vala]
 "
