@@ -1,0 +1,51 @@
+diff '--color=auto' -Naur switchboard-plug-security-privacy-8.0.0_orig/src/meson.build switchboard-plug-security-privacy-8.0.0/src/meson.build
+--- switchboard-plug-security-privacy-8.0.0_orig/src/meson.build	2024-07-30 13:16:41.133903618 +0200
++++ switchboard-plug-security-privacy-8.0.0/src/meson.build	2024-07-30 13:22:12.857252365 +0200
+@@ -5,21 +5,15 @@
+ )
+ 
+ plug_files = files(
+-    'BlackList.vala',
+     'Plug.vala',
+     'UFWHelpers.vala',
+-    'ZGUtilities.vala',
+     'DBus/PermissionStore.vala',
+     'Views/FirewallPanel.vala',
+     'Views/HouseKeepingPanel.vala',
+     'Views/LockPanel.vala',
+-    'Views/TrackPanel.vala',
+     'Views/LocationPanel.vala',
+     'Widgets/AppChooser.vala',
+     'Widgets/AppRow.vala',
+-    'Widgets/ClearUsageDialog.vala',
+-    'Widgets/ExcludeTreeView.vala',
+-    'Widgets/IncludeTreeView.vala'
+ )
+ 
+ plug_dependencies = [
+@@ -28,7 +22,6 @@
+         dependency('gobject-2.0'),
+         dependency('granite-7'),
+         dependency('gtk4'),
+-        dependency('zeitgeist-2.0'),
+         meson.get_compiler('vala').find_library('posix'),
+         polkit_dep,
+         switchboard_dep
+diff '--color=auto' -Naur switchboard-plug-security-privacy-8.0.0_orig/src/Plug.vala switchboard-plug-security-privacy-8.0.0/src/Plug.vala
+--- switchboard-plug-security-privacy-8.0.0_orig/src/Plug.vala	2024-07-30 13:16:41.133903618 +0200
++++ switchboard-plug-security-privacy-8.0.0/src/Plug.vala	2024-07-30 13:21:03.830582475 +0200
+@@ -41,14 +41,12 @@
+ 
+     public override Gtk.Widget get_widget () {
+         if (paned == null) {
+-            var tracking = new TrackPanel ();
+             var locking = new LockPanel ();
+             var firewall = new FirewallPanel ();
+             var housekeeping = new HouseKeepingPanel ();
+             var location = new LocationPanel ();
+ 
+             stack = new Gtk.Stack ();
+-            stack.add_titled (tracking, HISTORY, _("Privacy"));
+             stack.add_titled (locking, LOCKING, _("Locking"));
+             stack.add_titled (firewall, FIREWALL, _("Firewall"));
+             stack.add_titled (housekeeping, HOUSEKEEPING, _("Housekeeping"));
