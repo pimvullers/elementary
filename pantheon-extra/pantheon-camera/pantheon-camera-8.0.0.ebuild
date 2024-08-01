@@ -20,12 +20,11 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite:0
+	dev-libs/granite:7
 	dev-libs/libgee:0.8
 	media-libs/libcanberra
-	gui-libs/libhandy
 	media-libs/gstreamer
-	x11-libs/gtk+:3
+	gui-libs/gtk:4
 "
 S=${WORKDIR}/camera-${PV}
 
