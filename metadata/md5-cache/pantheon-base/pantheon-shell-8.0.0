@@ -1,0 +1,16 @@
+BDEPEND=>=app-portage/elt-patches-20240116 app-arch/xz-utils >=dev-build/meson-1.2.3 app-alternatives/ninja dev-build/meson-format-array
+DEFINED_PHASES=compile configure install postinst postrm preinst prepare test
+DESCRIPTION=Pantheon DE shell
+EAPI=8
+HOMEPAGE=https://github.com/elementary/session-settings
+IDEPEND=dev-util/desktop-file-utils x11-misc/shared-mime-info
+INHERIT=gnome2 meson
+IUSE=accessibility gnome-keyring wayland systemd
+KEYWORDS=amd64
+LICENSE=metapackage
+PDEPEND=pantheon-base/pantheon-settings
+RDEPEND=accessibility? ( app-accessibility/orca app-accessibility/onboard ) gnome-base/gnome-session gnome-base/gnome-settings-daemon gnome-base/gsettings-desktop-schemas gnome-keyring? ( gnome-base/gnome-keyring ) pantheon-base/applications-menu pantheon-base/wingpanel pantheon-extra/pantheon-agent-polkit x11-misc/plank x11-wm/gala
+SLOT=0
+SRC_URI=https://github.com/elementary/session-settings/archive/8.0.0.tar.gz -> pantheon-shell-8.0.0.tar.gz
+_eclasses_=toolchain-funcs	e7e7331166166e7a516d19e264b098c2	multilib	c19072c3cd7ac5cb21de013f7e9832e0	libtool	5f49a16f67f81bdf873e3d1f10b10001	gnome.org	e1b4f392dbfedfb8974b71b017937f08	xdg-utils	baea6080dd821f5562d715887954c9d3	gnome2-utils	a8cf148ec7f5ae0b1f1d33ae5f7f9e88	xdg	4a14c5c24f121e7da66e5aab4a168c6e	gnome2	26fd01914b36038dc8e964ff4bd03a95	flag-o-matic	e503ea5acc20410237ba33ec3f7c857d	multiprocessing	30ead54fa2e2b5f9cd4e612ffc34d0fe	ninja-utils	2df4e452cea39a9ec8fb543ce059f8d6	python-utils-r1	6881b056477c23167d9a6b33e146374e	meson	99466844dd8d4fcfb07578a76f5a9922
+_md5_=6331dffce32b815a83a2a0efa1d5aa82
