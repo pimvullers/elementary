@@ -1,0 +1,82 @@
+diff '--color=auto' -Naur gala-8.0.0_orig/src/DaemonManager.vala gala-8.0.0/src/DaemonManager.vala
+--- gala-8.0.0_orig/src/DaemonManager.vala	2024-08-20 14:47:27.346883246 +0200
++++ gala-8.0.0/src/DaemonManager.vala	2024-08-20 15:02:52.470276162 +0200
+@@ -102,7 +102,9 @@
+                 break;
+ 
+             case "MODAL":
++#if HAS_MUTTER46
+                 daemon_client.make_dock (window);
++#endif
+                 window.move_frame (false, 0, 0);
+                 window.make_above ();
+                 break;
+diff '--color=auto' -Naur gala-8.0.0_orig/src/ScreenshotManager.vala gala-8.0.0/src/ScreenshotManager.vala
+--- gala-8.0.0_orig/src/ScreenshotManager.vala	2024-08-20 14:47:27.346883246 +0200
++++ gala-8.0.0/src/ScreenshotManager.vala	2024-08-20 15:16:48.586997118 +0200
+@@ -361,7 +361,8 @@
+ 
+             try {
+                 unowned var selection = wm.get_display ().get_selection ();
+-                var source = new Meta.SelectionSourceMemory ("image/png", new GLib.Bytes.take (buffer));
++                var bytes = new GLib.Bytes.take (buffer);
++                var source = new Meta.SelectionSourceMemory ("image/png", bytes);
+                 selection.set_owner (Meta.SelectionType.SELECTION_CLIPBOARD, source);
+             } catch (Error e) {
+                 warning ("Could not save screenshot to clipboard: failed to create new Meta.SelectionSourceMemory: %s", e.message);
+diff '--color=auto' -Naur gala-8.0.0_orig/src/ShellClients/PanelWindow.vala gala-8.0.0/src/ShellClients/PanelWindow.vala
+--- gala-8.0.0_orig/src/ShellClients/PanelWindow.vala	2024-08-20 14:47:27.346883246 +0200
++++ gala-8.0.0/src/ShellClients/PanelWindow.vala	2024-08-20 14:47:56.490218424 +0200
+@@ -61,7 +61,7 @@
+         workspace_manager.workspace_removed.connect (update_strut);
+     }
+ 
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+     public Mtk.Rectangle get_custom_window_rect () {
+ #else
+     public Meta.Rectangle get_custom_window_rect () {
+diff '--color=auto' -Naur gala-8.0.0_orig/src/ShellClients/ShellClientsManager.vala gala-8.0.0/src/ShellClients/ShellClientsManager.vala
+--- gala-8.0.0_orig/src/ShellClients/ShellClientsManager.vala	2024-08-20 14:47:27.346883246 +0200
++++ gala-8.0.0/src/ShellClients/ShellClientsManager.vala	2024-08-20 15:04:25.820282158 +0200
+@@ -116,7 +116,9 @@
+     private void make_dock_wayland (Meta.Window window) requires (Meta.Util.is_wayland_compositor ()) {
+         foreach (var client in protocol_clients) {
+             if (client.wayland_client.owns_window (window)) {
++#if HAS_MUTTER46
+                 client.wayland_client.make_dock (window);
++#endif
+                 break;
+             }
+         }
+diff '--color=auto' -Naur gala-8.0.0_orig/src/WindowManager.vala gala-8.0.0/src/WindowManager.vala
+--- gala-8.0.0_orig/src/WindowManager.vala	2024-08-20 14:47:27.346883246 +0200
++++ gala-8.0.0/src/WindowManager.vala	2024-08-20 15:10:09.193637590 +0200
+@@ -926,8 +926,10 @@
+                         op,
+                         event.get_device (),
+                         event.get_event_sequence (),
+-                        event.get_time (),
+-                        null
++                        event.get_time ()
++#if HAS_MUTTER46
++                        , null
++#endif
+                     );
+                 } else if (event.get_type () == LEAVE) {
+                     /* We get leave emitted when beginning a grab op, so we have
+diff '--color=auto' -Naur gala-8.0.0_orig/vapi/libmutter.vapi gala-8.0.0/vapi/libmutter.vapi
+--- gala-8.0.0_orig/vapi/libmutter.vapi	2024-08-20 14:47:27.353549913 +0200
++++ gala-8.0.0/vapi/libmutter.vapi	2024-08-20 15:06:16.996955950 +0200
+@@ -917,8 +917,10 @@
+ 		public WaylandClient (GLib.SubprocessLauncher launcher) throws GLib.Error;
+ #endif
+ 		public void hide_from_window_list (Meta.Window window);
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+ 		public void make_desktop (Meta.Window window);
++#endif
++#if HAS_MUTTER46
+ 		public void make_dock (Meta.Window window);
+ #endif
+ 		public bool owns_window (Meta.Window window);
