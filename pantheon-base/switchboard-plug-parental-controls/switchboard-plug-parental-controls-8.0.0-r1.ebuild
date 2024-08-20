@@ -5,7 +5,7 @@ EAPI=8
 
 VALA_MIN_API_VERSION=0.22
 
-inherit meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="An easy parental controls plug for Switchboard"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-parental-controls"
@@ -18,7 +18,7 @@ IUSE="systemd"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-parental-controls:0
-	pantheon-base/switchboard-plug-parental-controls-helper
+	pantheon-base/switchboard-plug-parental-controls-helper[systemd?]
 	dev-libs/glib:2
 	dev-libs/granite:7
 	dev-libs/libgee:0.8
@@ -38,7 +38,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
+	#use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
+	sed -i -e '/systemd_dep/d' meson.build data/meson.build
 	vala_setup
 }
 
