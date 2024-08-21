@@ -10,7 +10,7 @@ SRC_URI=""
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower input_devices_wacom"
+IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower wayland input_devices_wacom"
 
 DEPEND=""
 RDEPEND="${DEPEND}
@@ -67,7 +67,7 @@ RDEPEND="${DEPEND}
 	pantheon-base/applications-menu
 	pantheon-base/pantheon-files
 	pantheon-base/pantheon-greeter
-	pantheon-base/pantheon-shell[accessibility?]
+	pantheon-base/pantheon-shell[accessibility?, wayland?]
 	pantheon-base/pantheon-settings
 	pantheon-base/pantheon-settings-daemon
 	pantheon-base/switchboard:3
