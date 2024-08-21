@@ -1,0 +1,16 @@
+diff '--color=auto' -Naur wingpanel-8.0.0_orig/wingpanel-interface/FocusManager.vala wingpanel-8.0.0/wingpanel-interface/FocusManager.vala
+--- wingpanel-8.0.0_orig/wingpanel-interface/FocusManager.vala	2024-08-21 20:12:48.941645974 +0200
++++ wingpanel-8.0.0/wingpanel-interface/FocusManager.vala	2024-08-21 20:27:02.961864381 +0200
+@@ -132,8 +132,10 @@
+                         Meta.GrabOp.MOVING,
+                         event.get_device (),
+                         event.get_event_sequence (),
+-                        event.get_time (),
+-                        { x, y }
++                        event.get_time ()
++#if HAS_MUTTER46
++                        ,{ x, y }
++#endif
+                     );
+                 }
+ 
