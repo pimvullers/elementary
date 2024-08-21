@@ -27,12 +27,7 @@ RDEPEND="${DEPEND}
 	pantheon-base/applications-menu
 	pantheon-base/wingpanel
 	pantheon-extra/pantheon-agent-polkit
-	wayland? (
-		pantheon-base/pantheon-dock
-	)
-	!wayland? (
-		x11-misc/plank
-	)
+	pantheon-base/pantheon-dock
 	x11-wm/gala
 "
 

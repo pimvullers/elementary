@@ -22,17 +22,16 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-db/sqlite:3
-	>=dev-libs/glib-2.40.0:2
+	dev-libs/glib:2
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
-	>=x11-libs/gtk+-3.22:3[X,wayland]
-	gui-libs/libhandy
-	>=x11-misc/plank-0.10.9
+	x11-libs/gtk+:3[X,wayland]
+	gui-libs/libhandy:1
+	dev-libs/libportal[gtk]
+	x11-libs/pango
+	media-libs/libcanberra
 	net-libs/libcloudproviders[vala]
 	dev-libs/libgit2-glib[vala]
-	>=media-libs/libcanberra-0.30
-	>=x11-libs/libnotify-0.7.2
-	>=x11-libs/pango-1.48.5-r1
 	systemd? ( sys-apps/systemd )
 "
 

@@ -15,19 +15,19 @@ IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio 
 DEPEND=""
 RDEPEND="${DEPEND}
 	accessibility? (
-		pantheon-base/switchboard-plug-a11y
+		pantheon-base/switchboard-plug-a11y:2
 		pantheon-base/wingpanel-indicator-a11y
 	)
 	bluetooth? (
-		pantheon-base/switchboard-plug-bluetooth
+		pantheon-base/switchboard-plug-bluetooth:2
 		pantheon-base/wingpanel-indicator-bluetooth
 	)
 	cups? (
-		pantheon-base/switchboard-plug-printers
+		pantheon-base/switchboard-plug-printers:2
 		pantheon-extra/contract-print
 	)
 	input_devices_wacom? (
-		pantheon-base/switchboard-plug-wacom
+		pantheon-base/switchboard-plug-wacom:2
 	)
 	media-fonts/inter
 	!minimal? (
@@ -49,7 +49,7 @@ RDEPEND="${DEPEND}
 		sys-apps/xdg-desktop-portal-pantheon
 	)
 	networkmanager? (
-		pantheon-base/switchboard-plug-network
+		pantheon-base/switchboard-plug-network:2
 		pantheon-base/wingpanel-indicator-network
 		!minimal? (
 			pantheon-extra/pantheon-capnet-assist
@@ -57,10 +57,10 @@ RDEPEND="${DEPEND}
 	)
 	upnp? (
 		net-misc/rygel
-		pantheon-base/switchboard-plug-sharing
+		pantheon-base/switchboard-plug-sharing:2
 	)
 	libnotify? (
-		pantheon-base/switchboard-plug-notifications
+		pantheon-base/switchboard-plug-notifications:2
 		pantheon-base/wingpanel-indicator-notifications
 		virtual/notification-daemon[pantheon]
 	)
@@ -71,29 +71,29 @@ RDEPEND="${DEPEND}
 	pantheon-base/pantheon-settings
 	pantheon-base/pantheon-settings-daemon
 	pantheon-base/switchboard:2
-	pantheon-base/switchboard-plug-about
-	pantheon-base/switchboard-plug-applications
-	pantheon-base/switchboard-plug-datetime
-	pantheon-base/switchboard-plug-display
-	pantheon-base/switchboard-plug-keyboard
-	pantheon-base/switchboard-plug-locale
-	pantheon-base/switchboard-plug-mouse-touchpad
-	pantheon-base/switchboard-plug-onlineaccounts
-	pantheon-base/switchboard-plug-pantheon-shell
-	pantheon-base/switchboard-plug-parental-controls
-	pantheon-base/switchboard-plug-security-privacy
-	pantheon-base/switchboard-plug-useraccounts
+	pantheon-base/switchboard-plug-about:2
+	pantheon-base/switchboard-plug-applications:2
+	pantheon-base/switchboard-plug-datetime:2
+	pantheon-base/switchboard-plug-display:2
+	pantheon-base/switchboard-plug-keyboard:2
+	pantheon-base/switchboard-plug-locale:2
+	pantheon-base/switchboard-plug-mouse-touchpad:2
+	pantheon-base/switchboard-plug-onlineaccounts:2
+	pantheon-base/switchboard-plug-pantheon-shell:2
+	pantheon-base/switchboard-plug-parental-controls:2
+	pantheon-base/switchboard-plug-security-privacy:2
+	pantheon-base/switchboard-plug-useraccounts:2
 	pantheon-base/wingpanel
 	pantheon-base/wingpanel-indicator-datetime
 	pantheon-base/wingpanel-indicator-keyboard
 	pantheon-base/wingpanel-indicator-nightlight
 	pantheon-base/wingpanel-indicator-session
 	pulseaudio? (
-		pantheon-base/switchboard-plug-sound
+		pantheon-base/switchboard-plug-sound:2
 		pantheon-base/wingpanel-indicator-sound
 	)
 	upower? (
-		pantheon-base/switchboard-plug-power
+		pantheon-base/switchboard-plug-power:2
 		pantheon-base/wingpanel-indicator-power
 	)
 	x11-misc/lightdm

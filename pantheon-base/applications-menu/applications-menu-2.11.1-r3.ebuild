@@ -14,7 +14,7 @@ SRC_URI="https://github.com/elementary/applications-menu/archive/${PV}.tar.gz ->
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
+IUSE="+plank"
 
 DEPEND="
 	$(vala_depend)
@@ -32,11 +32,14 @@ RDEPEND="${DEPEND}
 	pantheon-base/wingpanel
 	gui-libs/libhandy
 	x11-libs/gtk+:3
+	plank? ( x11-misc/plank )
 "
 
 src_prepare() {
 	eapply_user
 	vala_setup
+
+	use plank || sed -i -e '/PLANK/d' meson.build
 }
 
 src_configure() {

@@ -15,7 +15,6 @@ IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio 
 DEPEND=""
 RDEPEND="${DEPEND}
 	accessibility? (
-		pantheon-base/switchboard-plug-a11y:3
 		pantheon-base/wingpanel-indicator-a11y
 	)
 	bluetooth? (
@@ -67,7 +66,7 @@ RDEPEND="${DEPEND}
 	pantheon-base/applications-menu
 	pantheon-base/pantheon-files
 	pantheon-base/pantheon-greeter
-	pantheon-base/pantheon-shell[accessibility?, wayland?]
+	pantheon-base/pantheon-shell[accessibility?,wayland?]
 	pantheon-base/pantheon-settings
 	pantheon-base/pantheon-settings-daemon
 	pantheon-base/switchboard:3

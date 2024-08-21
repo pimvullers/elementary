@@ -20,19 +20,22 @@ VALA_USE_DEPEND="vapigen"
 
 RDEPEND="
 	media-libs/libcanberra
-	>=dev-libs/glib-2.44:2
-	dev-libs/granite:0
+	dev-libs/glib:2
+	dev-libs/granite:7
 	dev-libs/libgee:0.8
+	dev-db/sqlite:3
 	gnome-base/gnome-desktop:3
-	>=gnome-base/gnome-settings-daemon-3.15.2
-	media-libs/gexiv2
-	>=x11-libs/gtk+-3.10.0:3
-	>=x11-misc/plank-0.11.0
-	>=x11-wm/mutter-45[wayland]
+	gui-libs/gtk:4
+	x11-wm/mutter[wayland]
+	systemd? ( sys-apps/systemd )
+	x11-libs/gtk+:3
+	dev-libs/granite:0
+	gui-libs/libhandy:1
 "
 
 DEPEND="${RDEPEND}
 	$(vala_depend)
+	dev-util/wayland-scanner
 	virtual/pkgconfig
 "
 

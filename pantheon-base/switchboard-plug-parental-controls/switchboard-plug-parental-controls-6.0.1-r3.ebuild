@@ -18,7 +18,7 @@ IUSE="systemd"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-parental-controls:0
-	pantheon-base/switchboard-plug-parental-controls-helper
+	pantheon-base/switchboard-plug-parental-controls-helper[systemd?]
 	dev-libs/glib:2
 	dev-libs/granite:0
 	dev-libs/malcontent
@@ -35,7 +35,8 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
+	#use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
+	sed -i -e '/systemd_dep/d' meson.build data/meson.build
 	vala_setup
 }
 
