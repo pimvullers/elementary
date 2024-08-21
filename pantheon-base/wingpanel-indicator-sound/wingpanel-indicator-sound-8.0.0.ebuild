@@ -30,6 +30,5 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/default_player_not_null.patch"
 	vala_setup
 }
