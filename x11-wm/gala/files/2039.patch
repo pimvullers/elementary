@@ -1,0 +1,152 @@
+From fbc9ab35ad31371301df72fd194e723a33ea7d92 Mon Sep 17 00:00:00 2001
+From: lenemter <lenemter@gmail.com>
+Date: Tue, 20 Aug 2024 22:48:24 +0900
+Subject: [PATCH 1/3] Fix mutter 45
+
+---
+ vapi/libmutter.vapi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/vapi/libmutter.vapi b/vapi/libmutter.vapi
+index 3bcc051ed..23373066e 100644
+--- a/vapi/libmutter.vapi
++++ b/vapi/libmutter.vapi
+@@ -792,7 +792,11 @@ namespace Meta {
+ 	[CCode (cheader_filename = "meta/meta-selection-source-memory.h", type_id = "meta_selection_source_memory_get_type ()")]
+ 	public sealed class SelectionSourceMemory : Meta.SelectionSource {
+ 		[CCode (has_construct_function = false, type = "MetaSelectionSource*")]
++#if HAS_MUTTER46
+ 		public SelectionSourceMemory (string mimetype, GLib.Bytes content) throws GLib.Error;
++#else
++		public SelectionSourceMemory (string mimetype, GLib.Bytes content);
++#endif
+ 	}
+ 	[CCode (cheader_filename = "meta/meta-settings.h", has_type_id = false)]
+ 	[Compact]
+
+From 3c9cd210c4f8b604495149cc7a4ad45339bbcb53 Mon Sep 17 00:00:00 2001
+From: lenemter <lenemter@gmail.com>
+Date: Tue, 20 Aug 2024 23:04:36 +0900
+Subject: [PATCH 2/3] Apply patch
+
+---
+ src/DaemonManager.vala                    | 2 ++
+ src/ScreenshotManager.vala                | 3 ++-
+ src/ShellClients/PanelWindow.vala         | 2 +-
+ src/ShellClients/ShellClientsManager.vala | 2 ++
+ src/WindowManager.vala                    | 6 ++++--
+ vapi/libmutter.vapi                       | 4 +++-
+ 6 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/src/DaemonManager.vala b/src/DaemonManager.vala
+index 16609cc6b..551f3f470 100644
+--- a/src/DaemonManager.vala
++++ b/src/DaemonManager.vala
+@@ -102,7 +102,9 @@ public class Gala.DaemonManager : GLib.Object {
+                 break;
+ 
+             case "MODAL":
++#if HAS_MUTTER46
+                 daemon_client.make_dock (window);
++#endif
+                 window.move_frame (false, 0, 0);
+                 window.make_above ();
+                 break;
+diff --git a/src/ScreenshotManager.vala b/src/ScreenshotManager.vala
+index ec74631b6..3223e3036 100644
+--- a/src/ScreenshotManager.vala
++++ b/src/ScreenshotManager.vala
+@@ -361,7 +361,8 @@ namespace Gala {
+ 
+             try {
+                 unowned var selection = wm.get_display ().get_selection ();
+-                var source = new Meta.SelectionSourceMemory ("image/png", new GLib.Bytes.take (buffer));
++                var bytes = new GLib.Bytes.take (buffer);
++                var source = new Meta.SelectionSourceMemory ("image/png", bytes);
+                 selection.set_owner (Meta.SelectionType.SELECTION_CLIPBOARD, source);
+             } catch (Error e) {
+                 warning ("Could not save screenshot to clipboard: failed to create new Meta.SelectionSourceMemory: %s", e.message);
+diff --git a/src/ShellClients/PanelWindow.vala b/src/ShellClients/PanelWindow.vala
+index 5ed05bd08..190ebb127 100644
+--- a/src/ShellClients/PanelWindow.vala
++++ b/src/ShellClients/PanelWindow.vala
+@@ -61,7 +61,7 @@ public class Gala.PanelWindow : Object {
+         workspace_manager.workspace_removed.connect (update_strut);
+     }
+ 
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+     public Mtk.Rectangle get_custom_window_rect () {
+ #else
+     public Meta.Rectangle get_custom_window_rect () {
+diff --git a/src/ShellClients/ShellClientsManager.vala b/src/ShellClients/ShellClientsManager.vala
+index 9dacbb91a..ad15ca9e8 100644
+--- a/src/ShellClients/ShellClientsManager.vala
++++ b/src/ShellClients/ShellClientsManager.vala
+@@ -116,7 +116,9 @@ public class Gala.ShellClientsManager : Object {
+     private void make_dock_wayland (Meta.Window window) requires (Meta.Util.is_wayland_compositor ()) {
+         foreach (var client in protocol_clients) {
+             if (client.wayland_client.owns_window (window)) {
++#if HAS_MUTTER46
+                 client.wayland_client.make_dock (window);
++#endif
+                 break;
+             }
+         }
+diff --git a/src/WindowManager.vala b/src/WindowManager.vala
+index f73b510d2..4cbc15c79 100644
+--- a/src/WindowManager.vala
++++ b/src/WindowManager.vala
+@@ -926,8 +926,10 @@ namespace Gala {
+                         op,
+                         event.get_device (),
+                         event.get_event_sequence (),
+-                        event.get_time (),
+-                        null
++                        event.get_time ()
++#if HAS_MUTTER46
++                        , null
++#endif
+                     );
+                 } else if (event.get_type () == LEAVE) {
+                     /* We get leave emitted when beginning a grab op, so we have
+diff --git a/vapi/libmutter.vapi b/vapi/libmutter.vapi
+index 3bcc051ed..1c039f871 100644
+--- a/vapi/libmutter.vapi
++++ b/vapi/libmutter.vapi
+@@ -917,8 +917,10 @@ namespace Meta {
+ 		public WaylandClient (GLib.SubprocessLauncher launcher) throws GLib.Error;
+ #endif
+ 		public void hide_from_window_list (Meta.Window window);
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+ 		public void make_desktop (Meta.Window window);
++#endif
++#if HAS_MUTTER46
+ 		public void make_dock (Meta.Window window);
+ #endif
+ 		public bool owns_window (Meta.Window window);
+
+From adcbb4bcf21087f23900e2d112bbbe19e674d23d Mon Sep 17 00:00:00 2001
+From: lenemter <lenemter@gmail.com>
+Date: Tue, 20 Aug 2024 23:11:39 +0900
+Subject: [PATCH 3/3] Revert one change
+
+---
+ src/ScreenshotManager.vala | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/src/ScreenshotManager.vala b/src/ScreenshotManager.vala
+index 3223e3036..ec74631b6 100644
+--- a/src/ScreenshotManager.vala
++++ b/src/ScreenshotManager.vala
+@@ -361,8 +361,7 @@ namespace Gala {
+ 
+             try {
+                 unowned var selection = wm.get_display ().get_selection ();
+-                var bytes = new GLib.Bytes.take (buffer);
+-                var source = new Meta.SelectionSourceMemory ("image/png", bytes);
++                var source = new Meta.SelectionSourceMemory ("image/png", new GLib.Bytes.take (buffer));
+                 selection.set_owner (Meta.SelectionType.SELECTION_CLIPBOARD, source);
+             } catch (Error e) {
+                 warning ("Could not save screenshot to clipboard: failed to create new Meta.SelectionSourceMemory: %s", e.message);

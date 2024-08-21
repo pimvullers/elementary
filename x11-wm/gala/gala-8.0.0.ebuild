@@ -38,8 +38,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${P}_mutter45.patch"
-	eapply "${FILESDIR}/2038.patch"
+	eapply "${FILESDIR}/2039.patch"
 	vala_setup
 
 	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
