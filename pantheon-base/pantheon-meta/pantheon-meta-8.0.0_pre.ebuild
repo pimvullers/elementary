@@ -20,6 +20,7 @@ RDEPEND="${DEPEND}
 	bluetooth? (
 		pantheon-base/switchboard-plug-bluetooth:3
 		pantheon-base/wingpanel-indicator-bluetooth
+		pantheon-base/bluetooth-daemon
 	)
 	cups? (
 		pantheon-base/switchboard-plug-printers:3
