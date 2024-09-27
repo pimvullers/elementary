@@ -1,0 +1,52 @@
+diff '--color=auto' -Naur greeter-8.0.0_orig/compositor/ShellClients/PanelWindow.vala greeter-8.0.0/compositor/ShellClients/PanelWindow.vala
+--- greeter-8.0.0_orig/compositor/ShellClients/PanelWindow.vala	2024-09-27 15:59:23.621221889 +0200
++++ greeter-8.0.0/compositor/ShellClients/PanelWindow.vala	2024-09-27 16:06:00.552618706 +0200
+@@ -57,7 +57,7 @@
+         workspace_manager.workspace_removed.connect (update_strut);
+     }
+ 
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+     public Mtk.Rectangle get_custom_window_rect () {
+ #else
+     public Meta.Rectangle get_custom_window_rect () {
+diff '--color=auto' -Naur greeter-8.0.0_orig/compositor/ShellClients/ShellClientsManager.vala greeter-8.0.0/compositor/ShellClients/ShellClientsManager.vala
+--- greeter-8.0.0_orig/compositor/ShellClients/ShellClientsManager.vala	2024-09-27 15:59:23.621221889 +0200
++++ greeter-8.0.0/compositor/ShellClients/ShellClientsManager.vala	2024-09-27 16:08:35.083470182 +0200
+@@ -60,7 +60,9 @@
+     private void make_dock_wayland (Meta.Window window) requires (Meta.Util.is_wayland_compositor ()) {
+         foreach (var client in protocol_clients) {
+             if (client.wayland_client.owns_window (window)) {
++#if HAS_MUTTER46
+                 client.wayland_client.make_dock (window);
++#endif
+                 break;
+             }
+         }
+diff '--color=auto' -Naur greeter-8.0.0_orig/vapi/libmutter.vapi greeter-8.0.0/vapi/libmutter.vapi
+--- greeter-8.0.0_orig/vapi/libmutter.vapi	2024-09-27 15:59:23.654555150 +0200
++++ greeter-8.0.0/vapi/libmutter.vapi	2024-09-27 16:00:20.687743512 +0200
+@@ -792,7 +792,11 @@
+ 	[CCode (cheader_filename = "meta/meta-selection-source-memory.h", type_id = "meta_selection_source_memory_get_type ()")]
+ 	public sealed class SelectionSourceMemory : Meta.SelectionSource {
+ 		[CCode (has_construct_function = false, type = "MetaSelectionSource*")]
++#if HAS_MUTTER46
++		public SelectionSourceMemory (string mimetype, GLib.Bytes content) throws GLib.Error;
++#else
+ 		public SelectionSourceMemory (string mimetype, GLib.Bytes content);
++#endif
+ 	}
+ 	[CCode (cheader_filename = "meta/meta-settings.h", has_type_id = false)]
+ 	[Compact]
+@@ -917,8 +921,10 @@
+ 		public WaylandClient (GLib.SubprocessLauncher launcher) throws GLib.Error;
+ #endif
+ 		public void hide_from_window_list (Meta.Window window);
+-#if HAS_MUTTER46
++#if HAS_MUTTER45
+ 		public void make_desktop (Meta.Window window);
++#endif
++#if HAS_MUTTER46
+ 		public void make_dock (Meta.Window window);
+ #endif
+ 		public bool owns_window (Meta.Window window);

@@ -32,7 +32,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${P}_mutter45.patch"
+	eapply "${FILESDIR}/${PN}-8.0.0_mutter45.patch"
 	vala_setup
 }
 
