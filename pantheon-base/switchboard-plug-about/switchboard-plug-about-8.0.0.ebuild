@@ -26,7 +26,7 @@ RDEPEND="
 	pantheon-base/switchboard:3
 	gui-libs/gtk:4
 	gui-libs/libhandy
-	<dev-libs/appstream-1.0.0
+	dev-libs/appstream
 	systemd? ( sys-apps/systemd )
 	!systemd? ( app-admin/openrc-settingsd )
 "
