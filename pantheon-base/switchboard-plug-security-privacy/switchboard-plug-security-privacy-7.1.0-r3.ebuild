@@ -12,7 +12,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-security-privacy/archive
 LICENSE="GPL-3"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-security-privacy:0

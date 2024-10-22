@@ -8,11 +8,12 @@ inherit meson vala
 DESCRIPTION="Small utility to print documents"
 HOMEPAGE="https://github.com/elementary/print"
 SRC_URI="https://github.com/elementary/print/archive/${PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="amd64"
+
+S="${WORKDIR}/print-${PV}"
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE=""
+KEYWORDS="amd64"
 
 RDEPEND="
 	pantheon-extra/contractor
@@ -22,8 +23,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/print-${PV}"
 
 src_prepare() {
 	eapply_user

@@ -9,10 +9,11 @@ DESCRIPTION="LightDM Greeter for Pantheon"
 HOMEPAGE="https://github.com/elementary/greeter"
 SRC_URI="https://github.com/elementary/greeter/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/greeter-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
@@ -32,8 +33,6 @@ RDEPEND="${DEPEND}
 	x11-misc/lightdm[introspection,vala]
 	x11-wm/mutter
 "
-
-S="${WORKDIR}/greeter-${PV}"
 
 src_prepare() {
 	eapply_user

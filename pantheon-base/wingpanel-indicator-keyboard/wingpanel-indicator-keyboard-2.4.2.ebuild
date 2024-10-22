@@ -12,7 +12,6 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-keyboard/archive/${PV
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	app-i18n/ibus[vala]

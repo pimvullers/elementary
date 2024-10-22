@@ -11,10 +11,9 @@ DESCRIPTION="A printers plug for Switchboard"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-printers"
 SRC_URI="https://github.com/elementary/switchboard-plug-printers/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="2"
-IUSE=""
+KEYWORDS="amd64"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-printers:0

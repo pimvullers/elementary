@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${P
 LICENSE="GPL-3"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-applications:0
@@ -37,5 +36,5 @@ src_prepare() {
 
 src_install() {
 	meson_src_install
-	rm -r ${ED}/usr/share/icons
+	rm -r "${ED}/usr/share/icons"
 }

@@ -9,10 +9,11 @@ DESCRIPTION="Elementary OS tasks and reminders"
 HOMEPAGE="https://github.com/elementary/tasks"
 SRC_URI="https://github.com/elementary/tasks/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/tasks-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
@@ -33,8 +34,6 @@ RDEPEND="${DEPEND}
 	x11-libs/gtk+:3
 	dev-libs/libportal[gtk]
 "
-
-S="${WORKDIR}/tasks-${PV}"
 
 src_prepare() {
 	eapply_user

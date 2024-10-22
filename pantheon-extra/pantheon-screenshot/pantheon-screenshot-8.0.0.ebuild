@@ -8,11 +8,12 @@ inherit gnome2 meson vala
 DESCRIPTION="Elementary Screenshot Tool"
 HOMEPAGE="https://github.com/elementary/screenshot"
 SRC_URI="https://github.com/elementary/screenshot/archive/${PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="amd64"
+
+S=${WORKDIR}/screenshot-${PV}
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE=""
+KEYWORDS="amd64"
 
 DEPEND="
 	$(vala_depend)
@@ -27,8 +28,6 @@ RDEPEND="${DEPEND}
 	x11-libs/gdk-pixbuf:2
 	x11-libs/gtk+:3
 "
-
-S=${WORKDIR}/screenshot-${PV}
 
 src_prepare() {
 	eapply_user

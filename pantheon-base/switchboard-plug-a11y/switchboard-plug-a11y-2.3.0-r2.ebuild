@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-a11y/archive/${PV}.tar.g
 LICENSE="GPL-3"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-a11y:0

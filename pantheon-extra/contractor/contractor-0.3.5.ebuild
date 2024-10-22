@@ -12,7 +12,6 @@ SRC_URI="https://github.com/elementary/contractor/archive/${PV}.tar.gz -> ${P}.t
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)

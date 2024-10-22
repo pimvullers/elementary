@@ -11,10 +11,9 @@ DESCRIPTION="Wacom settings"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-wacom"
 SRC_URI="https://github.com/elementary/switchboard-plug-wacom/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="3"
-IUSE=""
+KEYWORDS="amd64"
 
 RDEPEND="
 	dev-libs/glib:2

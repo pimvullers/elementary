@@ -9,12 +9,13 @@ DESCRIPTION="Pantheon settings daemon"
 HOMEPAGE="https://github.com/elementary/settings-daemon"
 SRC_URI="https://github.com/elementary/settings-daemon/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/settings-daemon-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="systemd"
 
-DEPEND=""
 RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	dev-libs/glib:2
@@ -23,8 +24,6 @@ RDEPEND="${DEPEND}
 	sys-apps/fwupd
 	systemd? ( sys-apps/systemd )
 "
-
-S="${WORKDIR}/settings-daemon-${PV}"
 
 src_prepare() {
 	eapply_user

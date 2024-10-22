@@ -11,9 +11,11 @@ DESCRIPTION="An easy parental controls plug for Switchboard"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-parental-controls"
 SRC_URI="https://github.com/elementary/switchboard-plug-parental-controls/archive/${PV}.tar.gz -> switchboard-plug-parental-controls-${PV}.tar.gz"
 
-KEYWORDS="amd64"
+S="${WORKDIR}/switchboard-plug-parental-controls-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
+KEYWORDS="amd64"
 IUSE="systemd"
 
 RDEPEND="
@@ -35,8 +37,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-S="${WORKDIR}/switchboard-plug-parental-controls-${PV}"
-
 src_prepare() {
 	eapply_user
 	use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
@@ -45,6 +45,6 @@ src_prepare() {
 
 src_install() {
 	meson_src_install
-	rm -r ${ED}/usr/lib64
-	rm -r ${ED}/usr/share/{doc,icons,locale,metainfo,polkit-1}
+	rm -r "${ED}/usr/lib64"
+	rm -r "${ED}/usr/share/{doc,icons,locale,metainfo,polkit-1}"
 }

@@ -9,12 +9,12 @@ DESCRIPTION="Default settings for the Pantheon Desktop Environment"
 HOMEPAGE="https://github.com/elementary/default-settings"
 SRC_URI="https://github.com/elementary/default-settings/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/default-settings-${PV}"
+
 LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
-DEPEND=""
 RDEPEND="${DEPEND}
 	x11-themes/elementary-icons-theme
 	x11-themes/elementary-sound-theme
@@ -24,8 +24,6 @@ RDEPEND="${DEPEND}
 	media-fonts/roboto
 	pantheon-base/pantheon-settings-daemon
 "
-
-S="${WORKDIR}/default-settings-${PV}"
 
 src_prepare() {
 	eapply_user

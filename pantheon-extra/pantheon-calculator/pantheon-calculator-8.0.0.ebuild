@@ -8,11 +8,12 @@ inherit gnome2 meson vala
 DESCRIPTION="A tiny, simple calculator written in GTK+ and Vala"
 HOMEPAGE="https://github.com/elementary/calculator"
 SRC_URI="https://github.com/elementary/calculator/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="amd64"
+
+S=${WORKDIR}/calculator-${PV}
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE=""
+KEYWORDS="amd64"
 
 DEPEND="
 	$(vala_depend)
@@ -26,8 +27,6 @@ RDEPEND="${DEPEND}
 	>=gui-libs/libhandy-0.91.0:1
 	gui-libs/gtk:4
 "
-
-S=${WORKDIR}/calculator-${PV}
 
 src_prepare() {
 	eapply_user

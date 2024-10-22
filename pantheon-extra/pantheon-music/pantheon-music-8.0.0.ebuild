@@ -9,10 +9,11 @@ DESCRIPTION="Elementary OS music player"
 HOMEPAGE="https://github.com/elementary/music"
 SRC_URI="https://github.com/elementary/music/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/music-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
@@ -28,8 +29,6 @@ RDEPEND="${DEPEND}
 	media-plugins/gst-plugins-meta:1.0[mp3]
 	gui-libs/gtk:4
 "
-
-S="${WORKDIR}/music-${PV}"
 
 src_prepare() {
 	eapply_user

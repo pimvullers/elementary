@@ -7,10 +7,10 @@ inherit gnome2 meson vala
 
 DESCRIPTION="A quick app launcher and window switcher for Pantheon"
 HOMEPAGE="https://github.com/elementary/dock"
-SRC_URI=""
 SRC_URI="https://github.com/elementary/dock/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
-IUSE=""
+S="${WORKDIR}/dock-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -23,8 +23,6 @@ RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:7
 "
-
-S="${WORKDIR}/dock-${PV}"
 
 src_prepare() {
 	eapply_user

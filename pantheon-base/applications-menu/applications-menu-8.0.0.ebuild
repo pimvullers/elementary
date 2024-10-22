@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/applications-menu/archive/${PV}.tar.gz ->
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)

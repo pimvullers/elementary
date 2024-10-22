@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-bluetooth/archive/${PV}.
 LICENSE="LGPL-2.1"
 SLOT="3"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2

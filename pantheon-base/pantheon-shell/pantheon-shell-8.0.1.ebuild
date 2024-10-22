@@ -9,16 +9,16 @@ DESCRIPTION="Pantheon DE shell"
 HOMEPAGE="https://github.com/elementary/session-settings"
 SRC_URI="https://github.com/elementary/session-settings/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/session-settings-${PV}"
+
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="accessibility gnome-keyring wayland systemd"
 
-DEPEND=""
 RDEPEND="${DEPEND}
 	accessibility? (
 		app-accessibility/orca
-		app-accessibility/onboard
 	)
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
@@ -34,8 +34,6 @@ RDEPEND="${DEPEND}
 PDEPEND="
 	pantheon-base/pantheon-settings
 "
-
-S="${WORKDIR}/session-settings-${PV}"
 
 src_prepare() {
 	eapply_user

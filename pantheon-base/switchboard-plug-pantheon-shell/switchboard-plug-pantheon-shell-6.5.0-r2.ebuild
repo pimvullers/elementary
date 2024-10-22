@@ -11,10 +11,9 @@ DESCRIPTION="Configure the Pantheon desktop environment using Switchboard"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-pantheon-shell"
 SRC_URI="https://github.com/elementary/switchboard-plug-pantheon-shell/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="2"
-IUSE=""
+KEYWORDS="amd64"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-pantheon-shell:0

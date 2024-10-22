@@ -12,7 +12,6 @@ SRC_URI="https://github.com/elementary/wingpanel-indicator-nightlight/archive/${
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2

@@ -9,10 +9,11 @@ DESCRIPTION="Desktop calendar app designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/calendar"
 SRC_URI="https://github.com/elementary/calendar/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/calendar-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
@@ -36,8 +37,6 @@ RDEPEND="${DEPEND}
 	sci-geosciences/geocode-glib:2
 	x11-libs/gtk+:3
 "
-
-S="${WORKDIR}/calendar-${PV}"
 
 src_prepare() {
 	eapply_user

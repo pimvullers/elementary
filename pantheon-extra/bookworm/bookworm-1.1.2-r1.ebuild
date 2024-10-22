@@ -28,7 +28,6 @@ RDEPEND="${DEPEND}
 	dev-python/html2text
 	dev-lang/python:2.7
 	comics? ( app-arch/unar )"
-BDEPEND=""
 
 src_prepare() {
 	eapply_user

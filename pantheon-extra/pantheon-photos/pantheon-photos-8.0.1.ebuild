@@ -9,6 +9,8 @@ DESCRIPTION="Photo viewer and organizer designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/photos/"
 SRC_URI="https://github.com/elementary/photos/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/photos-${PV}"
+
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64"
@@ -39,8 +41,6 @@ RDEPEND="${DEPEND}
 	sci-geosciences/geocode-glib:2
 	x11-libs/gtk+:3
 "
-
-S="${WORKDIR}/photos-${PV}"
 
 src_prepare() {
 	eapply_user

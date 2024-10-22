@@ -8,11 +8,12 @@ inherit gnome2 meson vala
 DESCRIPTION="Video player and library app designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/videos"
 SRC_URI="https://github.com/elementary/videos/archive/${PV}.tar.gz -> ${P}.tar.gz"
-KEYWORDS="amd64"
+
+S=${WORKDIR}/videos-${PV}
 
 LICENSE="GPL-3"
 SLOT="0"
-IUSE=""
+KEYWORDS="amd64"
 
 DEPEND="
 	$(vala_depend)
@@ -30,8 +31,6 @@ RDEPEND="${DEPEND}
 	gui-libs/libadwaita:1
 	x11-libs/gdk-pixbuf:2
 "
-
-S=${WORKDIR}/videos-${PV}
 
 src_prepare() {
 	eapply_user

@@ -5,14 +5,12 @@ EAPI=8
 
 DESCRIPTION="Pantheon DE meta package"
 HOMEPAGE="https://elementary.io/"
-SRC_URI=""
 
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
 IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower wayland input_devices_wacom"
 
-DEPEND=""
 RDEPEND="${DEPEND}
 	accessibility? (
 		pantheon-base/wingpanel-indicator-a11y

@@ -9,10 +9,11 @@ DESCRIPTION="Elementary OS mail reader"
 HOMEPAGE="https://github.com/elementary/mail"
 SRC_URI="https://github.com/elementary/mail/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/mail-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2
@@ -26,8 +27,6 @@ RDEPEND="
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
-
-S="${WORKDIR}/mail-${PV}"
 
 src_prepare() {
 	eapply_user

@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-useraccounts/archive/${P
 LICENSE="GPL-3"
 SLOT="2"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-useraccounts:0

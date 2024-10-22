@@ -12,7 +12,6 @@ SRC_URI="https://github.com/elementary/pantheon-agent-polkit/archive/${PV}.tar.g
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)

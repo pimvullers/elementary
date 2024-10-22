@@ -9,10 +9,11 @@ DESCRIPTION="The camera app designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/camera"
 SRC_URI="https://github.com/elementary/camera/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S=${WORKDIR}/camera-${PV}
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 DEPEND="
 	$(vala_depend)
@@ -26,7 +27,6 @@ RDEPEND="${DEPEND}
 	media-libs/gstreamer
 	gui-libs/gtk:4
 "
-S=${WORKDIR}/camera-${PV}
 
 src_prepare() {
 	eapply_user

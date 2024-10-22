@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-sharing/archive/${PV}.ta
 LICENSE="GPL-3"
 SLOT="3"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	dev-libs/glib:2

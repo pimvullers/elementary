@@ -11,10 +11,9 @@ DESCRIPTION="Mouse and touchpad settings"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-mouse-touchpad"
 SRC_URI="https://github.com/elementary/switchboard-plug-mouse-touchpad/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
-KEYWORDS="amd64"
 LICENSE="GPL-3"
 SLOT="3"
-IUSE=""
+KEYWORDS="amd64"
 
 RDEPEND="
 	dev-libs/glib:2

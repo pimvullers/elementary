@@ -14,7 +14,6 @@ SRC_URI="https://github.com/elementary/switchboard-plug-display/archive/${PV}.ta
 LICENSE="GPL-3"
 SLOT="3"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-display:0

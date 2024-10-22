@@ -11,10 +11,11 @@ DESCRIPTION="Application configuration management"
 HOMEPAGE="https://github.com/elementary/switchboard-plug-applications"
 SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${PV}.tar.gz -> switchboard-plug-applications-${PV}.tar.gz"
 
+S="${WORKDIR}/switchboard-plug-applications-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-applications:0
@@ -29,8 +30,6 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
-S="${WORKDIR}/switchboard-plug-applications-${PV}"
-
 src_prepare() {
 	eapply_user
 	vala_setup
@@ -38,6 +37,6 @@ src_prepare() {
 
 src_install() {
 	meson_src_install
-	rm -r ${ED}/usr/lib64
-	rm -r ${ED}/usr/share/{doc,locale,metainfo}
+	rm -r "${ED}/usr/lib64"
+	rm -r "${ED}/usr/share/{doc,locale,metainfo}"
 }
