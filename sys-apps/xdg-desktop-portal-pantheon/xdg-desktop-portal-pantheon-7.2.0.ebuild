@@ -9,6 +9,8 @@ DESCRIPTION="Pantheon XDG Desktop Portals"
 HOMEPAGE="https://github.com/elementary/portals"
 SRC_URI="https://github.com/elementary/portals/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/portals-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -21,9 +23,6 @@ DEPEND="
 	x11-libs/libX11"
 RDEPEND="${DEPEND}
 	systemd? ( sys-apps/systemd )"
-BDEPEND=""
-
-S="${WORKDIR}/portals-${PV}"
 
 src_prepare() {
 	eapply_user

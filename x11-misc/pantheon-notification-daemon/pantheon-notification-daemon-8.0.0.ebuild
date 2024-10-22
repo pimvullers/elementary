@@ -9,6 +9,8 @@ DESCRIPTION="Gtk notification server for Pantheon"
 HOMEPAGE="https://github.com/elementary/notifications"
 SRC_URI="https://github.com/elementary/notifications/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/notifications-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -26,15 +28,7 @@ RDEPEND="${DEPEND}
 	x11-libs/gtk+:3
 "
 
-S="${WORKDIR}/notifications-${PV}"
-
 src_prepare() {
 	eapply_user
 	vala_setup
-#	vala_version=`${VALAC} --version`
-#	vala_minor_patch=${vala_version#*.}
-#	vala_patch=${vala_minor_patch#*.}
-#	if ((${vala_patch} > 14)); then
-#		eapply "${FILESDIR}/6e1e487a152f59eb26fdb828459ac8fa4dd1f0e0.patch"
-#	fi
 }

@@ -19,8 +19,8 @@ fi
 
 LICENSE="GPL-3"
 SLOT="0"
-RESTRICT="mirror"
 IUSE="dbus debug nls"
+RESTRICT="mirror"
 
 VALA_USE_DEPEND="vapigen"
 

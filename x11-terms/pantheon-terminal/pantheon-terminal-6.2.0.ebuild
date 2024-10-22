@@ -11,10 +11,11 @@ DESCRIPTION="The terminal of the 21st century"
 HOMEPAGE="https://github.com/elementary/terminal"
 SRC_URI="https://github.com/elementary/terminal/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/terminal-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="
 	dev-libs/libgee:0.8
@@ -29,8 +30,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/terminal-${PV}"
 
 pkg_setup() {
 	vala_setup
