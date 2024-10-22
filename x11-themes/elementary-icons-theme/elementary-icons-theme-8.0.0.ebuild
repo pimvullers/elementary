@@ -9,15 +9,15 @@ DESCRIPTION="An original set of vector icons designed specifically for elementar
 HOMEPAGE="https://github.com/elementary/icons"
 SRC_URI="https://github.com/elementary/icons/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S=${WORKDIR}/icons-${PV}
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
 RDEPEND="gnome-base/librsvg"
 BDEPEND="${RDEPEND}
 	x11-apps/xcursorgen"
-S=${WORKDIR}/icons-${PV}
 
 src_configure() {
 	local emesonargs=(

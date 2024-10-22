@@ -3,27 +3,19 @@
 
 EAPI=8
 
-inherit mount-boot-utils meson
+inherit mount-boot meson
 
 DESCRIPTION="an elementary theme for rEFInd"
 HOMEPAGE="https://github.com/danirabbit/refind-theme-elementary"
-SRC_URI="https://github.com/danirabbit/refind-theme-elementary/archive/559555ae8c30e1e08d56cd2af067bfb89034ab6c.zip -> ${P}.zip"
+SRC_URI="https://github.com/danirabbit/refind-theme-elementary/archive/559555ae8c30e1e08d56cd2af067bfb89034ab6c.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/refind-theme-elementary-559555ae8c30e1e08d56cd2af067bfb89034ab6c"
 
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
 
-
-DEPEND="
-	gnome-base/librsvg
-"
-
-S="${WORKDIR}/refind-theme-elementary-559555ae8c30e1e08d56cd2af067bfb89034ab6c"
-
-pkg_pretend() {
-	mount-boot_check_status
-}
+DEPEND="gnome-base/librsvg"
 
 src_install() {
 	meson_src_install

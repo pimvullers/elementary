@@ -9,12 +9,8 @@ DESCRIPTION="A set of system sounds for elementary OS"
 HOMEPAGE="https://github.com/elementary/sound-theme"
 SRC_URI="https://github.com/elementary/sound-theme/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/sound-theme-${PV}"
+
 LICENSE="Unlicense"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE=""
-
-DEPEND=""
-RDEPEND="${DEPEND}"
-
-S="${WORKDIR}/sound-theme-${PV}"

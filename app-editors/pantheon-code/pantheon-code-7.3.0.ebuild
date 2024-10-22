@@ -9,6 +9,8 @@ DESCRIPTION="Code editor designed for elementary OS"
 HOMEPAGE="https://github.com/elementary/code"
 SRC_URI="https://github.com/elementary/code/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/code-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -38,8 +40,6 @@ RDEPEND="${DEPEND}
 	x11-libs/pango
 	x11-libs/vte:2.91
 "
-
-S="${WORKDIR}/code-${PV}"
 
 src_prepare() {
 	eapply_user
