@@ -1,0 +1,13 @@
+BDEPEND=app-arch/unzip X? ( >=x11-apps/mkfontscale-1.2.0 media-fonts/encodings )
+DEFINED_PHASES=install postinst postrm setup
+DESCRIPTION=The Inter font family
+EAPI=8
+HOMEPAGE=https://rsms.me/inter/
+INHERIT=font
+IUSE=X
+KEYWORDS=amd64
+LICENSE=OFL-1.1
+SLOT=0
+SRC_URI=https://github.com/rsms/inter/releases/download/v4.0/Inter-4.0.zip
+_eclasses_=font	aa113a3df9cd0a9693a1c1ee7c34a6eb
+_md5_=53fe6f2c30b7f1dd4d4c8e9ad3b8ef0a
