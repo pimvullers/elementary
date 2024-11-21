@@ -19,6 +19,7 @@ IUSE="accessibility gnome-keyring"
 RDEPEND="${DEPEND}
 	accessibility? (
 		app-accessibility/orca
+		app-accessibility/onboard
 	)
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
