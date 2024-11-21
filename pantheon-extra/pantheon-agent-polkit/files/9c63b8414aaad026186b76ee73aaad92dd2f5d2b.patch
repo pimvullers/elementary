@@ -1,0 +1,80 @@
+From 9c63b8414aaad026186b76ee73aaad92dd2f5d2b Mon Sep 17 00:00:00 2001
+From: Leonhard <106322251+leolost2605@users.noreply.github.com>
+Date: Thu, 22 Aug 2024 19:57:52 +0200
+Subject: [PATCH] Use wl protocol for keeping it centered (#81)
+
+---
+ .github/workflows/main.yml |  2 +-
+ README.md                  |  1 +
+ meson.build                |  1 +
+ src/PolkitDialog.vala      | 13 ++++++++++++-
+ 4 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/.github/workflows/main.yml b/.github/workflows/main.yml
+index 95c6e32..b540d05 100644
+--- a/.github/workflows/main.yml
++++ b/.github/workflows/main.yml
+@@ -23,7 +23,7 @@ jobs:
+     - name: Install Dependencies
+       run: |
+         apt update
+-        apt install -y libgranite-7-dev libgtk-4-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev meson valac
++        apt install -y libgranite-7-dev libgtk-4-dev libpantheon-wayland-1-dev libpolkit-agent-1-dev libpolkit-gobject-1-dev meson valac
+     - name: Build
+       env:
+         DESTDIR: out
+diff --git a/README.md b/README.md
+index 431292e..0a22055 100644
+--- a/README.md
++++ b/README.md
+@@ -9,6 +9,7 @@ You'll need the following dependencies:
+ * libadwaita-1-dev
+ * libgranite-7-dev (>= 7.0.0)
+ * libgtk-4-dev
++* libpantheon-wayland-1-dev
+ * libpolkit-gobject-1-dev
+ * libpolkit-agent-1-dev
+ * meson
+diff --git a/meson.build b/meson.build
+index e7f197b..7c57371 100644
+--- a/meson.build
++++ b/meson.build
+@@ -23,6 +23,7 @@ executable(
+         dependency('gtk4'),
+         dependency('polkit-agent-1'),
+         dependency('polkit-gobject-1'),
++        dependency('pantheon-wayland-1'),
+         meson.get_compiler('vala').find_library('posix')
+     ],
+     c_args: [
+diff --git a/src/PolkitDialog.vala b/src/PolkitDialog.vala
+index 1a2c77b..f1edf3e 100644
+--- a/src/PolkitDialog.vala
++++ b/src/PolkitDialog.vala
+@@ -23,7 +23,7 @@
+  * https://github.com/solus-project/budgie-desktop
+  */
+ 
+-public class Ag.PolkitDialog : Granite.MessageDialog {
++public class Ag.PolkitDialog : Granite.MessageDialog, PantheonWayland.ExtendedBehavior {
+     public signal void done ();
+     public bool was_canceled = false;
+ 
+@@ -123,6 +123,17 @@ public class Ag.PolkitDialog : Granite.MessageDialog {
+ 
+         update_idents ();
+         select_session ();
++
++        child.realize.connect (() => {
++            connect_to_shell ();
++            set_keep_above ();
++            make_centered ();
++
++            var surface = get_surface ();
++            if (surface is Gdk.Toplevel) {
++                ((Gdk.Toplevel) surface).inhibit_system_shortcuts (null);
++            }
++        });
+     }
+ 
+     private void update_idents () {

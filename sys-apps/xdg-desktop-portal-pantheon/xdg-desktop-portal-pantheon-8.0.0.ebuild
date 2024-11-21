@@ -28,6 +28,7 @@ RDEPEND="${DEPEND}
 
 src_prepare() {
 	eapply_user
+	use wayland || eapply -R "${FILESDIR}/1a825f6dcba9a0c42f369a933eaa38c4dbb8a0ec.patch"
 	use systemd || eapply "${FILESDIR}/${PN}-7.0.0.patch"
 	vala_setup
 }

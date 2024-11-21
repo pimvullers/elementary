@@ -1,0 +1,66 @@
+From 1a825f6dcba9a0c42f369a933eaa38c4dbb8a0ec Mon Sep 17 00:00:00 2001
+From: Leonhard <106322251+leolost2605@users.noreply.github.com>
+Date: Fri, 16 Aug 2024 01:26:45 +0200
+Subject: [PATCH] Access/Dialog: Center and keep above on wayland (#114)
+
+---
+ .github/workflows/ci.yml      |  2 +-
+ .github/workflows/release.yml |  2 +-
+ data/portals.metainfo.xml.in  | 12 ++++++++++++
+ meson.build                   |  1 +
+ src/Access/Dialog.vala        | 10 +++++++++-
+ src/meson.build               |  1 +
+ 6 files changed, 25 insertions(+), 3 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 629fc356..6d831244 100644
+--- a/meson.build
++++ b/meson.build
+@@ -26,6 +26,7 @@ if meson.get_compiler('vala').version().version_compare('>=0.56.1')
+     ]
+ endif
+ 
++pantheon_wayland_dep = dependency('pantheon-wayland-1')
+ x11_dep = dependency('x11')
+ 
+ add_project_arguments(
+diff --git a/src/Access/Dialog.vala b/src/Access/Dialog.vala
+index 0c54fe6a..d438c66d 100644
+--- a/src/Access/Dialog.vala
++++ b/src/Access/Dialog.vala
+@@ -4,7 +4,7 @@
+  */
+ 
+ [DBus (name = "org.freedesktop.impl.portal.Request")]
+-public class Access.Dialog : Granite.MessageDialog {
++public class Access.Dialog : Granite.MessageDialog, PantheonWayland.ExtendedBehavior {
+     public enum ButtonAction {
+         SUGGESTED,
+         DESTRUCTIVE
+@@ -73,6 +73,14 @@ public class Access.Dialog : Granite.MessageDialog {
+ 
+         custom_bin.orientation = Gtk.Orientation.VERTICAL;
+         custom_bin.spacing = 6;
++
++        if (parent_window == "") {
++            child.realize.connect (() => {
++                connect_to_shell ();
++                make_centered ();
++                set_keep_above ();
++            });
++        }
+     }
+ 
+     public override void show () {
+diff --git a/src/meson.build b/src/meson.build
+index c17ab23e..f995b995 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -29,6 +29,7 @@ executable(
+         gio_dep,
+         granite_dep,
+         gtk_deps,
++        pantheon_wayland_dep,
+         x11_dep
+     ],
+     install: true,
