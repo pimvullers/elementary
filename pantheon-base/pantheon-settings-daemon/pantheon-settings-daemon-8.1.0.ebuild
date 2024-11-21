@@ -21,7 +21,7 @@ RDEPEND="${DEPEND}
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
 	sys-apps/accountsservice
-	sys-apps/fwupd
+	<sys-apps/fwupd-2.0.0
 	systemd? ( sys-apps/systemd )
 "
 

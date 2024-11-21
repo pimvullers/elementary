@@ -14,7 +14,7 @@ S="${WORKDIR}/portals-${PV}"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="systemd"
+IUSE="systemd wayland"
 
 DEPEND="
 	dev-libs/glib:2
@@ -22,7 +22,9 @@ DEPEND="
 	gui-libs/gtk:4
 	x11-libs/libX11"
 RDEPEND="${DEPEND}
-	systemd? ( sys-apps/systemd )"
+	systemd? ( sys-apps/systemd )
+	wayland? ( pantheon-base/pantheon-wayland )
+"
 
 src_prepare() {
 	eapply_user

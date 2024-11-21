@@ -12,7 +12,7 @@ SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 LICENSE="LGPL-3+"
 SLOT="7"
 KEYWORDS="amd64"
-IUSE="demo doc"
+IUSE="demo"
 
 RDEPEND="
 	>=dev-libs/glib-2.50:2
@@ -33,7 +33,7 @@ src_prepare() {
 
 src_configure() {
 	local emesonargs=(
-		-Ddocumentation=$(usex doc true false)
+		-Ddocumentation=false
 		-Ddemo=$(usex demo true false)
 	)
 	meson_src_configure

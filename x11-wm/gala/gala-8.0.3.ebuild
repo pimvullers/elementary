@@ -44,6 +44,7 @@ src_prepare() {
 	vala_setup
 
 	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
+	sed -i -e "s#pid_t#int#" vapi/libmutter.vapi lib/App.vala src/WindowTracker.vala
 }
 
 src_configure() {

@@ -1,0 +1,18 @@
+diff -ur --unidirectional-new-file -urN onboard-1.4.1.orig/setup.py onboard-1.4.1/setup.py
+--- onboard-1.4.1.orig/setup.py	2017-04-05 12:07:31.491000000 +0000
++++ onboard-1.4.1/setup.py	2017-04-05 12:10:31.453000000 +0000
+@@ -396,14 +396,6 @@
+ 
+     data_files = [('share/glib-2.0/schemas', glob.glob('data/*.gschema.xml')),
+                   ('share/dbus-1/services', glob.glob('data/org.onboard.Onboard.service')),
+-                  ('share/onboard', glob.glob('AUTHORS')),
+-                  ('share/onboard', glob.glob('CHANGELOG')),
+-                  ('share/onboard', glob.glob('COPYING*')),
+-                  ('share/onboard', glob.glob('HACKING')),
+-                  ('share/onboard', glob.glob('NEWS')),
+-                  ('share/onboard', glob.glob('README')),
+-                  ('share/onboard', glob.glob('onboard-defaults.conf.example')),
+-                  ('share/onboard', glob.glob('onboard-default-settings.gschema.override.example')),
+                   ('share/icons/hicolor/16x16/apps', glob.glob('icons/hicolor/16/*')),
+                   ('share/icons/hicolor/22x22/apps', glob.glob('icons/hicolor/22/*')),
+                   ('share/icons/hicolor/24x24/apps', glob.glob('icons/hicolor/24/*')),

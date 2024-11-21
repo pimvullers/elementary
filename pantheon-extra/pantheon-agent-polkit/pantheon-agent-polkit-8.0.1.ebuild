@@ -12,6 +12,7 @@ SRC_URI="https://github.com/elementary/pantheon-agent-polkit/archive/${PV}.tar.g
 LICENSE="LGPL-2.1"
 SLOT="0"
 KEYWORDS="amd64"
+IUSE="wayland"
 
 DEPEND="
 	$(vala_depend)
@@ -24,6 +25,7 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	sys-auth/polkit[introspection]
 	x11-libs/gtk+:3
+	wayland? ( pantheon-base/pantheon-wayland )
 "
 
 src_prepare() {

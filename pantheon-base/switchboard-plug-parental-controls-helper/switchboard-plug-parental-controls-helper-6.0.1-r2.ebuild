@@ -43,5 +43,7 @@ src_prepare() {
 src_install() {
 	meson_src_install
 	rm -r "${ED}/usr/lib64"
-	rm -r "${ED}/usr/share/{doc,icons,locale,metainfo,polkit-1}"
+	for d in doc icons locale metainfo polkit-1; do
+		rm -r "${ED}/usr/share/${d}"
+	done
 }

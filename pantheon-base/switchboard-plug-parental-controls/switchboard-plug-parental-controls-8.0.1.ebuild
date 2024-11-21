@@ -47,5 +47,7 @@ src_install() {
 	meson_src_install
 	rm -r "${ED}/usr/bin"
 	rm -r "${ED}/usr/libexec"
-	rm -r "${ED}/usr/share/{applications,dbus-1}"
+	for d in applications dbus-1; do
+		rm -r "${ED}/usr/share/${d}"
+	done
 }
