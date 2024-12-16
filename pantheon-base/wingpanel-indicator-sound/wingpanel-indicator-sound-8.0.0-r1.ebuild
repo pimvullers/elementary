@@ -16,7 +16,7 @@ KEYWORDS="amd64"
 RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:0
-	media-libs/libcanberra[gtk3]
+	|| ( media-libs/libcanberra[gtk3] media-libs/libcanberra-gtk3 )
 	media-libs/libpulse[glib]
 	pantheon-base/wingpanel
 	x11-libs/gtk+:3
