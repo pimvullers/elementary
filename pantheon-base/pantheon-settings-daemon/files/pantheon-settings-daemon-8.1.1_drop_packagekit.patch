@@ -1,6 +1,6 @@
-diff '--color=auto' -Naur settings-daemon-8.1.0_orig/meson.build settings-daemon-8.1.0/meson.build
---- settings-daemon-8.1.0_orig/meson.build	2024-08-28 13:21:26.160782171 +0200
-+++ settings-daemon-8.1.0/meson.build	2024-08-28 13:22:08.903468272 +0200
+diff '--color=auto' -Naur settings-daemon-8.1.1_orig/meson.build settings-daemon-8.1.1/meson.build
+--- settings-daemon-8.1.1_orig/meson.build	2024-12-17 11:11:07.069443911 +0100
++++ settings-daemon-8.1.1/meson.build	2024-12-17 11:12:11.060113188 +0100
 @@ -13,7 +13,6 @@
  granite_dep = dependency('granite', version: '>= 5.3.0')
  gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0')
@@ -9,9 +9,9 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/meson.build settings-daemon
  i18n = import('i18n')
  gettext_name = meson.project_name()
  
-diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.vala settings-daemon-8.1.0/src/Backends/SystemUpdate.vala
---- settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.vala	2024-08-28 13:21:26.180781846 +0200
-+++ settings-daemon-8.1.0/src/Backends/SystemUpdate.vala	2024-08-28 13:27:51.481024980 +0200
+diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.vala settings-daemon-8.1.1/src/Backends/SystemUpdate.vala
+--- settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.vala	2024-12-17 11:11:07.076110647 +0100
++++ settings-daemon-8.1.1/src/Backends/SystemUpdate.vala	2024-12-17 11:14:07.454673860 +0100
 @@ -10,7 +10,6 @@
      public struct UpdateDetails {
          string[] packages;
@@ -59,7 +59,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.v
          check_for_updates.begin (false, true);
  
          Timeout.add_seconds ((uint) settings.get_int64 ("refresh-interval"), () => {
-@@ -69,80 +49,7 @@
+@@ -73,83 +53,7 @@
              return;
          }
  
@@ -113,12 +113,15 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.v
 -
 -            update_state (AVAILABLE);
 -
--            if (!force && settings.get_boolean ("automatic-updates")) {
+-            var metered_network = NetworkMonitor.get_default ().network_metered;
+-            var auto_updates = settings.get_boolean ("automatic-updates");
+-
+-            if (!force && !metered_network && auto_updates) {
 -                update.begin ();
 -                return;
 -            }
 -
--            if (notify) {
+-            if (notify || (metered_network && auto_updates)) {
 -                var notification = new Notification (_("Update available"));
 -                notification.set_default_action (Application.ACTION_PREFIX + Application.SHOW_UPDATES_ACTION);
 -
@@ -141,7 +144,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.v
      }
  
      public async void update () throws DBusError, IOError {
-@@ -151,40 +58,12 @@
+@@ -158,40 +62,12 @@
          }
  
          cancellable.reset ();
@@ -182,10 +185,10 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Backends/SystemUpdate.v
      private void send_error (string message) {
          var notification = new Notification (_("System updates couldn't be installed"));
          notification.set_body (_("An error occurred while trying to update your system"));
-diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/meson.build settings-daemon-8.1.0/src/meson.build
---- settings-daemon-8.1.0_orig/src/meson.build	2024-08-28 13:21:26.180781846 +0200
-+++ settings-daemon-8.1.0/src/meson.build	2024-08-28 13:24:52.961768450 +0200
-@@ -33,8 +33,7 @@
+diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/meson.build settings-daemon-8.1.1/src/meson.build
+--- settings-daemon-8.1.1_orig/src/meson.build	2024-12-17 11:11:07.079444015 +0100
++++ settings-daemon-8.1.1/src/meson.build	2024-12-17 11:12:11.060113188 +0100
+@@ -34,8 +34,7 @@
          gdk_pixbuf_dep,
          gexiv2_dep,
          libgeoclue_dep,
@@ -195,9 +198,9 @@ diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/meson.build settings-da
      ],
      vala_args: args,
      install: true,
-diff '--color=auto' -Naur settings-daemon-8.1.0_orig/src/Utils/PkUtils.vala settings-daemon-8.1.0/src/Utils/PkUtils.vala
---- settings-daemon-8.1.0_orig/src/Utils/PkUtils.vala	2024-08-28 13:21:26.180781846 +0200
-+++ settings-daemon-8.1.0/src/Utils/PkUtils.vala	2024-08-28 13:27:49.004362345 +0200
+diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Utils/PkUtils.vala settings-daemon-8.1.1/src/Utils/PkUtils.vala
+--- settings-daemon-8.1.1_orig/src/Utils/PkUtils.vala	2024-12-17 11:11:07.076110647 +0100
++++ settings-daemon-8.1.1/src/Utils/PkUtils.vala	2024-12-17 11:12:11.060113188 +0100
 @@ -12,81 +12,4 @@
          State state;
          string status;

@@ -27,6 +27,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${P}_drop_zeitgeist.patch"
+	eapply "${FILESDIR}/${PN}-8.0.0_drop_zeitgeist.patch"
 	vala_setup
 }

@@ -1,0 +1,36 @@
+diff '--color=auto' -Naur switchboard-plug-about-8.1.0_orig/src/DBus/SystemUpdate.vala switchboard-plug-about-8.1.0/src/DBus/SystemUpdate.vala
+--- switchboard-plug-about-8.1.0_orig/src/DBus/SystemUpdate.vala	2024-12-17 11:02:59.741216259 +0100
++++ switchboard-plug-about-8.1.0/src/DBus/SystemUpdate.vala	2024-12-17 11:03:49.435026116 +0100
+@@ -17,7 +17,6 @@
+     public struct UpdateDetails {
+         string[] packages;
+         int size;
+-        Pk.Info[] info;
+     }
+ 
+     public signal void state_changed ();
+diff '--color=auto' -Naur switchboard-plug-about-8.1.0_orig/src/meson.build switchboard-plug-about-8.1.0/src/meson.build
+--- switchboard-plug-about-8.1.0_orig/src/meson.build	2024-12-17 11:02:59.741216259 +0100
++++ switchboard-plug-about-8.1.0/src/meson.build	2024-12-17 11:04:36.422149303 +0100
+@@ -42,7 +42,6 @@
+         dependency('libadwaita-1'),
+         dependency('libgtop-2.0'),
+         dependency('libsoup-3.0'),
+-        dependency('packagekit-glib2'),
+         dependency('gudev-1.0'),
+         dependency('udisks2'),
+         dependency('polkit-gobject-1'),
+diff '--color=auto' -Naur switchboard-plug-about-8.1.0_orig/src/Views/OperatingSystemView.vala switchboard-plug-about-8.1.0/src/Views/OperatingSystemView.vala
+--- switchboard-plug-about-8.1.0_orig/src/Views/OperatingSystemView.vala	2024-12-17 11:02:59.741216259 +0100
++++ switchboard-plug-about-8.1.0/src/Views/OperatingSystemView.vala	2024-12-17 11:03:49.435026116 +0100
+@@ -536,10 +536,6 @@
+                         details.packages.length
+                     ).printf (details.packages.length);
+ 
+-                    if (Pk.Info.SECURITY in details.info) {
+-                        updates_image.icon_name = "software-update-urgent";
+-                    }
+-
+                     packages.splice (0, packages.get_n_items (), details.packages);
+                 } catch (Error e) {
+                     updates_description.label = _("Unable to determine number of updates");
