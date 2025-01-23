@@ -19,7 +19,6 @@ RDEPEND="
 	gnome-base/libgtop:2
 	pantheon-base/wingpanel
 	virtual/libudev
-	x11-libs/bamf
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
