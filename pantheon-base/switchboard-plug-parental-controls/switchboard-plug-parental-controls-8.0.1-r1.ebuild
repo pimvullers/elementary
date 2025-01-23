@@ -18,7 +18,7 @@ IUSE="systemd"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-parental-controls:0
-	pantheon-base/switchboard-plug-parental-controls-helper[systemd?]
+	!pantheon-base/switchboard-plug-parental-controls-helper
 	dev-libs/glib:2
 	dev-libs/granite:7
 	dev-libs/libgee:0.8
@@ -38,16 +38,10 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	#use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
-	sed -i -e '/systemd_dep/d' meson.build data/meson.build
+	use systemd || sed -i -e '/systemd_dep/d' meson.build data/meson.build
 	vala_setup
 }
 
 src_install() {
 	meson_src_install
-	rm -r "${ED}/usr/bin"
-	rm -r "${ED}/usr/libexec"
-	for d in applications dbus-1; do
-		rm -r "${ED}/usr/share/${d}"
-	done
 }

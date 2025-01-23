@@ -9,22 +9,22 @@ inherit meson vala
 
 DESCRIPTION="Control system power consumption using Switchboard."
 HOMEPAGE="https://github.com/elementary/switchboard-plug-power"
-SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> switchboard-plug-power-${PV}.tar.gz"
-
-S="${WORKDIR}/switchboard-plug-power-${PV}"
+SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
-SLOT="0"
+SLOT="3"
 KEYWORDS="amd64"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-power:0
+	!pantheon-base/switchboard-plug-power-helper
 	dev-libs/glib:2
-	dev-libs/granite:0
-	pantheon-base/switchboard:2
+	dev-libs/granite:7
+	pantheon-base/switchboard:3
 	sys-apps/dbus
 	sys-auth/polkit
-	x11-libs/gtk+:3
+	gui-libs/gtk:4
+	gui-libs/libadwaita:1
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -38,6 +38,4 @@ src_prepare() {
 
 src_install() {
 	meson_src_install
-	rm -r "${ED}/usr/lib64"
-	for d in doc locale metainfo polkit-1; do rm -r "${ED}/usr/share/${d}"; done
 }
