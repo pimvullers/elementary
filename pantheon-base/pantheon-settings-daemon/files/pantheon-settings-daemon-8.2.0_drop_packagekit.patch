@@ -1,6 +1,6 @@
-diff '--color=auto' -Naur settings-daemon-8.1.1_orig/meson.build settings-daemon-8.1.1/meson.build
---- settings-daemon-8.1.1_orig/meson.build	2024-12-17 11:11:07.069443911 +0100
-+++ settings-daemon-8.1.1/meson.build	2024-12-17 11:12:11.060113188 +0100
+diff '--color=auto' -Naur settings-daemon-8.2.0.orig/meson.build settings-daemon-8.2.0/meson.build
+--- settings-daemon-8.2.0.orig/meson.build	2025-02-15 20:40:00.108220566 +0100
++++ settings-daemon-8.2.0/meson.build	2025-02-15 20:46:43.403160291 +0100
 @@ -13,7 +13,6 @@
  granite_dep = dependency('granite', version: '>= 5.3.0')
  gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0')
@@ -9,13 +9,13 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/meson.build settings-daemon
  i18n = import('i18n')
  gettext_name = meson.project_name()
  
-diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.vala settings-daemon-8.1.1/src/Backends/SystemUpdate.vala
---- settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.vala	2024-12-17 11:11:07.076110647 +0100
-+++ settings-daemon-8.1.1/src/Backends/SystemUpdate.vala	2024-12-17 11:14:07.454673860 +0100
+diff '--color=auto' -Naur settings-daemon-8.2.0.orig/src/Backends/SystemUpdate.vala settings-daemon-8.2.0/src/Backends/SystemUpdate.vala
+--- settings-daemon-8.2.0.orig/src/Backends/SystemUpdate.vala	2025-02-15 20:40:00.114887027 +0100
++++ settings-daemon-8.2.0/src/Backends/SystemUpdate.vala	2025-02-15 20:46:35.766608303 +0100
 @@ -10,7 +10,6 @@
      public struct UpdateDetails {
          string[] packages;
-         int size;
+         uint64 size;
 -        Pk.Info[] info;
      }
  
@@ -29,7 +29,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
      private GLib.Cancellable cancellable;
  
      construct {
-@@ -34,28 +31,11 @@
+@@ -36,29 +33,11 @@
  
          update_details = {
              {},
@@ -38,6 +38,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
 -        };
 -
 -        task = new Pk.Task () {
+-            details_with_deps_size = true,
 -            only_download = true
 +            0
          };
@@ -59,7 +60,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
          check_for_updates.begin (false, true);
  
          Timeout.add_seconds ((uint) settings.get_int64 ("refresh-interval"), () => {
-@@ -73,83 +53,7 @@
+@@ -76,97 +55,7 @@
              return;
          }
  
@@ -94,20 +95,34 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
 -
 -            string[] package_names = {};
 -            Pk.Info[] package_info = {};
+-            string[] package_ids = {};
 -            bool security_updates = false;
 -
 -            foreach (var package in available_updates.get_array ()) {
+-                if (package.get_info () == Pk.Info.BLOCKED) {
+-                    // Skip packages blocked typically due to phasing or being held back.
+-                    continue;
+-                }
 -                package_names += package.get_name ();
 -                package_info += package.get_info ();
 -
 -                if (package.get_info () == SECURITY) {
 -                    security_updates = true;
 -                }
+-
+-                package_ids += package.get_id ();
+-            }
+-
+-            uint64 package_total_size = 0;
+-            var results = yield task.get_details_async (package_ids, null, progress_callback);
+-            var details = results.get_details_array ();
+-            foreach (var detail in details) {
+-                package_total_size += detail.get_size ();
 -            }
 -
 -            update_details = {
 -                package_names,
--                0, //FIXME: Is there a way to get update size from PackageKit
+-                package_total_size,
 -                package_info
 -            };
 -
@@ -144,7 +159,7 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
      }
  
      public async void update () throws DBusError, IOError {
-@@ -158,40 +62,12 @@
+@@ -175,45 +64,12 @@
          }
  
          cancellable.reset ();
@@ -179,15 +194,86 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Backends/SystemUpdate.v
      }
  
 -    private void progress_callback (Pk.Progress progress, Pk.ProgressType progress_type) {
--        update_state (current_state.state, PkUtils.status_to_title (progress.status));
+-        update_state (
+-            current_state.state,
+-            PkUtils.status_to_title (progress.status),
+-            progress.percentage,
+-            progress.download_size_remaining
+-        );
 -    }
 -
      private void send_error (string message) {
          var notification = new Notification (_("System updates couldn't be installed"));
          notification.set_body (_("An error occurred while trying to update your system"));
-diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/meson.build settings-daemon-8.1.1/src/meson.build
---- settings-daemon-8.1.1_orig/src/meson.build	2024-12-17 11:11:07.079444015 +0100
-+++ settings-daemon-8.1.1/src/meson.build	2024-12-17 11:12:11.060113188 +0100
+diff '--color=auto' -Naur settings-daemon-8.2.0.orig/src/Backends/UbuntuDrivers.vala settings-daemon-8.2.0/src/Backends/UbuntuDrivers.vala
+--- settings-daemon-8.2.0.orig/src/Backends/UbuntuDrivers.vala	2025-02-15 20:40:00.114887027 +0100
++++ settings-daemon-8.2.0/src/Backends/UbuntuDrivers.vala	2025-02-15 20:46:32.213325909 +0100
+@@ -21,7 +21,6 @@
+     private HashTable<string, Device> devices_by_drivers;
+     private Device[] devices = {};
+ 
+-    private Pk.Task task;
+     private GLib.Cancellable cancellable;
+ 
+     construct {
+@@ -35,8 +34,6 @@
+         available_drivers = new HashTable<string, GenericArray<string>> (str_hash, str_equal);
+         devices_by_drivers = new HashTable<string, Device> (str_hash, str_equal);
+ 
+-        task = new Pk.Task ();
+-
+         cancellable = new GLib.Cancellable ();
+ 
+         check_for_drivers.begin (true);
+@@ -186,29 +183,6 @@
+ 
+     private async GenericArray<string> update_installed (string driver, string[] package_names) {
+         var array = new GenericArray<string> ();
+-        try {
+-            var result = yield task.resolve_async (Pk.Filter.NONE, package_names, null, () => {});
+-
+-            var packages = result.get_package_array ();
+-
+-            bool all_installed = true;
+-            foreach (var package in packages) {
+-                array.add (package.package_id);
+-
+-                if (!(driver in devices_by_drivers)) {
+-                    continue;
+-                }
+-
+-                if (all_installed && (Pk.Info.INSTALLED == package.info)) {
+-                    devices_by_drivers[driver].available_drivers_with_installed[driver] = true;
+-                } else {
+-                    all_installed = false;
+-                    devices_by_drivers[driver].available_drivers_with_installed[driver] = false;
+-                }
+-            }
+-        } catch (Error e) {
+-            critical ("Failed to get package details, treating as not installed: %s", e.message);
+-        }
+ 
+         return array;
+     }
+@@ -261,15 +235,6 @@
+         cancellable.cancel ();
+     }
+ 
+-    private void progress_callback (Pk.Progress progress, Pk.ProgressType progress_type) {
+-        update_state (
+-            current_state.state,
+-            PkUtils.status_to_title (progress.status),
+-            progress.percentage,
+-            progress.download_size_remaining
+-        );
+-    }
+-
+     private void send_error (string message) {
+         var notification = new Notification (_("A driver couldn't be installed"));
+         notification.set_body (_("An error occurred while trying to install a driver"));
+diff '--color=auto' -Naur settings-daemon-8.2.0.orig/src/meson.build settings-daemon-8.2.0/src/meson.build
+--- settings-daemon-8.2.0.orig/src/meson.build	2025-02-15 20:40:00.114887027 +0100
++++ settings-daemon-8.2.0/src/meson.build	2025-02-15 20:46:38.633232733 +0100
 @@ -34,8 +34,7 @@
          gdk_pixbuf_dep,
          gexiv2_dep,
@@ -198,12 +284,12 @@ diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/meson.build settings-da
      ],
      vala_args: args,
      install: true,
-diff '--color=auto' -Naur settings-daemon-8.1.1_orig/src/Utils/PkUtils.vala settings-daemon-8.1.1/src/Utils/PkUtils.vala
---- settings-daemon-8.1.1_orig/src/Utils/PkUtils.vala	2024-12-17 11:11:07.076110647 +0100
-+++ settings-daemon-8.1.1/src/Utils/PkUtils.vala	2024-12-17 11:12:11.060113188 +0100
-@@ -12,81 +12,4 @@
-         State state;
-         string status;
+diff '--color=auto' -Naur settings-daemon-8.2.0.orig/src/Utils/PkUtils.vala settings-daemon-8.2.0/src/Utils/PkUtils.vala
+--- settings-daemon-8.2.0.orig/src/Utils/PkUtils.vala	2025-02-15 20:40:00.114887027 +0100
++++ settings-daemon-8.2.0/src/Utils/PkUtils.vala	2025-02-15 20:45:44.437169608 +0100
+@@ -14,81 +14,4 @@
+         uint percentage;
+         uint64 download_size_remaining;
      }
 -
 -    public static unowned string status_to_title (Pk.Status status) {

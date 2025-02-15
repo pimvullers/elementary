@@ -1,10 +1,11 @@
-diff -Naur terminal-6.1.2.orig/src/meson.build terminal-6.1.2/src/meson.build
---- terminal-6.1.2.orig/src/meson.build	2023-04-08 16:50:59.116347583 +0200
-+++ terminal-6.1.2/src/meson.build	2023-04-08 16:52:48.453019270 +0200
-@@ -38,33 +38,3 @@
+diff '--color=auto' -Naur terminal-7.0.0.orig/src/meson.build terminal-7.0.0/src/meson.build
+--- terminal-7.0.0.orig/src/meson.build	2025-02-15 20:36:18.787010515 +0100
++++ terminal-7.0.0/src/meson.build	2025-02-15 20:37:08.821879263 +0100
+@@ -40,36 +40,3 @@
+     dependencies: terminal_deps,
      install : true
  )
- 
+-
 -# tests
 -
 -test_env = [
@@ -35,3 +36,5 @@ diff -Naur terminal-6.1.2.orig/src/meson.build terminal-6.1.2/src/meson.build
 -    protocol: 'tap',
 -    depends: test_schemas
 -)
+-
+-subdir('tests')

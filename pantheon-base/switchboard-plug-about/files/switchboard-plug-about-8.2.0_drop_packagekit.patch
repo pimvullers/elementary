@@ -1,0 +1,36 @@
+diff '--color=auto' -Naur switchboard-plug-about-8.2.0.orig/src/DBus/SystemUpdate.vala switchboard-plug-about-8.2.0/src/DBus/SystemUpdate.vala
+--- switchboard-plug-about-8.2.0.orig/src/DBus/SystemUpdate.vala	2025-02-15 20:50:17.671549790 +0100
++++ switchboard-plug-about-8.2.0/src/DBus/SystemUpdate.vala	2025-02-15 20:51:18.123316428 +0100
+@@ -19,7 +19,6 @@
+     public struct UpdateDetails {
+         string[] packages;
+         uint64 size;
+-        Pk.Info[] info;
+     }
+ 
+     public signal void state_changed ();
+diff '--color=auto' -Naur switchboard-plug-about-8.2.0.orig/src/meson.build switchboard-plug-about-8.2.0/src/meson.build
+--- switchboard-plug-about-8.2.0.orig/src/meson.build	2025-02-15 20:50:17.671549790 +0100
++++ switchboard-plug-about-8.2.0/src/meson.build	2025-02-15 20:51:34.497399528 +0100
+@@ -42,7 +42,6 @@
+         dependency('libadwaita-1'),
+         dependency('libgtop-2.0'),
+         dependency('libsoup-3.0'),
+-        dependency('packagekit-glib2'),
+         dependency('gudev-1.0'),
+         dependency('udisks2'),
+         dependency('polkit-gobject-1'),
+diff '--color=auto' -Naur switchboard-plug-about-8.2.0.orig/src/Views/OperatingSystemView.vala switchboard-plug-about-8.2.0/src/Views/OperatingSystemView.vala
+--- switchboard-plug-about-8.2.0.orig/src/Views/OperatingSystemView.vala	2025-02-15 20:50:17.671549790 +0100
++++ switchboard-plug-about-8.2.0/src/Views/OperatingSystemView.vala	2025-02-15 20:51:55.628268623 +0100
+@@ -563,10 +563,6 @@
+                         details.packages.length
+                     ).printf (details.packages.length, GLib.format_size (details.size));
+ 
+-                    if (Pk.Info.SECURITY in details.info) {
+-                        updates_image.icon_name = "software-update-urgent";
+-                    }
+-
+                     packages.splice (0, packages.get_n_items (), details.packages);
+                 } catch (Error e) {
+                     updates_description.label = _("Unable to determine number of updates");
