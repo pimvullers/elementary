@@ -22,7 +22,7 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/libX11
 	x11-wm/gala
-	x11-wm/mutter
+	<x11-wm/mutter-47
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
