@@ -23,7 +23,18 @@ diff '--color=auto' -Naur quick-settings-1.0.0_orig/src/meson.build quick-settin
 diff '--color=auto' -Naur quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog.vala quick-settings-1.0.0/src/Widgets/EndSessionDialog.vala
 --- quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog.vala	2024-08-21 22:29:38.215835414 +0200
 +++ quick-settings-1.0.0/src/Widgets/EndSessionDialog.vala	2024-08-21 22:33:15.200130655 +0200
-@@ -108,26 +108,6 @@
+diff '--color=auto' -Naur quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog.vala quick-settings-1.0.0/src/Widgets/EndSessionDialog.vala
+--- quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog.vala	2024-08-21 22:29:38.215835414 +0200
++++ quick-settings-1.0.0/src/Widgets/EndSessionDialog.vala	2024-08-21 22:33:15.200130655 +0200
+@@ -87,7 +87,6 @@ public class QuickSettings.EndSessionDialog : Hdy.Window {
+         if (dialog_type == EndSessionDialogType.RESTART) {
+             var confirm_restart = new Gtk.Button.with_label (_("Restart"));
+             confirm_restart.clicked.connect (() => {
+-                set_offline_trigger (REBOOT); // This will just do nothing if no updates are available
+                 reboot ();
+                 destroy ();
+             });
+@@ -109,24 +109,6 @@ public class QuickSettings.EndSessionDialog : Hdy.Window {
          grid.attach (primary_label, 1, 0);
          grid.attach (secondary_label, 1, 1);
  
@@ -42,15 +53,13 @@ diff '--color=auto' -Naur quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog
 -                    margin_top = 16
 -                };
 -                grid.attach (updates_check_button, 1, 2);
--
--                reboot.connect (() => set_offline_trigger (REBOOT));
 -            }
 -        }
 -
          grid.attach (action_area, 0, 3, 2);
  
          grid.show_all ();
-@@ -164,11 +144,7 @@
+@@ -163,11 +145,7 @@ public class QuickSettings.EndSessionDialog : Hdy.Window {
  
          confirm.clicked.connect (() => {
              if (dialog_type == EndSessionDialogType.RESTART || dialog_type == EndSessionDialogType.SHUTDOWN) {
@@ -63,7 +72,7 @@ diff '--color=auto' -Naur quick-settings-1.0.0_orig/src/Widgets/EndSessionDialog
              } else {
                  logout ();
              }
-@@ -179,31 +155,6 @@
+@@ -178,31 +156,6 @@ public class QuickSettings.EndSessionDialog : Hdy.Window {
          realize.connect (() => Idle.add_once (() => init_wl ()));
      }
  
