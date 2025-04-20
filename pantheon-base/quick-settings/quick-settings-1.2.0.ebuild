@@ -18,6 +18,7 @@ RDEPEND="
 	dev-libs/granite:0
 	gui-libs/libhandy:1
 	pantheon-base/wingpanel
+	sys-apps/accountsservice[vala]
 	x11-libs/gtk+:3
 "
 DEPEND="${RDEPEND}
@@ -27,6 +28,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PN}-1.0.1_drop_packagekit.patch"
+	eapply "${FILESDIR}/${PN}-1.2.0_drop_packagekit.patch"
 	vala_setup
 }
