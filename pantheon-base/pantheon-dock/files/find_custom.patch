@@ -1,0 +1,15 @@
+diff '--color=auto' -Naur dock-8.1.0/src/WindowSystem/WindowSystem.vala dock_patched/src/WindowSystem/WindowSystem.vala
+--- dock-8.1.0/src/WindowSystem/WindowSystem.vala	2025-05-12 19:04:23.000000000 +0200
++++ dock_patched/src/WindowSystem/WindowSystem.vala	2025-05-14 20:43:25.133656039 +0200
+@@ -43,8 +43,9 @@
+ 
+     private Window? find_window (uint64 uid) {
+         uint index;
+-        if (windows.find_custom (uid, (win, uid) => {
+-            return win.uid == uid;
++        Window w = new Window(uid);
++        if (windows.find_with_equal_func (w, (win, needle) => {
++            return win.uid == needle.uid;
+         }, out index)) {
+             return windows[index];
+         }
