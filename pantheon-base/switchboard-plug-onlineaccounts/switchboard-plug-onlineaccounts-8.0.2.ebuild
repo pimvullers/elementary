@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.20
 inherit gnome2 meson vala
 
 DESCRIPTION="Switchboard plug for Online Accounts management"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-onlineaccounts"
-SRC_URI="https://github.com/elementary/switchboard-plug-onlineaccounts/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-onlineaccounts"
+SRC_URI="https://github.com/elementary/settings-onlineaccounts/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -26,6 +26,8 @@ RDEPEND="
 DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig"
+
+S="${WORKDIR}/settings-onlineaccounts-${PV}"
 
 src_prepare() {
 	eapply_user
