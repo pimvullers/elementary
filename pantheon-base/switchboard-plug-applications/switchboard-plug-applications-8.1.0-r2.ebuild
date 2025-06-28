@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit gnome2 meson vala
 
 DESCRIPTION="Application configuration management"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-applications"
-SRC_URI="https://github.com/elementary/switchboard-plug-applications/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-applications"
+SRC_URI="https://github.com/elementary/settings-applications/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -28,6 +28,8 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+
+S="${WORKDIR}/settings-applications-${PV}"
 
 src_prepare() {
 	eapply_user

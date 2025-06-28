@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Date & Time indicator for Wingpanel"
-HOMEPAGE="https://github.com/elementary/wingpanel-indicator-datetime"
-SRC_URI="https://github.com/elementary/wingpanel-indicator-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/panel-datetime"
+SRC_URI="https://github.com/elementary/panel-datetime/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,6 +26,8 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+
+S="${WORKDIR}/panel-datetime-${PV}"
 
 src_prepare() {
 	eapply_user

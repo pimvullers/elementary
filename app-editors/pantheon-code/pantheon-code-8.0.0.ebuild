@@ -32,7 +32,7 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:0
 	dev-libs/libgee:0.8
 	dev-libs/libgit2-glib
-	dev-libs/libpeas[gtk]
+	dev-libs/libpeas:2
 	gui-libs/libhandy
 	media-libs/fontconfig
 	x11-libs/gtk+:3
@@ -43,6 +43,9 @@ RDEPEND="${DEPEND}
 
 src_prepare() {
 	eapply_user
+
+	eapply "${FILESDIR}/1606.patch"
+
 	vala_setup
 }
 

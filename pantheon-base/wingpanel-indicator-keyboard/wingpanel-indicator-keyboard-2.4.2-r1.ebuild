@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Keyboard indicator for Wingpanel"
-HOMEPAGE="https://github.com/elementary/wingpanel-indicator-keyboard"
-SRC_URI="https://github.com/elementary/wingpanel-indicator-keyboard/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/panel-keyboard"
+SRC_URI="https://github.com/elementary/panel-keyboard/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -26,6 +26,8 @@ DEPEND="${RDEPEND}
 	dev-libs/libxml2[python]
 	virtual/pkgconfig
 "
+
+S="${WORKDIR}/panel-keyboard-${PV}"
 
 src_prepare() {
 	eapply_user

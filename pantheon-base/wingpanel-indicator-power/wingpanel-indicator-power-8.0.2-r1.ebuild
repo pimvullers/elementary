@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Power indicator for Wingpanel"
-HOMEPAGE="https://github.com/elementary/wingpanel-indicator-power"
-SRC_URI="https://github.com/elementary/wingpanel-indicator-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/panel-power"
+SRC_URI="https://github.com/elementary/panel-power/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -25,6 +25,8 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+
+S="${WORKDIR}/panel-power-${PV}"
 
 src_prepare() {
 	eapply_user
