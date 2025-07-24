@@ -27,6 +27,8 @@ DEPEND="${RDEPEND}
 	virtual/pkgconfig
 "
 
+S="${WORKDIR}/settings-bluetooth-${PV}"
+
 src_prepare() {
 	eapply_user
 	vala_setup
