@@ -21,6 +21,7 @@ RDEPEND="
 	pantheon-base/switchboard:3
 	gui-libs/gtk:4
 	gui-libs/libadwaita:1
+	>=pantheon-base/bluetooth-daemon-1.1.0
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
