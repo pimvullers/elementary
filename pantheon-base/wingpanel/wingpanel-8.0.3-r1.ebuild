@@ -22,7 +22,6 @@ RDEPEND="
 	x11-libs/gtk+:3
 	x11-libs/libX11
 	x11-wm/gala
-	<x11-wm/mutter-47
 "
 DEPEND="${RDEPEND}
 	$(vala_depend)
@@ -32,7 +31,7 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PN}-8.0.0_mutter45.patch"
+	eapply "${FILESDIR}/${PN}-8.0.3_mutter48.patch"
 	vala_setup
 }
 
