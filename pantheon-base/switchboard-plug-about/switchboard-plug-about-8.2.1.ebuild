@@ -17,16 +17,18 @@ KEYWORDS="amd64"
 IUSE="systemd"
 
 RDEPEND="
-	sys-apps/fwupd[introspection]
-	sys-fs/udisks[introspection]
 	dev-libs/glib:2
-	dev-libs/granite:7
-	dev-libs/libgudev
-	gnome-base/libgtop
+	sys-apps/fwupd[introspection]
+	dev-libs/appstream[vala]
 	pantheon-base/switchboard:3
+	dev-libs/granite:7
 	gui-libs/gtk:4
-	gui-libs/libhandy
-	dev-libs/appstream
+	gui-libs/libadwaita:1
+	gnome-base/libgtop:2
+	net-libs/libsoup:3.0
+	dev-libs/libgudev
+	sys-fs/udisks:2[introspection]
+	sys-auth/polkit[introspection]
 	systemd? ( sys-apps/systemd )
 	!systemd? ( app-admin/openrc-settingsd )
 "

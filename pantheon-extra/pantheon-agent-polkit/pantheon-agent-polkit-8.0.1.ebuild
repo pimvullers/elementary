@@ -22,9 +22,9 @@ DEPEND="
 RDEPEND="${DEPEND}
 	gui-libs/libadwaita:1
 	dev-libs/glib:2
-	dev-libs/granite:0
+	dev-libs/granite:7
 	sys-auth/polkit[introspection]
-	x11-libs/gtk+:3
+	gui-libs/gtk:4
 	wayland? ( pantheon-base/pantheon-wayland )
 "
 
