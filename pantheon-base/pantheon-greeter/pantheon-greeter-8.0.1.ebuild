@@ -36,5 +36,7 @@ RDEPEND="${DEPEND}
 
 src_prepare() {
 	eapply_user
+	eapply "${FILESDIR}/${P}_dropold.patch"
+	eapply "${FILESDIR}/${P}_mutter48.patch"
 	vala_setup
 }
