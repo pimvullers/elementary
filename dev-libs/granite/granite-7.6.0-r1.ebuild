@@ -1,4 +1,4 @@
-# Copyright 1999-2022 Gentoo Authors
+# Copyright 1999-2025 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=8
@@ -14,17 +14,18 @@ SLOT="7"
 KEYWORDS="amd64"
 IUSE="demo"
 
-RDEPEND="
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
+"
+DEPEND="
+	dev-lang/sassc
 	>=dev-libs/glib-2.50:2
 	dev-libs/libgee:0.8[introspection]
 	gui-libs/gtk:4[introspection]
+	!>=dev-libs/granite-7:0
 "
-
-DEPEND="${RDEPEND}
-	$(vala_depend)
-	dev-lang/sassc
-	virtual/pkgconfig
-"
+RDEPEND="${DEPEND}"
 
 src_prepare() {
 	eapply_user
@@ -32,6 +33,7 @@ src_prepare() {
 }
 
 src_configure() {
+	# docs disabled due to: https://github.com/elementary/granite/issues/482
 	local emesonargs=(
 		-Ddocumentation=false
 		-Ddemo=$(usex demo true false)
