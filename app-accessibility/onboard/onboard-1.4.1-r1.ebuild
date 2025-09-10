@@ -50,6 +50,11 @@ DOCS=( AUTHORS CHANGELOG HACKING NEWS README onboard-defaults.conf.example
 	onboard-default-settings.gschema.override.example )
 PATCHES=( "${FILESDIR}/${P}-remove-duplicated-docs.patch" )
 
+src_prepare() {
+	eapply_user
+	sed -i -e 's/.*bool.*/#include <stdbool.h>/' "${S}/Onboard/osk/osk_module.h"
+}
+
 src_install() {
 	distutils-r1_src_install
 
