@@ -26,7 +26,7 @@ RDEPEND="
 	dev-db/sqlite:3
 	gnome-base/gnome-desktop:3
 	gui-libs/gtk:4
-	x11-wm/mutter[wayland]
+	<x11-wm/mutter-47[wayland]
 	systemd? ( sys-apps/systemd )
 	x11-libs/gtk+:3
 	dev-libs/granite:0
