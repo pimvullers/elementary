@@ -4,9 +4,10 @@
 EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
+DISTUTILS_EXT=1
 PYTHON_COMPAT=( python3_{10,11,12,13} )
 
-inherit gnome2 distutils-r1
+inherit gnome2 distutils-r1 python-utils-r1
 
 DESCRIPTION="Onscreen keyboard for everybody who can't use a hardware keyboard"
 HOMEPAGE="https://launchpad.net/onboard"
@@ -60,4 +61,8 @@ src_install() {
 
 	# Delete duplicated docs installed by original distutils
 	rm "${D}"/usr/share/doc/onboard/*
+
+	python_setup
+	mkdir -p "${ED}/etc/xdg/autostart/"
+	mv "${ED}$(python_get_sitedir)/etc/xdg/autostart/onboard-autostart.desktop" "${ED}/etc/xdg/autostart/onboard-autostart.desktop"
 }
