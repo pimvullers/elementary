@@ -14,7 +14,8 @@ S="${WORKDIR}/session-settings-${PV}"
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility gnome-keyring wayland systemd"
+IUSE="accessibility gnome-keyring ssh-agent wayland systemd"
+REQUIRED_USE="ssh-agent? ( gnome-keyring )"
 
 RDEPEND="${DEPEND}
 	accessibility? (
@@ -24,7 +25,7 @@ RDEPEND="${DEPEND}
 	gnome-base/gnome-session
 	gnome-base/gnome-settings-daemon
 	gnome-base/gsettings-desktop-schemas
-	gnome-keyring? ( gnome-base/gnome-keyring )
+	gnome-keyring? ( gnome-base/gnome-keyring[ssh-agent?] )
 	pantheon-base/applications-menu
 	pantheon-base/wingpanel
 	pantheon-extra/pantheon-agent-polkit
@@ -42,6 +43,7 @@ src_prepare() {
 	use accessibility || sed -i -e "/orca/d" session/meson.build
 	use accessibility || sed -i -e "/onboard/d" session/meson.build
 	use gnome-keyring || sed -i -e "/gnome-keyring/d" session/meson.build
+	use ssh-agent || sed -i -e "/gnome-keyring-ssh/d" session/meson.build
 }
 
 src_configure() {
