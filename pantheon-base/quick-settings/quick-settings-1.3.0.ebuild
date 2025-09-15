@@ -28,6 +28,6 @@ DEPEND="${RDEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${PN}-1.2.0_drop_packagekit.patch"
+	eapply "${FILESDIR}/${PN}-1.3.0_drop_packagekit.patch"
 	vala_setup
 }

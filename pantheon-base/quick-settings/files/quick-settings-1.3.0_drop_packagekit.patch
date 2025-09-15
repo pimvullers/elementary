@@ -1,0 +1,104 @@
+diff '--color=auto' -Naur quick-settings-1.3.0_orig/meson.build quick-settings-1.3.0/meson.build
+--- quick-settings-1.3.0_orig/meson.build	2025-09-15 21:19:31.698260212 +0200
++++ quick-settings-1.3.0/meson.build	2025-09-15 21:20:04.159796648 +0200
+@@ -20,7 +20,6 @@
+ granite_dep = dependency('granite', version: '>=6.0.0')
+ gtk_dep = dependency('gtk+-3.0')
+ handy_dep = dependency('libhandy-1', version: '>=1.0')
+-packagekit_dep = dependency('packagekit-glib2')
+ wingpanel_dep = dependency('wingpanel')
+ wingpanel_indicatorsdir = wingpanel_dep.get_pkgconfig_variable('indicatorsdir', define_variable: ['libdir', libdir])
+ wl_client_dep = dependency('wayland-client')
+diff '--color=auto' -Naur quick-settings-1.3.0_orig/src/meson.build quick-settings-1.3.0/src/meson.build
+--- quick-settings-1.3.0_orig/src/meson.build	2025-09-15 21:19:31.704927413 +0200
++++ quick-settings-1.3.0/src/meson.build	2025-09-15 21:20:04.159796648 +0200
+@@ -43,7 +43,6 @@
+         gtk_dep,
+         handy_dep,
+         wingpanel_dep,
+-        packagekit_dep,
+         pantheon_desktop_shell_dep,
+         portal_dep,
+         wl_client_dep,
+diff '--color=auto' -Naur quick-settings-1.3.0_orig/src/Widgets/EndSessionDialog.vala quick-settings-1.3.0/src/Widgets/EndSessionDialog.vala
+--- quick-settings-1.3.0_orig/src/Widgets/EndSessionDialog.vala	2025-09-15 21:19:31.704927413 +0200
++++ quick-settings-1.3.0/src/Widgets/EndSessionDialog.vala	2025-09-15 21:20:49.120385552 +0200
+@@ -62,7 +62,6 @@
+         if (dialog_type == EndSessionDialogType.RESTART) {
+             var confirm_restart = (Gtk.Button) add_button (_("Restart"), 1);
+             confirm_restart.clicked.connect (() => {
+-                set_offline_trigger (REBOOT); // This will just do nothing if no updates are available
+                 reboot ();
+                 destroy ();
+             });
+@@ -73,25 +72,6 @@
+         var confirm = (Gtk.Button) add_button (button_text, Gtk.ResponseType.ACCEPT);
+         confirm.get_style_context ().add_class (Gtk.STYLE_CLASS_DESTRUCTIVE_ACTION);
+ 
+-        if (dialog_type != LOGOUT) {
+-            bool has_prepared_updates = false;
+-            try {
+-                has_prepared_updates = Pk.offline_get_prepared_ids ().length > 0;
+-            } catch (Error e) {
+-                warning ("Failed to check for prepared updates, assuming no: %s", e.message);
+-            }
+-
+-            if (has_prepared_updates) {
+-                updates_check_button = new Gtk.CheckButton () {
+-                    active = true,
+-                    label = _("Install pending system updates"),
+-                };
+-                updates_check_button.show ();
+-
+-                custom_bin.add (updates_check_button);
+-            }
+-        }
+-
+         cancel.grab_focus ();
+ 
+         var cancel_action = new SimpleAction ("cancel", null);
+@@ -113,11 +93,7 @@
+ 
+         confirm.clicked.connect (() => {
+             if (dialog_type == EndSessionDialogType.RESTART || dialog_type == EndSessionDialogType.SHUTDOWN) {
+-                if (set_offline_trigger (POWER_OFF)) {
+-                    reboot ();
+-                } else {
+-                    shutdown ();
+-                }
++                shutdown ();
+             } else {
+                 logout ();
+             }
+@@ -128,31 +104,6 @@
+         realize.connect (() => Idle.add_once (() => init_wl ()));
+     }
+ 
+-    private bool set_offline_trigger (Pk.OfflineAction action) {
+-        if (updates_check_button == null) {
+-            return false;
+-        }
+-
+-        if (updates_check_button.active) {
+-            try {
+-                Pk.offline_trigger (action);
+-                return true;
+-            } catch (Error e) {
+-                critical ("Failed to set offline trigger for updates: %s", e.message);
+-            }
+-        } else {
+-            try {
+-                if (Pk.offline_get_action () != UNSET) {
+-                    Pk.offline_cancel ();
+-                }
+-            } catch (Error e) {
+-                critical ("Failed to check/cancel offline trigger for updates: %s", e.message);
+-            }
+-        }
+-
+-        return false;
+-    }
+-
+     public void registry_handle_global (Wl.Registry wl_registry, uint32 name, string @interface, uint32 version) {
+         if (@interface == "io_elementary_pantheon_shell_v1") {
+             var desktop_shell = wl_registry.bind<Pantheon.Desktop.Shell> (name, ref Pantheon.Desktop.Shell.iface, uint32.min (version, 1));
