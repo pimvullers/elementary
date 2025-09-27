@@ -22,7 +22,7 @@ DEPEND="
 "
 RDEPEND="${DEPEND}
 	dev-libs/glib:2
-	dev-libs/granite:0
+	<dev-libs/granite-7:0
 	dev-libs/libgee:0.8
 	gui-libs/libhandy:1
 	sys-apps/accountsservice

@@ -30,7 +30,6 @@ RDEPEND="
 	x11-wm/mutter[wayland]
 	systemd? ( sys-apps/systemd )
 	x11-libs/gtk+:3
-	dev-libs/granite:0
 	gui-libs/libhandy:1
 "
 
