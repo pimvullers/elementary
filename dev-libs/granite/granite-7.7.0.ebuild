@@ -3,6 +3,8 @@
 
 EAPI=8
 
+BUILD_DIR="${WORKDIR}/${P}-build"
+
 inherit meson vala xdg
 
 DESCRIPTION="Elementary OS library that extends GTK+"
@@ -11,7 +13,7 @@ SRC_URI="https://github.com/elementary/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz
 
 LICENSE="LGPL-3+"
 SLOT="7"
-KEYWORDS="amd64"
+KEYWORDS="amd64 arm x86"
 IUSE="demo"
 
 BDEPEND="
@@ -28,7 +30,7 @@ DEPEND="
 RDEPEND="${DEPEND}"
 
 src_prepare() {
-	eapply_user
+	default
 	vala_setup
 }
 
