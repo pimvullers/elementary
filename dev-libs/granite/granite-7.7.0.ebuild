@@ -26,6 +26,7 @@ DEPEND="
 	dev-libs/libgee:0.8[introspection]
 	gui-libs/gtk:4[introspection]
 	!>=dev-libs/granite-7:0
+	demo? ( media-libs/libshumate:1.0 )
 "
 RDEPEND="${DEPEND}"
 
