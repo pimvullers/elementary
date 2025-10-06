@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit meson vala
 
 DESCRIPTION="Configure all available networks"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-network"
-SRC_URI="https://github.com/elementary/switchboard-plug-network/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-network"
+SRC_URI="https://github.com/elementary/settings-network/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -28,6 +28,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-network-${PV}"
 
 src_prepare() {
 	eapply_user

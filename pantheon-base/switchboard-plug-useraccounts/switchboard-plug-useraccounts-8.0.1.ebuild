@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.34
 inherit meson vala
 
 DESCRIPTION="Switchboard User Accounts Plug."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-useraccounts"
-SRC_URI="https://github.com/elementary/switchboard-plug-useraccounts/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-useraccounts"
+SRC_URI="https://github.com/elementary/settings-useraccounts/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -30,6 +30,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-useraccounts-${PV}"
 
 src_prepare() {
 	eapply_user

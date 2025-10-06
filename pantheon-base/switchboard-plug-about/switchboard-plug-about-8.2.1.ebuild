@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit meson vala
 
 DESCRIPTION="Switchboard plug to show system information"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-about"
-SRC_URI="https://github.com/elementary/switchboard-plug-about/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-system"
+SRC_URI="https://github.com/elementary/settings-system/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -36,6 +36,8 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+
+S="${WORKDIR}/settings-system-${PV}"
 
 src_prepare() {
 	eapply "${FILESDIR}/${PN}-8.2.0_drop_packagekit.patch"

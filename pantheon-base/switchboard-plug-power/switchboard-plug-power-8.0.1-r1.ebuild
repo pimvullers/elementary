@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit meson vala
 
 DESCRIPTION="Control system power consumption using Switchboard."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-power"
-SRC_URI="https://github.com/elementary/switchboard-plug-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-power"
+SRC_URI="https://github.com/elementary/settings-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -30,6 +30,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-power-${PV}"
 
 src_prepare() {
 	eapply_user

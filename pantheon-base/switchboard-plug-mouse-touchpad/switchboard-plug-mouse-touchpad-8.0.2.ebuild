@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit meson vala
 
 DESCRIPTION="Mouse and touchpad settings"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-mouse-touchpad"
-SRC_URI="https://github.com/elementary/switchboard-plug-mouse-touchpad/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-mouse-touchpad"
+SRC_URI="https://github.com/elementary/settings-mouse-touchpad/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -26,6 +26,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-mouse-touchpad-${PV}"
 
 src_prepare() {
 	eapply_user

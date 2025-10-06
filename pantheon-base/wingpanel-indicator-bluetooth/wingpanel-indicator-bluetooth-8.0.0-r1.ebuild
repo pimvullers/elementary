@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Bluetooth indicator for Wingpanel"
-HOMEPAGE="https://github.com/elementary/wingpanel-indicator-bluetooth"
-SRC_URI="https://github.com/elementary/wingpanel-indicator-bluetooth/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/panel-bluetooth"
+SRC_URI="https://github.com/elementary/panel-bluetooth/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/panel-bluetooth-${PV}"
 
 src_prepare() {
 	eapply_user

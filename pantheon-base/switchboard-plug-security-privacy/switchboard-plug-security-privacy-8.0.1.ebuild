@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Configure various aspects of the security of the system."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-security-privacy"
-SRC_URI="https://github.com/elementary/switchboard-plug-security-privacy/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-security-privacy"
+SRC_URI="https://github.com/elementary/settings-security-privacy/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -24,6 +24,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-security-privacy-${PV}"
 
 src_prepare() {
 	eapply_user

@@ -8,8 +8,8 @@ VALA_MIN_API_VERSION=0.22
 inherit meson vala
 
 DESCRIPTION="Configure the date & time of the user"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-datetime"
-SRC_URI="https://github.com/elementary/switchboard-plug-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-datetime"
+SRC_URI="https://github.com/elementary/settings-datetime/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -27,6 +27,7 @@ RDEPEND="${DEPEND}
 	gui-libs/gtk:4
 	gui-libs/libadwaita:1
 "
+S="${WORKDIR}/settings-datetime-${PV}"
 
 src_prepare() {
 	eapply_user

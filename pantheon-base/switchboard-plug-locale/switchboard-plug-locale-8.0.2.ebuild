@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Adjust Locale settings using Switchboard."
-HOMEPAGE="https://github.com/elementary/switchboard-plug-locale"
-SRC_URI="https://github.com/elementary/switchboard-plug-locale/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-locale"
+SRC_URI="https://github.com/elementary/settings-locale/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -28,6 +28,7 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
+S="${WORKDIR}/settings-locale-${PV}"
 
 src_prepare() {
 	eapply_user
