@@ -1,0 +1,39 @@
+diff '--color=auto' -Naur session-settings-8.1.0.orig/meson.build session-settings-8.1.0/meson.build
+--- session-settings-8.1.0.orig/meson.build	2025-11-01 16:04:27.529285901 +0100
++++ session-settings-8.1.0/meson.build	2025-11-01 16:08:06.531521251 +0100
+@@ -43,4 +43,6 @@
+     subdir('systemd')
+ endif
+ 
++if get_option('wayland')
+ subdir('wayland-sessions')
++endif
+diff '--color=auto' -Naur session-settings-8.1.0.orig/meson_options.txt session-settings-8.1.0/meson_options.txt
+--- session-settings-8.1.0.orig/meson_options.txt	2025-11-01 16:04:27.529285901 +0100
++++ session-settings-8.1.0/meson_options.txt	2025-11-01 16:05:02.062979275 +0100
+@@ -15,3 +15,6 @@
+ 
+ option('x11', type: 'boolean', value: true,
+        description: 'Install X11 session')
++
++option('wayland', type: 'boolean', value: false,
++       description: 'Install Wayland session')
+diff '--color=auto' -Naur session-settings-8.1.0.orig/session/meson.build session-settings-8.1.0/session/meson.build
+--- session-settings-8.1.0.orig/session/meson.build	2025-11-01 16:04:27.552619479 +0100
++++ session-settings-8.1.0/session/meson.build	2025-11-01 16:06:48.120733109 +0100
+@@ -19,6 +19,7 @@
+   )
+ endif
+ 
++if get_option('wayland')
+ wayland_session_components = [
+   'gala-wayland',
+   gsd_components
+@@ -33,6 +34,7 @@
+   configuration: wayland_session_configuration,
+   install_dir: datadir / 'gnome-session' / 'sessions'
+ )
++endif
+ 
+ autostartdir = join_paths(get_option('sysconfdir'), 'xdg', 'autostart')
+ 

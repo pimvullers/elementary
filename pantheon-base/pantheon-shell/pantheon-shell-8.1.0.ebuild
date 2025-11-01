@@ -14,7 +14,7 @@ S="${WORKDIR}/session-settings-${PV}"
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility gnome-keyring ssh-agent wayland systemd"
+IUSE="accessibility gnome-keyring ssh-agent wayland systemd X"
 REQUIRED_USE="ssh-agent? ( gnome-keyring )"
 
 RDEPEND="${DEPEND}
@@ -39,6 +39,7 @@ PDEPEND="
 
 src_prepare() {
 	eapply_user
+	eapply "${FILESDIR}/${P}-wayland.patch"
 
 	use accessibility || sed -i -e "/orca/d" session/meson.build
 	use accessibility || sed -i -e "/onboard/d" session/meson.build
@@ -50,6 +51,7 @@ src_configure() {
 	local emesonargs=(
 		-Dsystemd=$(usex systemd true false)
 		-Dwayland=$(usex wayland true false)
+		-Dx11=$(usex X true false)
 	)
 
 	meson_src_configure
