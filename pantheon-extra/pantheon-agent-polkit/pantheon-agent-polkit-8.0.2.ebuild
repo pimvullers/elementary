@@ -25,7 +25,7 @@ RDEPEND="${DEPEND}
 	dev-libs/granite:7
 	sys-auth/polkit[introspection]
 	gui-libs/gtk:4
-	wayland? ( pantheon-base/pantheon-wayland )
+	wayland? ( >=pantheon-base/pantheon-wayland-1.1.0 )
 "
 
 src_prepare() {
