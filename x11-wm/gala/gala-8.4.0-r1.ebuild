@@ -26,7 +26,7 @@ RDEPEND="
 	dev-db/sqlite:3
 	gnome-base/gnome-desktop:3
 	gui-libs/gtk:4
-	<x11-wm/mutter-47[wayland]
+	x11-wm/mutter[wayland]
 	systemd? ( sys-apps/systemd )
 	x11-libs/gtk+:3
 	gui-libs/libhandy:1
@@ -44,6 +44,8 @@ src_prepare() {
 
 	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
 	sed -i -e "s#pid_t#int#" vapi/libmutter.vapi lib/App.vala src/WindowTracker.vala
+	eapply "${FILESDIR}/2708.patch"
+	eapply "${FILESDIR}/2710.patch"
 }
 
 src_configure() {

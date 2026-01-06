@@ -1,0 +1,26 @@
+From 6a4a1a236b8a73f741fba6fb790465fde8895f62 Mon Sep 17 00:00:00 2001
+From: Denis Garaev <garaevdi@yandex.ru>
+Date: Sun, 4 Jan 2026 10:02:27 +0300
+Subject: [PATCH] BackgroundBlurEffect: keep getting `Cogl.Context` from
+ default `Clutter.Backend` on libmutter15+
+
+---
+ src/BackgroundBlurEffect.vala | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/src/BackgroundBlurEffect.vala b/src/BackgroundBlurEffect.vala
+index e9eac3b49..a781d2926 100644
+--- a/src/BackgroundBlurEffect.vala
++++ b/src/BackgroundBlurEffect.vala
+@@ -39,11 +39,7 @@ public class Gala.BackgroundBlurEffect : Clutter.Effect {
+     }
+ 
+     construct {
+-#if HAS_MUTTER47
+-        unowned var ctx = actor.context.get_backend ().get_cogl_context ();
+-#else
+         unowned var ctx = Clutter.get_default_backend ().get_cogl_context ();
+-#endif
+ 
+         actor_pipeline = new Cogl.Pipeline (ctx);
+         actor_pipeline.set_layer_null_texture (0);

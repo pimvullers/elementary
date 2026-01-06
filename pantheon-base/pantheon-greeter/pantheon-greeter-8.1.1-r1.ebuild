@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala xdg
+inherit gnome2 meson vala
 
 DESCRIPTION="LightDM Greeter for Pantheon"
 HOMEPAGE="https://github.com/elementary/greeter"
@@ -36,7 +36,7 @@ RDEPEND="${DEPEND}
 
 src_prepare() {
 	eapply_user
-	eapply "${FILESDIR}/${P}_dropold.patch"
-	eapply "${FILESDIR}/${P}_mutter48.patch"
 	vala_setup
+
+	eapply "${FILESDIR}/mutter47.patch"
 }

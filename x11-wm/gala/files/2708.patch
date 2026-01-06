@@ -1,0 +1,75 @@
+From 45a3c62db4cde5d3e3c0a210f19ff673c9556433 Mon Sep 17 00:00:00 2001
+From: Denis Garaev <garaevdi@yandex.ru>
+Date: Sat, 3 Jan 2026 09:31:49 +0300
+Subject: [PATCH] libmutter15: use hex colors with Cogl.Color.from_string
+
+`Cogl.Color.from_string` can't accept color names like
+`Clutter.Color.from_string` which results in a segfault with mutter47+
+---
+ src/Background/Background.vala          | 4 ++--
+ src/Background/BackgroundContainer.vala | 2 +-
+ src/ScreenshotManager.vala              | 2 +-
+ src/Widgets/SessionLocker.vala          | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/Background/Background.vala b/src/Background/Background.vala
+index 08f45ad66..7acb4a5aa 100644
+--- a/src/Background/Background.vala
++++ b/src/Background/Background.vala
+@@ -103,7 +103,7 @@ public class Gala.Background : Object {
+ #endif
+         if (color == null) {
+ #if HAS_MUTTER47
+-            color = Cogl.Color.from_string ("black");
++            color = Cogl.Color.from_string ("#000000");
+ #else
+             color = Clutter.Color.from_string ("black");
+ #endif
+@@ -122,7 +122,7 @@ public class Gala.Background : Object {
+ #endif
+             if (second_color == null) {
+ #if HAS_MUTTER47
+-                second_color = Cogl.Color.from_string ("black");
++                second_color = Cogl.Color.from_string ("#000000");
+ #else
+                 second_color = Clutter.Color.from_string ("black");
+ #endif
+diff --git a/src/Background/BackgroundContainer.vala b/src/Background/BackgroundContainer.vala
+index 9d2425db9..c3a890be2 100644
+--- a/src/Background/BackgroundContainer.vala
++++ b/src/Background/BackgroundContainer.vala
+@@ -29,7 +29,7 @@ public class Gala.BackgroundContainer : Meta.BackgroundGroup {
+         });
+ 
+ #if HAS_MUTTER47
+-        background_color = Cogl.Color.from_string ("Black");
++        background_color = Cogl.Color.from_string ("#000000");
+ #else
+         background_color = Clutter.Color.from_string ("Black");
+ #endif
+diff --git a/src/ScreenshotManager.vala b/src/ScreenshotManager.vala
+index 315ba6cec..18028ce78 100644
+--- a/src/ScreenshotManager.vala
++++ b/src/ScreenshotManager.vala
+@@ -244,7 +244,7 @@ public class Gala.ScreenshotManager : Object {
+         flash_actor.set_size (width, height);
+         flash_actor.set_position (x, y);
+ #if HAS_MUTTER47
+-        flash_actor.set_background_color (Cogl.Color.from_string ("white"));
++        flash_actor.set_background_color (Cogl.Color.from_string ("#FFFFFF"));
+ #elif HAS_MUTTER46
+         flash_actor.set_background_color (Clutter.Color.from_pixel (0xffffffffu));
+ #else
+diff --git a/src/Widgets/SessionLocker.vala b/src/Widgets/SessionLocker.vala
+index 1ec4bb25d..bd9818629 100644
+--- a/src/Widgets/SessionLocker.vala
++++ b/src/Widgets/SessionLocker.vala
+@@ -121,7 +121,7 @@ public class Gala.SessionLocker : Clutter.Actor {
+         });
+ 
+ #if HAS_MUTTER47
+-        background_color = Cogl.Color.from_string ("black");
++        background_color = Cogl.Color.from_string ("#000000");
+ #else
+         background_color = Clutter.Color.from_string ("black");
+ #endif
