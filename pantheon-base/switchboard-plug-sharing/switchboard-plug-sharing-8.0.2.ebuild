@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.20
-
 inherit meson vala
 
 DESCRIPTION="Switchboard Sharing Plug"
 HOMEPAGE="https://github.com/elementary/settings-sharing"
 SRC_URI="https://github.com/elementary/settings-sharing/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-sharing-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -25,7 +25,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-sharing-${PV}"
 
 src_prepare() {
 	eapply_user

@@ -3,8 +3,6 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.22
-
 inherit gnome2 meson vala
 
 DESCRIPTION="An easy parental controls plug for Switchboard"
@@ -18,7 +16,6 @@ IUSE="systemd"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-parental-controls:0
-	!pantheon-base/switchboard-plug-parental-controls-helper
 	dev-libs/glib:2
 	dev-libs/granite:7
 	dev-libs/libgee:0.8

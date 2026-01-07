@@ -6,4 +6,8 @@
 		<name>Pim Vullers</name>
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
+	<use>
+		<flag name="quick-settings">Include the quick-settings panel item</flag>
+		<flag name="user-session">Include the user-session panel item</flag>
+	</use>
 </pkgmetadata>

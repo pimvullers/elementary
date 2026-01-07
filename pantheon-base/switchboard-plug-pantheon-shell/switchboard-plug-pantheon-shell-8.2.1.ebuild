@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.20
-
 inherit gnome2 meson vala
 
 DESCRIPTION="Configure the Pantheon desktop environment using Switchboard"
 HOMEPAGE="https://github.com/elementary/settings-desktop"
 SRC_URI="https://github.com/elementary/settings-desktop/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-desktop-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -27,8 +27,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/settings-desktop-${PV}"
 
 src_prepare() {
 	eapply_user

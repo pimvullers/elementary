@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/wingpanel-indicator-keyboard</remote-id>
+		<remote-id type="github">elementary/panel-keyboard</remote-id>
 	</upstream>
 </pkgmetadata>

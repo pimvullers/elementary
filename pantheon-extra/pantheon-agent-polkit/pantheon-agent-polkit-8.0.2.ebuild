@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Pantheon Polkit Agent"
 HOMEPAGE="https://github.com/elementary/pantheon-agent-polkit"

@@ -9,6 +9,8 @@ DESCRIPTION="Date & Time indicator for Wingpanel"
 HOMEPAGE="https://github.com/elementary/panel-datetime"
 SRC_URI="https://github.com/elementary/panel-datetime/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/panel-datetime-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -26,8 +28,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/panel-datetime-${PV}"
 
 src_prepare() {
 	eapply_user

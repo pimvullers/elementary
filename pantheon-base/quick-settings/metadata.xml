@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/wingpanel-indicator-datetime</remote-id>
+		<remote-id type="github">elementary/quick-settings</remote-id>
 	</upstream>
 </pkgmetadata>

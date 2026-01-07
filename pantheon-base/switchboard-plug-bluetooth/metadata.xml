@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/switchboard-plug-bluetooth</remote-id>
+		<remote-id type="github">elementary/settings-bluetooth</remote-id>
 	</upstream>
 </pkgmetadata>

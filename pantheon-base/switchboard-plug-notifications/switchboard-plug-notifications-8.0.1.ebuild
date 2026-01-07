@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.20
-
 inherit meson vala
 
 DESCRIPTION="Configure which apps should be allowed to show notifications"
 HOMEPAGE="https://github.com/elementary/settings-notifications"
 SRC_URI="https://github.com/elementary/settings-notifications/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-notifications-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -26,7 +26,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-notifications-${PV}"
 
 src_prepare() {
 	eapply_user

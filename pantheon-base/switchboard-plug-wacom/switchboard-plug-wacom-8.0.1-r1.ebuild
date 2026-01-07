@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.22
-
 inherit meson vala
 
 DESCRIPTION="Wacom settings"
 HOMEPAGE="https://github.com/elementary/settings-wacom"
 SRC_URI="https://github.com/elementary/settings-wacom/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-wacom-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -27,7 +27,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-wacom-${PV}"
 
 src_prepare() {
 	eapply_user

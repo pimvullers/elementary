@@ -3,9 +3,7 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.40
-
-inherit meson vala xdg
+inherit gnome2 meson vala
 
 DESCRIPTION="Parental controls support library"
 HOMEPAGE="https://gitlab.freedesktop.org/pwithnall/malcontent"

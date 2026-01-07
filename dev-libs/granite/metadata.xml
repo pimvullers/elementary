@@ -2,14 +2,19 @@
 <!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
 
 <pkgmetadata>
-  <maintainer type="person">
-    <name>Pim Vullers</name>
-    <email>elementary@vullersmail.nl</email>
-  </maintainer>
-  <upstream>
-    <remote-id type="github">elementary/granite</remote-id>
-  </upstream>
-  <use>
-    <flag name="demo">Install demo application</flag>
-  </use>
+	<maintainer type="person">
+		<email>elementary@vullersmail.nl</email>
+		<name>Pim Vullers</name>
+	</maintainer>
+	<use>
+		<flag name="demo">Install demo application</flag>
+	</use>
+	<longdescription>
+		Granite is a companion library for GTK+ and GLib.
+		Among other things, it provides complex widgets and convenience
+		functions designed for use in apps built for elementary OS.
+	</longdescription>
+	<upstream>
+		<remote-id type="github">elementary/granite</remote-id>
+	</upstream>
 </pkgmetadata>

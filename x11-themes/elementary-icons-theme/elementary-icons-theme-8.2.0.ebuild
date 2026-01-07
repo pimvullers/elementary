@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson xdg
+inherit gnome2 meson
 
 DESCRIPTION="An original set of vector icons designed specifically for elementary OS"
 HOMEPAGE="https://github.com/elementary/icons"
@@ -25,16 +25,4 @@ src_configure() {
 		-Dpalettes=false
 	)
 	meson_src_configure
-}
-
-pkg_preinst() {
-	xdg_pkg_preinst
-}
-
-pkg_postinst() {
-	xdg_pkg_postinst
-}
-
-pkg_postrm() {
-	xdg_pkg_postrm
 }

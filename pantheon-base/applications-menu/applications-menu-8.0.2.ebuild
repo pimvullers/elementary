@@ -5,8 +5,6 @@ EAPI=8
 
 inherit gnome2 meson vala
 
-VALA_MIN_API_VERSION="0.52"
-
 DESCRIPTION="A lightweight and stylish app launcher for Pantheon and other DEs"
 HOMEPAGE="https://github.com/elementary/applications-menu"
 SRC_URI="https://github.com/elementary/applications-menu/archive/${PV}.tar.gz -> ${P}.tar.gz"

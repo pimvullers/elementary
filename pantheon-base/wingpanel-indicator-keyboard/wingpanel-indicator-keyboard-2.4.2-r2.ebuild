@@ -9,6 +9,8 @@ DESCRIPTION="Keyboard indicator for Wingpanel"
 HOMEPAGE="https://github.com/elementary/panel-keyboard"
 SRC_URI="https://github.com/elementary/panel-keyboard/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/panel-keyboard-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -26,8 +28,6 @@ DEPEND="${RDEPEND}
 	dev-libs/libxml2[python]
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/panel-keyboard-${PV}"
 
 src_prepare() {
 	eapply_user

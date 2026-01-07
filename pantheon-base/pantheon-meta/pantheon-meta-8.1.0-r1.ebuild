@@ -9,7 +9,7 @@ HOMEPAGE="https://elementary.io/"
 LICENSE="metapackage"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower wayland input_devices_wacom"
+IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower wayland input_devices_wacom quick-settings user-session"
 
 RDEPEND="${DEPEND}
 	accessibility? (
@@ -35,6 +35,7 @@ RDEPEND="${DEPEND}
 		pantheon-extra/pantheon-calendar
 		pantheon-extra/pantheon-camera
 		pantheon-extra/pantheon-mail
+		pantheon-extra/pantheon-maps
 		pantheon-extra/pantheon-music
 		pantheon-extra/pantheon-photos
 		pantheon-extra/pantheon-screenshot
@@ -60,7 +61,7 @@ RDEPEND="${DEPEND}
 	libnotify? (
 		pantheon-base/switchboard-plug-notifications:3
 		pantheon-base/wingpanel-indicator-notifications
-		virtual/notification-daemon[pantheon]
+		x11-misc/pantheon-notification-daemon
 	)
 	pantheon-base/applications-menu
 	pantheon-base/pantheon-files
@@ -85,7 +86,15 @@ RDEPEND="${DEPEND}
 	pantheon-base/wingpanel-indicator-datetime
 	pantheon-base/wingpanel-indicator-keyboard
 	pantheon-base/wingpanel-indicator-nightlight
-	pantheon-base/wingpanel-indicator-session
+	quick-settings? (
+		pantheon-base/quick-settings
+		user-session? (
+			pantheon-base/wingpanel-indicator-session
+		)
+	)
+	!quick-settings? (
+		pantheon-base/wingpanel-indicator-session
+	)
 	pulseaudio? (
 		pantheon-base/switchboard-plug-sound:3
 		pantheon-base/wingpanel-indicator-sound

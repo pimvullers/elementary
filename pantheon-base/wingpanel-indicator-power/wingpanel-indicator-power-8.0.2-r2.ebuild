@@ -9,6 +9,8 @@ DESCRIPTION="Power indicator for Wingpanel"
 HOMEPAGE="https://github.com/elementary/panel-power"
 SRC_URI="https://github.com/elementary/panel-power/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/panel-power-${PV}"
+
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
@@ -25,8 +27,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/panel-power-${PV}"
 
 src_prepare() {
 	eapply_user

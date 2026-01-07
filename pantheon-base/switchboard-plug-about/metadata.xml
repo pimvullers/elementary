@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/switchboard-plug-about</remote-id>
+		<remote-id type="github">elementary/settings-system</remote-id>
 	</upstream>
 </pkgmetadata>

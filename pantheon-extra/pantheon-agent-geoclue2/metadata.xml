@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/agent-geoclue2</remote-id>
+		<remote-id type="github">elementary/pantheon-agent-geoclue2</remote-id>
 	</upstream>
 </pkgmetadata>

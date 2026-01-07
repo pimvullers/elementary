@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Small utility to print documents"
 HOMEPAGE="https://github.com/elementary/print"

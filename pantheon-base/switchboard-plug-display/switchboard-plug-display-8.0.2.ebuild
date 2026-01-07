@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.50
-
 inherit meson vala
 
-DESCRIPTION="Switchboard plug to show displays information"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-display"
-SRC_URI="https://github.com/elementary/switchboard-plug-display/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Settings plug to show displays information"
+HOMEPAGE="https://github.com/elementary/settings-display"
+SRC_URI="https://github.com/elementary/settings-display/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-display-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -26,8 +26,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/settings-display-${PV}"
 
 src_prepare() {
 	eapply_user

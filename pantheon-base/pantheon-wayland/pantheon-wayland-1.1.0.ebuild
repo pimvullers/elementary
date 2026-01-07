@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit meson vala
+inherit gnome2 meson vala
 
 DESCRIPTION="Wayland integration library to the Pantheon Desktop"
 HOMEPAGE="https://github.com/elementary/pantheon-wayland"

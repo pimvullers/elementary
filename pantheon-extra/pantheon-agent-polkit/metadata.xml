@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/agent-polkit</remote-id>
+		<remote-id type="github">elementary/pantheon-agent-polkit</remote-id>
 	</upstream>
 </pkgmetadata>

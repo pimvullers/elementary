@@ -3,8 +3,6 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.40
-
 inherit gnome2 meson vala systemd
 
 DESCRIPTION="A simple, powerful, sexy file manager for the Pantheon desktop"

@@ -9,6 +9,8 @@ DESCRIPTION="Configure various aspects of the security of the system."
 HOMEPAGE="https://github.com/elementary/settings-security-privacy"
 SRC_URI="https://github.com/elementary/settings-security-privacy/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/settings-security-privacy-${PV}"
+
 LICENSE="GPL-3"
 SLOT="3"
 KEYWORDS="amd64"
@@ -24,7 +26,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-security-privacy-${PV}"
 
 src_prepare() {
 	eapply_user

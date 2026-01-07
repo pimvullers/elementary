@@ -5,14 +5,16 @@ EAPI=8
 
 DISTUTILS_USE_PEP517=setuptools
 DISTUTILS_EXT=1
-PYTHON_COMPAT=( python3_{10,11,12,13} )
+PYTHON_COMPAT=( python3_{11,12,13,14} )
 
-inherit gnome2 distutils-r1 python-utils-r1
+inherit gnome2 distutils-r1
 
 MY_PV=$(ver_rs 3 -)
 DESCRIPTION="Onscreen keyboard for everybody who can't use a hardware keyboard"
 HOMEPAGE="https://github.com/onboard-osk/onboard"
 SRC_URI="https://github.com/onboard-osk/${PN}/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/${PN}-${MY_PV}"
 
 # po/* are licensed under BSD 3-clause
 LICENSE="GPL-3+ BSD"
@@ -50,9 +52,6 @@ RESTRICT="mirror"
 # These are using a functionality of distutils-r1.eclass
 DOCS=( AUTHORS CHANGELOG HACKING README.md onboard-defaults.conf.example
 	onboard-default-settings.gschema.override.example )
-PATCHES=( "${FILESDIR}/${P}-remove-duplicated-docs.patch" )
-
-S="${WORKDIR}/${PN}-${MY_PV}"
 
 src_prepare() {
 	eapply_user
@@ -68,5 +67,6 @@ src_install() {
 
 	python_setup
 	mkdir -p "${ED}/etc/xdg/autostart/"
-	mv "${ED}$(python_get_sitedir)/etc/xdg/autostart/onboard-autostart.desktop" "${ED}/etc/xdg/autostart/onboard-autostart.desktop"
+	mv "$(python_get_sitedir)/etc/xdg/autostart/onboard-autostart.desktop" \
+		"${ED}/etc/xdg/autostart/onboard-autostart.desktop"
 }

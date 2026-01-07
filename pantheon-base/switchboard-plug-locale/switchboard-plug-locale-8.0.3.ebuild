@@ -9,6 +9,8 @@ DESCRIPTION="Adjust Locale settings using Switchboard."
 HOMEPAGE="https://github.com/elementary/settings-locale"
 SRC_URI="https://github.com/elementary/settings-locale/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
+S="${WORKDIR}/settings-locale-${PV}"
+
 LICENSE="GPL-3"
 SLOT="3"
 KEYWORDS="amd64"
@@ -28,7 +30,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-locale-${PV}"
 
 src_prepare() {
 	eapply_user

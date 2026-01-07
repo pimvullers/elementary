@@ -3,8 +3,6 @@
 
 EAPI=8
 
-VALA_MIN_VERSION=0.22
-
 inherit meson vala
 
 DESCRIPTION="Session indicator for Wingpanel"

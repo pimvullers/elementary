@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.22
-
 inherit meson vala
 
 DESCRIPTION="Control system power consumption using Switchboard."
 HOMEPAGE="https://github.com/elementary/settings-power"
 SRC_URI="https://github.com/elementary/settings-power/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-power-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -17,7 +17,6 @@ KEYWORDS="amd64"
 
 RDEPEND="
 	!pantheon-base/switchboard-plug-power:0
-	!pantheon-base/switchboard-plug-power-helper
 	dev-libs/glib:2
 	dev-libs/granite:7
 	pantheon-base/switchboard:3
@@ -30,7 +29,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-power-${PV}"
 
 src_prepare() {
 	eapply_user

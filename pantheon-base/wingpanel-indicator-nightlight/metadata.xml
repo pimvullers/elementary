@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/wingpanel-indicator-nightlight</remote-id>
+		<remote-id type="github">elementary/panel-nightlight</remote-id>
 	</upstream>
 </pkgmetadata>

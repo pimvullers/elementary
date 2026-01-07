@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.34
-
 inherit meson vala
 
 DESCRIPTION="A printers plug for Switchboard"
 HOMEPAGE="https://github.com/elementary/settings-printers"
 SRC_URI="https://github.com/elementary/settings-printers/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-printers-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
@@ -27,7 +27,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-S="${WORKDIR}/settings-printers-${PV}"
 
 src_prepare() {
 	eapply_user

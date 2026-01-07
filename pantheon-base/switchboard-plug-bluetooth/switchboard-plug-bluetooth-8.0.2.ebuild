@@ -3,13 +3,13 @@
 
 EAPI=8
 
-VALA_MIN_API_VERSION=0.22
-
 inherit meson vala
 
 DESCRIPTION="Switchboard plug to setup bluetooth devices"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-bluetooth"
-SRC_URI="https://github.com/elementary/switchboard-plug-bluetooth/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/settings-bluetooth"
+SRC_URI="https://github.com/elementary/settings-bluetooth/archive/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-bluetooth-${PV}"
 
 LICENSE="LGPL-2.1"
 SLOT="3"
@@ -27,8 +27,6 @@ DEPEND="${RDEPEND}
 	$(vala_depend)
 	virtual/pkgconfig
 "
-
-S="${WORKDIR}/settings-bluetooth-${PV}"
 
 src_prepare() {
 	eapply_user

@@ -6,6 +6,9 @@
 		<name>Pim Vullers</name>
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
+	<use>
+		<flag name="ssh-agent">Use GNOME Keyring to unlock SSH keys.</flag>
+	</use>
 	<upstream>
 		<remote-id type="github">elementary/session-settings</remote-id>
 	</upstream>

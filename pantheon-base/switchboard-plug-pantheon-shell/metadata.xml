@@ -7,6 +7,6 @@
 		<email>elementary@vullersmail.nl</email>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">elementary/switchboard-plug-pantheon-shell</remote-id>
+		<remote-id type="github">elementary/settings-desktop</remote-id>
 	</upstream>
 </pkgmetadata>
