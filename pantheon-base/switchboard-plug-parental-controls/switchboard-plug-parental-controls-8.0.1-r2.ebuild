@@ -5,9 +5,11 @@ EAPI=8
 
 inherit gnome2 meson vala
 
-DESCRIPTION="An easy parental controls plug for Switchboard"
-HOMEPAGE="https://github.com/elementary/switchboard-plug-parental-controls"
-SRC_URI="https://github.com/elementary/switchboard-plug-parental-controls/archive/${PV}.tar.gz -> ${P}.tar.gz"
+DESCRIPTION="Switchboard Screen Time & Limits Plug"
+HOMEPAGE="https://github.com/elementary/settings-screentime-limits"
+SRC_URI="https://github.com/elementary/settings-screentime-limits/archive/refs/tags/${PV}.tar.gz -> ${P}.tar.gz"
+
+S="${WORKDIR}/settings-screentime-limits-${PV}"
 
 LICENSE="GPL-3"
 SLOT="3"
