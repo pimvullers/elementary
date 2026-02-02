@@ -20,13 +20,16 @@ RDEPEND="${DEPEND}
 	<dev-libs/granite-7:0
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
+	media-libs/gexiv2
 	sys-apps/accountsservice
+	sys-apps/dbus
 	sys-apps/fwupd
 	systemd? ( sys-apps/systemd )
+	x11-libs/gdk-pixbuf:2
 "
 
 src_prepare() {
-	eapply "${FILESDIR}/${PN}-8.4.0_drop_packagekit.patch"
+	eapply "${FILESDIR}/${PN}-8.5.0_drop_packagekit.patch"
 	eapply_user
 	vala_setup
 }

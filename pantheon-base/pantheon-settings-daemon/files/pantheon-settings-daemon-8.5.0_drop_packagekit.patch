@@ -1,6 +1,6 @@
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/meson.build settings-daemon-8.4.0/meson.build
---- settings-daemon-8.4.0.orig/meson.build	2025-11-26 15:31:59.152002380 +0100
-+++ settings-daemon-8.4.0/meson.build	2025-11-26 15:32:31.969594642 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/meson.build settings-daemon-8.5.0/meson.build
+--- settings-daemon-8.5.0_orig/meson.build	2026-02-02 16:13:23.899112020 +0100
++++ settings-daemon-8.5.0/meson.build	2026-02-02 16:14:16.213166014 +0100
 @@ -13,7 +13,6 @@
  granite_dep = dependency('granite', version: '>= 5.3.0')
  gdk_pixbuf_dep = dependency('gdk-pixbuf-2.0')
@@ -9,9 +9,9 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/meson.build settings-daemon
  i18n = import('i18n')
  gettext_name = meson.project_name()
  
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/SystemUpdate.vala settings-daemon-8.4.0/src/Backends/SystemUpdate.vala
---- settings-daemon-8.4.0.orig/src/Backends/SystemUpdate.vala	2025-11-26 15:31:59.172002972 +0100
-+++ settings-daemon-8.4.0/src/Backends/SystemUpdate.vala	2025-11-26 15:35:40.080180733 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/src/Backends/SystemUpdate.vala settings-daemon-8.5.0/src/Backends/SystemUpdate.vala
+--- settings-daemon-8.5.0_orig/src/Backends/SystemUpdate.vala	2026-02-02 16:13:23.915778917 +0100
++++ settings-daemon-8.5.0/src/Backends/SystemUpdate.vala	2026-02-02 16:14:16.213166014 +0100
 @@ -10,7 +10,6 @@
      public struct UpdateDetails {
          string[] packages;
@@ -204,9 +204,9 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/SystemUpdate.v
      private void send_error (string message) {
          var notification = new Notification (_("System updates couldn't be installed"));
          notification.set_body (_("An error occurred while trying to update your system"));
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.vala settings-daemon-8.4.0/src/Backends/UbuntuDrivers.vala
---- settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.vala	2025-11-26 15:31:59.172002972 +0100
-+++ settings-daemon-8.4.0/src/Backends/UbuntuDrivers.vala	2025-11-26 15:32:31.969594642 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/src/Backends/UbuntuDrivers.vala settings-daemon-8.5.0/src/Backends/UbuntuDrivers.vala
+--- settings-daemon-8.5.0_orig/src/Backends/UbuntuDrivers.vala	2026-02-02 16:13:23.915778917 +0100
++++ settings-daemon-8.5.0/src/Backends/UbuntuDrivers.vala	2026-02-02 16:15:50.507797372 +0100
 @@ -21,7 +21,6 @@
      private HashTable<string, Device> devices_by_drivers;
      private Device[] devices = {};
@@ -224,7 +224,7 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.
          cancellable = new GLib.Cancellable ();
  
          check_for_drivers.begin (true);
-@@ -186,29 +183,6 @@
+@@ -189,28 +186,6 @@
  
      private async GenericArray<string> update_installed (string driver, string[] package_names) {
          var array = new GenericArray<string> ();
@@ -235,8 +235,6 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.
 -
 -            bool all_installed = true;
 -            foreach (var package in packages) {
--                array.add (package.package_id);
--
 -                if (!(driver in devices_by_drivers)) {
 -                    continue;
 -                }
@@ -246,6 +244,7 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.
 -                } else {
 -                    all_installed = false;
 -                    devices_by_drivers[driver].available_drivers_with_installed[driver] = false;
+-                    array.add (package.package_id);
 -                }
 -            }
 -        } catch (Error e) {
@@ -254,7 +253,7 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.
  
          return array;
      }
-@@ -261,15 +235,6 @@
+@@ -263,15 +238,6 @@
          cancellable.cancel ();
      }
  
@@ -270,9 +269,9 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Backends/UbuntuDrivers.
      private void send_error (string message) {
          var notification = new Notification (_("A driver couldn't be installed"));
          notification.set_body (_("An error occurred while trying to install a driver"));
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/meson.build settings-daemon-8.4.0/src/meson.build
---- settings-daemon-8.4.0.orig/src/meson.build	2025-11-26 15:31:59.178669837 +0100
-+++ settings-daemon-8.4.0/src/meson.build	2025-11-26 15:32:31.969594642 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/src/meson.build settings-daemon-8.5.0/src/meson.build
+--- settings-daemon-8.5.0_orig/src/meson.build	2026-02-02 16:13:23.915778917 +0100
++++ settings-daemon-8.5.0/src/meson.build	2026-02-02 16:14:16.213166014 +0100
 @@ -37,8 +37,7 @@
          gdk_pixbuf_dep,
          gexiv2_dep,
@@ -283,9 +282,9 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/meson.build settings-da
      ],
      vala_args: args,
      install: true,
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/meson.build.orig settings-daemon-8.4.0/src/meson.build.orig
---- settings-daemon-8.4.0.orig/src/meson.build.orig	1970-01-01 01:00:00.000000000 +0100
-+++ settings-daemon-8.4.0/src/meson.build.orig	2025-11-24 20:00:34.000000000 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/src/meson.build.orig settings-daemon-8.5.0/src/meson.build.orig
+--- settings-daemon-8.5.0_orig/src/meson.build.orig	1970-01-01 01:00:00.000000000 +0100
++++ settings-daemon-8.5.0/src/meson.build.orig	2026-02-02 16:14:16.213166014 +0100
 @@ -0,0 +1,45 @@
 +sources = files(
 +    'AccountsService.vala',
@@ -332,9 +331,9 @@ diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/meson.build.orig settin
 +    vala_args: args,
 +    install: true,
 +)
-diff '--color=auto' -Naur settings-daemon-8.4.0.orig/src/Utils/PkUtils.vala settings-daemon-8.4.0/src/Utils/PkUtils.vala
---- settings-daemon-8.4.0.orig/src/Utils/PkUtils.vala	2025-11-26 15:31:59.178669837 +0100
-+++ settings-daemon-8.4.0/src/Utils/PkUtils.vala	2025-11-26 15:32:31.969594642 +0100
+diff '--color=auto' -Naur settings-daemon-8.5.0_orig/src/Utils/PkUtils.vala settings-daemon-8.5.0/src/Utils/PkUtils.vala
+--- settings-daemon-8.5.0_orig/src/Utils/PkUtils.vala	2026-02-02 16:13:23.915778917 +0100
++++ settings-daemon-8.5.0/src/Utils/PkUtils.vala	2026-02-02 16:14:16.216499393 +0100
 @@ -14,81 +14,4 @@
          uint percentage;
          uint64 download_size_remaining;
