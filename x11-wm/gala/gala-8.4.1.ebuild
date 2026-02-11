@@ -42,8 +42,6 @@ src_prepare() {
 
 	sed -i -e "s#'vapigen'#'${VAPIGEN}'#" meson.build
 	sed -i -e "s#pid_t#int#" vapi/libmutter.vapi lib/App.vala src/WindowTracker.vala
-	eapply "${FILESDIR}/2708.patch"
-	eapply "${FILESDIR}/2710.patch"
 }
 
 src_configure() {
