@@ -23,7 +23,7 @@ RDEPEND="${DEPEND}
 	media-libs/gexiv2
 	sys-apps/accountsservice
 	sys-apps/dbus
-	sys-apps/fwupd
+	sys-apps/fwupd[introspection]
 	systemd? ( sys-apps/systemd )
 	x11-libs/gdk-pixbuf:2
 "
