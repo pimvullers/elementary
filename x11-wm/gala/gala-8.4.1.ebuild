@@ -22,7 +22,7 @@ RDEPEND="
 	dev-libs/granite:7
 	dev-libs/libgee:0.8
 	dev-db/sqlite:3
-	gnome-base/gnome-desktop:3
+	gnome-base/gnome-desktop:4
 	gui-libs/gtk:4
 	x11-wm/mutter[wayland]
 	systemd? ( sys-apps/systemd )
