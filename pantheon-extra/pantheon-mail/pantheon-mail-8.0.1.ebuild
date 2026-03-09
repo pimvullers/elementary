@@ -23,7 +23,7 @@ RDEPEND="
 	gui-libs/libhandy:1
 	dev-libs/libportal[gtk]
 	net-libs/webkit-gtk:4.1
-	gnome-extra/evolution-data-server[vala]
+	<gnome-extra/evolution-data-server-3.58[vala]
 	x11-libs/gtk+:3"
 DEPEND="${RDEPEND}
 	$(vala_depend)"
