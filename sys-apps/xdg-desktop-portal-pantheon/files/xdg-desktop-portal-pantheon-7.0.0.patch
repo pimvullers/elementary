@@ -21,15 +21,15 @@ diff -Naur portals-7.0.0_orig/data/meson.build portals-7.0.0/data/meson.build
  i18n.merge_file(
      input: 'portals.metainfo.xml.in',
      output: 'io.elementary.portals.metainfo.xml',
-diff -Naur portals-7.0.0_orig/meson.build portals-7.0.0/meson.build
---- portals-7.0.0_orig/meson.build	2023-02-28 18:36:56.378632989 +0100
-+++ portals-7.0.0/meson.build	2023-02-28 18:37:08.658633835 +0100
-@@ -7,8 +7,6 @@
+diff --git a/meson.build b/meson.build
+index 83d8b459..652d7c25 100644
+--- a/meson.build
++++ b/meson.build
+@@ -8,7 +8,6 @@ datadir = prefix / get_option('datadir')
  libexecdir = prefix / get_option('libexecdir')
  localedir = prefix / get_option('localedir')
  
 -systemd_dep = dependency('systemd')
--
- glib_dep = dependency('glib-2.0')
- gobject_dep = dependency('gobject-2.0')
- gio_dep = dependency('gio-2.0')
+ 
+ act_dep = dependency('accountsservice')
+ adw_dep = dependency('libadwaita-1')
