@@ -67,6 +67,6 @@ src_install() {
 
 	python_setup
 	mkdir -p "${ED}/etc/xdg/autostart/"
-	mv "$(python_get_sitedir)/etc/xdg/autostart/onboard-autostart.desktop" \
+	mv "${ED}$(python_get_sitedir)/etc/xdg/autostart/onboard-autostart.desktop" \
 		"${ED}/etc/xdg/autostart/onboard-autostart.desktop"
 }
