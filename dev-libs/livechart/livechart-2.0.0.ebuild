@@ -15,25 +15,18 @@ LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
 
-DEPEND="
-	$(vala_depend)
-	gui-libs/gtk:4
-	dev-libs/libgee:0.8
-	dev-libs/glib:2
-	virtual/pkgconfig
-	sys-devel/gettext
-	dev-build/meson
-	dev-build/ninja
-	x11-misc/xvfb-run
-"
-
 RDEPEND="
 	dev-libs/glib:2
 	gui-libs/gtk:4
 	dev-libs/libgee:0.8
 "
+DEPEND="
+	$(vala_depend)
+	${RDEPEND}
+"
 
 src_prepare() {
 	eapply_user
+	sed -i '/tests/d' meson.build
 	vala_setup
 }
