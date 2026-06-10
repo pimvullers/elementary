@@ -1,0 +1,104 @@
+diff --git a/meson.build b/meson.build
+index ee763725..b7f25bb0 100644
+--- a/meson.build
++++ b/meson.build
+@@ -1,4 +1,4 @@
+-project('io.elementary.monitor', 'vala', 'c', version: '8.0.1')
++project('io.elementary.monitor', 'vala', 'c', version: '8.0.1', meson_version: '>=0.59')
+ 
+ # these are Meson modules
+ gnome = import('gnome')
+@@ -14,7 +14,13 @@ vapidir = meson.current_source_dir() / 'vapi/'
+ 
+ add_global_arguments('-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()), language: 'c')
+ 
+-add_project_arguments(['--vapidir', vapidir], language: 'vala')
++vala_flags = ['--vapidir', vapidir]
++
++if get_option('nvidia').enabled()
++    vala_flags += ['--define', 'NVIDIA_SUPPORT']
++endif
++
++add_project_arguments(vala_flags, language: 'vala')
+ 
+ # subprojects should be skipped: https://mesonbuild.com/Release-notes-for-0-58-0.html#skip-subprojects-installation
+ # needs meson 0.58.0
+@@ -48,8 +54,10 @@ app_dependencies = [
+     meson.get_compiler('c').find_library('pci'),
+     meson.get_compiler('vala').find_library('pci', dirs: vapidir),
+ 
+-    meson.get_compiler('c').find_library('XNVCtrl'),
+-    meson.get_compiler('vala').find_library('libxnvctrl', dirs: vapidir),
++    # Allow building without nvidia libraries because they're not packaged or does not run
++    # on some distros due to incompatibility with muslc. Also they're not needed on ARM architecture
++    meson.get_compiler('c').find_library('XNVCtrl', required: get_option('nvidia').enabled()),
++    meson.get_compiler('vala').find_library('libxnvctrl', dirs: vapidir, required: get_option('nvidia').enabled()),
+ ]
+ 
+ config_data = configuration_data()
+diff --git a/meson_options.txt b/meson_options.txt
+index d0fedb3b..6dc700aa 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1 +1,2 @@
+-option('indicator-wingpanel', type : 'feature', value : 'disabled', description : 'Enables the Indicator for Wingpanel.')
+\ No newline at end of file
++option('indicator-wingpanel', type : 'feature', value : 'disabled', description : 'Enables the Indicator for Wingpanel.')
++option('nvidia', type : 'feature', value : 'disabled', description : 'Build with NVIDIA support.')
+\ No newline at end of file
+diff --git a/src/Resources/Resources.vala b/src/Resources/Resources.vala
+index 94b54a85..e6a5a33e 100644
+--- a/src/Resources/Resources.vala
++++ b/src/Resources/Resources.vala
+@@ -69,8 +69,12 @@ public class Monitor.Resources : Object {
+ 
+                 case Utils.PCI_VENDOR_ID_NVIDIA:
+                     debug ("PCI device: GPU: nVidia %s", name);
++#if NVIDIA_SUPPORT
+                     IGPU gpu = new GPUNvidia (pci_access, pci_device);
+                     gpu_list.add (gpu);
++#else
++                    warning ("GPU: nVidia support is disabled: %s", name);
++#endif
+                     break;
+ 
+                 case Utils.PCI_VENDOR_ID_AMD:
+diff --git a/src/Views/SystemView/SystemView.vala b/src/Views/SystemView/SystemView.vala
+index 4f55d6c7..e6a3ab84 100644
+--- a/src/Views/SystemView/SystemView.vala
++++ b/src/Views/SystemView/SystemView.vala
+@@ -39,7 +39,11 @@ public class Monitor.SystemView : Gtk.Box {
+         wrapper.append (storage_view);
+ 
+         foreach (IGPU gpu in resources.gpu_list) {
++#if NVIDIA_SUPPORT
+             if (gpu is GPUIntel || gpu is GPUNvidia) {
++#else
++            if (gpu is GPUIntel) {
++#endif
+                 wrapper.append (build_no_support_label (gpu.name));
+             } else {
+                 var gpu_view = new SystemGPUView (gpu);
+diff --git a/src/meson.build b/src/meson.build
+index 24dbaaf2..311db4c3 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -58,7 +58,6 @@ source_app_files = [
+ 
+     'Resources/GPU/IGPU.vala',
+     'Resources/GPU/GPUAmd.vala',
+-    'Resources/GPU/GPUNvidia.vala',
+     'Resources/GPU/GPUIntel.vala',
+ 
+     'Resources/Hwmon/HwmonPathsParser.vala',
+@@ -75,6 +74,10 @@ source_app_files = [
+ 
+ ]
+ 
++if get_option('nvidia').enabled()
++    source_app_files += ['Resources/GPU/GPUNvidia.vala']
++endif
++
+ executable(
+     meson.project_name(),
+     icons_gresource,
