@@ -30,6 +30,8 @@ DEPEND="${RDEPEND}
 "
 
 src_prepare() {
+	eapply "${FILESDIR}/658.patch"
+	eapply "${FILESDIR}/679.patch"
 	eapply_user
 	vala_setup
 }
