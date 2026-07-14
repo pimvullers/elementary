@@ -1,0 +1,401 @@
+diff '--color=auto' -Naur mail-8.0.1.orig/src/Backend/MoveOperation.vala mail-8.0.1/src/Backend/MoveOperation.vala
+--- mail-8.0.1.orig/src/Backend/MoveOperation.vala	2025-11-12 00:44:28.000000000 +0100
++++ mail-8.0.1/src/Backend/MoveOperation.vala	2026-07-14 15:27:47.000997529 +0200
+@@ -189,10 +189,10 @@
+             var vee_folder = (Camel.VeeFolder)src_folder;
+ 
+             store = null;
+-            unowned Camel.Folder? orig_folder = null;
++            Camel.Folder? orig_folder = null;
+ 
+             foreach (unowned Camel.MessageInfo message in moved_messages) {
+-                orig_folder = vee_folder.get_vee_uid_folder (message.uid);
++                orig_folder = vee_folder.dup_vee_uid_folder (message.uid);
+                 if (orig_folder != null) {
+                     if (store != null && orig_folder.get_parent_store () != store) {
+                         // Don't know which archive folder to use when messages are from
+@@ -214,11 +214,11 @@
+     }
+ 
+     private async void collect_thread_messages (Camel.FolderThreadNode thread) {
+-        moved_messages.add (thread.message);
+-        unowned Camel.FolderThreadNode? child = (Camel.FolderThreadNode?) thread.child;
++        moved_messages.add ((Camel.MessageInfo?) thread.get_item());
++        unowned Camel.FolderThreadNode? child = (Camel.FolderThreadNode?) thread.get_child();
+         while (child != null) {
+             yield collect_thread_messages (child);
+-            child = (Camel.FolderThreadNode?) child.next;
++            child = (Camel.FolderThreadNode?) child.get_next();
+         }
+     }
+ 
+diff '--color=auto' -Naur mail-8.0.1.orig/src/ConversationList/ConversationItemModel.vala mail-8.0.1/src/ConversationList/ConversationItemModel.vala
+--- mail-8.0.1.orig/src/ConversationList/ConversationItemModel.vala	2025-11-12 00:44:28.000000000 +0100
++++ mail-8.0.1/src/ConversationList/ConversationItemModel.vala	2026-07-14 13:36:30.362937124 +0200
+@@ -46,7 +46,7 @@
+ 
+             unowned Camel.FolderThreadNode? current_node = node;
+             while (current_node != null) {
+-                weak Camel.MessageInfo? message = current_node.message;
++                weak Camel.MessageInfo? message = (Camel.MessageInfo?) current_node.get_item();
+                 if (message != null) {
+                     var address = new Camel.InternetAddress ();
+                     if (address.decode (message.from) > 0) {
+@@ -67,7 +67,7 @@
+                     }
+                 }
+ 
+-                current_node = (Camel.FolderThreadNode?) current_node.child;
++                current_node = (Camel.FolderThreadNode?) current_node.get_child();
+             }
+ 
+             if (senders.length > 0) {
+@@ -84,7 +84,7 @@
+ 
+             unowned Camel.FolderThreadNode? current_node = node;
+             while (current_node != null) {
+-                weak Camel.MessageInfo? message = current_node.message;
++                weak Camel.MessageInfo? message = (Camel.MessageInfo?) current_node.get_item();
+                 if (message != null) {
+                     var address = new Camel.InternetAddress ();
+                     if (address.decode (message.to) > 0) {
+@@ -105,7 +105,7 @@
+                     }
+                 }
+ 
+-                current_node = (Camel.FolderThreadNode?) current_node.child;
++                current_node = (Camel.FolderThreadNode?) current_node.get_child();
+             }
+ 
+             if (recipients.length > 0) {
+@@ -118,7 +118,7 @@
+ 
+     public string subject {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return _("Unknown");
+             }
+@@ -129,7 +129,7 @@
+ 
+     public bool flagged {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return false;
+             }
+@@ -140,7 +140,7 @@
+ 
+     public bool forwarded {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return false;
+             }
+@@ -151,7 +151,7 @@
+ 
+     public bool replied {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return false;
+             }
+@@ -162,7 +162,7 @@
+ 
+     public bool replied_all {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return false;
+             }
+@@ -179,7 +179,7 @@
+ 
+     public bool deleted {
+         get {
+-            weak Camel.MessageInfo? message = node.message;
++            weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
+             if (message == null) {
+                 return false;
+             }
+@@ -204,7 +204,7 @@
+ 
+     private static uint count_thread_messages (Camel.FolderThreadNode node) {
+         uint i = 1;
+-        for (unowned Camel.FolderThreadNode? child = node.child; child != null; child = child.next) {
++        for (unowned Camel.FolderThreadNode? child = node.get_child(); child != null; child = child.get_next()) {
+             i += count_thread_messages (child);
+         }
+ 
+@@ -217,13 +217,13 @@
+             return time;
+         }
+ 
+-        weak Camel.MessageInfo? message = node.message;
++        weak Camel.MessageInfo? message = (Camel.MessageInfo) node.get_item();
+         if (message != null) {
+             time = int64.max (time, message.date_received);
+             time = int64.max (time, message.date_sent);
+         }
+ 
+-        for (unowned Camel.FolderThreadNode? child = node.child; child != null; child = child.next) {
++        for (unowned Camel.FolderThreadNode? child = node.get_child(); child != null; child = child.get_next()) {
+             time = get_newest_timestamp (child, time);
+         }
+ 
+@@ -235,13 +235,17 @@
+             return false;
+         }
+ 
+-        var has_flag = !(flag in (int)node.message.flags);
++        weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
++        var has_flag = false;
++        if (message != null) {
++            has_flag = !(flag in (int)message.flags);
+ 
+-        if (!has_flag) {
+-            for (unowned Camel.FolderThreadNode? child = node.child; child != null; child = child.next) {
+-                has_flag = has_thread_flag (child, flag);
+-                if (has_flag) {
+-                    break;
++            if (!has_flag) {
++                for (unowned Camel.FolderThreadNode? child = node.get_child(); child != null; child = child.get_next()) {
++                    has_flag = has_thread_flag (child, flag);
++                    if (has_flag) {
++                        break;
++                    }
+                 }
+             }
+         }
+diff '--color=auto' -Naur mail-8.0.1.orig/src/ConversationList/ConversationList.vala mail-8.0.1/src/ConversationList/ConversationList.vala
+--- mail-8.0.1.orig/src/ConversationList/ConversationList.vala	2025-11-12 00:44:28.000000000 +0100
++++ mail-8.0.1/src/ConversationList/ConversationList.vala	2026-07-14 15:57:01.756335990 +0200
+@@ -213,11 +213,14 @@
+             return;
+         }
+ 
+-        if (!(flag in (int)node.message.flags)) {
+-            node.message.set_flags (flag, ~0);
++        weak Camel.MessageInfo? message = (Camel.MessageInfo?) node.get_item();
++        if (message != null) {
++            if (!(flag in (int)message.flags)) {
++                message.set_flags (flag, ~0);
++            }
+         }
+ 
+-        for (unowned Camel.FolderThreadNode? child = node.child; child != null; child = child.next) {
++        for (unowned Camel.FolderThreadNode? child = node.get_child(); child != null; child = child.get_next()) {
+             set_thread_flag (child, flag);
+         }
+     }
+@@ -269,17 +272,21 @@
+ 
+                                 var search_result_uids = get_search_result_uids (current_account.service.uid);
+                                 if (search_result_uids != null) {
+-                                    var thread = new Camel.FolderThread (folder, search_result_uids, false);
++                                    var uids = new GenericArray<string> ();
++                                    foreach (unowned string uid in search_result_uids) {
++                                        uids.add (uid);
++                                    }
++                                    var thread = new Camel.FolderThread (folder, uids, Camel.FolderThreadFlags.NONE);
+                                     threads[current_account.service.uid] = thread;
+ 
+-                                    weak Camel.FolderThreadNode? child = thread.tree;
++                                    weak Camel.FolderThreadNode? child = thread.get_tree();
+                                     while (child != null) {
+                                         if (cancellable.is_cancelled ()) {
+                                             break;
+                                         }
+ 
+                                         add_conversation_item (folder_info_flags[current_account.service.uid], child, thread, current_account.service.uid);
+-                                        child = child.next;
++                                        child = child.get_next();
+                                     }
+                                 }
+                             } catch (Error e) {
+@@ -326,7 +333,11 @@
+                     return;
+                 }
+ 
+-                threads[service_uid] = new Camel.FolderThread (folders[service_uid], search_result_uids, false);
++                var uids = new GenericArray<string> ();
++                foreach (unowned string uid in search_result_uids) {
++                    uids.add (uid);
++                }
++                threads[service_uid] = new Camel.FolderThread (folders[service_uid], uids, Camel.FolderThreadFlags.NONE);
+ 
+                 var removed = 0;
+                 change_info.get_removed_uids ().foreach ((uid) => {
+@@ -338,25 +349,26 @@
+                     }
+                 });
+ 
+-                unowned Camel.FolderThreadNode? child = threads[service_uid].tree;
++                unowned Camel.FolderThreadNode? child = threads[service_uid].get_tree();
+                 while (child != null) {
+                     if (cancellable.is_cancelled ()) {
+                         return;
+                     }
+ 
+-                    var item = conversations[child.message.uid];
++                    Camel.MessageInfo? message = (Camel.MessageInfo?) child.get_item();
++                    var item = conversations[message.uid];
+                     if (item == null) {
+                         add_conversation_item (folder_info_flags[service_uid], child, threads[service_uid], service_uid);
+                     } else {
+                         if (item.is_older_than (child)) {
+-                            conversations.unset (child.message.uid);
++                            conversations.unset (message.uid);
+                             list_store.remove (item);
+                             removed++;
+                             add_conversation_item (folder_info_flags[service_uid], child, threads[service_uid], service_uid);
+                         };
+                     }
+ 
+-                    child = child.next;
++                    child = child.get_next();
+                 }
+ 
+                 list_store.items_changed (0, removed, list_store.get_n_items ());
+@@ -364,7 +376,7 @@
+         }
+     }
+ 
+-    private GenericArray<string>? get_search_result_uids (string service_uid) {
++    private GenericArray<weak string>? get_search_result_uids (string service_uid) {
+         var style_context = filter_button.get_style_context ();
+         if (hide_read_switch.active || hide_unstarred_switch.active) {
+             if (!style_context.has_class (Granite.STYLE_CLASS_ACCENT)) {
+@@ -381,7 +393,7 @@
+ 
+             var has_current_search_query = search_entry.text.strip () != "";
+             if (!has_current_search_query && !hide_read_switch.active && !hide_unstarred_switch.active) {
+-                return folders[service_uid].get_uids ();
++                return folders[service_uid].dup_uids ();
+             }
+ 
+             string[] current_search_expressions = {};
+@@ -406,20 +418,23 @@
+             string search_query = "(match-all (and " + string.joinv ("", current_search_expressions) + "))";
+ 
+             try {
+-                return folders[service_uid].search_by_expression (search_query, cancellable);
++                GenericArray<weak string> results;
++                folders[service_uid].search_sync (search_query, out results, cancellable);
++                return results;
+             } catch (Error e) {
+                 if (!(e is GLib.IOError.CANCELLED)) {
+                     warning ("Error while searching: %s", e.message);
+                 }
+ 
+-                return folders[service_uid].get_uids ();
++                return folders[service_uid].dup_uids ();
+             }
+         }
+     }
+ 
+     private void add_conversation_item (Camel.FolderInfoFlags folder_info_flags, Camel.FolderThreadNode child, Camel.FolderThread thread, string service_uid) {
+         var item = new ConversationItemModel (folder_info_flags, child, thread, service_uid);
+-        conversations[child.message.uid] = item;
++        var message = (Camel.MessageInfo?) child.get_item();
++        conversations[message.uid] = item;
+         list_store.add (item);
+     }
+ 
+@@ -439,28 +454,32 @@
+     public void mark_read_selected_messages () {
+         var selected_rows = list_box.get_selected_rows ();
+         foreach (var row in selected_rows) {
+-            (((ConversationItemModel)row).node).message.set_flags (Camel.MessageFlags.SEEN, ~0);
++            var message = (Camel.MessageInfo?) (((ConversationItemModel)row).node).get_item();
++            message.set_flags (Camel.MessageFlags.SEEN, ~0);
+         }
+     }
+ 
+     public void mark_star_selected_messages () {
+         var selected_rows = list_box.get_selected_rows ();
+         foreach (var row in selected_rows) {
+-            (((ConversationItemModel)row).node).message.set_flags (Camel.MessageFlags.FLAGGED, ~0);
++            var message = (Camel.MessageInfo?) (((ConversationItemModel)row).node).get_item();
++            message.set_flags (Camel.MessageFlags.FLAGGED, ~0);
+         }
+     }
+ 
+     public void mark_unread_selected_messages () {
+         var selected_rows = list_box.get_selected_rows ();
+         foreach (var row in selected_rows) {
+-            (((ConversationItemModel)row).node).message.set_flags (Camel.MessageFlags.SEEN, 0);
++            var message = (Camel.MessageInfo?) (((ConversationItemModel)row).node).get_item();
++            message.set_flags (Camel.MessageFlags.SEEN, 0);
+         }
+     }
+ 
+     public void mark_unstar_selected_messages () {
+         var selected_rows = list_box.get_selected_rows ();
+         foreach (var row in selected_rows) {
+-            (((ConversationItemModel)row).node).message.set_flags (Camel.MessageFlags.FLAGGED, 0);
++            var message = (Camel.MessageInfo?) (((ConversationItemModel)row).node).get_item();
++            message.set_flags (Camel.MessageFlags.FLAGGED, 0);
+         }
+     }
+ 
+diff '--color=auto' -Naur mail-8.0.1.orig/src/MessageList/MessageList.vala mail-8.0.1/src/MessageList/MessageList.vala
+--- mail-8.0.1.orig/src/MessageList/MessageList.vala	2025-11-12 00:44:28.000000000 +0100
++++ mail-8.0.1/src/MessageList/MessageList.vala	2026-07-14 16:01:26.843920547 +0200
+@@ -179,14 +179,16 @@
+          */
+         can_move_thread (true);
+ 
+-        var store = node.message.summary.folder.parent_store;
++        var message = (Camel.MessageInfo?) node.get_item();
++        var store = message.summary.folder.parent_store;
+         folder_popover.set_store (store);
+ 
+-        var item = new MessageListItem (node.message);
++        var item = new MessageListItem (message);
+         list_box.add (item);
+-        messages.set (node.message.uid, item);
+-        if (node.child != null) {
+-            go_down ((Camel.FolderThreadNode?) node.child);
++        messages.set (message.uid, item);
++        unowned Camel.FolderThreadNode? child_node = node.get_child();
++        if (child_node != null) {
++            go_down (child_node);
+         }
+ 
+         var children = list_box.get_children ();
+@@ -203,7 +205,7 @@
+             }
+         }
+ 
+-        if (node.message != null && Camel.MessageFlags.DRAFT in (int) node.message.flags) {
++        if (message != null && Camel.MessageFlags.DRAFT in (int) message.flags) {
+             compose.begin (Composer.Type.DRAFT, "");
+         }
+     }
+@@ -211,14 +213,16 @@
+     private void go_down (Camel.FolderThreadNode node) {
+         unowned Camel.FolderThreadNode? current_node = node;
+         while (current_node != null) {
+-            var item = new MessageListItem (current_node.message);
++            var message = (Camel.MessageInfo?) current_node.get_item();
++            var item = new MessageListItem (message);
+             list_box.add (item);
+-            messages.set (current_node.message.uid, item);
+-            if (current_node.next != null) {
+-                go_down ((Camel.FolderThreadNode?) current_node.next);
++            messages.set (message.uid, item);
++            unowned Camel.FolderThreadNode? next = current_node.get_next();
++            if (next != null) {
++                go_down ((Camel.FolderThreadNode?) next);
+             }
+ 
+-            current_node = (Camel.FolderThreadNode?) current_node.child;
++            current_node = (Camel.FolderThreadNode?) current_node.get_child();
+         }
+     }
+ 
