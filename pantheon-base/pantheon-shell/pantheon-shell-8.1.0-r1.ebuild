@@ -17,14 +17,13 @@ KEYWORDS="amd64"
 IUSE="accessibility gnome-keyring ssh-agent wayland systemd X"
 REQUIRED_USE="ssh-agent? ( gnome-keyring )"
 
-# Issue #288: starting with gsd-49 the autostart files do not exist
 RDEPEND="${DEPEND}
 	accessibility? (
 		app-accessibility/orca
 		app-accessibility/onboard
 	)
 	gnome-base/gnome-session
-	<gnome-base/gnome-settings-daemon-49
+	gnome-base/gnome-settings-daemon
 	gnome-base/gsettings-desktop-schemas
 	gnome-keyring? ( gnome-base/gnome-keyring[ssh-agent?] )
 	pantheon-base/applications-menu
@@ -40,6 +39,7 @@ PDEPEND="
 
 src_prepare() {
 	eapply_user
+	eapply "${FILESDIR}/gsd-49.patch"
 	eapply "${FILESDIR}/${P}-wayland.patch"
 
 	use accessibility || sed -i -e "/orca/d" session/meson.build
