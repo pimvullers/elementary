@@ -1,5 +1,6 @@
-BDEPEND=virtual/pkgconfig >=app-portage/elt-patches-20250306 app-arch/xz-utils >=dev-build/meson-1.2.3 app-alternatives/ninja dev-build/meson-format-array
+BDEPEND=|| ( dev-lang/vala:0.56 ) virtual/pkgconfig virtual/pkgconfig >=app-portage/elt-patches-20250306 app-arch/xz-utils >=dev-build/meson-1.2.3 app-alternatives/ninja dev-build/meson-format-array
 DEFINED_PHASES=compile configure install postinst postrm preinst prepare test
+DEPEND=<dev-libs/granite-7:0 dev-libs/glib:2 app-misc/geoclue:2.0 media-libs/gexiv2 sys-apps/accountsservice sys-apps/dbus sys-apps/fwupd[introspection] systemd? ( sys-apps/systemd ) x11-libs/gdk-pixbuf:2
 DESCRIPTION=Pantheon settings daemon
 EAPI=8
 HOMEPAGE=https://github.com/elementary/settings-daemon
@@ -12,4 +13,4 @@ RDEPEND=<dev-libs/granite-7:0 dev-libs/glib:2 app-misc/geoclue:2.0 media-libs/ge
 SLOT=0
 SRC_URI=https://github.com/elementary/settings-daemon/archive/8.5.0.tar.gz -> pantheon-settings-daemon-8.5.0.tar.gz
 _eclasses_=toolchain-funcs	58a918e3a42d0156f010dcfd43725be5	systemd	a964c0cbe818b5729da1dbfcee5be861	libtool	6a96cd90e5da8c7c615015479f46f1a4	gnome.org	e1b4f392dbfedfb8974b71b017937f08	xdg-utils	42869b3c8d86a70ef3cf75165a395e09	gnome2-utils	a8cf148ec7f5ae0b1f1d33ae5f7f9e88	xdg	3ef49a87c52c8b77c476351195dfe575	gnome2	26fd01914b36038dc8e964ff4bd03a95	flag-o-matic	fd3558f73f6503093adee69adf41020d	multiprocessing	45d0620f25c2f063ad6276ecd9ed9399	ninja-utils	d063ea1900a793f93eb095010d6d9156	eapi9-pipestatus	d2c134036ac31c3085aebc9147f572bd	python-utils-r1	025367880f07ae6444e6035a49db0dab	sysroot	4c36abaf94ebd3ab32f8abea9a444121	rust-toolchain	76468983281b0a7fc167ca224f84ecfd	meson	4d3a148e5931f2930e970884bcb4c77d	vala	b2f2aa400d77b841d952dda847e24d53
-_md5_=4eed488e81b77f4c36059773b73c013e
+_md5_=69920bb03504d7a6174063edd59a3d92

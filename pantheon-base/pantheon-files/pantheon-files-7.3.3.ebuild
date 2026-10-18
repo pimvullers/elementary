@@ -16,11 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="systemd"
 
-DEPEND="
-	$(vala_depend)
-	virtual/pkgconfig
-"
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	<dev-libs/granite-7:0
@@ -33,6 +29,11 @@ RDEPEND="${DEPEND}
 	net-libs/libcloudproviders[vala]
 	dev-libs/libgit2-glib[vala]
 	systemd? ( sys-apps/systemd )
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

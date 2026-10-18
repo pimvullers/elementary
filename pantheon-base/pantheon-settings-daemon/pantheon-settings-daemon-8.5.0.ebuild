@@ -16,7 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="systemd"
 
-RDEPEND="${DEPEND}
+RDEPEND="
 	<dev-libs/granite-7:0
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
@@ -26,6 +26,11 @@ RDEPEND="${DEPEND}
 	sys-apps/fwupd[introspection]
 	systemd? ( sys-apps/systemd )
 	x11-libs/gdk-pixbuf:2
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

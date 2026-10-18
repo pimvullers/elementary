@@ -15,13 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	sys-devel/gettext
-	dev-util/wayland-scanner
-	virtual/pkgconfig
-"
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/glib:2
 	<dev-libs/granite-7:0
 	dev-libs/libgee:0.8
@@ -32,6 +26,13 @@ RDEPEND="${DEPEND}
 	x11-libs/gtk+:3
 	x11-misc/lightdm[introspection,vala]
 	x11-wm/mutter
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	sys-devel/gettext
+	dev-util/wayland-scanner
+	virtual/pkgconfig
 "
 
 src_prepare() {

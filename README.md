@@ -10,7 +10,7 @@ To install this overlay using Portage's built-in repos.conf mechanism, be sure t
 Then get the elementary.conf file from the base of this repository:
 > `wget https://raw.githubusercontent.com/pimvullers/elementary/master/elementary.conf -O /etc/portage/repos.conf/elementary.conf`
 
-Finallty use `emaint` to sync the repo:
+Finally use `emaint` to sync the repo:
 > `emaint sync -r elementary`
 
 ### Using eselect
@@ -23,8 +23,11 @@ Then use `emaint` to sync the repo:
 
 ## Installing the Pantheon desktop environment
 
-Just install the meta package to pull in all required packages (you can tweak using USE flags):
+Install the meta package to pull in the Pantheon desktop environment (you can tweak using USE flags):
 > `emerge -va pantheon-meta`
+
+The `minimal` USE flag is enabled by default, so the default install omits the optional desktop applications. To include them, disable `minimal`:
+> `USE="-minimal" emerge -va pantheon-meta`
 
 ## Reporting bugs/issues
 

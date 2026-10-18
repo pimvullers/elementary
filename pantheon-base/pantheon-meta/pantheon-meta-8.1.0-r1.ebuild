@@ -11,7 +11,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="accessibility bluetooth cups libnotify +minimal networkmanager pulseaudio upnp upower wayland input_devices_wacom quick-settings user-session"
 
-RDEPEND="${DEPEND}
+RDEPEND="
 	accessibility? (
 		pantheon-base/wingpanel-indicator-a11y
 	)

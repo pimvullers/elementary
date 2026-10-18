@@ -15,17 +15,17 @@ LICENSE="GPL-3"
 SLOT="3"
 KEYWORDS="amd64"
 
-DEPEND="${RDEPEND}
-	$(vala_depend)
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:7
 	pantheon-base/switchboard:3
 	gui-libs/gtk:4
 	gui-libs/libadwaita:1
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

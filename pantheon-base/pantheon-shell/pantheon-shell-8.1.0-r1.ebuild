@@ -17,7 +17,7 @@ KEYWORDS="amd64"
 IUSE="accessibility gnome-keyring ssh-agent wayland systemd X"
 REQUIRED_USE="ssh-agent? ( gnome-keyring )"
 
-RDEPEND="${DEPEND}
+RDEPEND="
 	accessibility? (
 		app-accessibility/orca
 		app-accessibility/onboard

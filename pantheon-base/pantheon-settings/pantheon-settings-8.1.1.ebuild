@@ -15,7 +15,7 @@ LICENSE="GPL-2+"
 SLOT="0"
 KEYWORDS="amd64"
 
-RDEPEND="${DEPEND}
+RDEPEND="
 	x11-themes/elementary-icons-theme
 	x11-themes/elementary-sound-theme
 	x11-themes/elementary-theme

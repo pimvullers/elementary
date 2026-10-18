@@ -15,13 +15,17 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-BDEPEND="${RDEPEND}"
 RDEPEND="
 	gui-libs/gtk:4[wayland]
 	gui-libs/libadwaita:1
 	dev-libs/libgee:0.8
 	dev-libs/glib:2
 	dev-libs/granite:7
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {
