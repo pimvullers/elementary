@@ -8,5 +8,6 @@
 	</maintainer>
 	<upstream>
 		<remote-id type="freedesktop-gitlab">pwithnall/malcontent</remote-id>
+		<remote-id type="gnome-gitlab">GNOME/gvdb</remote-id>
 	</upstream>
 </pkgmetadata>

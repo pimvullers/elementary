@@ -12,7 +12,7 @@ inherit gnome2 distutils-r1
 MY_PV=$(ver_rs 3 -)
 DESCRIPTION="Onscreen keyboard for everybody who can't use a hardware keyboard"
 HOMEPAGE="https://github.com/onboard-osk/onboard"
-SRC_URI="https://github.com/onboard-osk/${PN}/archive/refs/tags/${MY_PV}.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/onboard-osk/${PN}/archive/refs/tags/v${MY_PV}.tar.gz -> ${P}.tar.gz"
 
 S="${WORKDIR}/${PN}-${MY_PV}"
 
