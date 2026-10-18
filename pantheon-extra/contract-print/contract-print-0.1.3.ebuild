@@ -19,7 +19,8 @@ RDEPEND="
 	pantheon-extra/contractor
 	x11-libs/gtk+:3
 "
-DEPEND="${RDEPEND}
+DEPEND="${RDEPEND}"
+BDEPEND="
 	$(vala_depend)
 	virtual/pkgconfig
 "

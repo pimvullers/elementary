@@ -16,13 +16,8 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="plugins policykit"
 
-DEPEND="
-	$(vala_depend)
+RDEPEND="
 	policykit? ( sys-auth/polkit )
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
 	plugins? (
 		app-text/editorconfig-core-c
 		app-text/gtkspell:3[vala]
@@ -39,6 +34,11 @@ RDEPEND="${DEPEND}
 	x11-libs/gtksourceview:4
 	x11-libs/pango
 	x11-libs/vte:2.91
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

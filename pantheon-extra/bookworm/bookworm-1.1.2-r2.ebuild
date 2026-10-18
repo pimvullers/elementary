@@ -28,6 +28,10 @@ RDEPEND="${DEPEND}
 	dev-python/html2text
 	dev-lang/python:2.7
 	comics? ( app-arch/unar )"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
+"
 
 src_prepare() {
 	eapply_user

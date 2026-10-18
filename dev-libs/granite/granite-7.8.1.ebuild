@@ -18,10 +18,10 @@ IUSE="demo"
 
 BDEPEND="
 	$(vala_depend)
+	dev-lang/sassc
 	virtual/pkgconfig
 "
 DEPEND="
-	dev-lang/sassc
 	>=dev-libs/glib-2.50:2
 	dev-libs/libgee:0.8[introspection]
 	gui-libs/gtk:4[introspection]

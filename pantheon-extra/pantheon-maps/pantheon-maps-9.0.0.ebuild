@@ -15,12 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	sys-devel/gettext
-	virtual/pkgconfig
-"
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:7
 	media-libs/libshumate:1.0
@@ -28,6 +23,12 @@ RDEPEND="${DEPEND}
 	app-misc/geoclue:2.0
 	gui-libs/gtk:4
 	gui-libs/libadwaita:1
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	sys-devel/gettext
+	virtual/pkgconfig
 "
 
 src_prepare() {

@@ -13,16 +13,16 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	sys-devel/gettext
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/glib:2
 	dev-libs/libgee:0.8
 	sys-apps/dbus
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	sys-devel/gettext
+	virtual/pkgconfig
 "
 
 src_prepare() {

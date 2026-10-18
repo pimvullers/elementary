@@ -14,18 +14,19 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="wayland"
 
-DEPEND="
-	$(vala_depend)
-	sys-devel/gettext
-	virtual/pkgconfig
-"
-RDEPEND="${DEPEND}
+RDEPEND="
 	gui-libs/libadwaita:1
 	dev-libs/glib:2
 	dev-libs/granite:7
 	sys-auth/polkit[introspection]
 	gui-libs/gtk:4
 	wayland? ( >=pantheon-base/pantheon-wayland-1.1.0 )
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	sys-devel/gettext
+	virtual/pkgconfig
 "
 
 src_prepare() {

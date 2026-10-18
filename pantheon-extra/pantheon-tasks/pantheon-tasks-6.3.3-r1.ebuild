@@ -15,12 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/libical[glib]
 	gnome-extra/evolution-data-server
 	media-libs/clutter:1.0
@@ -33,6 +28,11 @@ RDEPEND="${DEPEND}
 	<dev-libs/granite-7:0
 	x11-libs/gtk+:3
 	dev-libs/libportal[gtk]
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

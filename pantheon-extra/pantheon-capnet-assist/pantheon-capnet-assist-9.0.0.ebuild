@@ -21,8 +21,8 @@ RDEPEND="
 	app-crypt/gcr:4
 	net-libs/webkit-gtk:6
 	gui-libs/gtk:4"
-DEPEND="${RDEPEND}
-	$(vala_depend)"
+DEPEND="${RDEPEND}"
+BDEPEND="$(vala_depend)"
 
 src_prepare() {
 	eapply_user

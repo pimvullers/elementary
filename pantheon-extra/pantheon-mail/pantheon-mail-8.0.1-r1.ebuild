@@ -25,8 +25,8 @@ RDEPEND="
 	net-libs/webkit-gtk:4.1
 	>=gnome-extra/evolution-data-server-3.58[vala]
 	x11-libs/gtk+:3"
-DEPEND="${RDEPEND}
-	$(vala_depend)"
+DEPEND="${RDEPEND}"
+BDEPEND="$(vala_depend)"
 
 src_prepare() {
 	eapply "${FILESDIR}/eds-358.patch"

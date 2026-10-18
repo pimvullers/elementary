@@ -16,14 +16,7 @@ SLOT="0"
 KEYWORDS="amd64"
 IUSE="plugins doc"
 
-DEPEND="
-	$(vala_depend)
-	dev-util/intltool
-	sys-devel/gettext
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-db/sqlite:3
 	dev-libs/glib:2
 	<dev-libs/granite-7:0
@@ -40,6 +33,13 @@ RDEPEND="${DEPEND}
 	media-libs/libwebp
 	sci-geosciences/geocode-glib:2
 	x11-libs/gtk+:3
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	dev-util/intltool
+	sys-devel/gettext
+	virtual/pkgconfig
 "
 
 src_prepare() {

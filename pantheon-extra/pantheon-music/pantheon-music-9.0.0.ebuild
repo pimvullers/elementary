@@ -15,12 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	dev-libs/glib:2
 	dev-libs/granite:7
 	gui-libs/libadwaita:1
@@ -28,6 +23,11 @@ RDEPEND="${DEPEND}
 	media-libs/gstreamer:1.0
 	media-plugins/gst-plugins-meta:1.0[mp3]
 	gui-libs/gtk:4
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
 "
 
 src_prepare() {

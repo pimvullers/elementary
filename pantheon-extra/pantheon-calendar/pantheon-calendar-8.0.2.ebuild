@@ -15,13 +15,7 @@ LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
 
-DEPEND="
-	$(vala_depend)
-	sys-devel/gettext
-	virtual/pkgconfig
-"
-
-RDEPEND="${DEPEND}
+RDEPEND="
 	app-misc/geoclue:2.0
 	dev-libs/folks
 	dev-libs/glib:2
@@ -36,6 +30,12 @@ RDEPEND="${DEPEND}
 	media-libs/libchamplain:0.12[gtk,vala]
 	sci-geosciences/geocode-glib:2
 	x11-libs/gtk+:3
+"
+DEPEND="${RDEPEND}"
+BDEPEND="
+	$(vala_depend)
+	sys-devel/gettext
+	virtual/pkgconfig
 "
 
 src_prepare() {

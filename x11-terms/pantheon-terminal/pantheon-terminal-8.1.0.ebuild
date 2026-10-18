@@ -24,7 +24,8 @@ RDEPEND="
 	gui-libs/libadwaita:1
 	gui-libs/vte:2.91-gtk4[vala]
 "
-DEPEND="${RDEPEND}
+DEPEND="${RDEPEND}"
+BDEPEND="
 	$(vala_depend)
 	virtual/pkgconfig
 "

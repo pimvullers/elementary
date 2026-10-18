@@ -25,6 +25,10 @@ RDEPEND="${DEPEND}
 	systemd? ( sys-apps/systemd )
 	wayland? ( pantheon-base/pantheon-wayland )
 "
+BDEPEND="
+	$(vala_depend)
+	virtual/pkgconfig
+"
 
 src_prepare() {
 	eapply_user
