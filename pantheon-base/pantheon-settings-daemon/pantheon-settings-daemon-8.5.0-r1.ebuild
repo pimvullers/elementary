@@ -20,7 +20,7 @@ RDEPEND="
 	<dev-libs/granite-7:0
 	dev-libs/glib:2
 	app-misc/geoclue:2.0
-	media-libs/gexiv2
+	media-libs/gexiv2:0
 	sys-apps/accountsservice
 	sys-apps/dbus
 	sys-apps/fwupd[introspection]
