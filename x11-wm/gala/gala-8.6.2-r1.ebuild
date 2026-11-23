@@ -24,7 +24,10 @@ RDEPEND="
 	dev-db/sqlite:3
 	gnome-base/gnome-desktop:4
 	gui-libs/gtk:4
-	x11-wm/mutter[wayland(+)]
+	|| (
+		<x11-wm/mutter-50[wayland(+)]
+		>=x11-wm/mutter-50
+	)
 	systemd? ( sys-apps/systemd )
 	x11-libs/gtk+:3
 	gui-libs/libhandy:1

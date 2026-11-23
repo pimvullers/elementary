@@ -6,8 +6,8 @@ EAPI=8
 inherit gnome2 meson vala
 
 DESCRIPTION="Sound indicator for Wingpanel"
-HOMEPAGE="https://github.com/elementary/wingpanel-indicator-sound"
-SRC_URI="https://github.com/elementary/wingpanel-indicator-sound/archive/${PV}.tar.gz -> ${P}.tar.gz"
+HOMEPAGE="https://github.com/elementary/panel-sound"
+SRC_URI="https://github.com/elementary/panel-sound/archive/${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-3"
 SLOT="0"
