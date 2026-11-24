@@ -12,7 +12,7 @@ SRC_URI="https://github.com/elementary/gala/archive/${PV}.tar.gz -> ${P}.tar.gz"
 LICENSE="GPL-3"
 SLOT="0"
 KEYWORDS="amd64"
-IUSE="systemd"
+IUSE="systemd X"
 
 VALA_USE_DEPEND="vapigen"
 
@@ -24,10 +24,8 @@ RDEPEND="
 	dev-db/sqlite:3
 	gnome-base/gnome-desktop:4
 	gui-libs/gtk:4
-	|| (
-		<x11-wm/mutter-50[wayland(+)]
-		>=x11-wm/mutter-50
-	)
+	X? ( <x11-wm/mutter-50[X,wayland(+)] )
+	!X? ( >=x11-wm/mutter-50 )
 	systemd? ( sys-apps/systemd )
 	x11-libs/gtk+:3
 	gui-libs/libhandy:1
